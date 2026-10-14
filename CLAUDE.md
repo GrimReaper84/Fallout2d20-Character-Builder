@@ -11,7 +11,7 @@ blueprint. The rulebooks are the source of truth.
 
 Supported books: Core Rulebook (`CRB`), Winter of Atom (`WOA`), Wanderer's Guide (`WG`).
 
-The project plan lives in `docs/plaene/projektplan.md` (local only, see below).
+The project plan lives in `docs/plans/project_plan.md` (local only, see below).
 
 ## Build & Run
 
@@ -45,7 +45,7 @@ will be published after completion. Names of game elements are spelled exactly a
 | What | Path |
 |---|---|
 | Rulebook PDFs + text | `docs/rulebooks/` (`<book>.pdf`, `<book>.txt` for prose, `<book>_layout.txt` for tables, `\f` page breaks; `README.md` has page offsets and commands) |
-| Plans | `docs/plaene/` |
+| Plans | `docs/plans/` |
 | Analyses / catalog reports | `docs/analyses/` |
 
 **Never copy rules text verbatim into tracked files** (catalogs, Javadoc, UI). Use values, page
@@ -67,12 +67,23 @@ references (`CRB p. 61`) and short descriptions in your own words.
 
 ## Workflows
 
-- **catalog-extractor**: transcribe catalogs from the rulebook texts into JSON catalog files.
-- Feature workflow skills (adapted from the Chummer rebuild) follow in phase 2.
+Shared rules for all skills: `.claude/skills/_shared/project-rules.md`.
+
+Feature workflow (stop and report after each step, the user approves each one):
+
+1. **legacy-app-analyzer** – what the legacy TS app does, checked against the books
+2. **java-analyzer** – what the Java code already has
+3. **javafx-planner** – implementation plan with the user's decisions
+4. **java-developer** – implementation after explicit approval, verified with `./gradlew build`
+5. **java-code-quality-reviewer** (diff mode) – automatic final review by a fresh agent; reports only
+
+Side workflow: **catalog-extractor** transcribes catalogs from the books into JSON catalog files.
+`java-code-quality-reviewer` can also be used on its own to review existing code.
 
 ## RULES FOR CLAUDE
 
 1. Never implement code without being explicitly told to do so. A finished plan is not an approval.
 2. Stop and report after each step; scope and domain decisions belong to the user.
 3. Do not start the application (`./gradlew run`): the display is the user's real desktop.
-4. Do not commit unless asked.
+4. Git is read-only for Claude (global rule in `~/.claude/CLAUDE.md`, enforced by a hook): never
+   commit, stage, push or change branches; suggest the command to the user instead.

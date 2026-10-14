@@ -13,8 +13,8 @@ Why this is its own step: Fallout 2d20 is dominated by catalogs (≈100 Core per
 armor pieces and packs per book). Getting values exactly right and traceable to a page is the
 largest part of the work, and it is different from planning or implementing a feature.
 
-**Read first:** `.claude/skills/_shared/project-rules.md` (paths, book codes, conventions), if it
-exists. If it does not exist yet, use the defaults in this file.
+**Read first:** `.claude/skills/_shared/project-rules.md` (paths, book codes, conventions),
+especially section 4 (rulebooks) and 5 (scope).
 
 ## Inputs
 
@@ -25,7 +25,7 @@ exists. If it does not exist yet, use the defaults in this file.
 | Rulebook PDF | `docs/rulebooks/<book>.pdf` (for page images) |
 | Page offset per book | `docs/rulebooks/README.md` |
 | Legacy data | `/home/luca/Documents/Fallout 2d20/v0.4.5/src/data/*.ts` |
-| Existing catalog | `src/main/resources/<base package path>/catalog/<catalog>.json` |
+| Existing catalog | `src/main/resources/de/fallout2d20/charbuilder/catalog/<catalog>.json` |
 
 Book codes: `CRB` (Core Rulebook), `WOA` (Winter of Atom), `WG` (Wanderer's Guide).
 
@@ -49,7 +49,7 @@ Book codes: `CRB` (Core Rulebook), `WOA` (Winter of Atom), `WG` (Wanderer's Guid
 7. **Validate:** the file parses (`python3 -m json.tool <file> > /dev/null`), ids are unique, every
    entry has `source`. If a catalog test exists, run `./gradlew test`.
 8. **Write the report** to `docs/analyses/<catalog>_catalog.md`, then stop and report briefly:
-   number of entries, open questions, notable legacy errors.
+   number of entries, open questions, notable legacy errors (report to the user in German).
 
 ## Entry conventions
 
@@ -91,4 +91,4 @@ Book codes: `CRB` (Core Rulebook), `WOA` (Winter of Atom), `WG` (Wanderer's Guid
 - Effects of perks/traits are **not** modeled here. Only data. Whether and how an effect is computed
   (HP bonus, carry weight, DR) is decided in the feature plan; the catalog only records it in a
   structured field once the plan defines one.
-- Do not touch Java code, tests or other catalogs. Do not commit.
+- Do not touch Java code, tests or other catalogs. Git is read-only: never commit or stage.
