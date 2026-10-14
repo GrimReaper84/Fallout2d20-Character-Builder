@@ -1,0 +1,39 @@
+{
+  "name": "Old Timer",
+  "origin": "Survivor",
+  "level": 3,
+  "xp": 300,
+  "attributes": {
+    "str": 6,
+    "per": 6,
+    "end": 6,
+    "cha": 5,
+    "int": 6,
+    "agi": 5,
+    "lck": 6
+  },
+  "skills": {
+    "Athletics": {
+      "tag": true,
+      "rank": 3
+    },
+    "Medicine": {
+      "tag": false,
+      "rank": "2"
+    }
+  },
+  "perks": [
+    "Life Giver",
+    "Life Giver",
+    "Toughness"
+  ],
+  "traits": [
+    "Educated",
+    "Fast Shot"
+  ],
+  "equipment": "[Wanderer]\nTest gear",
+  "weapons": [],
+  "derived": {
+    "hp": 15
+  }
+}

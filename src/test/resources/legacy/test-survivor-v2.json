@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 2,
+  "name": "Test Survivor",
+  "origin": "Survivor",
+  "level": 2,
+  "xp": 100,
+  "attributes": {
+    "str": 4,
+    "per": 7,
+    "end": 5,
+    "cha": 5,
+    "int": 8,
+    "agi": 6,
+    "lck": 5
+  },
+  "skills": {
+    "Athletics": {
+      "tag": false,
+      "rank": 2
+    },
+    "Barter": {
+      "tag": false,
+      "rank": 0
+    },
+    "Big Guns": {
+      "tag": false,
+      "rank": 0
+    },
+    "Energy Weapons": {
+      "tag": false,
+      "rank": 1
+    },
+    "Explosives": {
+      "tag": false,
+      "rank": 2
+    },
+    "Lockpick": {
+      "tag": true,
+      "rank": 3
+    },
+    "Medicine": {
+      "tag": false,
+      "rank": 1
+    },
+    "Melee Weapons": {
+      "tag": false,
+      "rank": 1
+    },
+    "Pilot": {
+      "tag": false,
+      "rank": 0
+    },
+    "Repair": {
+      "tag": true,
+      "rank": 4
+    },
+    "Science": {
+      "tag": true,
+      "rank": 3
+    },
+    "Small Guns": {
+      "tag": false,
+      "rank": 1
+    },
+    "Sneak": {
+      "tag": false,
+      "rank": 2
+    },
+    "Speech": {
+      "tag": false,
+      "rank": 1
+    },
+    "Survival": {
+      "tag": false,
+      "rank": 3
+    },
+    "Throwing": {
+      "tag": false,
+      "rank": 0
+    },
+    "Unarmed": {
+      "tag": false,
+      "rank": 0
+    }
+  },
+  "perks": [
+    {
+      "name": "Jury Rigging",
+      "rank": 1
+    },
+    {
+      "name": "Comprehension",
+      "rank": 1
+    },
+    {
+      "name": "Gun Nut",
+      "rank": 1
+    }
+  ],
+  "equipment": "[Settler]\nTough coat\n2 rolls on random food table\nPersonal trinket\n65 caps\nMelee weapon: Pipe wrench\n\n[TAG SKILL ITEMS]\nLockpick: 11 bobby pins\nRepair: Multi-Tool\nScience: Lab coat, 1 Mentats\n\n[TRINKET]\nTest trinket",
+  "weapons": [
+    {
+      "name": "Laser Gun",
+      "dmg": "3",
+      "eff": "Piercing 1",
+      "type": "Energy",
+      "qual": "Close Quarters",
+      "rate": "2",
+      "range": "C",
+      "mag": 16,
+      "pool": 0
+    }
+  ],
+  "derived": {
+    "hp": 11,
+    "init": 13,
+    "def": 1,
+    "carry": 170,
+    "melee": "+0",
+    "physDR": 0,
+    "enDR": 0,
+    "radDR": 0,
+    "poisDR": 0
+  },
+  "traits": [
+    "Small Frame"
+  ],
+  "originOptions": {
+    "noPincer": false,
+    "attachments": []
+  },
+  "progression": {
+    "pendingSkillRanks": 0,
+    "pendingPerks": 0
+  },
+  "vitals": {
+    "currentHP": 11,
+    "rads": 0,
+    "radiationPoints": 0
+  },
+  "equipmentPack": "Settler",
+  "trinket": "",
+  "armor": {}
+}

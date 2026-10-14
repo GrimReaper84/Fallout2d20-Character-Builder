@@ -155,9 +155,10 @@ This section grows with the project. Until a pattern exists in the code, the ent
 |---|---|
 | Catalog entry | planned: `record XData(...)` with `id`, `name`, `source` (book + page), loaded from JSON |
 | Catalog loader | planned: one loader per catalog with a cached, immutable result; path constant in one place |
-| Character instance | planned: class referencing its `XData` plus mutable state (rank, choices, equipped) |
-| Persistence | planned: DTOs in `persistence` separate from the model, Jackson, `schemaVersion: 3` |
-| Legacy import | planned: `persistence.legacy` maps v1/v2 JSON onto the model, collects warnings |
+| Character instance | planned: class referencing its `XData` plus mutable state (rank, choices, equipped). Until a catalog exists, selections reference it via `CatalogRef` (id + legacy name), e.g. `PerkSelection`, `TraitSelection` |
+| Character aggregate | `model.character.Character`: stores parts (allocation, `SkillState`, `LegacyBaseline`), one computing method per value (`attributeValue`, `skillRank`) – extend these methods, do not add parallel ones |
+| Persistence | `persistence.CharacterStore` + DTO records (`CharacterData` …) + `CharacterMapper` (only place knowing model and DTOs); new fields: DTO record field + mapper both ways + round-trip test in `CharacterStoreTest` |
+| Legacy import | `persistence.legacy.LegacyCharacterImporter`: tree-model import, `ImportWarning` instead of silent drops, unported fields stay in `LegacyImport.payload`; a feature that ports a legacy field takes it out of the payload |
 
 Prefer existing patterns and extend them only when they do not fit. Keep changes to base classes
 small and mention them in the result.

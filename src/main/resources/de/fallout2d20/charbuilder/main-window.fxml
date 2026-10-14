@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-  fx:controller="de.fallout2d20.charbuilder.MainWindowController">
+  fx:controller="de.fallout2d20.charbuilder.view.MainWindowController">
+  <top>
+    <MenuBar>
+      <Menu text="File">
+        <MenuItem text="New" onAction="#onNew">
+          <accelerator><KeyCodeCombination code="N" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
+        <MenuItem text="Open…" onAction="#onOpen">
+          <accelerator><KeyCodeCombination code="O" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
+        <MenuItem text="Save" onAction="#onSave">
+          <accelerator><KeyCodeCombination code="S" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
+        <MenuItem text="Save As…" onAction="#onSaveAs">
+          <accelerator><KeyCodeCombination code="S" control="DOWN" shift="DOWN" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
+        <SeparatorMenuItem/>
+        <MenuItem text="Exit" onAction="#onExit"/>
+      </Menu>
+    </MenuBar>
+  </top>
   <center>
-    <Label text="Fallout 2d20 Character Builder"/>
+    <ScrollPane fx:id="overviewPane" fitToWidth="true"/>
   </center>
 </BorderPane>

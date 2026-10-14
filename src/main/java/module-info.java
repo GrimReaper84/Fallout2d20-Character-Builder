@@ -8,6 +8,7 @@ module de.fallout2d20.charbuilder {
   requires org.kordamp.ikonli.fontawesome6;
   requires static org.jspecify;
 
-  opens de.fallout2d20.charbuilder to javafx.fxml;
+  opens de.fallout2d20.charbuilder.view to javafx.fxml;
+  opens de.fallout2d20.charbuilder.persistence to com.fasterxml.jackson.databind;
   exports de.fallout2d20.charbuilder;
 }
