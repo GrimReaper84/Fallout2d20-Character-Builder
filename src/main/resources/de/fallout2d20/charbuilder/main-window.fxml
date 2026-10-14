@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+  fx:controller="de.fallout2d20.charbuilder.MainWindowController">
+  <center>
+    <Label text="Fallout 2d20 Character Builder"/>
+  </center>
+</BorderPane>
