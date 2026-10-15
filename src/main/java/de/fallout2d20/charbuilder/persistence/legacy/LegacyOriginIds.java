@@ -1,9 +1,11 @@
 package de.fallout2d20.charbuilder.persistence.legacy;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Mapping of the internal origin ids of the legacy app (v0.4.5, {@code data/origins.ts}) to
@@ -35,6 +37,11 @@ final class LegacyOriginIds {
   /** Catalog id of an origin from one of the supported books. */
   static Optional<String> supportedId(String legacyId) {
     return Optional.ofNullable(SUPPORTED_BOOK_ORIGINS.get(legacyId));
+  }
+
+  /** All catalog ids the supported legacy origins map to. */
+  static @NonNull Collection<String> supportedIds() {
+    return SUPPORTED_BOOK_ORIGINS.values();
   }
 
   static boolean isFromUnsupportedBook(String legacyId) {

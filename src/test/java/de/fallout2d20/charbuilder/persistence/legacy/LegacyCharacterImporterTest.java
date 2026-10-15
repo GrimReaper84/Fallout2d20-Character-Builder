@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
@@ -21,6 +22,7 @@ import java.io.InputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -48,6 +50,7 @@ class LegacyCharacterImporterTest {
       assertEquals(0, character.attributeAllocation(attribute));
     });
     assertEquals(11, character.getVitals().currentHp());
+    assertEquals(EnumSet.allOf(Book.class), character.getEnabledBooks(), "legacy saves know no books");
   }
 
   @Test

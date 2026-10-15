@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.fallout2d20.charbuilder.catalog.Book;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,15 @@ class CharacterTest {
     }
     assertFalse(character.isLegacyImport());
     assertFalse(character.isCreationComplete());
+  }
+
+  /** The Core Rulebook can never be switched off (user decision). */
+  @Test
+  void coreRulebookIsAlwaysEnabled() {
+    assertEquals(EnumSet.allOf(Book.class), Character.createNew().getEnabledBooks());
+    Character character = new Character("Test", null, 1, 0, false, EnumSet.of(Book.WOA), Map.of(),
+        Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null);
+    assertEquals(EnumSet.of(Book.CRB, Book.WOA), character.getEnabledBooks());
   }
 
   /** CRB p. 58: base 5 plus spent points; an attribute may be lowered to 4. */
@@ -64,7 +75,8 @@ class CharacterTest {
 
   private static Character create(Map<Attribute, Integer> allocation, Map<Skill, SkillState> skills,
       LegacyBaseline baseline) {
-    return new Character("Test", CatalogRef.of("survivor"), 1, 0, baseline != null, allocation, skills,
+    return new Character("Test", CatalogRef.of("survivor"), 1, 0, baseline != null,
+        EnumSet.allOf(Book.class), allocation, skills,
         List.of(), List.of(), Progression.NONE, Vitals.FULL, baseline, null);
   }
 }

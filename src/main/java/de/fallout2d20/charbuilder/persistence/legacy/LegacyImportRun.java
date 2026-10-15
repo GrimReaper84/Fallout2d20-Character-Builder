@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -24,6 +25,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -88,7 +90,9 @@ final class LegacyImportRun {
     Progression progression = progression();
     Vitals vitals = vitals();
     keepRemainingFields();
-    Character character = new Character(name, origin, level, xp, true, Map.of(), skillStates,
+    // Legacy saves know no book selection: all supported books are enabled.
+    Character character = new Character(name, origin, level, xp, true, EnumSet.allOf(Book.class),
+        Map.of(), skillStates,
         traits, perks, progression, vitals, new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload));
     compareDerived(character);

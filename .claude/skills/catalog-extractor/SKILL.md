@@ -47,7 +47,7 @@ Book codes: `CRB` (Core Rulebook), `WOA` (Winter of Atom), `WG` (Wanderer's Guid
    requirements, damage, ...), differing names. Record each difference and which side the book
    supports. Legacy names that differ from the book go into `legacyNames` so old saves still import.
 7. **Validate:** the file parses (`python3 -m json.tool <file> > /dev/null`), ids are unique, every
-   entry has `source`. If a catalog test exists, run `./gradlew test`.
+   entry has at least one `sources` item. If a catalog test exists, run `./gradlew test`.
 8. **Write the report** to `docs/analyses/<catalog>_catalog.md`, then stop and report briefly:
    number of entries, open questions, notable legacy errors (report to the user in German).
 
@@ -57,7 +57,8 @@ Book codes: `CRB` (Core Rulebook), `WOA` (Winter of Atom), `WG` (Wanderer's Guid
   reference ids, so **never rename an existing id**. If the printed name changes, change `name` only.
 - `name`: exactly as printed in the book (spelling, capitalization, slashes such as
   `Action Boy/Girl`).
-- `source`: `{ "book": "CRB", "page": 61 }`, printed page where the entry starts.
+- `sources`: list of `{ "book": "CRB", "page": 61 }`, the printed page where the entry starts, one
+  item per book that describes the entry (e.g. Child of Atom in WOA and WG). Model: `origins.json`.
 - Mechanical values as structured fields, not as prose: requirements as objects
   (`{ "attribute": "END", "min": 7 }`, `{ "level": 1 }`), ranks as numbers, damage as numbers plus
   effect list. Requirements that cannot be expressed structurally go into `requirementNote` and are

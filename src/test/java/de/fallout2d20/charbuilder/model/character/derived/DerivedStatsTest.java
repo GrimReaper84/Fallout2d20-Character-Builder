@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character.derived;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -12,6 +13,7 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -166,7 +168,7 @@ class DerivedStatsTest {
       ranks.put(skill, 0);
     }
     Character character = new Character("Imported", CatalogRef.of("survivor"), 3, 300, true,
-        Map.of(), Map.of(),
+        EnumSet.allOf(Book.class), Map.of(), Map.of(),
         List.of(new TraitSelection(CatalogRef.fromLegacyName("Small Frame"), true, List.of())),
         List.of(new PerkSelection(CatalogRef.fromLegacyName("Life Giver"), 2, 2, List.of(), List.of())),
         Progression.NONE, Vitals.FULL, new LegacyBaseline(attributes, ranks), null);

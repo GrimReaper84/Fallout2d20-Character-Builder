@@ -1,9 +1,14 @@
 package de.fallout2d20.charbuilder.model.character;
 
+import de.fallout2d20.charbuilder.catalog.Book;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -26,6 +31,7 @@ public class Character {
   private final int level;
   private final long xp;
   private final boolean creationComplete;
+  private final Set<Book> enabledBooks;
   private final Map<Attribute, Integer> attributeAllocation;
   private final Map<Skill, SkillState> skills;
   private final List<TraitSelection> traits;
@@ -45,6 +51,7 @@ public class Character {
       int level,
       long xp,
       boolean creationComplete,
+      @NonNull Set<Book> enabledBooks,
       Map<Attribute, Integer> attributeAllocation,
       Map<Skill, SkillState> skills,
       List<TraitSelection> traits,
@@ -61,6 +68,8 @@ public class Character {
     this.level = level;
     this.xp = xp;
     this.creationComplete = creationComplete;
+    this.enabledBooks = EnumSet.of(Book.CRB);
+    this.enabledBooks.addAll(enabledBooks);
     this.attributeAllocation = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {
       this.attributeAllocation.put(attribute, attributeAllocation.getOrDefault(attribute, 0));
@@ -79,7 +88,8 @@ public class Character {
 
   /** A new, empty character at the start of character creation. */
   public static Character createNew() {
-    return new Character("", null, 1, 0, false, Map.of(), Map.of(), List.of(), List.of(),
+    return new Character("", null, 1, 0, false, EnumSet.allOf(Book.class), Map.of(), Map.of(),
+        List.of(), List.of(),
         Progression.NONE, Vitals.FULL, null, null);
   }
 
@@ -135,6 +145,14 @@ public class Character {
 
   public boolean isCreationComplete() {
     return creationComplete;
+  }
+
+  /**
+   * Books whose content this character may use. The Core Rulebook is always included, because the
+   * basic rules come from it (user decision); only the supplements can be switched off.
+   */
+  public @NonNull Set<Book> getEnabledBooks() {
+    return Collections.unmodifiableSet(enabledBooks);
   }
 
   public int attributeAllocation(Attribute attribute) {

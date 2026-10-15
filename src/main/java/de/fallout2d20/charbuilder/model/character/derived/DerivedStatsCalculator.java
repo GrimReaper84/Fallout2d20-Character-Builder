@@ -1,19 +1,20 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
+import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
-import java.util.Map;
-import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Formulas of the derived statistics and the only place that knows which perks, traits and origins
- * modify them. Until the catalogs exist (feature A2), effects are looked up by catalog id; the id
- * tables below are meant to move into catalog data then.
+ * Formulas of the derived statistics. Origin effects (fixed carry weight, immunities, base radiation
+ * DR) come from the origin catalog; perk and trait effects are looked up by catalog id here, until
+ * their catalogs exist. A character without origin or with an origin that is not in the catalog
+ * (e.g. an unsupported legacy origin) gets no origin effects.
  *
  * <p>Effects of imported perk ranks and traits count fully: a legacy baseline only contains
  * attribute and skill values, never derived statistics.
@@ -40,31 +41,10 @@ final class DerivedStatsCalculator {
   private static final String HEAVY_HANDED = "heavy-handed";
   private static final String GIFTED = "gifted";
 
-  /**
-   * Origins whose carry weight is fixed and not increased by STR or perks: Mister Handy (CRB p. 55),
-   * Protectron (WOA p. 21), Assaultron (WG p. 11).
-   */
-  private static final Map<String, Integer> FIXED_CARRY_WEIGHT =
-      Map.of("mister-handy", 150, "protectron", 225, "assaultron", 150);
-
-  /**
-   * Origins immune to radiation and poison damage: Super Mutant (CRB p. 53), Mister Handy
-   * (CRB p. 55), Generation 3 Synth (WOA p. 19), Protectron (WOA p. 21), Assaultron (WG p. 11),
-   * Nightkin (WG p. 14).
-   */
-  private static final Set<String> RADIATION_AND_POISON_IMMUNE = Set.of("super-mutant",
-      "mister-handy", "generation-3-synth", "protectron", "assaultron", "nightkin");
-
-  /** CRB p. 52: a ghoul is immune to radiation damage (and is healed by it). */
-  private static final String GHOUL = "ghoul";
-
-  /** WOA p. 25, WG p. 13 (Rad Sponge): a Child of Atom has a base radiation DR of 1. */
-  private static final String CHILD_OF_ATOM = "child-of-atom";
-
   private DerivedStatsCalculator() {}
 
   static @NonNull DerivedStats calculate(@NonNull Character character) {
-    String origin = originId(character);
+    OriginData origin = originData(character);
     return new DerivedStats(
         maxHp(character),
         initiative(character),
@@ -100,10 +80,9 @@ final class DerivedStatsCalculator {
   }
 
   /** CRB p. 47, 74: 150 + 10 × STR; Small Frame 5 × STR (CRB p. 56); Strong Back +25 per rank (CRB p. 73). */
-  private static int carryWeight(@NonNull Character character, @Nullable String origin) {
-    Integer fixed = origin == null ? null : FIXED_CARRY_WEIGHT.get(origin);
-    if (fixed != null) {
-      return fixed;
+  private static int carryWeight(@NonNull Character character, @Nullable OriginData origin) {
+    if (origin != null && origin.fixedCarryWeight() != null) {
+      return origin.fixedCarryWeight();
     }
     int perStrength = hasTrait(character, SMALL_FRAME) ? 5 : 10;
     return CARRY_BASE + perStrength * character.attributeValue(Attribute.STRENGTH)
@@ -132,20 +111,20 @@ final class DerivedStatsCalculator {
     return Resistance.of(perkRank(character, TOUGHNESS) + barbarian);
   }
 
-  /** Rad Resistance +1 per rank (CRB p. 70); origin immunity or Child of Atom base DR 1. */
+  /** Rad Resistance +1 per rank (CRB p. 70); origin immunity or base DR (Child of Atom). */
   private static @NonNull Resistance radiationResistance(@NonNull Character character,
-      @Nullable String origin) {
-    if (isRadiationAndPoisonImmune(origin) || GHOUL.equals(origin)) {
+      @Nullable OriginData origin) {
+    if (origin != null && origin.radiationImmune()) {
       return Resistance.IMMUNITY;
     }
-    int base = CHILD_OF_ATOM.equals(origin) ? 1 : 0;
+    int base = origin == null ? 0 : origin.baseRadiationDr();
     return Resistance.of(base + perkRank(character, RAD_RESISTANCE));
   }
 
   /** Snakeater +2 (CRB p. 72); origin immunity. */
   private static @NonNull Resistance poisonResistance(@NonNull Character character,
-      @Nullable String origin) {
-    if (isRadiationAndPoisonImmune(origin)) {
+      @Nullable OriginData origin) {
+    if (origin != null && origin.poisonImmune()) {
       return Resistance.IMMUNITY;
     }
     return Resistance.of(SNAKEATER_POISON_DR * perkRank(character, SNAKEATER));
@@ -162,13 +141,9 @@ final class DerivedStatsCalculator {
     return strength >= 7 ? 1 : 0;
   }
 
-  private static boolean isRadiationAndPoisonImmune(@Nullable String origin) {
-    return origin != null && RADIATION_AND_POISON_IMMUNE.contains(origin);
-  }
-
-  private static @Nullable String originId(@NonNull Character character) {
+  private static @Nullable OriginData originData(@NonNull Character character) {
     CatalogRef origin = character.getOrigin();
-    return origin == null ? null : origin.id();
+    return origin == null ? null : OriginCatalog.byId(origin.id()).orElse(null);
   }
 
   private static int perkRank(@NonNull Character character, @NonNull String perkId) {

@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.persistence;
 
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -13,9 +14,12 @@ import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /** Converts between the character model and the v3 save-file records. */
@@ -52,6 +56,7 @@ final class CharacterMapper {
         character.getLevel(),
         character.getXp(),
         character.isCreationComplete(),
+        character.getEnabledBooks().stream().map(Book::name).toList(),
         allocation,
         skills,
         traits,
@@ -104,6 +109,7 @@ final class CharacterMapper {
           data.level(),
           data.xp(),
           data.creationComplete(),
+          books(data.books()),
           allocation,
           skills,
           traits,
@@ -118,6 +124,22 @@ final class CharacterMapper {
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
+  }
+
+  /** Enabled books; a file without the field (written before it existed) enables all books. */
+  private static @NonNull Set<Book> books(@Nullable List<String> codes) throws SaveFormatException {
+    if (codes == null) {
+      return EnumSet.allOf(Book.class);
+    }
+    Set<Book> books = EnumSet.noneOf(Book.class);
+    for (String code : codes) {
+      try {
+        books.add(Book.valueOf(code));
+      } catch (IllegalArgumentException e) {
+        throw new SaveFormatException("Unknown book: " + code, e);
+      }
+    }
+    return books;
   }
 
   private static CatalogRefData toData(CatalogRef ref) {

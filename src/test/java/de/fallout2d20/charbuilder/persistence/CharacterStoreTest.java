@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -20,6 +21,7 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.EnumSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -112,6 +114,42 @@ class CharacterStoreTest {
   private void assertUnreadable(Path file, ObjectNode content) throws IOException {
     Files.writeString(file, content.toString());
     assertThrows(SaveFormatException.class, () -> store.load(file));
+  }
+
+  /** CRB is always enabled, so a file listing only WOA loads (and saves) as CRB + WOA. */
+  @Test
+  void roundTripsEnabledBooks() throws Exception {
+    Path file = dir.resolve("books.json");
+    store.save(Character.createNew(), file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    assertEquals("[\"CRB\",\"WOA\",\"WG\"]", node.get("books").toString());
+
+    node.putArray("books").add("WOA");
+    Files.writeString(file, node.toString());
+    Character loaded = store.load(file).character();
+    assertEquals(EnumSet.of(Book.CRB, Book.WOA), loaded.getEnabledBooks());
+    store.save(loaded, file);
+    assertEquals("[\"CRB\",\"WOA\"]", JSON.readTree(file.toFile()).get("books").toString());
+  }
+
+  /** Files written before the books field existed enable all books. */
+  @Test
+  void enablesAllBooksWhenTheFieldIsMissing() throws Exception {
+    Path file = dir.resolve("old.json");
+    store.save(Character.createNew(), file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    node.remove("books");
+    Files.writeString(file, node.toString());
+    assertEquals(EnumSet.allOf(Book.class), store.load(file).character().getEnabledBooks());
+  }
+
+  @Test
+  void rejectsUnknownBooks() throws Exception {
+    Path file = dir.resolve("unknown-book.json");
+    store.save(Character.createNew(), file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    node.putArray("books").add("SG");
+    assertUnreadable(file, node);
   }
 
   @Test

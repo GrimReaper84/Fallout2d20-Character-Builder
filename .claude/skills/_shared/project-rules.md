@@ -161,8 +161,8 @@ This section grows with the project. Until a pattern exists in the code, the ent
 
 | Task | Model |
 |---|---|
-| Catalog entry | planned: `record XData(...)` with `id`, `name`, `source` (book + page), loaded from JSON |
-| Catalog loader | planned: one loader per catalog with a cached, immutable result; path constant in one place |
+| Catalog entry | `catalog.origin.OriginData`: immutable record with `id`, `name`, `sources` (list of `catalog.Source` = `Book` + printed page) and structured effect fields; validated in the compact constructor; JSON fields marked `@JsonProperty(required = true)` |
+| Catalog loader | `catalog.origin.OriginCatalog`: static class, the only place its catalog is loaded (static field, loaded on first use), lookups `all()`/`byId()`/`available(books)`; reads via `catalog.CatalogReader.readList` (fails loudly on broken data); new catalog package needs `opens … to com.fasterxml.jackson.databind` |
 | Character instance | planned: class referencing its `XData` plus mutable state (rank, choices, equipped). Until a catalog exists, selections reference it via `CatalogRef` (id + legacy name), e.g. `PerkSelection`, `TraitSelection` |
 | Character aggregate | `model.character.Character`: stores parts (allocation, `SkillState`, `LegacyBaseline`), one computing method per value (`attributeValue`, `skillRank`) – extend these methods, do not add parallel ones |
 | Persistence | `persistence.CharacterStore` + DTO records (`CharacterData` …) + `CharacterMapper` (only place knowing model and DTOs); new fields: DTO record field + mapper both ways + round-trip test in `CharacterStoreTest` |

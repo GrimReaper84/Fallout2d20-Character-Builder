@@ -1,5 +1,9 @@
 package de.fallout2d20.charbuilder.view;
 
+import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -11,6 +15,7 @@ import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
@@ -49,11 +54,14 @@ final class CharacterOverview {
     pane.add(name, "span 3");
     pane.add(new Label("Origin"));
     CatalogRef origin = character.getOrigin();
-    pane.add(origin == null ? new Label("Not chosen") : reference(origin), "span 3");
+    pane.add(origin == null ? new Label("Not chosen") : origin(origin), "span 3");
     pane.add(new Label("Level"));
     pane.add(new Label(Integer.toString(character.getLevel())));
     pane.add(new Label("XP"));
     pane.add(new Label(Long.toString(character.getXp())));
+    pane.add(new Label("Books"));
+    pane.add(new Label(character.getEnabledBooks().stream().map(Book::name)
+        .collect(Collectors.joining(", "))), "span 3");
 
     heading(pane, "S.P.E.C.I.A.L.");
     for (Attribute attribute : Attribute.values()) {
@@ -151,6 +159,19 @@ final class CharacterOverview {
     label.setTooltip(new Tooltip(tooltip));
     pane.add(label);
     pane.add(new Label(resistance.toString()));
+  }
+
+  /** Origin resolved from the catalog (name, sources and trait summary), else the plain reference. */
+  private static @NonNull Label origin(@NonNull CatalogRef ref) {
+    Optional<OriginData> origin = OriginCatalog.byId(ref.id());
+    if (origin.isEmpty()) {
+      return reference(ref);
+    }
+    Label label = new Label(origin.get().name());
+    String sources = origin.get().sources().stream().map(Source::toString)
+        .collect(Collectors.joining(", "));
+    label.setTooltip(new Tooltip(sources + " – " + origin.get().traitSummary()));
+    return label;
   }
 
   private static Label reference(CatalogRef ref) {

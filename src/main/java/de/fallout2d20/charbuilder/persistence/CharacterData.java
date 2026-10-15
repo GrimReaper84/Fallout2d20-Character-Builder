@@ -8,7 +8,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Root of the save format {@code schemaVersion: 3}. Maps are keyed by attribute and skill ids;
- * all 7 attributes and 17 skills are always written.
+ * all 7 attributes and 17 skills are always written. {@code books} lists the enabled book codes
+ * ({@code CRB}, {@code WOA}, {@code WG}); files written before it existed enable all books.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CharacterData(
@@ -18,6 +19,7 @@ public record CharacterData(
     int level,
     long xp,
     boolean creationComplete,
+    @Nullable List<String> books,
     @JsonProperty(required = true) Map<String, Integer> attributeAllocation,
     @JsonProperty(required = true) Map<String, SkillData> skills,
     @Nullable List<TraitData> traits,
