@@ -3,7 +3,10 @@ package de.fallout2d20.charbuilder.catalog.origin;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.model.character.Attribute;
+import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -11,9 +14,9 @@ import org.jspecify.annotations.Nullable;
 /**
  * One character origin from the catalog (CRB p. 51 ff., WOA p. 18 ff., WG p. 10 ff.).
  *
- * <p>Only identity and the effects already used by the application are modeled; the creation rules
- * of an origin (attribute modifiers and limits, Tag skills, trait lists, equipment packs) follow with
- * the origin feature.
+ * <p>Besides identity, it holds the effects on derived statistics and the creation rules of the
+ * origin. Equipment packs (incl. Mister Handy arm attachments and Protectron robot mods) are not part
+ * of it. Optional JSON fields default to "no rule".
  *
  * @param id stable catalog id, referenced by save files
  * @param name name as printed in the book
@@ -27,6 +30,21 @@ import org.jspecify.annotations.Nullable;
  * @param radiationImmune immune to radiation damage (e.g. Super Mutant CRB p. 53, Ghoul CRB p. 52)
  * @param poisonImmune immune to poison damage (e.g. Super Mutant CRB p. 53)
  * @param baseRadiationDr innate radiation Damage Resistance (Child of Atom 1, WOA p. 25)
+ * @param attributeModifiers change of the starting attribute value (Super Mutant CRB p. 53, Nightkin
+ *     WG p. 14: STR and END +2)
+ * @param attributeMaximums attribute maximums that differ from the general maximum of 10 (CRB p. 58)
+ * @param skillRankCap highest rank any skill may reach, if lower than the general 6 (Super Mutant,
+ *     Nightkin: 4)
+ * @param fixedTagSkill skill the origin tags in addition to the three free Tag skills (Ghoul:
+ *     Survival, CRB p. 52 – read as an additional Tag skill, user decision)
+ * @param extraTagSkill additional Tag skill the player chooses (Brotherhood Initiate CRB p. 51,
+ *     Vault Dweller CRB p. 57, Generation 3 Synth WOA p. 19, Brotherhood Outcast WG p. 12)
+ * @param traitLists ids of the trait lists the origin offers; the character takes two traits from
+ *     one list, or one trait plus one extra perk (Survivor CRB p. 56, Tribal WG p. 15)
+ * @param extraPerks perks granted in addition at level 1 (Child of Atom 1, WOA p. 25)
+ * @param pincerOptional whether the character may go without a pincer (Mister Handy, CRB p. 55)
+ * @param purposeSuggestions suggested purposes; non-empty means the origin requires a purpose
+ *     (Protectron, WOA p. 21)
  */
 public record OriginData(
     @JsonProperty(required = true) @NonNull String id,
@@ -38,7 +56,19 @@ public record OriginData(
     boolean robot,
     boolean radiationImmune,
     boolean poisonImmune,
-    int baseRadiationDr) {
+    int baseRadiationDr,
+    @NonNull Map<Attribute, Integer> attributeModifiers,
+    @NonNull Map<Attribute, Integer> attributeMaximums,
+    @Nullable Integer skillRankCap,
+    @Nullable Skill fixedTagSkill,
+    @Nullable ExtraTagSkill extraTagSkill,
+    @NonNull List<String> traitLists,
+    int extraPerks,
+    boolean pincerOptional,
+    @NonNull List<String> purposeSuggestions) {
+
+  /** CRB p. 58: no attribute may exceed 10 unless the origin changes the maximum. */
+  public static final int DEFAULT_ATTRIBUTE_MAXIMUM = 10;
 
   public OriginData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || traitSummary == null
@@ -49,6 +79,28 @@ public record OriginData(
       throw new IllegalArgumentException("Invalid effect values for origin " + id);
     }
     sources = List.copyOf(sources);
+    attributeModifiers = attributeModifiers == null ? Map.of() : Map.copyOf(attributeModifiers);
+    attributeMaximums = attributeMaximums == null ? Map.of() : Map.copyOf(attributeMaximums);
+    traitLists = traitLists == null ? List.of() : List.copyOf(traitLists);
+    purposeSuggestions = purposeSuggestions == null ? List.of() : List.copyOf(purposeSuggestions);
+    if (attributeModifiers.values().stream().anyMatch(value -> value < -2 || value > 2)
+        || attributeMaximums.values().stream().anyMatch(value -> value < 1 || value > 12)
+        || (skillRankCap != null && (skillRankCap < 1 || skillRankCap > 6)) || extraPerks < 0) {
+      throw new IllegalArgumentException("Invalid creation rules for origin " + id);
+    }
+    if (fixedTagSkill != null && extraTagSkill != null && extraTagSkill.options().contains(fixedTagSkill)) {
+      throw new IllegalArgumentException("Fixed Tag skill must not be an extra Tag option: " + id);
+    }
+  }
+
+  /** Starting attribute change granted by this origin (0 if none). */
+  public int attributeModifier(@NonNull Attribute attribute) {
+    return attributeModifiers.getOrDefault(attribute, 0);
+  }
+
+  /** Highest value the attribute may have for this origin (CRB p. 58: 10 unless changed). */
+  public int attributeMaximum(@NonNull Attribute attribute) {
+    return attributeMaximums.getOrDefault(attribute, DEFAULT_ATTRIBUTE_MAXIMUM);
   }
 
   /** Whether one of the books describing this origin is enabled. */

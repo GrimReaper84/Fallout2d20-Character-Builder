@@ -2,11 +2,12 @@ package de.fallout2d20.charbuilder.catalog.origin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.model.character.Attribute;
+import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -85,17 +86,46 @@ class OriginCatalogTest {
     assertEquals(1, OriginCatalog.byId("child-of-atom").orElseThrow().baseRadiationDr());
   }
 
+  /** Creation rules: CRB p. 51–58, WOA p. 19–25, WG p. 12–15. */
   @Test
-  void rejectsIncompleteOrInvalidEntries() {
-    List<Source> crb = List.of(new Source(Book.CRB, 56));
-    assertThrows(IllegalArgumentException.class,
-        () -> new OriginData("x", "X", List.of(), null, "Summary", null, false, false, false, 0));
-    assertThrows(IllegalArgumentException.class,
-        () -> new OriginData("x", "X", crb, null, " ", null, false, false, false, 0));
-    assertThrows(IllegalArgumentException.class,
-        () -> new OriginData("x", "X", crb, null, "Summary", 0, false, false, false, 0));
-    assertThrows(IllegalArgumentException.class,
-        () -> new OriginData("x", "X", crb, null, "Summary", null, false, false, false, -1));
+  void creationFieldsMatchTheBooks() {
+    Map<Attribute, Integer> mutantModifiers = Map.of(Attribute.STRENGTH, 2, Attribute.ENDURANCE, 2);
+    for (String id : List.of("super-mutant", "nightkin")) {
+      OriginData mutant = origin(id);
+      assertEquals(mutantModifiers, mutant.attributeModifiers(), id);
+      assertEquals(12, mutant.attributeMaximum(Attribute.STRENGTH), id);
+      assertEquals(12, mutant.attributeMaximum(Attribute.ENDURANCE), id);
+      assertEquals(4, mutant.skillRankCap(), id);
+    }
+    assertEquals(6, origin("super-mutant").attributeMaximum(Attribute.INTELLIGENCE));
+    assertEquals(6, origin("super-mutant").attributeMaximum(Attribute.CHARISMA));
+    assertEquals(8, origin("nightkin").attributeMaximum(Attribute.INTELLIGENCE));
+    assertEquals(8, origin("nightkin").attributeMaximum(Attribute.CHARISMA));
+    assertEquals(Set.of("super-mutant", "nightkin"),
+        idsWhere(origin -> !origin.attributeModifiers().isEmpty() || origin.skillRankCap() != null));
+
+    List<Skill> scienceTags = List.of(Skill.ENERGY_WEAPONS, Skill.SCIENCE, Skill.REPAIR);
+    assertEquals(scienceTags, origin("brotherhood-initiate").extraTagSkill().options());
+    assertEquals(scienceTags, origin("brotherhood-outcast").extraTagSkill().options());
+    assertEquals(List.of(), origin("vault-dweller").extraTagSkill().options());
+    assertEquals(List.of(), origin("generation-3-synth").extraTagSkill().options());
+    assertEquals(Set.of("brotherhood-initiate", "brotherhood-outcast", "vault-dweller",
+        "generation-3-synth"), idsWhere(origin -> origin.extraTagSkill() != null));
+    assertEquals(Skill.SURVIVAL, origin("ghoul").fixedTagSkill());
+    assertEquals(Set.of("ghoul"), idsWhere(origin -> origin.fixedTagSkill() != null));
+
+    assertEquals(List.of("survivor"), origin("survivor").traitLists());
+    assertEquals(List.of("tribal", "survivor"), origin("tribal").traitLists());
+    assertEquals(Set.of("survivor", "tribal"), idsWhere(origin -> !origin.traitLists().isEmpty()));
+    assertEquals(Set.of("child-of-atom"), idsWhere(origin -> origin.extraPerks() == 1));
+    assertEquals(Set.of("mister-handy"), idsWhere(OriginData::pincerOptional));
+    assertEquals(List.of("Fire Brigadier", "Law Enforcer", "Construction Worker", "Medical Responder"),
+        origin("protectron").purposeSuggestions());
+    assertEquals(Set.of("protectron"), idsWhere(origin -> !origin.purposeSuggestions().isEmpty()));
+  }
+
+  private static OriginData origin(String id) {
+    return OriginCatalog.byId(id).orElseThrow();
   }
 
   private static Set<String> ids(List<OriginData> origins) {

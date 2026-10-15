@@ -1,9 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
-import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
@@ -44,7 +42,7 @@ final class DerivedStatsCalculator {
   private DerivedStatsCalculator() {}
 
   static @NonNull DerivedStats calculate(@NonNull Character character) {
-    OriginData origin = originData(character);
+    OriginData origin = character.getOriginData().orElse(null);
     return new DerivedStats(
         maxHp(character),
         initiative(character),
@@ -139,11 +137,6 @@ final class DerivedStatsCalculator {
       return 2;
     }
     return strength >= 7 ? 1 : 0;
-  }
-
-  private static @Nullable OriginData originData(@NonNull Character character) {
-    CatalogRef origin = character.getOrigin();
-    return origin == null ? null : OriginCatalog.byId(origin.id()).orElse(null);
   }
 
   private static int perkRank(@NonNull Character character, @NonNull String perkId) {

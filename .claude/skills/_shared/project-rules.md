@@ -116,8 +116,9 @@ text verbatim (copyright, public repository); `docs/` analyses may quote short p
 - **No half features.** Rather leave out a category entirely than offer it without its core mechanic.
 - **Legacy saves must keep loading.** Unversioned and `schemaVersion: 2` files are imported by the
   legacy importer; every feature that touches saved data states how its legacy fields map. Unknown
-  names are skipped and reported, never crash the import. Changes to the new `schemaVersion: 3`
-  format are allowed until the first release but must be mentioned in the result.
+  names are skipped and reported, never crash the import. The `schemaVersion: 3`
+  format may change freely until the first release (user, 2026-10-15): no v3 file exists in use
+  yet, so no compatibility for earlier v3 drafts is needed; just mention format changes in the result.
 - **Derived values are computed, never stored** (HP, initiative, defense, carry weight, melee bonus,
   DR). Stored legacy values are only compared on import.
 - Open follow-ups and deferred items go into `docs/feature_checklist.md`.
@@ -133,6 +134,10 @@ text verbatim (copyright, public repository); `docs/` analyses may quote short p
 - **JPMS:** a new package with FXML controllers needs `opens <pkg> to javafx.fxml`; packages read or
   written by Jackson need `opens <pkg> to com.fasterxml.jackson.databind`. Exports only for what other
   modules really need.
+  This includes packages of types Jackson only reads *inside* a record (enums such as `Skill`,
+  nested records). Tests run on the classpath and cannot see a missing `opens`;
+  `ModuleOpensTest` checks it from the Jackson roots – add new top-level Jackson types (new
+  catalogs, new save roots) to its `JACKSON_ROOTS`.
 - **Explicit nullness annotations (user preference):** every reference type in a signature is
   annotated explicitly with jspecify `@NonNull` or `@Nullable`, although non-null is NullAway's
   default, so the nullness is visible at a glance. Applies to parameters, return types, fields and
@@ -165,6 +170,8 @@ This section grows with the project. Until a pattern exists in the code, the ent
 | Catalog loader | `catalog.origin.OriginCatalog`: static class, the only place its catalog is loaded (static field, loaded on first use), lookups `all()`/`byId()`/`available(books)`; reads via `catalog.CatalogReader.readList` (fails loudly on broken data); new catalog package needs `opens … to com.fasterxml.jackson.databind` |
 | Character instance | planned: class referencing its `XData` plus mutable state (rank, choices, equipped). Until a catalog exists, selections reference it via `CatalogRef` (id + legacy name), e.g. `PerkSelection`, `TraitSelection` |
 | Character aggregate | `model.character.Character`: stores parts (allocation, `SkillState`, `LegacyBaseline`), one computing method per value (`attributeValue`, `skillRank`) – extend these methods, do not add parallel ones |
+| Creation rules | `model.character.creation.OriginRules.problems(character)` → `List<CreationProblem>` (soft hints, creation mode only, never block editing/saving); one rules class per area, B8 collects them. Creation edits go through `Character` mutators that throw `IllegalStateException` once creation is complete |
+| Editable overview section | `view.OriginSection`: controls call the model, then `onChanged`; `MainWindowController.onChanged` marks dirty and rebuilds the overview via `Platform.runLater`. Choice controls use `view.DisplayConverter` |
 | Persistence | `persistence.CharacterStore` + DTO records (`CharacterData` …) + `CharacterMapper` (only place knowing model and DTOs); new fields: DTO record field + mapper both ways + round-trip test in `CharacterStoreTest` |
 | Derived values | `model.character.derived.DerivedStats.of(character)`: computed on every call, never stored; perk/trait/origin effects by id only in `DerivedStatsCalculator` (until catalogs exist) |
 | Legacy import | `persistence.legacy.LegacyCharacterImporter`: tree-model import, `ImportWarning` instead of silent drops, unported fields stay in `LegacyImport.payload`; a feature that ports a legacy field takes it out of the payload |

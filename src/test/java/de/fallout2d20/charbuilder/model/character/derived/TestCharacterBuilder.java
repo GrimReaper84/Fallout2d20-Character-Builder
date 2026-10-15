@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
@@ -14,7 +15,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-/** Builds new (not imported) characters for tests; attributes are given as effective values. */
+/**
+ * Builds new (not imported) characters for tests; attributes are given as effective values for
+ * origins without attribute modifiers.
+ */
 final class TestCharacterBuilder {
   private String origin = "survivor";
   private int level = 1;
@@ -48,7 +52,7 @@ final class TestCharacterBuilder {
   }
 
   Character build() {
-    return new Character("Test", CatalogRef.of(origin), level, 0, false,
+    return new Character("Test", CatalogRef.of(origin), OriginChoices.NONE, level, 0, false,
         EnumSet.allOf(Book.class), allocation, Map.of(), traits, perks, Progression.NONE, Vitals.FULL,
         null, null);
   }

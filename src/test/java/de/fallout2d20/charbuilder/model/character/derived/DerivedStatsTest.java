@@ -7,6 +7,7 @@ import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -124,6 +125,16 @@ class DerivedStatsTest {
     assertEquals(Resistance.of(2), stats.poison());
   }
 
+  /** CRB p. 53: the STR/END +2 of a new Super Mutant feeds HP, carry weight and melee bonus. */
+  @Test
+  void superMutantModifiersReachTheDerivedStatistics() {
+    Character mutant = builder().origin("super-mutant").build();
+    DerivedStats stats = DerivedStats.of(mutant);
+    assertEquals(7 + 5, stats.maxHp());
+    assertEquals(150 + 70, stats.carryWeight());
+    assertEquals(1, stats.meleeBonusDice());
+  }
+
   /** CRB p. 53, 55; WOA p. 19, 21; WG p. 11, 14: immune to radiation and poison. */
   @ParameterizedTest
   @CsvSource({"super-mutant", "mister-handy", "generation-3-synth", "protectron", "assaultron",
@@ -167,7 +178,7 @@ class DerivedStatsTest {
     for (Skill skill : Skill.values()) {
       ranks.put(skill, 0);
     }
-    Character character = new Character("Imported", CatalogRef.of("survivor"), 3, 300, true,
+    Character character = new Character("Imported", CatalogRef.of("survivor"), OriginChoices.NONE, 3, 300, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(),
         List.of(new TraitSelection(CatalogRef.fromLegacyName("Small Frame"), true, List.of())),
         List.of(new PerkSelection(CatalogRef.fromLegacyName("Life Giver"), 2, 2, List.of(), List.of())),

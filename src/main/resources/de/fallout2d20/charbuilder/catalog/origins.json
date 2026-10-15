@@ -2,83 +2,94 @@
   {
     "id": "brotherhood-initiate",
     "name": "Brotherhood Initiate",
-    "sources": [{ "book": "CRB", "page": 51 }],
+    "sources": [{"book": "CRB", "page": 51}],
     "traitName": "The Chain that Binds",
-    "traitSummary": "One extra Tag skill (Energy Weapons, Science or Repair); you must follow your superiors' orders or be cast out of the Brotherhood."
+    "traitSummary": "One extra Tag skill (Energy Weapons, Science or Repair); you must follow your superiors' orders or be cast out of the Brotherhood.",
+    "extraTagSkill": {"options": ["ENERGY_WEAPONS", "SCIENCE", "REPAIR"]}
   },
   {
     "id": "ghoul",
     "name": "Ghoul",
-    "sources": [{ "book": "CRB", "page": 52 }],
+    "sources": [{"book": "CRB", "page": 52}],
     "traitName": "Necrotic Post-Human",
     "traitSummary": "Immune to radiation damage and healed by it; Survival becomes a Tag skill; some people distrust ghouls.",
-    "radiationImmune": true
+    "radiationImmune": true,
+    "fixedTagSkill": "SURVIVAL"
   },
   {
     "id": "super-mutant",
     "name": "Super Mutant",
-    "sources": [{ "book": "CRB", "page": 53 }],
+    "sources": [{"book": "CRB", "page": 53}],
     "traitName": "Forced Evolution",
     "traitSummary": "+2 STR and END with a higher maximum, lower maximum INT and CHA, at most 4 ranks per skill; immune to radiation and poison damage.",
     "radiationImmune": true,
-    "poisonImmune": true
+    "poisonImmune": true,
+    "attributeModifiers": {"STRENGTH": 2, "ENDURANCE": 2},
+    "attributeMaximums": {"STRENGTH": 12, "ENDURANCE": 12, "INTELLIGENCE": 6, "CHARISMA": 6},
+    "skillRankCap": 4
   },
   {
     "id": "mister-handy",
     "name": "Mister Handy",
-    "sources": [{ "book": "CRB", "page": 54 }],
+    "sources": [{"book": "CRB", "page": 54}],
     "traitName": "Mister Handy Robot",
     "traitSummary": "Hovering robot with all-round senses and three arm attachments; immune to radiation and poison, no chems, repairs instead of healing, fixed carry weight of 150 lbs.",
     "fixedCarryWeight": 150,
     "robot": true,
     "radiationImmune": true,
-    "poisonImmune": true
+    "poisonImmune": true,
+    "pincerOptional": true
   },
   {
     "id": "survivor",
     "name": "Survivor",
-    "sources": [{ "book": "CRB", "page": 56 }],
-    "traitSummary": "Pick two Survivor traits, or one trait and one extra perk."
+    "sources": [{"book": "CRB", "page": 56}],
+    "traitSummary": "Pick two Survivor traits, or one trait and one extra perk.",
+    "traitLists": ["survivor"]
   },
   {
     "id": "vault-dweller",
     "name": "Vault Dweller",
-    "sources": [{ "book": "CRB", "page": 57 }],
+    "sources": [{"book": "CRB", "page": 57}],
     "traitName": "Vault Kid",
-    "traitSummary": "Easier END tests against disease and one extra Tag skill; the GM may bring in complications from your Vault's experiment, which refund a Luck point."
+    "traitSummary": "Easier END tests against disease and one extra Tag skill; the GM may bring in complications from your Vault's experiment, which refund a Luck point.",
+    "extraTagSkill": {"options": []}
   },
   {
     "id": "generation-3-synth",
     "name": "Generation 3 Synth",
-    "sources": [{ "book": "WOA", "page": 18 }],
+    "sources": [{"book": "WOA", "page": 18}],
     "traitName": "More Than Human",
     "traitSummary": "One extra Tag skill; no need for food, drink or sleep; immune to radiation, poison and disease; distrusted by those who know, and bound by an Institute recall code.",
     "radiationImmune": true,
-    "poisonImmune": true
+    "poisonImmune": true,
+    "extraTagSkill": {"options": []}
   },
   {
     "id": "protectron",
     "name": "Protectron",
-    "sources": [{ "book": "WOA", "page": 20 }],
+    "sources": [{"book": "WOA", "page": 20}],
     "traitName": "Protect Or Destroy",
     "traitSummary": "Robot built for a purpose: a reroll against environmental hazards once per scene, immune to radiation, poison and disease, repairs instead of healing, up to two robot mods, fixed carry weight of 225 lbs.",
     "fixedCarryWeight": 225,
     "robot": true,
     "radiationImmune": true,
-    "poisonImmune": true
+    "poisonImmune": true,
+    "purposeSuggestions": ["Fire Brigadier", "Law Enforcer", "Construction Worker", "Medical Responder"]
   },
   {
     "id": "child-of-atom",
     "name": "Child of Atom",
-    "sources": [{ "book": "WOA", "page": 24 }, { "book": "WG", "page": 13 }],
+    "sources": [{"book": "WOA", "page": 24}, {"book": "WG", "page": 13}],
     "traitName": "Rad Sponge",
     "traitSummary": "One extra perk at level 1 and a base radiation DR of 1; absorbs radiation for nearby allies and stores up to 5 Radiation Points to boost melee damage.",
-    "baseRadiationDr": 1
+    "baseRadiationDr": 1,
+    "extraPerks": 1
   },
   {
     "id": "assaultron",
     "name": "Assaultron",
-    "sources": [{ "book": "WG", "page": 10 }],
+    "sources": [{"book": "WG", "page": 10}],
     "traitName": "Designed for the Frontline",
     "traitSummary": "Combat robot with clawed hands, a head laser and a self-destruct option; immune to radiation, poison and disease, repairs instead of healing, fixed carry weight of 150 lbs.",
     "fixedCarryWeight": 150,
@@ -89,23 +100,28 @@
   {
     "id": "brotherhood-outcast",
     "name": "Brotherhood Outcast",
-    "sources": [{ "book": "WG", "page": 12 }],
+    "sources": [{"book": "WG", "page": 12}],
     "traitName": "The Chain that Breaks",
-    "traitSummary": "One extra Tag skill (Energy Weapons, Science or Repair) and extra junk and loot at the start; you left the Brotherhood to follow your own goals."
+    "traitSummary": "One extra Tag skill (Energy Weapons, Science or Repair) and extra junk and loot at the start; you left the Brotherhood to follow your own goals.",
+    "extraTagSkill": {"options": ["ENERGY_WEAPONS", "SCIENCE", "REPAIR"]}
   },
   {
     "id": "nightkin",
     "name": "Nightkin",
-    "sources": [{ "book": "WG", "page": 14 }],
+    "sources": [{"book": "WG", "page": 14}],
     "traitName": "Stealth Boy Addict",
     "traitSummary": "Super mutant body (+2 STR and END, limited INT and CHA, at most 4 ranks per skill, immune to radiation and poison) with a risk of Stealth Boy addiction.",
     "radiationImmune": true,
-    "poisonImmune": true
+    "poisonImmune": true,
+    "attributeModifiers": {"STRENGTH": 2, "ENDURANCE": 2},
+    "attributeMaximums": {"STRENGTH": 12, "ENDURANCE": 12, "INTELLIGENCE": 8, "CHARISMA": 8},
+    "skillRankCap": 4
   },
   {
     "id": "tribal",
     "name": "Tribal",
-    "sources": [{ "book": "WG", "page": 15 }],
-    "traitSummary": "Pick two Tribal or two Survivor traits, or one trait and one extra perk."
+    "sources": [{"book": "WG", "page": 15}],
+    "traitSummary": "Pick two Tribal or two Survivor traits, or one trait and one extra perk.",
+    "traitLists": ["tribal", "survivor"]
   }
 ]

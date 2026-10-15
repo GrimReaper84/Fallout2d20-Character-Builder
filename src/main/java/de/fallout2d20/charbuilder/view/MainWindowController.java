@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -165,15 +166,26 @@ public class MainWindowController {
     character = newCharacter;
     file = newFile;
     dirty = false;
-    overviewPane.setContent(CharacterOverview.build(newCharacter, this::onNameChanged));
+    showOverview();
     updateTitle();
   }
 
-  private void onNameChanged(String name) {
+  private void showOverview() {
     if (character == null) {
       return;
     }
-    character.setName(name);
+    overviewPane.setContent(CharacterOverview.build(character, this::onEdited, this::onChanged));
+  }
+
+  /** A creation edit changed the character: mark it unsaved and rebuild the overview afterwards. */
+  private void onChanged() {
+    dirty = true;
+    updateTitle();
+    Platform.runLater(this::showOverview);
+  }
+
+  /** An edit that needs no rebuild (typed text): only mark the character unsaved. */
+  private void onEdited() {
     dirty = true;
     updateTitle();
   }

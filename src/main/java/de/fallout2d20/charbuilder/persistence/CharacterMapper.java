@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -53,6 +54,7 @@ final class CharacterMapper {
         SCHEMA_VERSION,
         character.getName(),
         origin == null ? null : toData(origin),
+        toData(character.getOriginChoices()),
         character.getLevel(),
         character.getXp(),
         character.isCreationComplete(),
@@ -106,6 +108,7 @@ final class CharacterMapper {
       return new Character(
           name == null ? "" : name,
           origin == null ? null : toModel(origin),
+          toModel(data.originChoices()),
           data.level(),
           data.xp(),
           data.creationComplete(),
@@ -140,6 +143,25 @@ final class CharacterMapper {
       }
     }
     return books;
+  }
+
+  /** Omitted from the file when nothing is chosen. */
+  private static @Nullable OriginChoicesData toData(@NonNull OriginChoices choices) {
+    if (choices.equals(OriginChoices.NONE)) {
+      return null;
+    }
+    Skill tagSkill = choices.tagSkill();
+    return new OriginChoicesData(tagSkill == null ? null : tagSkill.id(), choices.noPincer(),
+        choices.purpose());
+  }
+
+  private static @NonNull OriginChoices toModel(@Nullable OriginChoicesData data)
+      throws SaveFormatException {
+    if (data == null) {
+      return OriginChoices.NONE;
+    }
+    String tagSkill = data.tagSkill();
+    return new OriginChoices(tagSkill == null ? null : skill(tagSkill), data.noPincer(), data.purpose());
   }
 
   private static CatalogRefData toData(CatalogRef ref) {

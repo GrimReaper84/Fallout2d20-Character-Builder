@@ -1,12 +1,15 @@
 package de.fallout2d20.charbuilder.model.character;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -17,6 +20,10 @@ import org.jspecify.annotations.Nullable;
  * <p>Attributes and skills are stored as their parts (base, allocation, ranks), not as effective
  * values, so every value can be traced back. A character imported from a legacy save carries a
  * {@link LegacyBaseline} that replaces base and creation allocation.
+ *
+ * <p>Origin effects (attribute modifiers, origin Tag skills) are applied only to characters without
+ * a legacy baseline: an imported baseline already contains them. Origin and origin choices can only
+ * be changed while creation is not complete.
  */
 public class Character {
 
@@ -28,6 +35,7 @@ public class Character {
 
   private String name;
   private @Nullable CatalogRef origin;
+  private @NonNull OriginChoices originChoices;
   private final int level;
   private final long xp;
   private final boolean creationComplete;
@@ -48,6 +56,7 @@ public class Character {
   public Character(
       String name,
       @Nullable CatalogRef origin,
+      @NonNull OriginChoices originChoices,
       int level,
       long xp,
       boolean creationComplete,
@@ -65,6 +74,7 @@ public class Character {
     }
     this.name = name;
     this.origin = origin;
+    this.originChoices = originChoices;
     this.level = level;
     this.xp = xp;
     this.creationComplete = creationComplete;
@@ -88,22 +98,40 @@ public class Character {
 
   /** A new, empty character at the start of character creation. */
   public static Character createNew() {
-    return new Character("", null, 1, 0, false, EnumSet.allOf(Book.class), Map.of(), Map.of(),
-        List.of(), List.of(),
-        Progression.NONE, Vitals.FULL, null, null);
+    return new Character("", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class),
+        Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null);
   }
 
   /**
-   * Effective attribute value: the base (5, or the legacy baseline value for an imported
-   * character) plus the creation allocation.
+   * Effective attribute value: the base (5 plus the origin modifier, e.g. Super Mutant STR +2,
+   * CRB p. 53; or the legacy baseline value for an imported character) plus the creation allocation.
    *
-   * <p>Origin modifiers, traits (Gifted) and perks (Intense Training) are added here by their
-   * features; they must skip imported traits and the imported ranks of a perk, whose effects are
-   * already part of the legacy baseline.
+   * <p>Traits (Gifted) and perks (Intense Training) are added here by their features; they must skip
+   * imported traits and the imported ranks of a perk, whose effects are already part of the legacy
+   * baseline.
    */
-  public int attributeValue(Attribute attribute) {
-    int base = legacyBaseline != null ? legacyBaseline.attribute(attribute) : ATTRIBUTE_BASE;
-    return base + attributeAllocation(attribute);
+  public int attributeValue(@NonNull Attribute attribute) {
+    if (legacyBaseline != null) {
+      return legacyBaseline.attribute(attribute) + attributeAllocation(attribute);
+    }
+    int modifier = getOriginData().map(data -> data.attributeModifier(attribute)).orElse(0);
+    return ATTRIBUTE_BASE + modifier + attributeAllocation(attribute);
+  }
+
+  /**
+   * Whether the skill is a Tag skill: one of the freely chosen Tag skills, or one granted by the
+   * origin – its fixed Tag skill (Ghoul: Survival, in addition to the three free ones, user reading
+   * of CRB p. 52) or the chosen extra Tag skill (e.g. Vault Kid, CRB p. 57).
+   */
+  public boolean isTagged(@NonNull Skill skill) {
+    if (skillState(skill).tagged()) {
+      return true;
+    }
+    if (legacyBaseline != null) {
+      return false;
+    }
+    return skill == originChoices.tagSkill()
+        || getOriginData().map(data -> data.fixedTagSkill() == skill).orElse(false);
   }
 
   /**
@@ -111,11 +139,11 @@ public class Character {
    * imported character, which already includes the Tag bonus) plus advancement ranks. Rank caps
    * are validated by creation and advancement, not here.
    */
-  public int skillRank(Skill skill) {
+  public int skillRank(@NonNull Skill skill) {
     SkillState state = skillState(skill);
     int start = legacyBaseline != null
         ? legacyBaseline.skillRank(skill)
-        : (state.tagged() ? TAG_SKILL_BONUS : 0) + state.creationRanks();
+        : (isTagged(skill) ? TAG_SKILL_BONUS : 0) + state.creationRanks();
     return start + state.advancementRanks();
   }
 
@@ -133,6 +161,55 @@ public class Character {
 
   public @Nullable CatalogRef getOrigin() {
     return origin;
+  }
+
+  /** The catalog entry of the origin; empty without origin or for an origin outside the catalog. */
+  public @NonNull Optional<OriginData> getOriginData() {
+    return origin == null ? Optional.empty() : OriginCatalog.byId(origin.id());
+  }
+
+  public @NonNull OriginChoices getOriginChoices() {
+    return originChoices;
+  }
+
+  /**
+   * Chooses the origin during creation. Origin choices and traits are reset, because they depend on
+   * the origin (user decision); attribute allocation and free Tag skills are kept. A free Tag on the
+   * new origin's fixed Tag skill is removed, since the origin tags that skill anyway.
+   */
+  public void chooseOrigin(@NonNull CatalogRef newOrigin) {
+    requireCreation();
+    origin = newOrigin;
+    originChoices = OriginChoices.NONE;
+    traits.clear();
+    getOriginData().map(OriginData::fixedTagSkill).ifPresent(skill -> {
+      SkillState state = skillState(skill);
+      skills.put(skill, new SkillState(false, state.creationRanks(), state.advancementRanks()));
+    });
+  }
+
+  /** The additional Tag skill granted by the origin; checked by the creation rules, not here. */
+  public void chooseOriginTagSkill(@Nullable Skill skill) {
+    requireCreation();
+    originChoices = originChoices.withTagSkill(skill);
+  }
+
+  /** Mister Handy without a pincer (CRB p. 55). */
+  public void setNoPincer(boolean noPincer) {
+    requireCreation();
+    originChoices = originChoices.withNoPincer(noPincer);
+  }
+
+  /** Purpose of a Protectron (WOA p. 21); blank means not chosen. */
+  public void setPurpose(@Nullable String purpose) {
+    requireCreation();
+    originChoices = originChoices.withPurpose(purpose == null || purpose.isBlank() ? null : purpose.strip());
+  }
+
+  private void requireCreation() {
+    if (creationComplete) {
+      throw new IllegalStateException("The origin can only be changed during character creation");
+    }
   }
 
   public int getLevel() {

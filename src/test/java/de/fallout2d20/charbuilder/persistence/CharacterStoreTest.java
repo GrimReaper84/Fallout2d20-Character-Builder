@@ -12,7 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
+import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.io.IOException;
 import java.io.InputStream;
@@ -149,6 +151,26 @@ class CharacterStoreTest {
     store.save(Character.createNew(), file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     node.putArray("books").add("SG");
+    assertUnreadable(file, node);
+  }
+
+  @Test
+  void roundTripsOriginChoices() throws Exception {
+    Character character = Character.createNew();
+    Path file = dir.resolve("origin.json");
+    store.save(character, file);
+    assertFalse(JSON.readTree(file.toFile()).has("originChoices"), "omitted when nothing is chosen");
+
+    character.chooseOrigin(CatalogRef.of("vault-dweller"));
+    character.chooseOriginTagSkill(Skill.SNEAK);
+    character.setPurpose("Scout");
+    store.save(character, file);
+    Character loaded = store.load(file).character();
+    assertEquals(new OriginChoices(Skill.SNEAK, false, "Scout"), loaded.getOriginChoices());
+    assertEquals("sneak", JSON.readTree(file.toFile()).get("originChoices").get("tagSkill").asText());
+
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    ((ObjectNode) node.get("originChoices")).put("tagSkill", "hacking");
     assertUnreadable(file, node);
   }
 

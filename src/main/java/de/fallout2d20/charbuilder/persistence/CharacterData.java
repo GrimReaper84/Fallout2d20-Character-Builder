@@ -16,6 +16,7 @@ public record CharacterData(
     @JsonProperty(required = true) int schemaVersion,
     @Nullable String name,
     @Nullable CatalogRefData origin,
+    @Nullable OriginChoicesData originChoices,
     int level,
     long xp,
     boolean creationComplete,

@@ -150,6 +150,31 @@ class LegacyCharacterImporterTest {
     assertTrue(derivedWarnings(importer.importCharacter(root)).isEmpty());
   }
 
+  /** CRB p. 55: the legacy "no pincer" flag becomes an origin choice; attachments stay for B7. */
+  @Test
+  void importsMisterHandyWithoutPincer() throws Exception {
+    ObjectNode root = minimal();
+    root.put("origin", "Mister Handy");
+    ObjectNode options = root.putObject("originOptions");
+    options.put("noPincer", true);
+    options.putArray("attachments").add("Buzz-Saw");
+    Character handy = importer.importCharacter(root).character();
+    assertTrue(handy.getOriginChoices().noPincer());
+    assertEquals("{\"attachments\":[\"Buzz-Saw\"]}",
+        handy.getLegacyImport().payload().get("originOptions").toString());
+
+    root.put("origin", "Survivor");
+    options.removeAll();
+    options.put("noPincer", true);
+    CharacterFile result = importer.importCharacter(root);
+    Character survivor = result.character();
+    assertFalse(survivor.getOriginChoices().noPincer(), "only a Mister Handy can go without pincer");
+    assertFalse(survivor.getLegacyImport().payload().has("originOptions"));
+    assertTrue(hasInfo(result, "originOptions"));
+    assertTrue(result.importReport().warnings().stream()
+        .noneMatch(w -> w.message().contains("Kept for later features")), "nothing was kept");
+  }
+
   @Test
   void keepsOutOfScopeOriginsAsLegacyEntries() throws Exception {
     ObjectNode root = minimal();

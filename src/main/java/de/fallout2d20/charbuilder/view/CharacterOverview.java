@@ -1,13 +1,13 @@
 package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.catalog.Book;
-import de.fallout2d20.charbuilder.catalog.Source;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -16,7 +16,6 @@ import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -27,8 +26,8 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Read-only overview of a character; only the name can be edited. Rebuilt completely whenever
- * another character is shown.
+ * Overview of a character. Only the name and, during creation, the origin choices can be edited;
+ * after every change the overview is rebuilt by the caller, so all values stay current.
  */
 final class CharacterOverview {
 
@@ -44,17 +43,30 @@ final class CharacterOverview {
 
   private CharacterOverview() {}
 
-  static Node build(Character character, Consumer<String> onNameChanged) {
+  /**
+   * @param onEdited called after an edit that needs no rebuild (typed text such as the name)
+   * @param onChanged called after an edit that changes other values; the caller rebuilds the overview
+   */
+  static @NonNull Node build(@NonNull Character character, @NonNull Runnable onEdited,
+      @NonNull Runnable onChanged) {
     MigPane pane = new MigPane("insets 16, gap 8 4, wrap 4", "[right][grow,fill][right][grow,fill]");
 
     TextField name = new TextField(character.getName());
     name.setPromptText("Name");
-    name.textProperty().addListener((obs, old, value) -> onNameChanged.accept(value));
+    name.textProperty().addListener((obs, old, value) -> {
+      character.setName(value);
+      onEdited.run();
+    });
     pane.add(new Label("Name"));
     pane.add(name, "span 3");
-    pane.add(new Label("Origin"));
-    CatalogRef origin = character.getOrigin();
-    pane.add(origin == null ? new Label("Not chosen") : origin(origin), "span 3");
+    if (character.isCreationComplete()) {
+      pane.add(new Label("Origin"));
+      CatalogRef origin = character.getOrigin();
+      pane.add(origin == null ? new Label("Not chosen") : origin(origin), "span 3");
+      addOriginChoices(pane, character.getOriginChoices());
+    } else {
+      OriginSection.addTo(pane, character, onEdited, onChanged);
+    }
     pane.add(new Label("Level"));
     pane.add(new Label(Integer.toString(character.getLevel())));
     pane.add(new Label("XP"));
@@ -91,7 +103,7 @@ final class CharacterOverview {
 
     heading(pane, "Skills");
     for (Skill skill : Skill.values()) {
-      boolean tagged = character.skillState(skill).tagged();
+      boolean tagged = character.isTagged(skill);
       pane.add(new Label((tagged ? "● " : "") + skill.displayName()));
       pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
       pane.add(baselineMarked(Integer.toString(character.skillRank(skill)), character.isLegacyImport()),
@@ -161,6 +173,24 @@ final class CharacterOverview {
     pane.add(new Label(resistance.toString()));
   }
 
+  /** Origin choices of a complete character, as text. */
+  private static void addOriginChoices(@NonNull MigPane pane, @NonNull OriginChoices choices) {
+    Skill tagSkill = choices.tagSkill();
+    if (tagSkill != null) {
+      pane.add(new Label("Extra Tag skill"));
+      pane.add(new Label(tagSkill.displayName()), "span 3");
+    }
+    if (choices.noPincer()) {
+      pane.add(new Label("Pincer"));
+      pane.add(new Label("No pincer"), "span 3");
+    }
+    String purpose = choices.purpose();
+    if (purpose != null) {
+      pane.add(new Label("Purpose"));
+      pane.add(new Label(purpose), "span 3");
+    }
+  }
+
   /** Origin resolved from the catalog (name, sources and trait summary), else the plain reference. */
   private static @NonNull Label origin(@NonNull CatalogRef ref) {
     Optional<OriginData> origin = OriginCatalog.byId(ref.id());
@@ -168,9 +198,7 @@ final class CharacterOverview {
       return reference(ref);
     }
     Label label = new Label(origin.get().name());
-    String sources = origin.get().sources().stream().map(Source::toString)
-        .collect(Collectors.joining(", "));
-    label.setTooltip(new Tooltip(sources + " – " + origin.get().traitSummary()));
+    label.setTooltip(new Tooltip(OriginSection.describe(origin.get())));
     return label;
   }
 

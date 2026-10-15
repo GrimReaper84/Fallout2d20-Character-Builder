@@ -10,6 +10,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Progression;
@@ -50,6 +51,9 @@ final class LegacyImportRun {
   private static final String TRAITS = "traits";
   private static final String VITALS = "vitals";
   private static final String DERIVED = "derived";
+  private static final String ORIGIN_OPTIONS = "originOptions";
+  private static final String NO_PINCER = "noPincer";
+  private static final String MISTER_HANDY = "mister-handy";
   private static final Set<String> CONSUMED_FIELDS = Set.of("schemaVersion", "name", ORIGIN,
       "level", "xp", ATTRIBUTES, SKILLS, PERKS, TRAITS, "progression", VITALS, DERIVED);
   private static final Pattern MELEE_DICE = Pattern.compile("\\+(\\d+)");
@@ -89,11 +93,13 @@ final class LegacyImportRun {
     List<TraitSelection> traits = traits();
     Progression progression = progression();
     Vitals vitals = vitals();
-    keepRemainingFields();
+    List<String> kept = keepRemainingFields();
+    OriginChoices originChoices = originChoices(origin);
+    reportKeptFields(kept);
     // Legacy saves know no book selection: all supported books are enabled.
-    Character character = new Character(name, origin, level, xp, true, EnumSet.allOf(Book.class),
-        Map.of(), skillStates,
-        traits, perks, progression, vitals, new LegacyBaseline(attributes, skillRanks),
+    Character character = new Character(name, origin, originChoices, level, xp, true,
+        EnumSet.allOf(Book.class), Map.of(), skillStates, traits, perks, progression, vitals,
+        new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload));
     compareDerived(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
@@ -377,7 +383,32 @@ final class LegacyImportRun {
     return value == null ? null : Resistance.of(value);
   }
 
-  private void keepRemainingFields() {
+  /**
+   * Mister Handy's "no pincer" option (CRB p. 55) from {@code originOptions}; the flag is taken out of
+   * the kept payload, the arm attachments stay there until the equipment packs are ported. Other
+   * origins ignore the flag (the legacy app wrote {@code false} for every character).
+   */
+  private @NonNull OriginChoices originChoices(@NonNull CatalogRef origin) {
+    JsonNode options = payload.get(ORIGIN_OPTIONS);
+    if (!(options instanceof ObjectNode kept)) {
+      return OriginChoices.NONE;
+    }
+    JsonNode noPincer = kept.remove(NO_PINCER);
+    if (kept.isEmpty()) {
+      payload.remove(ORIGIN_OPTIONS);
+    }
+    if (noPincer == null || !noPincer.asBoolean()) {
+      return OriginChoices.NONE;
+    }
+    if (!origin.id().equals(MISTER_HANDY)) {
+      info(ORIGIN_OPTIONS, "\"No pincer\" only applies to a Mister Handy; ignored.");
+      return OriginChoices.NONE;
+    }
+    return OriginChoices.NONE.withNoPincer(true);
+  }
+
+  /** Copies all fields no feature has taken over into the payload; returns their names. */
+  private @NonNull List<String> keepRemainingFields() {
     List<String> kept = new ArrayList<>();
     for (Iterator<Map.Entry<String, JsonNode>> it = root.fields(); it.hasNext(); ) {
       Map.Entry<String, JsonNode> entry = it.next();
@@ -386,8 +417,14 @@ final class LegacyImportRun {
         kept.add(entry.getKey());
       }
     }
-    if (!kept.isEmpty()) {
-      info("legacy data", "Kept for later features: " + String.join(", ", kept) + ".");
+    return kept;
+  }
+
+  /** Reports the kept fields that are still in the payload after the origin options were read. */
+  private void reportKeptFields(@NonNull List<String> kept) {
+    List<String> remaining = kept.stream().filter(payload::has).toList();
+    if (!remaining.isEmpty()) {
+      info("legacy data", "Kept for later features: " + String.join(", ", remaining) + ".");
     }
   }
 
