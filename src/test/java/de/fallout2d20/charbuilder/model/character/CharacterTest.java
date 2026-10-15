@@ -181,6 +181,132 @@ class CharacterTest {
         () -> complete.setTraitAttributeChoices("gifted", List.of(Attribute.STRENGTH)));
   }
 
+  @Test
+  void creationMutatorsWorkOnlyDuringCreation() {
+    Character character = Character.createNew();
+    character.setAttributeAllocation(Attribute.LUCK, -1);
+    character.setCreationRanks(Skill.SNEAK, 2);
+    character.setFreeTag(Skill.REPAIR, true);
+    assertEquals(4, character.attributeValue(Attribute.LUCK));
+    assertEquals(2, character.skillRank(Skill.SNEAK));
+    assertEquals(2, character.skillRank(Skill.REPAIR));
+
+    Character complete = create(Map.of(), Map.of(), baseline(6));
+    assertThrows(IllegalStateException.class, () -> complete.setAttributeAllocation(Attribute.LUCK, 1));
+    assertThrows(IllegalStateException.class, () -> complete.setCreationRanks(Skill.SNEAK, 1));
+    assertThrows(IllegalStateException.class, () -> complete.setFreeTag(Skill.SNEAK, true));
+  }
+
+  /** User decision: tagging lowers bought ranks to the creation cap (CRB p. 58: 3 at level 1). */
+  @Test
+  void tagTrimsBoughtRanksToTheCap() {
+    Character character = Character.createNew();
+    character.setCreationRanks(Skill.SNEAK, 3);
+    character.setFreeTag(Skill.SNEAK, true);
+    assertEquals(1, character.skillState(Skill.SNEAK).creationRanks());
+    assertEquals(3, character.skillRank(Skill.SNEAK));
+  }
+
+  /** User decision: untagging only removes the two free ranks. */
+  @Test
+  void untagKeepsBoughtRanks() {
+    Character character = Character.createNew();
+    character.setFreeTag(Skill.SNEAK, true);
+    character.setCreationRanks(Skill.SNEAK, 1);
+    character.setFreeTag(Skill.SNEAK, false);
+    assertEquals(1, character.skillRank(Skill.SNEAK));
+  }
+
+  @Test
+  void originTagsCannotBeFreeTags() {
+    Character ghoul = Character.createNew();
+    ghoul.chooseOrigin(CatalogRef.of("ghoul"));
+    assertTrue(ghoul.isTaggedByOrigin(Skill.SURVIVAL));
+    assertThrows(IllegalArgumentException.class, () -> ghoul.setFreeTag(Skill.SURVIVAL, true));
+    ghoul.setFreeTag(Skill.SURVIVAL, false);
+  }
+
+  /** Choosing the origin's extra Tag on a freely tagged skill frees that Tag; bought ranks stay. */
+  @Test
+  void chooseOriginTagSkillClearsAFreeTag() {
+    Character initiate = Character.createNew();
+    initiate.chooseOrigin(CatalogRef.of("brotherhood-initiate"));
+    initiate.setFreeTag(Skill.SCIENCE, true);
+    initiate.setCreationRanks(Skill.SCIENCE, 1);
+    initiate.chooseOriginTagSkill(Skill.SCIENCE);
+    assertFalse(initiate.skillState(Skill.SCIENCE).tagged());
+    assertTrue(initiate.isTagged(Skill.SCIENCE));
+    assertEquals(3, initiate.skillRank(Skill.SCIENCE));
+  }
+
+  /** User decision: choosing Nomad (WG p. 15) removes a free Tag on Science; bought ranks stay. */
+  @Test
+  void nomadRemovesAFreeScienceTag() {
+    Character tribal = Character.createNew();
+    tribal.chooseOrigin(CatalogRef.of("tribal"));
+    tribal.setFreeTag(Skill.SCIENCE, true);
+    tribal.setCreationRanks(Skill.SCIENCE, 1);
+    tribal.chooseTrait(CatalogRef.of("nomad"));
+    assertFalse(tribal.isTagged(Skill.SCIENCE));
+    assertEquals(1, tribal.skillRank(Skill.SCIENCE));
+    assertThrows(IllegalArgumentException.class, () -> tribal.setFreeTag(Skill.SCIENCE, true));
+  }
+
+  /** User decision: an origin Tag lowers bought ranks to the cap like a free Tag (CRB p. 52, 58). */
+  @Test
+  void originTagsTrimBoughtRanks() {
+    Character ghoul = Character.createNew();
+    ghoul.setCreationRanks(Skill.SURVIVAL, 3);
+    ghoul.chooseOrigin(CatalogRef.of("ghoul"));
+    assertEquals(3, ghoul.skillRank(Skill.SURVIVAL));
+    assertEquals(1, ghoul.skillState(Skill.SURVIVAL).creationRanks());
+
+    Character initiate = Character.createNew();
+    initiate.chooseOrigin(CatalogRef.of("brotherhood-initiate"));
+    initiate.setCreationRanks(Skill.SCIENCE, 3);
+    initiate.chooseOriginTagSkill(Skill.SCIENCE);
+    assertEquals(3, initiate.skillRank(Skill.SCIENCE));
+  }
+
+  /** User decision: a new origin's lower maximum (Super Mutant INT 6, CRB p. 53) returns the excess points. */
+  @Test
+  void superMutantOriginReturnsExcessAttributePoints() {
+    Character character = Character.createNew();
+    character.setAttributeAllocation(Attribute.INTELLIGENCE, 3);
+    character.setAttributeAllocation(Attribute.STRENGTH, 2);
+    character.chooseOrigin(CatalogRef.of("super-mutant"));
+    assertEquals(6, character.attributeValue(Attribute.INTELLIGENCE));
+    assertEquals(1, character.attributeAllocation(Attribute.INTELLIGENCE));
+    assertEquals(9, character.attributeValue(Attribute.STRENGTH));
+  }
+
+  /** CRB p. 53: switching to Super Mutant lowers bought ranks to its cap of 4. */
+  @Test
+  void superMutantOriginTrimsRanksToItsCap() {
+    Character character = atLevel(3, "survivor");
+    character.setCreationRanks(Skill.SNEAK, 6);
+    character.chooseOrigin(CatalogRef.of("super-mutant"));
+    assertEquals(4, character.skillRank(Skill.SNEAK));
+  }
+
+  /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */
+  @Test
+  void skillRankCap() {
+    assertEquals(3, Character.createNew().skillRankCap());
+    assertEquals(6, atLevel(3, "survivor").skillRankCap());
+    assertEquals(4, atLevel(3, "super-mutant").skillRankCap());
+    Character mutant = Character.createNew();
+    mutant.chooseOrigin(CatalogRef.of("super-mutant"));
+    assertEquals(3, mutant.skillRankCap());
+    assertEquals(6, create(Map.of(), Map.of(), baseline(6)).skillRankCap());
+  }
+
+  private static Character atLevel(int level, String origin) {
+    return new Character("Test", CatalogRef.of(origin), OriginChoices.NONE, level, 0, false,
+        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE,
+        Vitals.FULL, null, null);
+  }
+
   private static LegacyBaseline baseline(int value) {
     Map<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {

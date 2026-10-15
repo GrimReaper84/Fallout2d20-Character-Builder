@@ -3,6 +3,8 @@ package de.fallout2d20.charbuilder.model.character;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
+import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -23,7 +25,8 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>Origin and trait effects (attribute modifiers, origin Tag skills, Gifted) are applied only to
  * characters without a legacy baseline: an imported baseline already contains them. Origin, origin
- * choices and traits can only be changed while creation is not complete.
+ * choices, traits, attribute allocation, free Tags and bought skill ranks can only be changed while
+ * creation is not complete.
  */
 public class Character {
 
@@ -32,6 +35,15 @@ public class Character {
 
   /** CRB p. 58: a Tag skill starts at rank 2. */
   public static final int TAG_SKILL_BONUS = 2;
+
+  /** CRB p. 58: no skill can ever go above rank 6. */
+  private static final int MAX_SKILL_RANK = 6;
+
+  /** CRB p. 58: during creation no skill above rank 3, unless the character starts at level 3+. */
+  public static final int CREATION_SKILL_RANK_CAP = 3;
+
+  /** CRB p. 58: from this starting level on, the creation cap of rank 3 no longer applies. */
+  private static final int FULL_SKILL_RANKS_FROM_LEVEL = 3;
 
   private String name;
   private @Nullable CatalogRef origin;
@@ -138,14 +150,7 @@ public class Character {
    * of CRB p. 52) or the chosen extra Tag skill (e.g. Vault Kid, CRB p. 57).
    */
   public boolean isTagged(@NonNull Skill skill) {
-    if (skillState(skill).tagged()) {
-      return true;
-    }
-    if (legacyBaseline != null) {
-      return false;
-    }
-    return skill == originChoices.tagSkill()
-        || getOriginData().map(data -> data.fixedTagSkill() == skill).orElse(false);
+    return skillState(skill).tagged() || isTaggedByOrigin(skill);
   }
 
   /**
@@ -159,6 +164,36 @@ public class Character {
         ? legacyBaseline.skillRank(skill)
         : (isTagged(skill) ? TAG_SKILL_BONUS : 0) + state.creationRanks();
     return start + state.advancementRanks();
+  }
+
+  /**
+   * Highest rank any skill of this character may have: during creation 3 below level 3, otherwise 6
+   * (CRB p. 58), lowered to the origin's skill cap (Super Mutant CRB p. 53, Nightkin WG p. 14).
+   */
+  public int skillRankCap() {
+    int cap = !creationComplete && level < FULL_SKILL_RANKS_FROM_LEVEL
+        ? CREATION_SKILL_RANK_CAP : MAX_SKILL_RANK;
+    Optional<OriginData> data = getOriginData();
+    if (data.isEmpty()) {
+      return cap;
+    }
+    Integer originCap = data.get().skillRankCap();
+    return originCap == null ? cap : Math.min(cap, originCap);
+  }
+
+  /** Whether the origin tags the skill: its fixed Tag skill or the chosen extra Tag skill. */
+  public boolean isTaggedByOrigin(@NonNull Skill skill) {
+    return legacyBaseline == null && (skill == originChoices.tagSkill()
+        || getOriginData().map(data -> data.fixedTagSkill() == skill).orElse(false));
+  }
+
+  /** The chosen trait that forbids the skill as a Tag skill (Nomad: Science, WG p. 15), if any. */
+  public @NonNull Optional<TraitDefinition> tagForbiddenBy(@NonNull Skill skill) {
+    return traits.stream()
+        .map(selection -> TraitCatalog.byId(selection.trait().id()))
+        .flatMap(Optional::stream)
+        .filter(trait -> trait.forbiddenTagSkills().contains(skill))
+        .findFirst();
   }
 
   public boolean isLegacyImport() {
@@ -188,24 +223,98 @@ public class Character {
 
   /**
    * Chooses the origin during creation. Origin choices and traits are reset, because they depend on
-   * the origin (user decision); attribute allocation and free Tag skills are kept. A free Tag on the
-   * new origin's fixed Tag skill is removed, since the origin tags that skill anyway.
+   * the origin (user decision); attribute allocation and free Tag skills are kept, then adjusted to
+   * the new origin (see {@link #adjustAttributesToOrigin()} and {@link #adjustSkillsToRules()}).
    */
   public void chooseOrigin(@NonNull CatalogRef newOrigin) {
     requireCreation();
     origin = newOrigin;
     originChoices = OriginChoices.NONE;
     traits.clear();
-    getOriginData().map(OriginData::fixedTagSkill).ifPresent(skill -> {
-      SkillState state = skillState(skill);
-      skills.put(skill, new SkillState(false, state.creationRanks(), state.advancementRanks()));
-    });
+    adjustAttributesToOrigin();
+    adjustSkillsToRules();
   }
 
-  /** The additional Tag skill granted by the origin; checked by the creation rules, not here. */
+  /**
+   * Lowers the allocation of every attribute above the new origin's maximum (e.g. Super Mutant INT 6,
+   * CRB p. 53) down to that maximum; the points return to the S.P.E.C.I.A.L. budget (user decision).
+   */
+  private void adjustAttributesToOrigin() {
+    for (Attribute attribute : Attribute.values()) {
+      int maximum = getOriginData().map(data -> data.attributeMaximum(attribute))
+          .orElse(OriginData.DEFAULT_ATTRIBUTE_MAXIMUM);
+      int excess = attributeValue(attribute) - maximum;
+      if (excess > 0) {
+        attributeAllocation.put(attribute, attributeAllocation(attribute) - excess);
+      }
+    }
+  }
+
+  /**
+   * The additional Tag skill granted by the origin; checked by the creation rules, not here. The
+   * skills are adjusted afterwards (see {@link #adjustSkillsToRules()}).
+   */
   public void chooseOriginTagSkill(@Nullable Skill skill) {
     requireCreation();
     originChoices = originChoices.withTagSkill(skill);
+    adjustSkillsToRules();
+  }
+
+  /**
+   * Keeps free Tags and bought ranks consistent after origin or traits changed (user decision): a free
+   * Tag is removed from a skill the origin tags (it returns to the free Tag budget; e.g. Ghoul
+   * Survival) or a trait forbids (Nomad: Science), and bought ranks are lowered as far as needed to
+   * stay within {@link #skillRankCap()}, as when tagging a skill.
+   */
+  private void adjustSkillsToRules() {
+    for (Skill skill : Skill.values()) {
+      SkillState state = skillState(skill);
+      boolean tagged = state.tagged() && !isTaggedByOrigin(skill) && tagForbiddenBy(skill).isEmpty();
+      skills.put(skill, new SkillState(tagged, ranksWithinCap(skill, tagged), state.advancementRanks()));
+    }
+  }
+
+  /** The bought ranks of the skill, lowered so its rank stays within the cap (never below 0). */
+  private int ranksWithinCap(@NonNull Skill skill, boolean freeTag) {
+    SkillState state = skillState(skill);
+    int tagBonus = freeTag || isTaggedByOrigin(skill) ? TAG_SKILL_BONUS : 0;
+    int room = skillRankCap() - tagBonus - state.advancementRanks();
+    return Math.max(0, Math.min(state.creationRanks(), room));
+  }
+
+  /**
+   * Sets the creation allocation of an attribute: points spent on it, or −1 for an attribute lowered
+   * below its starting value (CRB p. 58). The range and the budget are checked by the creation
+   * rules, not here.
+   */
+  public void setAttributeAllocation(@NonNull Attribute attribute, int allocation) {
+    requireCreation();
+    attributeAllocation.put(attribute, allocation);
+  }
+
+  /**
+   * Chooses or removes a free Tag skill (CRB p. 58). Tagging adds the two free ranks and lowers the
+   * bought ranks as far as needed to stay within {@link #skillRankCap()}; untagging only removes the
+   * two free ranks and keeps the bought ones (user decisions). Removing is always possible. The
+   * budget is checked by the creation rules.
+   *
+   * @throws IllegalArgumentException when tagging a skill the origin already tags or a trait forbids
+   */
+  public void setFreeTag(@NonNull Skill skill, boolean tagged) {
+    requireCreation();
+    if (tagged && (isTaggedByOrigin(skill) || tagForbiddenBy(skill).isPresent())) {
+      throw new IllegalArgumentException(skill.displayName() + " cannot get a free Tag");
+    }
+    SkillState state = skillState(skill);
+    int creationRanks = tagged ? ranksWithinCap(skill, true) : state.creationRanks();
+    skills.put(skill, new SkillState(tagged, creationRanks, state.advancementRanks()));
+  }
+
+  /** Sets the ranks bought with skill points during creation; budget and cap are checked by the rules. */
+  public void setCreationRanks(@NonNull Skill skill, int creationRanks) {
+    requireCreation();
+    SkillState state = skillState(skill);
+    skills.put(skill, new SkillState(state.tagged(), creationRanks, state.advancementRanks()));
   }
 
   /** Mister Handy without a pincer (CRB p. 55). */
@@ -220,12 +329,16 @@ public class Character {
     originChoices = originChoices.withPurpose(purpose == null || purpose.isBlank() ? null : purpose.strip());
   }
 
-  /** Takes a trait during creation; a trait already chosen is not added twice. */
+  /**
+   * Takes a trait during creation; a trait already chosen is not added twice. A free Tag the trait
+   * forbids is removed (see {@link #adjustSkillsToRules()}).
+   */
   public void chooseTrait(@NonNull CatalogRef trait) {
     requireCreation();
     if (traits.stream().noneMatch(selection -> selection.trait().id().equals(trait.id()))) {
       traits.add(new TraitSelection(trait, false, List.of()));
     }
+    adjustSkillsToRules();
   }
 
   /** Removes a trait (and its attribute choices) during creation. */

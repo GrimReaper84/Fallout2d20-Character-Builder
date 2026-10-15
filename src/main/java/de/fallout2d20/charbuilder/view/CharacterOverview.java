@@ -15,8 +15,10 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.OriginRules;
+import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
 import de.fallout2d20.charbuilder.model.character.creation.TraitRules;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
@@ -33,8 +35,9 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Overview of a character. Only the name and, during creation, the origin choices can be edited;
- * after every change the overview is rebuilt by the caller, so all values stay current.
+ * Overview of a character. Only the name and, during creation, origin, traits, S.P.E.C.I.A.L.
+ * allocation and skills can be edited; after every change the overview is rebuilt by the caller, so
+ * all values stay current.
  */
 final class CharacterOverview {
 
@@ -77,6 +80,8 @@ final class CharacterOverview {
       TraitSection.addTo(pane, character, onChanged);
       List<CreationProblem> problems = new ArrayList<>(OriginRules.problems(character));
       problems.addAll(TraitRules.problems(character));
+      problems.addAll(AttributeRules.problems(character));
+      problems.addAll(SkillRules.problems(character));
       addHints(pane, problems);
     }
     pane.add(new Label("Level"));
@@ -88,10 +93,14 @@ final class CharacterOverview {
         .collect(Collectors.joining(", "))), "span 3");
 
     heading(pane, "S.P.E.C.I.A.L.");
-    for (Attribute attribute : Attribute.values()) {
-      pane.add(new Label(attribute.displayName()));
-      pane.add(baselineMarked(Integer.toString(character.attributeValue(attribute)), character.isLegacyImport()),
-          "span 3");
+    if (character.isCreationComplete()) {
+      for (Attribute attribute : Attribute.values()) {
+        pane.add(new Label(attribute.displayName()));
+        pane.add(baselineMarked(Integer.toString(character.attributeValue(attribute)), character.isLegacyImport()),
+            "span 3");
+      }
+    } else {
+      AttributeSection.addTo(pane, character, onChanged);
     }
 
     DerivedStats derived = DerivedStats.of(character);
@@ -114,14 +123,18 @@ final class CharacterOverview {
     resistance(pane, "Poison DR", derived.poison(), RESISTANCE_TOOLTIP);
 
     heading(pane, "Skills");
-    for (Skill skill : Skill.values()) {
-      boolean tagged = character.isTagged(skill);
-      pane.add(new Label((tagged ? "● " : "") + skill.displayName()));
-      pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
-      pane.add(baselineMarked(Integer.toString(character.skillRank(skill)), character.isLegacyImport()),
-          "span 2");
+    if (character.isCreationComplete()) {
+      for (Skill skill : Skill.values()) {
+        boolean tagged = character.isTagged(skill);
+        pane.add(new Label((tagged ? "● " : "") + skill.displayName()));
+        pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
+        pane.add(baselineMarked(Integer.toString(character.skillRank(skill)), character.isLegacyImport()),
+            "span 2");
+      }
+      pane.add(new Label("● = Tag skill"), "span 4");
+    } else {
+      SkillSection.addTo(pane, character, onChanged);
     }
-    pane.add(new Label("● = Tag skill"), "span 4");
 
     heading(pane, "Traits");
     if (character.getTraits().isEmpty()) {
@@ -189,7 +202,7 @@ final class CharacterOverview {
   private static void addHints(@NonNull MigPane pane, @NonNull List<CreationProblem> problems) {
     pane.add(new Label("Rule hints"), "top");
     if (problems.isEmpty()) {
-      pane.add(new Label("No problems with the origin and trait rules."), "span 3");
+      pane.add(new Label("No problems with the creation rules so far."), "span 3");
       return;
     }
     Label hints = new Label(problems.stream().map(CreationProblem::message)

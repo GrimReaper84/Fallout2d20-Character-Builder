@@ -14,9 +14,10 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Checks the rules an origin sets for character creation (CRB p. 51–58, WOA p. 18–25,
- * WG p. 10–15): attribute maximums, skill rank cap, the origin's extra Tag skill and
- * origin-specific choices. Only characters in creation are checked; traits are checked by
- * {@link TraitRules}, the free Tag skills, attribute budget and perk budget by other creation rules.
+ * WG p. 10–15): attribute maximums, the origin's extra Tag skill and origin-specific choices. Only
+ * characters in creation are checked; traits are checked by {@link TraitRules}, the attribute budget
+ * by {@link AttributeRules}, free Tag skills, skill points and all skill rank caps (including the
+ * origin's) by {@link SkillRules}, the perk budget by later creation rules.
  */
 public final class OriginRules {
 
@@ -46,7 +47,6 @@ public final class OriginRules {
       problems.add(new CreationProblem(ORIGIN, originData.name() + " needs a book that is not enabled."));
     }
     checkAttributes(character, originData, problems);
-    checkSkillCap(character, originData, problems);
     checkExtraTagSkill(character, originData, problems);
     checkChoices(character.getOriginChoices(), originData, problems);
     return problems;
@@ -72,21 +72,6 @@ public final class OriginRules {
       if (character.attributeValue(attribute) > maximum) {
         problems.add(new CreationProblem(attribute.displayName(),
             attribute.displayName() + " may not exceed " + maximum + " (" + origin.name() + ")."));
-      }
-    }
-  }
-
-  /** Super Mutant (CRB p. 53) and Nightkin (WG p. 14): no skill above rank 4. */
-  private static void checkSkillCap(@NonNull Character character, @NonNull OriginData origin,
-      @NonNull List<CreationProblem> problems) {
-    Integer cap = origin.skillRankCap();
-    if (cap == null) {
-      return;
-    }
-    for (Skill skill : Skill.values()) {
-      if (character.skillRank(skill) > cap) {
-        problems.add(new CreationProblem(skill.displayName(),
-            skill.displayName() + " may not exceed rank " + cap + " (" + origin.name() + ")."));
       }
     }
   }

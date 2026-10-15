@@ -36,14 +36,13 @@ class OriginRulesTest {
     assertEquals(List.of("Generation 3 Synth needs a book that is not enabled."), messages(synth));
   }
 
-  /** CRB p. 53: INT/CHA at most 6, skills at most rank 4. */
+  /** CRB p. 53: INT/CHA at most 6; the skill cap 4 is checked by SkillRules. */
   @Test
-  void superMutantMaximumsAndSkillCap() {
+  void superMutantMaximums() {
     Character mutant = character(CatalogRef.of("super-mutant"), EnumSet.allOf(Book.class),
         Map.of(Attribute.INTELLIGENCE, 2, Attribute.STRENGTH, 5),
         Map.of(Skill.MELEE_WEAPONS, new SkillState(true, 3, 0)), List.of());
-    assertEquals(List.of("Intelligence may not exceed 6 (Super Mutant).",
-        "Melee Weapons may not exceed rank 4 (Super Mutant)."), messages(mutant));
+    assertEquals(List.of("Intelligence may not exceed 6 (Super Mutant)."), messages(mutant));
   }
 
   /** WG p. 14: Nightkin INT/CHA at most 8. */
@@ -86,11 +85,22 @@ class OriginRulesTest {
     initiate.chooseOriginTagSkill(Skill.SNEAK);
     assertEquals(List.of("Sneak cannot be the extra Tag skill granted by Brotherhood Initiate."),
         messages(initiate));
-    initiate.chooseOriginTagSkill(Skill.REPAIR);
-    assertEquals(List.of("Repair is already a Tag skill; choose another extra Tag skill."),
-        messages(initiate));
     initiate.chooseOriginTagSkill(Skill.SCIENCE);
     assertEquals(List.of(), messages(initiate));
+  }
+
+  /**
+   * A saved character may carry a free Tag on the extra Tag skill (choosing the extra Tag in the
+   * model removes the free one, so only loaded data reaches this state).
+   */
+  @Test
+  void extraTagSkillAlreadyFreelyTagged() {
+    Character loaded = new Character("Test", CatalogRef.of("brotherhood-initiate"),
+        OriginChoices.NONE.withTagSkill(Skill.REPAIR), 1, 0, false, EnumSet.allOf(Book.class), Map.of(),
+        Map.of(Skill.REPAIR, new SkillState(true, 0, 0)), List.of(), List.of(), Progression.NONE,
+        Vitals.FULL, null, null);
+    assertEquals(List.of("Repair is already a Tag skill; choose another extra Tag skill."),
+        messages(loaded));
   }
 
   /** CRB p. 57: the Vault Dweller may tag any skill. */
