@@ -1,0 +1,1008 @@
+[
+  {
+    "id": "action-boy-girl",
+    "name": "Action Boy/Girl",
+    "sources": [{"book": "CRB", "page": 59}],
+    "ranks": 1,
+    "summary": "Taking an extra major action with AP no longer raises the difficulty of the second action."
+  },
+  {
+    "id": "adamantium-skeleton",
+    "name": "Adamantium Skeleton",
+    "sources": [{"book": "CRB", "page": 59}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 1,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "Enemies need 1 more damage per rank to inflict a critical hit on you."
+  },
+  {
+    "id": "adrenalin-rush",
+    "name": "Adrenalin Rush",
+    "sources": [{"book": "CRB", "page": 59}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 7}
+    },
+    "summary": "While below maximum health, your STR counts as 10 for STR-based skill tests and melee attacks."
+  },
+  {
+    "id": "animal-friend",
+    "name": "Animal Friend",
+    "sources": [{"book": "CRB", "page": 59}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"CHARISMA": 6},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Mammals, lizards and insects may decide not to attack you; at rank 2 you can befriend one with a CHA + Survival test."
+  },
+  {
+    "id": "aquaboy-aquagirl",
+    "name": "Aquaboy/Aquagirl",
+    "sources": [{"book": "CRB", "page": 60}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"ENDURANCE": 5},
+      "level": 1,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "No radiation from swimming and longer breath-holding; at rank 2 you are harder to detect underwater."
+  },
+  {
+    "id": "armorer",
+    "name": "Armorer",
+    "sources": [{"book": "CRB", "page": 60}],
+    "ranks": 4,
+    "requirements": {
+      "attributes": {"STRENGTH": 5, "INTELLIGENCE": 6}
+    },
+    "summary": "Lets you install armor mods; each rank unlocks the next rank of mods."
+  },
+  {
+    "id": "awareness",
+    "name": "Awareness",
+    "sources": [{"book": "CRB", "page": 60}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 7}
+    },
+    "summary": "After aiming at a target at Close range, your next attack on it gains Piercing 1 (or +1 Piercing)."
+  },
+  {
+    "id": "barbarian",
+    "name": "Barbarian",
+    "sources": [{"book": "CRB", "page": 60}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 7},
+      "level": 4,
+      "notRobot": true
+    },
+    "summary": "Physical DR on all locations rises with your STR (+1 at 7–8, +2 at 9–10, +3 at 11+); not while in Power Armor."
+  },
+  {
+    "id": "basher",
+    "name": "Basher",
+    "sources": [{"book": "CRB", "page": 60}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 6}
+    },
+    "summary": "Bashing with your gun gains the Vicious damage effect."
+  },
+  {
+    "id": "better-criticals",
+    "name": "Better Criticals",
+    "sources": [{"book": "CRB", "page": 60}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 9}
+    },
+    "summary": "Spend 1 Luck point after dealing damage to turn the hit into a critical hit."
+  },
+  {
+    "id": "big-leagues",
+    "name": "Big Leagues",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 8}
+    },
+    "summary": "Two-handed melee weapons gain the Vicious damage effect."
+  },
+  {
+    "id": "black-widow-lady-killer",
+    "name": "Black Widow/Lady Killer",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 6}
+    },
+    "summary": "Against characters of the chosen gender: re-roll 1d20 on CHA tests to influence them and +1 CD damage."
+  },
+  {
+    "id": "blacksmith",
+    "name": "Blacksmith",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Lets you install melee weapon mods; each rank unlocks the next rank of mods."
+  },
+  {
+    "id": "blitz",
+    "name": "Blitz",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"AGILITY": 9},
+      "level": 1,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "Moving into reach and attacking in melee in the same turn lets you re-roll 1d20; at rank 2 also +1 CD damage."
+  },
+  {
+    "id": "bloody-mess",
+    "name": "Bloody Mess",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 6}
+    },
+    "summary": "A critical hit may inflict an extra injury on a random location (roll 1 CD for an Effect)."
+  },
+  {
+    "id": "can-do",
+    "name": "Can Do!",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 5}
+    },
+    "summary": "Scavenging a location with food yields one extra random food item for free."
+  },
+  {
+    "id": "cap-collector",
+    "name": "Cap Collector",
+    "sources": [{"book": "CRB", "page": 61}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 5}
+    },
+    "summary": "Raise or lower prices by 10% when buying or selling."
+  },
+  {
+    "id": "cautious-nature",
+    "name": "Cautious Nature",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 7},
+      "excludedPerks": ["daring-nature"]
+    },
+    "summary": "Re-roll 1d20 on a skill test when you buy d20s with your own AP; cannot be combined with Daring Nature."
+  },
+  {
+    "id": "center-mass",
+    "name": "Center Mass",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 7}
+    },
+    "summary": "Target the Torso with a ranged attack without extra difficulty, and re-roll 1d20 on that attack."
+  },
+  {
+    "id": "chem-resistant",
+    "name": "Chem Resistant",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 1,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Roll fewer dice for chem addiction; at rank 2 you cannot become addicted to chems."
+  },
+  {
+    "id": "chemist",
+    "name": "Chemist",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 7}
+    },
+    "summary": "Your crafted chems last twice as long, and chem recipes that need this perk become available."
+  },
+  {
+    "id": "commando",
+    "name": "Commando",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"AGILITY": 8},
+      "level": 2,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "+1 CD damage per rank with ranged weapons of Fire Rate 3 or more (not heavy weapons)."
+  },
+  {
+    "id": "comprehension",
+    "name": "Comprehension",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 6}
+    },
+    "summary": "After using a magazine bonus, a CD Effect lets you use it once more."
+  },
+  {
+    "id": "concentrated-fire",
+    "name": "Concentrated Fire",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8, "AGILITY": 6}
+    },
+    "summary": "When spending extra ammo for damage on a ranged attack, re-roll up to 3 CD."
+  },
+  {
+    "id": "daring-nature",
+    "name": "Daring Nature",
+    "sources": [{"book": "CRB", "page": 62}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 7},
+      "excludedPerks": ["cautious-nature"]
+    },
+    "summary": "Re-roll 1d20 on a skill test when you buy d20s by giving the GM AP; cannot be combined with Cautious Nature."
+  },
+  {
+    "id": "demolition-expert",
+    "name": "Demolition Expert",
+    "sources": [{"book": "CRB", "page": 63}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 6, "LUCK": 6}
+    },
+    "summary": "Blast weapons gain the Vicious damage effect, and explosive recipes that need this perk become available."
+  },
+  {
+    "id": "dodger",
+    "name": "Dodger",
+    "sources": [{"book": "CRB", "page": 63}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"AGILITY": 6},
+      "level": 4,
+      "levelIncreasePerRank": 6
+    },
+    "summary": "The Defend action gets easier by 1; at rank 2 raising Defense further costs only 1 AP."
+  },
+  {
+    "id": "dogmeat",
+    "name": "Dogmeat",
+    "sources": [{"book": "CRB", "page": 63}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 5}
+    },
+    "summary": "You have a loyal dog as an allied NPC companion that grows with your level."
+  },
+  {
+    "id": "entomologist",
+    "name": "Entomologist",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 7}
+    },
+    "summary": "Attacks against Insect NPCs gain Piercing 1 (or +1 Piercing)."
+  },
+  {
+    "id": "fast-metabolism",
+    "name": "Fast Metabolism",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "level": 1,
+      "notRobot": true,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "+1 HP per rank whenever you regain HP from anything but rest."
+  },
+  {
+    "id": "faster-healing",
+    "name": "Faster Healing",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "notRobot": true
+    },
+    "summary": "The first extra d20 on END + Survival tests to heal your own injuries is free."
+  },
+  {
+    "id": "finesse",
+    "name": "Finesse",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 9}
+    },
+    "summary": "Once per combat, re-roll all CD of one damage roll without spending Luck."
+  },
+  {
+    "id": "fortune-finder",
+    "name": "Fortune Finder",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"LUCK": 5},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Find more caps when rolling for money: +3, +6 or +10 CD by rank."
+  },
+  {
+    "id": "ghost",
+    "name": "Ghost",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 5, "AGILITY": 6}
+    },
+    "summary": "The first extra d20 on AGI + Sneak tests in shadows or darkness is free."
+  },
+  {
+    "id": "grim-reapers-sprint",
+    "name": "Grim Reaper’s Sprint",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 8}
+    },
+    "summary": "When an attack kills an enemy, a CD Effect adds 2 AP to the group pool.",
+    "legacyNames": ["Grim Reaper's Sprint"]
+  },
+  {
+    "id": "gun-fu",
+    "name": "Gun Fu",
+    "sources": [{"book": "CRB", "page": 64}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"AGILITY": 10},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "After a successful ranged attack, spend AP and ammo to hit up to one additional nearby target per rank."
+  },
+  {
+    "id": "gun-nut",
+    "name": "Gun Nut",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 6},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Lets you install small gun and heavy weapon mods; each rank unlocks the next rank of mods."
+  },
+  {
+    "id": "gunslinger",
+    "name": "Gunslinger",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"AGILITY": 7},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 CD damage per rank with one-handed ranged weapons of Fire Rate 2 or less, and re-roll the hit location."
+  },
+  {
+    "id": "hacker",
+    "name": "Hacker",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 8}
+    },
+    "summary": "Hacking computers is 1 difficulty easier."
+  },
+  {
+    "id": "healer",
+    "name": "Healer",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 7},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "First Aid heals +1 HP per rank."
+  },
+  {
+    "id": "heave-ho",
+    "name": "Heave Ho!",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 8}
+    },
+    "summary": "Spend 1 AP to increase a thrown weapon's range by one step."
+  },
+  {
+    "id": "hunter",
+    "name": "Hunter",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6}
+    },
+    "summary": "Attacks on mutated mammals, lizards and insects gain the Vicious damage effect."
+  },
+  {
+    "id": "infiltrator",
+    "name": "Infiltrator",
+    "sources": [{"book": "CRB", "page": 65}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8}
+    },
+    "summary": "Re-roll 1d20 on Lockpick tests to open doors and containers."
+  },
+  {
+    "id": "inspirational",
+    "name": "Inspirational",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 8}
+    },
+    "summary": "The group can save 1 more AP."
+  },
+  {
+    "id": "intense-training",
+    "name": "Intense Training",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 10,
+    "requirements": {
+      "level": 2,
+      "levelIncreasePerRank": 2
+    },
+    "choice": "ATTRIBUTE",
+    "summary": "Raise one S.P.E.C.I.A.L. attribute of your choice by 1 per rank, to at most 10."
+  },
+  {
+    "id": "iron-fist",
+    "name": "Iron Fist",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Unarmed attacks deal +1 CD; at rank 2 they also gain the Vicious damage effect."
+  },
+  {
+    "id": "junktown-jerky-vendor",
+    "name": "Junktown Jerky Vendor",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 8}
+    },
+    "summary": "CHA + Barter tests to buy or sell are 1 difficulty easier."
+  },
+  {
+    "id": "jury-rigging",
+    "name": "Jury Rigging",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 1,
+    "summary": "Repair items without components; the repair breaks on the next complication and raises the complication range."
+  },
+  {
+    "id": "laser-commander",
+    "name": "Laser Commander",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 CD damage per rank with ranged energy weapons."
+  },
+  {
+    "id": "lead-belly",
+    "name": "Lead Belly",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "level": 1,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Re-roll the radiation check for irradiated food and drink; at rank 2 you are immune to it."
+  },
+  {
+    "id": "life-giver",
+    "name": "Life Giver",
+    "sources": [{"book": "CRB", "page": 66}],
+    "ranks": 5,
+    "requirements": {
+      "level": 5,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Maximum HP increases by your END per rank."
+  },
+  {
+    "id": "light-step",
+    "name": "Light Step",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "summary": "Spend AP to ignore complications on AGI tests, and re-roll 1d20 to avoid pressure-plate traps."
+  },
+  {
+    "id": "master-thief",
+    "name": "Master Thief",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8, "AGILITY": 9}
+    },
+    "summary": "Others find it 1 difficulty harder to notice you picking locks or pockets."
+  },
+  {
+    "id": "medic",
+    "name": "Medic",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 8}
+    },
+    "summary": "Re-roll 1d20 when treating an injury with First Aid."
+  },
+  {
+    "id": "meltdown",
+    "name": "Meltdown",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 10}
+    },
+    "summary": "Enemies killed with energy weapons explode and can damage creatures close to them."
+  },
+  {
+    "id": "mister-sandman",
+    "name": "Mister Sandman",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 9}
+    },
+    "summary": "Sneak attacks with silenced or suppressed weapons deal +2 CD; not in Power Armor."
+  },
+  {
+    "id": "moving-target",
+    "name": "Moving Target",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 6}
+    },
+    "summary": "Sprinting raises your Defense by 1 until your next turn."
+  },
+  {
+    "id": "mysterious-stranger",
+    "name": "Mysterious Stranger",
+    "sources": [{"book": "CRB", "page": 67}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 7}
+    },
+    "summary": "Spend 1 Luck at the start of combat and a stranger may appear to shoot an enemy once (Luck refunded if not)."
+  },
+  {
+    "id": "nerd-rage",
+    "name": "Nerd Rage!",
+    "sources": [{"book": "CRB", "page": 68}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 8},
+      "level": 2,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Below a quarter of your maximum HP you gain +1 DR and +1 CD damage per rank."
+  },
+  {
+    "id": "night-person",
+    "name": "Night Person",
+    "sources": [{"book": "CRB", "page": 68}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 7}
+    },
+    "summary": "Difficulty increases from darkness are reduced by 1."
+  },
+  {
+    "id": "ninja",
+    "name": "Ninja",
+    "sources": [{"book": "CRB", "page": 68}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 8}
+    },
+    "summary": "Melee and unarmed sneak attacks deal +2 CD; not in Power Armor."
+  },
+  {
+    "id": "nuclear-physicist",
+    "name": "Nuclear Physicist",
+    "sources": [{"book": "CRB", "page": 68}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 9}
+    },
+    "summary": "Radiation weapons deal 1 more radiation damage per Effect, and your fusion cores hold 3 more charges."
+  },
+  {
+    "id": "pain-train",
+    "name": "Pain Train",
+    "sources": [{"book": "CRB", "page": 68}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"STRENGTH": 9, "ENDURANCE": 7},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "In Power Armor or as a super mutant, charge an enemy to damage and knock it prone; rank 2 adds damage and Stun."
+  },
+  {
+    "id": "paralyzing-palm",
+    "name": "Paralyzing Palm",
+    "sources": [{"book": "CRB", "page": 69}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 8}
+    },
+    "summary": "Unarmed attacks aimed at a specific location gain the Stun damage effect."
+  },
+  {
+    "id": "party-boy-party-girl",
+    "name": "Party Boy/Party Girl",
+    "sources": [{"book": "CRB", "page": 69}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6, "CHARISMA": 7}
+    },
+    "summary": "You cannot get addicted to alcohol, and each alcoholic drink heals 2 HP."
+  },
+  {
+    "id": "pathfinder",
+    "name": "Pathfinder",
+    "sources": [{"book": "CRB", "page": 69}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 6, "ENDURANCE": 6}
+    },
+    "summary": "A successful PER + Survival test halves long-distance travel time through the wilderness."
+  },
+  {
+    "id": "pharma-farma",
+    "name": "Pharma Farma",
+    "sources": [{"book": "CRB", "page": 69}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 6}
+    },
+    "summary": "Scavenging a location with medicine or chems yields one extra random item for free."
+  },
+  {
+    "id": "pickpocket",
+    "name": "Pickpocket",
+    "sources": [{"book": "CRB", "page": 69}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8, "AGILITY": 8},
+      "level": 1,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "Better at stealing from people: ignore a complication, re-roll 1d20, and finally an easier difficulty by rank."
+  },
+  {
+    "id": "piercing-strike",
+    "name": "Piercing Strike",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 7}
+    },
+    "summary": "Unarmed and bladed melee attacks gain Piercing 1 (or +1 Piercing)."
+  },
+  {
+    "id": "pyromaniac",
+    "name": "Pyromaniac",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 CD damage per rank with fire-based weapons."
+  },
+  {
+    "id": "quick-draw",
+    "name": "Quick Draw",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 6}
+    },
+    "summary": "Draw one weapon or item each turn without a minor action."
+  },
+  {
+    "id": "quick-hands",
+    "name": "Quick Hands",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 8}
+    },
+    "summary": "Spend 2 AP to double your gun's Fire Rate for one attack."
+  },
+  {
+    "id": "rad-resistance",
+    "name": "Rad Resistance",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"ENDURANCE": 8},
+      "level": 1,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 radiation DR on all locations per rank."
+  },
+  {
+    "id": "refractor",
+    "name": "Refractor",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"PERCEPTION": 6, "LUCK": 7},
+      "level": 1,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 energy DR on all locations per rank."
+  },
+  {
+    "id": "ricochet",
+    "name": "Ricochet",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 10},
+      "level": 5
+    },
+    "summary": "When an enemy's ranged attack on you complicates, spend 1 Luck to turn the damage back on them."
+  },
+  {
+    "id": "rifleman",
+    "name": "Rifleman",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"AGILITY": 7},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 CD damage per rank with two-handed ranged weapons of Fire Rate 2 or less (not heavy weapons); rank 2 adds Piercing."
+  },
+  {
+    "id": "robotics-expert",
+    "name": "Robotics Expert",
+    "sources": [{"book": "CRB", "page": 70}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 8},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Lets you mod robots; higher ranks make robot repairs easier and let you reprogram robots."
+  },
+  {
+    "id": "science",
+    "name": "Science!",
+    "sources": [{"book": "CRB", "page": 71}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 6},
+      "level": 2,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "Lets you install energy weapon mods and some advanced armor mods; each rank unlocks the next rank of mods."
+  },
+  {
+    "id": "scoundrel",
+    "name": "Scoundrel",
+    "sources": [{"book": "CRB", "page": 71}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 7}
+    },
+    "summary": "Ignore the first complication on CHA + Speech tests to make someone believe a lie."
+  },
+  {
+    "id": "scrapper",
+    "name": "Scrapper",
+    "sources": [{"book": "CRB", "page": 71}],
+    "ranks": 2,
+    "requirements": {
+      "level": 3,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Scrapping also yields uncommon components; at rank 2 rare ones too."
+  },
+  {
+    "id": "scrounger",
+    "name": "Scrounger",
+    "sources": [{"book": "CRB", "page": 71}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"LUCK": 6},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Find more ammunition when rolling for it: +3, +6 or +10 CD shots by rank."
+  },
+  {
+    "id": "shotgun-surgeon",
+    "name": "Shotgun Surgeon",
+    "sources": [{"book": "CRB", "page": 71}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 5, "AGILITY": 7}
+    },
+    "summary": "Shotgun attacks gain Piercing 1 (or +1 Piercing)."
+  },
+  {
+    "id": "skilled",
+    "name": "Skilled",
+    "sources": [{"book": "CRB", "page": 71}],
+    "ranks": 10,
+    "requirements": {
+      "level": 3,
+      "levelIncreasePerRank": 3
+    },
+    "summary": "Add 1 rank to two skills, or 2 ranks to one skill (never above 6)."
+  },
+  {
+    "id": "size-matters",
+    "name": "Size Matters",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7, "AGILITY": 6},
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 CD damage per rank with heavy weapons."
+  },
+  {
+    "id": "slayer",
+    "name": "Slayer",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 8}
+    },
+    "summary": "Spend 1 Luck after dealing unarmed or melee damage to inflict a critical hit."
+  },
+  {
+    "id": "smooth-talker",
+    "name": "Smooth Talker",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 6}
+    },
+    "summary": "Re-roll 1d20 on Barter or Speech in opposed tests."
+  },
+  {
+    "id": "snakeater",
+    "name": "Snakeater",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7}
+    },
+    "summary": "+2 poison DR."
+  },
+  {
+    "id": "sniper",
+    "name": "Sniper",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8, "AGILITY": 6}
+    },
+    "summary": "After aiming, a two-handed Accurate weapon may target a hit location without extra difficulty."
+  },
+  {
+    "id": "solar-powered",
+    "name": "Solar Powered",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7}
+    },
+    "summary": "Heal 1 radiation damage for every hour in direct sunlight."
+  },
+  {
+    "id": "steady-aim",
+    "name": "Steady Aim",
+    "sources": [{"book": "CRB", "page": 72}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 8, "AGILITY": 7}
+    },
+    "summary": "After aiming, re-roll 2d20 on your first attack this turn or 1d20 on all of them."
+  },
+  {
+    "id": "strong-back",
+    "name": "Strong Back",
+    "sources": [{"book": "CRB", "page": 73}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 5},
+      "level": 1,
+      "levelIncreasePerRank": 2
+    },
+    "summary": "+25 lbs. carry weight per rank."
+  },
+  {
+    "id": "tag",
+    "name": "Tag!",
+    "sources": [{"book": "CRB", "page": 73}],
+    "ranks": 1,
+    "requirements": {
+      "level": 5
+    },
+    "choice": "SKILL",
+    "summary": "Choose one more Tag skill; it gains 2 ranks (to at most 6)."
+  },
+  {
+    "id": "terrifying-presence",
+    "name": "Terrifying Presence",
+    "sources": [{"book": "CRB", "page": 73}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"STRENGTH": 6, "CHARISMA": 8},
+      "level": 3,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Re-roll 1d20 on Speech tests to threaten; at rank 2 you can scare an enemy away in combat."
+  },
+  {
+    "id": "toughness",
+    "name": "Toughness",
+    "sources": [{"book": "CRB", "page": 73}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6, "LUCK": 6},
+      "level": 1,
+      "levelIncreasePerRank": 4
+    },
+    "summary": "+1 physical DR on all locations per rank."
+  }
+]
