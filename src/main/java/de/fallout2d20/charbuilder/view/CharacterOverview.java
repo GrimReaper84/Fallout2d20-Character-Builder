@@ -3,6 +3,8 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
+import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -18,6 +20,7 @@ import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.OriginRules;
+import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
 import de.fallout2d20.charbuilder.model.character.creation.TraitRules;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
@@ -82,6 +85,7 @@ final class CharacterOverview {
       problems.addAll(TraitRules.problems(character));
       problems.addAll(AttributeRules.problems(character));
       problems.addAll(SkillRules.problems(character));
+      problems.addAll(PerkRules.problems(character));
       addHints(pane, problems);
     }
     pane.add(new Label("Level"));
@@ -145,15 +149,10 @@ final class CharacterOverview {
     }
 
     heading(pane, "Perks");
-    if (character.getPerks().isEmpty()) {
-      pane.add(new Label("None"), "span 4");
-    }
-    for (PerkSelection perk : character.getPerks()) {
-      String choices = perk.attributeChoices().isEmpty() ? ""
-          : " (" + perk.attributeChoices().stream().map(Attribute::abbreviation)
-              .collect(Collectors.joining(", ")) + ")";
-      pane.add(importMarked(reference(perk.perk()), perk.importedRanks() > 0));
-      pane.add(new Label("Rank " + perk.rank() + choices), "span 3");
+    if (character.isCreationComplete()) {
+      addPerkList(pane, character);
+    } else {
+      PerkSection.addTo(pane, character, onChanged);
     }
 
     heading(pane, "Advancement and session");
@@ -242,6 +241,31 @@ final class CharacterOverview {
       pane.add(new Label("Purpose"));
       pane.add(new Label(purpose), "span 3");
     }
+  }
+
+  /** Perks of a complete character, read-only: name, rank and choices. */
+  private static void addPerkList(@NonNull MigPane pane, @NonNull Character character) {
+    if (character.getPerks().isEmpty()) {
+      pane.add(new Label("None"), "span 4");
+    }
+    for (PerkSelection perk : character.getPerks()) {
+      String chosen = PerkCard.choiceText(perk);
+      String choices = chosen.isEmpty() ? "" : " (" + chosen + ")";
+      pane.add(importMarked(perk(perk), perk.importedRanks() > 0));
+      pane.add(new Label("Rank " + perk.rank() + choices), "span 3");
+    }
+  }
+
+  /** Perk resolved from the catalog (name, tooltip with summary and source), else the plain reference. */
+  private static @NonNull Label perk(@NonNull PerkSelection selection) {
+    Optional<PerkDefinition> perk = PerkCatalog.byId(selection.perk().id());
+    if (perk.isEmpty()) {
+      return reference(selection.perk());
+    }
+    Label label = new Label(perk.get().name());
+    label.setTooltip(new Tooltip(perk.get().summary() + "\n" + perk.get().sources().stream()
+        .map(Object::toString).collect(Collectors.joining(", "))));
+    return label;
   }
 
   /** Origin resolved from the catalog (name, sources and trait summary), else the plain reference. */

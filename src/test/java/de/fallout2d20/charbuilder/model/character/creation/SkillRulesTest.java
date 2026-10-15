@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
+import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
@@ -73,6 +74,16 @@ class SkillRulesTest {
     Character smart = character("survivor", Map.of(), List.of());
     smart.setAttributeAllocation(Attribute.INTELLIGENCE, 3);
     assertEquals(17, SkillRules.skillPointBudget(smart));
+  }
+
+  /** CRB p. 71: Skilled adds 2 skill points per rank. */
+  @Test
+  void skilledAddsTwoPointsPerRank() {
+    Character skilled = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 3, 0, false,
+        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
+        List.of(new PerkSelection(CatalogRef.of("skilled"), 1, 0, List.of(), List.of())),
+        Progression.NONE, Vitals.FULL, null, null);
+    assertEquals(16, SkillRules.skillPointBudget(skilled));
   }
 
   /** User decision: Gifted on INT raises the skill points. */

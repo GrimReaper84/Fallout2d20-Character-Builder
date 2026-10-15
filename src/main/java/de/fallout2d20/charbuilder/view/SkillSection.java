@@ -74,6 +74,9 @@ final class SkillSection {
       return "Tag skill from " + character.getOriginData().map(OriginData::name).orElse("the origin")
           + "." + freeTag;
     }
+    if (character.isTaggedByPerk(skill)) {
+      return "Tag skill from the Tag! perk." + freeTag;
+    }
     Optional<TraitDefinition> forbidding = character.tagForbiddenBy(skill);
     if (forbidding.isPresent()) {
       return skill.displayName() + " cannot be a Tag skill with " + forbidding.get().name() + "." + freeTag;

@@ -82,7 +82,8 @@
       "level": 4,
       "notRobot": true
     },
-    "summary": "Physical DR on all locations rises with your STR (+1 at 7–8, +2 at 9–10, +3 at 11+); not while in Power Armor."
+    "summary": "Physical DR on all locations rises with your STR (+1 at 7–8, +2 at 9–10, +3 at 11+); not while in Power Armor.",
+    "physicalDrByStrength": true
   },
   {
     "id": "basher",
@@ -545,7 +546,8 @@
       "level": 5,
       "levelIncreasePerRank": 5
     },
-    "summary": "Maximum HP increases by your END per rank."
+    "summary": "Maximum HP increases by your END per rank.",
+    "maxHpPerEndurance": 1
   },
   {
     "id": "light-step",
@@ -772,7 +774,8 @@
       "level": 1,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 radiation DR on all locations per rank."
+    "summary": "+1 radiation DR on all locations per rank.",
+    "radiationDrPerRank": 1
   },
   {
     "id": "refractor",
@@ -784,7 +787,8 @@
       "level": 1,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 energy DR on all locations per rank."
+    "summary": "+1 energy DR on all locations per rank.",
+    "energyDrPerRank": 1
   },
   {
     "id": "ricochet",
@@ -885,7 +889,8 @@
       "level": 3,
       "levelIncreasePerRank": 3
     },
-    "summary": "Add 1 rank to two skills, or 2 ranks to one skill (never above 6)."
+    "summary": "Add 1 rank to two skills, or 2 ranks to one skill (never above 6).",
+    "skillPointsPerRank": 2
   },
   {
     "id": "size-matters",
@@ -926,7 +931,8 @@
     "requirements": {
       "attributes": {"ENDURANCE": 7}
     },
-    "summary": "+2 poison DR."
+    "summary": "+2 poison DR.",
+    "poisonDrPerRank": 2
   },
   {
     "id": "sniper",
@@ -968,7 +974,8 @@
       "level": 1,
       "levelIncreasePerRank": 2
     },
-    "summary": "+25 lbs. carry weight per rank."
+    "summary": "+25 lbs. carry weight per rank.",
+    "carryWeightPerRank": 25
   },
   {
     "id": "tag",
@@ -1003,6 +1010,7 @@
       "level": 1,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 physical DR on all locations per rank."
+    "summary": "+1 physical DR on all locations per rank.",
+    "physicalDrPerRank": 1
   }
 ]

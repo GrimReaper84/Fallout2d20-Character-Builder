@@ -289,6 +289,69 @@ class CharacterTest {
     assertEquals(4, character.skillRank(Skill.SNEAK));
   }
 
+  /** CRB p. 66: Intense Training raises the chosen attribute; imported ranks are in the baseline. */
+  @Test
+  void intenseTrainingRaisesAttribute() {
+    Character character = atLevel(4, "survivor");
+    character.addPerkRank(CatalogRef.of("intense-training"), Attribute.AGILITY, null);
+    character.addPerkRank(CatalogRef.of("intense-training"), Attribute.AGILITY, null);
+    assertEquals(7, character.attributeValue(Attribute.AGILITY));
+    character.removePerkRank("intense-training");
+    assertEquals(6, character.attributeValue(Attribute.AGILITY));
+    assertEquals(List.of(Attribute.AGILITY), character.getPerks().get(0).attributeChoices());
+
+    Character imported = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 4, 0, true,
+        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
+        List.of(new PerkSelection(CatalogRef.of("intense-training"), 1, 1, List.of(Attribute.AGILITY), List.of())),
+        Progression.NONE, Vitals.FULL, baseline(6), null);
+    assertEquals(6, imported.attributeValue(Attribute.AGILITY));
+  }
+
+  /** User decision: Tag! is its own Tag source; a free Tag on the same skill is freed. */
+  @Test
+  void tagPerkIsSeparateTagSource() {
+    Character character = atLevel(5, "survivor");
+    character.setFreeTag(Skill.SNEAK, true);
+    character.addPerkRank(CatalogRef.of("tag"), null, Skill.SNEAK);
+    assertTrue(character.isTaggedByPerk(Skill.SNEAK));
+    assertFalse(character.skillState(Skill.SNEAK).tagged());
+    assertTrue(character.isTagged(Skill.SNEAK));
+    assertThrows(IllegalArgumentException.class, () -> character.setFreeTag(Skill.SNEAK, true));
+    character.removePerkRank("tag");
+    assertFalse(character.isTagged(Skill.SNEAK));
+  }
+
+  /** CRB p. 73: Tag! adds 2 ranks to at most 6; a rank-5 skill ends at 6 (user decision). */
+  @Test
+  void tagPerkOnRankFiveSkillCapsAtSix() {
+    Character character = atLevel(5, "survivor");
+    character.setCreationRanks(Skill.SNEAK, 5);
+    character.addPerkRank(CatalogRef.of("tag"), null, Skill.SNEAK);
+    assertEquals(6, character.skillRank(Skill.SNEAK));
+  }
+
+  @Test
+  void addAndRemovePerkRanksOnlyInCreation() {
+    Character character = Character.createNew();
+    character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
+    assertEquals(1, character.getPerks().get(0).rank());
+    character.removePerkRank("jury-rigging");
+    assertTrue(character.getPerks().isEmpty());
+    character.removePerkRank("jury-rigging");
+
+    Character withImported = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, false,
+        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
+        List.of(new PerkSelection(CatalogRef.of("jury-rigging"), 1, 1, List.of(), List.of())),
+        Progression.NONE, Vitals.FULL, null, null);
+    withImported.removePerkRank("jury-rigging");
+    assertEquals(1, withImported.getPerks().get(0).rank());
+
+    Character complete = create(Map.of(), Map.of(), baseline(6));
+    assertThrows(IllegalStateException.class,
+        () -> complete.addPerkRank(CatalogRef.of("jury-rigging"), null, null));
+    assertThrows(IllegalStateException.class, () -> complete.removePerkRank("jury-rigging"));
+  }
+
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */
   @Test
   void skillRankCap() {

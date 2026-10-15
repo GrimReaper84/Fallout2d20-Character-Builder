@@ -221,6 +221,17 @@ class LegacyCharacterImporterTest {
     assertTrue(result.importReport().hasWarnings());
   }
 
+  /** User decision: perks outside the catalog (e.g. the legacy invention "Thief") are kept and reported. */
+  @Test
+  void warnsAboutPerksNotInTheCatalog() throws Exception {
+    ObjectNode root = minimal();
+    root.putArray("perks").add("Thief").add("Gun Nut");
+    CharacterFile result = importer.importCharacter(root);
+    assertEquals(2, result.character().getPerks().size());
+    assertTrue(result.importReport().warnings().stream().anyMatch(w -> w.severity() == WarningSeverity.WARNING
+        && w.message().equals("Perks not in the supported books kept by their legacy name: Thief.")));
+  }
+
   @Test
   void keepsInvalidTraitsAndChoicesInsteadOfCrashing() throws Exception {
     ObjectNode root = minimal();

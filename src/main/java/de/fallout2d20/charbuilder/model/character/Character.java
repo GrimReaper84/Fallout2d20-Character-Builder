@@ -3,6 +3,9 @@ package de.fallout2d20.charbuilder.model.character;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
+import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
+import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.ToIntFunction;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -118,16 +122,50 @@ public class Character {
    * Effective attribute value: the base (5 plus the origin modifier, e.g. Super Mutant STR +2,
    * CRB p. 53; or the legacy baseline value for an imported character) plus the creation allocation.
    *
-   * <p>Gifted's chosen attributes add +1 each (CRB p. 56). Perks such as Intense Training are added
-   * here by their feature; they must skip the imported ranks of a perk, whose effects are already
-   * part of the legacy baseline.
+   * <p>Gifted's chosen attributes add +1 each (CRB p. 56), and so does every rank of a perk with an
+   * attribute choice (Intense Training, CRB p. 66). Imported perk ranks are skipped: their effect is
+   * already part of the legacy baseline.
    */
   public int attributeValue(@NonNull Attribute attribute) {
     if (legacyBaseline != null) {
-      return legacyBaseline.attribute(attribute) + attributeAllocation(attribute);
+      return legacyBaseline.attribute(attribute) + attributeAllocation(attribute) + perkBonus(attribute);
     }
     int modifier = getOriginData().map(data -> data.attributeModifier(attribute)).orElse(0);
-    return ATTRIBUTE_BASE + modifier + traitBonus(attribute) + attributeAllocation(attribute);
+    return ATTRIBUTE_BASE + modifier + traitBonus(attribute) + attributeAllocation(attribute)
+        + perkBonus(attribute);
+  }
+
+  /** +1 per new (not imported) rank of an attribute-choice perk that chose the attribute. */
+  private int perkBonus(@NonNull Attribute attribute) {
+    int bonus = 0;
+    for (PerkSelection perk : perks) {
+      if (choiceOf(perk) == PerkChoice.ATTRIBUTE) {
+        List<Attribute> choices = perk.attributeChoices();
+        bonus += (int) choices.subList(Math.min(perk.importedRanks(), choices.size()), choices.size())
+            .stream().filter(choice -> choice == attribute).count();
+      }
+    }
+    return bonus;
+  }
+
+  /**
+   * Sum of a catalog effect field times the rank over the character's catalogued perks (Strong Back,
+   * Toughness, Skilled, ...). Imported ranks count: unlike Intense Training, whose effect is already
+   * part of the legacy baseline attributes, these effects are never stored in a legacy file.
+   */
+  public int perkEffect(@NonNull ToIntFunction<PerkDefinition> effectPerRank) {
+    int total = 0;
+    for (PerkSelection perk : perks) {
+      Optional<PerkDefinition> definition = PerkCatalog.byId(perk.perk().id());
+      if (definition.isPresent()) {
+        total += effectPerRank.applyAsInt(definition.get()) * perk.rank();
+      }
+    }
+    return total;
+  }
+
+  private static @Nullable PerkChoice choiceOf(@NonNull PerkSelection perk) {
+    return PerkCatalog.byId(perk.perk().id()).map(PerkDefinition::choice).orElse(null);
   }
 
   /**
@@ -145,12 +183,13 @@ public class Character {
   }
 
   /**
-   * Whether the skill is a Tag skill: one of the freely chosen Tag skills, or one granted by the
-   * origin – its fixed Tag skill (Ghoul: Survival, in addition to the three free ones, user reading
-   * of CRB p. 52) or the chosen extra Tag skill (e.g. Vault Kid, CRB p. 57).
+   * Whether the skill is a Tag skill: one of the freely chosen Tag skills, one granted by the origin –
+   * its fixed Tag skill (Ghoul: Survival, in addition to the three free ones, user reading of CRB
+   * p. 52) or the chosen extra Tag skill (e.g. Vault Kid, CRB p. 57) – or the skill chosen with Tag!
+   * (CRB p. 73).
    */
   public boolean isTagged(@NonNull Skill skill) {
-    return skillState(skill).tagged() || isTaggedByOrigin(skill);
+    return skillState(skill).tagged() || hasFixedTag(skill);
   }
 
   /**
@@ -194,6 +233,17 @@ public class Character {
         .flatMap(Optional::stream)
         .filter(trait -> trait.forbiddenTagSkills().contains(skill))
         .findFirst();
+  }
+
+  /** Whether a perk with a skill choice made the skill a Tag skill (Tag!, CRB p. 73). */
+  public boolean isTaggedByPerk(@NonNull Skill skill) {
+    return perks.stream().anyMatch(perk -> choiceOf(perk) == PerkChoice.SKILL
+        && perk.skillChoices().contains(skill));
+  }
+
+  /** Whether the skill is tagged by its origin or a perk, i.e. not freely (user decision: separate sources). */
+  private boolean hasFixedTag(@NonNull Skill skill) {
+    return isTaggedByOrigin(skill) || isTaggedByPerk(skill);
   }
 
   public boolean isLegacyImport() {
@@ -261,15 +311,15 @@ public class Character {
   }
 
   /**
-   * Keeps free Tags and bought ranks consistent after origin or traits changed (user decision): a free
-   * Tag is removed from a skill the origin tags (it returns to the free Tag budget; e.g. Ghoul
-   * Survival) or a trait forbids (Nomad: Science), and bought ranks are lowered as far as needed to
-   * stay within {@link #skillRankCap()}, as when tagging a skill.
+   * Keeps free Tags and bought ranks consistent after origin, traits or perks changed (user decision):
+   * a free Tag is removed from a skill the origin or a perk tags (it returns to the free Tag budget;
+   * e.g. Ghoul Survival, Tag!) or a trait forbids (Nomad: Science), and bought ranks are lowered as far
+   * as needed to stay within {@link #skillRankCap()}, as when tagging a skill.
    */
   private void adjustSkillsToRules() {
     for (Skill skill : Skill.values()) {
       SkillState state = skillState(skill);
-      boolean tagged = state.tagged() && !isTaggedByOrigin(skill) && tagForbiddenBy(skill).isEmpty();
+      boolean tagged = state.tagged() && !hasFixedTag(skill) && tagForbiddenBy(skill).isEmpty();
       skills.put(skill, new SkillState(tagged, ranksWithinCap(skill, tagged), state.advancementRanks()));
     }
   }
@@ -277,7 +327,7 @@ public class Character {
   /** The bought ranks of the skill, lowered so its rank stays within the cap (never below 0). */
   private int ranksWithinCap(@NonNull Skill skill, boolean freeTag) {
     SkillState state = skillState(skill);
-    int tagBonus = freeTag || isTaggedByOrigin(skill) ? TAG_SKILL_BONUS : 0;
+    int tagBonus = freeTag || hasFixedTag(skill) ? TAG_SKILL_BONUS : 0;
     int room = skillRankCap() - tagBonus - state.advancementRanks();
     return Math.max(0, Math.min(state.creationRanks(), room));
   }
@@ -298,11 +348,12 @@ public class Character {
    * two free ranks and keeps the bought ones (user decisions). Removing is always possible. The
    * budget is checked by the creation rules.
    *
-   * @throws IllegalArgumentException when tagging a skill the origin already tags or a trait forbids
+   * @throws IllegalArgumentException when tagging a skill the origin or a perk already tags, or a trait
+   *     forbids
    */
   public void setFreeTag(@NonNull Skill skill, boolean tagged) {
     requireCreation();
-    if (tagged && (isTaggedByOrigin(skill) || tagForbiddenBy(skill).isPresent())) {
+    if (tagged && (hasFixedTag(skill) || tagForbiddenBy(skill).isPresent())) {
       throw new IllegalArgumentException(skill.displayName() + " cannot get a free Tag");
     }
     SkillState state = skillState(skill);
@@ -345,6 +396,65 @@ public class Character {
   public void removeTrait(@NonNull String traitId) {
     requireCreation();
     traits.removeIf(selection -> selection.trait().id().equals(traitId));
+  }
+
+  /**
+   * Takes one more rank of a perk during creation, with the attribute or skill chosen for it (Intense
+   * Training, Tag!). Requirements and budget are checked by the creation rules, not here. A Tag! skill
+   * loses a free Tag and keeps its bought ranks within the cap (see {@link #adjustSkillsToRules()}).
+   */
+  public void addPerkRank(@NonNull CatalogRef perk, @Nullable Attribute attribute, @Nullable Skill skill) {
+    requireCreation();
+    int index = perkIndex(perk.id());
+    PerkSelection current = index < 0 ? null : perks.get(index);
+    List<Attribute> attributes = new ArrayList<>(current == null ? List.of() : current.attributeChoices());
+    List<Skill> chosenSkills = new ArrayList<>(current == null ? List.of() : current.skillChoices());
+    if (attribute != null) {
+      attributes.add(attribute);
+    }
+    if (skill != null) {
+      chosenSkills.add(skill);
+    }
+    if (current == null) {
+      perks.add(new PerkSelection(perk, 1, 0, attributes, chosenSkills));
+    } else {
+      perks.set(index, new PerkSelection(current.perk(), current.rank() + 1, current.importedRanks(),
+          attributes, chosenSkills));
+    }
+    adjustSkillsToRules();
+  }
+
+  /**
+   * Gives back the last rank of a perk during creation, with its choice; imported ranks stay. The perk
+   * is removed when no rank is left.
+   */
+  public void removePerkRank(@NonNull String perkId) {
+    requireCreation();
+    int index = perkIndex(perkId);
+    if (index < 0 || perks.get(index).rank() <= perks.get(index).importedRanks()) {
+      return;
+    }
+    PerkSelection perk = perks.get(index);
+    if (perk.rank() == 1) {
+      perks.remove(index);
+      return;
+    }
+    perks.set(index, new PerkSelection(perk.perk(), perk.rank() - 1, perk.importedRanks(),
+        dropLast(perk.attributeChoices(), perk.rank()), dropLast(perk.skillChoices(), perk.rank())));
+  }
+
+  /** The choices without the one of the given (last) rank, if that rank has one. */
+  private static <T> @NonNull List<T> dropLast(@NonNull List<T> choices, int rank) {
+    return choices.size() >= rank ? choices.subList(0, choices.size() - 1) : choices;
+  }
+
+  private int perkIndex(@NonNull String perkId) {
+    for (int i = 0; i < perks.size(); i++) {
+      if (perks.get(i).perk().id().equals(perkId)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   /** Sets the attribute choices of a chosen trait (Gifted); checked by the creation rules, not here. */

@@ -1,11 +1,11 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
-import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Formulas of the derived statistics. Origin effects (fixed carry weight, immunities, base radiation
  * DR) come from the origin catalog, trait effects (Small Frame, Heavy Handed, Gifted) from the trait
- * catalog; perk effects are looked up by catalog id here, until the perk catalog exists. A
+ * catalog, perk effects from the effect fields of the perk catalog (times the rank). A
  * character without origin or with an origin that is not in the catalog (e.g. an unsupported legacy
  * origin) gets no origin effects.
  *
@@ -30,16 +30,6 @@ final class DerivedStatsCalculator {
 
   private static final int CARRY_BASE = 150;
   private static final int CARRY_PER_STRENGTH = 10;
-  private static final int STRONG_BACK_CARRY_PER_RANK = 25;
-  private static final int SNAKEATER_POISON_DR = 2;
-
-  private static final String LIFE_GIVER = "life-giver";
-  private static final String STRONG_BACK = "strong-back";
-  private static final String TOUGHNESS = "toughness";
-  private static final String BARBARIAN = "barbarian";
-  private static final String REFRACTOR = "refractor";
-  private static final String RAD_RESISTANCE = "rad-resistance";
-  private static final String SNAKEATER = "snakeater";
 
   private DerivedStatsCalculator() {}
 
@@ -53,7 +43,7 @@ final class DerivedStatsCalculator {
         meleeBonusDice(character),
         maxLuckPoints(character),
         physicalResistance(character),
-        Resistance.of(perkRank(character, REFRACTOR)),
+        Resistance.of(character.perkEffect(PerkDefinition::energyDrPerRank)),
         radiationResistance(character, origin),
         poisonResistance(character, origin));
   }
@@ -66,7 +56,7 @@ final class DerivedStatsCalculator {
   private static int maxHp(@NonNull Character character) {
     int endurance = character.attributeValue(Attribute.ENDURANCE);
     return endurance + character.attributeValue(Attribute.LUCK) + character.getLevel() - 1
-        + endurance * perkRank(character, LIFE_GIVER);
+        + endurance * character.perkEffect(PerkDefinition::maxHpPerEndurance);
   }
 
   /** CRB p. 47: PER + AGI. */
@@ -87,7 +77,7 @@ final class DerivedStatsCalculator {
     int perStrength = traits(character).stream().map(TraitDefinition::carryWeightPerStrength)
         .filter(Objects::nonNull).min(Integer::compare).orElse(CARRY_PER_STRENGTH);
     return CARRY_BASE + perStrength * character.attributeValue(Attribute.STRENGTH)
-        + STRONG_BACK_CARRY_PER_RANK * perkRank(character, STRONG_BACK);
+        + character.perkEffect(PerkDefinition::carryWeightPerRank);
   }
 
   /** CRB p. 47: STR 7–8 +1, 9–10 +2, 11+ +3 Combat Dice; Heavy Handed +1 (CRB p. 56). */
@@ -108,9 +98,9 @@ final class DerivedStatsCalculator {
    * apply in Power Armor; that exclusion follows with the armor feature.
    */
   private static @NonNull Resistance physicalResistance(@NonNull Character character) {
-    int barbarian = perkRank(character, BARBARIAN) > 0
-        ? strengthTier(character.attributeValue(Attribute.STRENGTH)) : 0;
-    return Resistance.of(perkRank(character, TOUGHNESS) + barbarian);
+    boolean byStrength = character.perkEffect(perk -> perk.physicalDrByStrength() ? 1 : 0) > 0;
+    int barbarian = byStrength ? strengthTier(character.attributeValue(Attribute.STRENGTH)) : 0;
+    return Resistance.of(character.perkEffect(PerkDefinition::physicalDrPerRank) + barbarian);
   }
 
   /** Rad Resistance +1 per rank (CRB p. 70); origin immunity or base DR (Child of Atom). */
@@ -120,7 +110,7 @@ final class DerivedStatsCalculator {
       return Resistance.IMMUNITY;
     }
     int base = origin == null ? 0 : origin.baseRadiationDr();
-    return Resistance.of(base + perkRank(character, RAD_RESISTANCE));
+    return Resistance.of(base + character.perkEffect(PerkDefinition::radiationDrPerRank));
   }
 
   /** Snakeater +2 (CRB p. 72); origin immunity. */
@@ -129,7 +119,7 @@ final class DerivedStatsCalculator {
     if (origin != null && origin.poisonImmune()) {
       return Resistance.IMMUNITY;
     }
-    return Resistance.of(SNAKEATER_POISON_DR * perkRank(character, SNAKEATER));
+    return Resistance.of(character.perkEffect(PerkDefinition::poisonDrPerRank));
   }
 
   /** Shared STR thresholds of the melee bonus (CRB p. 47) and Barbarian (CRB p. 60). */
@@ -141,16 +131,6 @@ final class DerivedStatsCalculator {
       return 2;
     }
     return strength >= 7 ? 1 : 0;
-  }
-
-  private static int perkRank(@NonNull Character character, @NonNull String perkId) {
-    int rank = 0;
-    for (PerkSelection perk : character.getPerks()) {
-      if (perk.perk().id().equals(perkId)) {
-        rank += perk.rank();
-      }
-    }
-    return rank;
   }
 
   /** Catalog entries of the character's traits; imported traits count too (not in the baseline). */

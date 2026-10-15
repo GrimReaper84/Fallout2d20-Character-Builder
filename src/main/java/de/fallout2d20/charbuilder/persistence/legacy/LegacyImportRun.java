@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -233,9 +234,18 @@ final class LegacyImportRun {
     }
     reportPerkProblems(merged, invalid, invalidChoices);
     List<PerkSelection> perks = new ArrayList<>();
+    List<String> notInCatalog = new ArrayList<>();
     for (Map.Entry<String, Integer> entry : ranks.entrySet()) {
-      perks.add(new PerkSelection(CatalogRef.fromLegacyName(entry.getKey()), entry.getValue(),
-          entry.getValue(), choices.getOrDefault(entry.getKey(), List.of()), List.of()));
+      CatalogRef ref = CatalogRef.fromLegacyName(entry.getKey());
+      if (PerkCatalog.byId(ref.id()).isEmpty()) {
+        notInCatalog.add(entry.getKey());
+      }
+      perks.add(new PerkSelection(ref, entry.getValue(), entry.getValue(),
+          choices.getOrDefault(entry.getKey(), List.of()), List.of()));
+    }
+    if (!notInCatalog.isEmpty()) {
+      warning(PERKS, "Perks not in the supported books kept by their legacy name: "
+          + String.join(", ", notInCatalog) + ".");
     }
     return perks;
   }

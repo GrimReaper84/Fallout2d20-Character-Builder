@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.creation;
 
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -19,7 +20,8 @@ import org.jspecify.annotations.NonNull;
  * effective Intelligence, which counts Gifted and Intense Training taken during creation (user
  * decision); one point buys one rank. All free Tags and all skill points must be used (user
  * decision). No skill may exceed {@link Character#skillRankCap()}. Soft checks only, for characters
- * in creation. Starting-level terms (level skill ranks, Skilled) are not counted yet.
+ * in creation. Skilled adds 2 skill points per rank (CRB p. 71); the level skill ranks of a higher
+ * starting level are not counted yet (B6).
  */
 public final class SkillRules {
 
@@ -54,9 +56,10 @@ public final class SkillRules {
     return freeTagBudget(character) - chosen;
   }
 
-  /** Skill points of the character: 9 + effective Intelligence. */
+  /** Skill points of the character: 9 + effective Intelligence, +2 per rank of Skilled (CRB p. 71). */
   public static int skillPointBudget(@NonNull Character character) {
-    return SKILL_POINTS_BASE + character.attributeValue(Attribute.INTELLIGENCE);
+    return SKILL_POINTS_BASE + character.attributeValue(Attribute.INTELLIGENCE)
+        + character.perkEffect(PerkDefinition::skillPointsPerRank);
   }
 
   /** Skill points still to spend; negative if too many are spent. Free Tag ranks cost nothing. */
@@ -80,13 +83,15 @@ public final class SkillRules {
 
   /**
    * Whether the free Tag of the skill may be switched: a free Tag can always be removed; a new one
-   * needs free Tags left, and the skill must be neither tagged by the origin nor forbidden by a trait.
+   * needs free Tags left, and the skill must be neither tagged by the origin or a perk nor forbidden by
+   * a trait.
    */
   public static boolean canToggleTag(@NonNull Character character, @NonNull Skill skill) {
     if (character.skillState(skill).tagged()) {
       return true;
     }
-    return !character.isTaggedByOrigin(skill) && character.tagForbiddenBy(skill).isEmpty()
+    return !character.isTaggedByOrigin(skill) && !character.isTaggedByPerk(skill)
+        && character.tagForbiddenBy(skill).isEmpty()
         && freeTagsLeft(character) > 0;
   }
 
