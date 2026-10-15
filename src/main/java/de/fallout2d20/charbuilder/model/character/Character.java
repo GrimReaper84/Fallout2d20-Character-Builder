@@ -21,9 +21,9 @@ import org.jspecify.annotations.Nullable;
  * values, so every value can be traced back. A character imported from a legacy save carries a
  * {@link LegacyBaseline} that replaces base and creation allocation.
  *
- * <p>Origin effects (attribute modifiers, origin Tag skills) are applied only to characters without
- * a legacy baseline: an imported baseline already contains them. Origin and origin choices can only
- * be changed while creation is not complete.
+ * <p>Origin and trait effects (attribute modifiers, origin Tag skills, Gifted) are applied only to
+ * characters without a legacy baseline: an imported baseline already contains them. Origin, origin
+ * choices and traits can only be changed while creation is not complete.
  */
 public class Character {
 
@@ -106,16 +106,30 @@ public class Character {
    * Effective attribute value: the base (5 plus the origin modifier, e.g. Super Mutant STR +2,
    * CRB p. 53; or the legacy baseline value for an imported character) plus the creation allocation.
    *
-   * <p>Traits (Gifted) and perks (Intense Training) are added here by their features; they must skip
-   * imported traits and the imported ranks of a perk, whose effects are already part of the legacy
-   * baseline.
+   * <p>Gifted's chosen attributes add +1 each (CRB p. 56). Perks such as Intense Training are added
+   * here by their feature; they must skip the imported ranks of a perk, whose effects are already
+   * part of the legacy baseline.
    */
   public int attributeValue(@NonNull Attribute attribute) {
     if (legacyBaseline != null) {
       return legacyBaseline.attribute(attribute) + attributeAllocation(attribute);
     }
     int modifier = getOriginData().map(data -> data.attributeModifier(attribute)).orElse(0);
-    return ATTRIBUTE_BASE + modifier + attributeAllocation(attribute);
+    return ATTRIBUTE_BASE + modifier + traitBonus(attribute) + attributeAllocation(attribute);
+  }
+
+  /**
+   * +1 per choice of the attribute by a trait with attribute choices (Gifted, CRB p. 56). Imported
+   * traits are skipped: their effect is part of the legacy baseline.
+   */
+  private int traitBonus(@NonNull Attribute attribute) {
+    int bonus = 0;
+    for (TraitSelection trait : traits) {
+      if (trait.choosesAttributes()) {
+        bonus += (int) trait.attributeChoices().stream().filter(choice -> choice == attribute).count();
+      }
+    }
+    return bonus;
   }
 
   /**
@@ -206,9 +220,30 @@ public class Character {
     originChoices = originChoices.withPurpose(purpose == null || purpose.isBlank() ? null : purpose.strip());
   }
 
+  /** Takes a trait during creation; a trait already chosen is not added twice. */
+  public void chooseTrait(@NonNull CatalogRef trait) {
+    requireCreation();
+    if (traits.stream().noneMatch(selection -> selection.trait().id().equals(trait.id()))) {
+      traits.add(new TraitSelection(trait, false, List.of()));
+    }
+  }
+
+  /** Removes a trait (and its attribute choices) during creation. */
+  public void removeTrait(@NonNull String traitId) {
+    requireCreation();
+    traits.removeIf(selection -> selection.trait().id().equals(traitId));
+  }
+
+  /** Sets the attribute choices of a chosen trait (Gifted); checked by the creation rules, not here. */
+  public void setTraitAttributeChoices(@NonNull String traitId, @NonNull List<Attribute> choices) {
+    requireCreation();
+    traits.replaceAll(selection -> selection.trait().id().equals(traitId)
+        ? new TraitSelection(selection.trait(), selection.imported(), choices) : selection);
+  }
+
   private void requireCreation() {
     if (creationComplete) {
-      throw new IllegalStateException("The origin can only be changed during character creation");
+      throw new IllegalStateException("This can only be changed during character creation");
     }
   }
 

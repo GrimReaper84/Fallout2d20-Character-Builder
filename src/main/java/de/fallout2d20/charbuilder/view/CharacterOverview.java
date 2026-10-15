@@ -3,6 +3,8 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
+import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -13,8 +15,13 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.creation.OriginRules;
+import de.fallout2d20.charbuilder.model.character.creation.TraitRules;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
@@ -37,6 +44,7 @@ final class CharacterOverview {
       "Imported from a legacy file; its effect is already included in the imported values.";
   private static final String UNRESOLVED_TOOLTIP =
       "Not yet checked against the rulebooks (shown with its legacy name).";
+  private static final String HINT_STYLE = "-fx-text-fill: #a35200;";
   private static final String RESISTANCE_TOOLTIP = "Innate resistance from origin and perks; armor is not included.";
   private static final String PHYSICAL_RESISTANCE_TOOLTIP =
       RESISTANCE_TOOLTIP + " A Barbarian bonus does not apply while wearing Power Armor.";
@@ -66,6 +74,10 @@ final class CharacterOverview {
       addOriginChoices(pane, character.getOriginChoices());
     } else {
       OriginSection.addTo(pane, character, onEdited, onChanged);
+      TraitSection.addTo(pane, character, onChanged);
+      List<CreationProblem> problems = new ArrayList<>(OriginRules.problems(character));
+      problems.addAll(TraitRules.problems(character));
+      addHints(pane, problems);
     }
     pane.add(new Label("Level"));
     pane.add(new Label(Integer.toString(character.getLevel())));
@@ -116,7 +128,7 @@ final class CharacterOverview {
       pane.add(new Label("None"), "span 4");
     }
     for (TraitSelection trait : character.getTraits()) {
-      pane.add(importMarked(reference(trait.trait()), trait.imported()), "span 4");
+      pane.add(importMarked(trait(trait), trait.imported()), "span 4");
     }
 
     heading(pane, "Perks");
@@ -171,6 +183,34 @@ final class CharacterOverview {
     label.setTooltip(new Tooltip(tooltip));
     pane.add(label);
     pane.add(new Label(resistance.toString()));
+  }
+
+  /** Rule hints of the creation rules; soft, they never block editing or saving. */
+  private static void addHints(@NonNull MigPane pane, @NonNull List<CreationProblem> problems) {
+    pane.add(new Label("Rule hints"), "top");
+    if (problems.isEmpty()) {
+      pane.add(new Label("No problems with the origin and trait rules."), "span 3");
+      return;
+    }
+    Label hints = new Label(problems.stream().map(CreationProblem::message)
+        .collect(Collectors.joining("\n")));
+    hints.setStyle(HINT_STYLE);
+    hints.setWrapText(true);
+    pane.add(hints, "span 3");
+  }
+
+  /** Trait resolved from the catalog (name, tooltip, Gifted choices), else the plain reference. */
+  private static @NonNull Label trait(@NonNull TraitSelection selection) {
+    Optional<TraitDefinition> trait = TraitCatalog.byId(selection.trait().id());
+    if (trait.isEmpty()) {
+      return reference(selection.trait());
+    }
+    String choices = selection.attributeChoices().isEmpty() ? ""
+        : " (" + selection.attributeChoices().stream().map(Attribute::abbreviation)
+            .collect(Collectors.joining(", ")) + ")";
+    Label label = new Label(trait.get().name() + choices);
+    label.setTooltip(new Tooltip(TraitSection.describe(trait.get())));
+    return label;
   }
 
   /** Origin choices of a complete character, as text. */

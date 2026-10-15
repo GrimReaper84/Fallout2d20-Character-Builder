@@ -14,9 +14,9 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Checks the rules an origin sets for character creation (CRB p. 51–58, WOA p. 18–25,
- * WG p. 10–15): attribute maximums, skill rank cap, the origin's extra Tag skill, the number of
- * traits and origin-specific choices. Only characters in creation are checked; the free Tag skills,
- * attribute budget and perk budget belong to other creation rules.
+ * WG p. 10–15): attribute maximums, skill rank cap, the origin's extra Tag skill and
+ * origin-specific choices. Only characters in creation are checked; traits are checked by
+ * {@link TraitRules}, the free Tag skills, attribute budget and perk budget by other creation rules.
  */
 public final class OriginRules {
 
@@ -48,7 +48,6 @@ public final class OriginRules {
     checkAttributes(character, originData, problems);
     checkSkillCap(character, originData, problems);
     checkExtraTagSkill(character, originData, problems);
-    checkTraits(character, originData, problems);
     checkChoices(character.getOriginChoices(), originData, problems);
     return problems;
   }
@@ -62,8 +61,7 @@ public final class OriginRules {
     if (data.isEmpty()) {
       return 0;
     }
-    boolean oneTraitAndPerk = !data.get().traitLists().isEmpty() && character.getTraits().size() == 1;
-    return data.get().extraPerks() + (oneTraitAndPerk ? 1 : 0);
+    return data.get().extraPerks() + (TraitRules.takesExtraPerkInsteadOfTrait(character) ? 1 : 0);
   }
 
   /** CRB p. 58: no attribute above 10, unless the origin changes the maximum (e.g. CRB p. 53). */
@@ -109,23 +107,6 @@ public final class OriginRules {
     } else if (character.skillState(chosen).tagged() || chosen == origin.fixedTagSkill()) {
       problems.add(new CreationProblem(ORIGIN, chosen.displayName()
           + " is already a Tag skill; choose another extra Tag skill."));
-    }
-  }
-
-  /**
-   * Survivor (CRB p. 56) and Tribal (WG p. 15): two traits, or one trait and an extra perk. Whether
-   * the traits come from the right list is checked with the trait catalog (feature B2).
-   */
-  private static void checkTraits(@NonNull Character character, @NonNull OriginData origin,
-      @NonNull List<CreationProblem> problems) {
-    int traits = character.getTraits().size();
-    if (origin.traitLists().isEmpty()) {
-      if (traits > 0) {
-        problems.add(new CreationProblem(ORIGIN, origin.name() + " offers no traits."));
-      }
-    } else if (traits < 1 || traits > 2) {
-      problems.add(new CreationProblem(ORIGIN,
-          "Choose two traits, or one trait and an extra perk."));
     }
   }
 

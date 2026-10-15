@@ -65,6 +65,18 @@ class OriginRulesTest {
     assertEquals(List.of("Agility may not exceed 10 (Ghoul)."), messages(ghoul));
   }
 
+  /** CRB p. 58: Gifted (CRB p. 56) may not push an attribute above 10 either. */
+  @Test
+  void giftedCannotExceedTheAttributeMaximum() {
+    Character survivor = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0,
+        false, EnumSet.allOf(Book.class), Map.of(Attribute.AGILITY, 5), Map.of(),
+        List.of(new TraitSelection(CatalogRef.of("gifted"), false,
+            List.of(Attribute.AGILITY, Attribute.LUCK))),
+        List.of(), Progression.NONE, Vitals.FULL, null, null);
+    assertEquals(List.of("Agility may not exceed 10 (Survivor)."),
+        OriginRules.problems(survivor).stream().map(CreationProblem::message).toList());
+  }
+
   /** CRB p. 51: the extra Tag skill must be Energy Weapons, Science or Repair and not taken twice. */
   @Test
   void brotherhoodExtraTagSkill() {
@@ -89,15 +101,9 @@ class OriginRulesTest {
     assertEquals(List.of(), messages(dweller));
   }
 
-  /** CRB p. 56: two traits, or one trait and an extra perk. */
+  /** CRB p. 56: one trait instead of two gives an extra perk (the trait count is a trait rule). */
   @Test
-  void survivorTraitCount() {
-    for (int count : new int[] {0, 3}) {
-      assertEquals(List.of("Choose two traits, or one trait and an extra perk."),
-          messages(survivor(count)), "traits: " + count);
-    }
-    assertEquals(List.of(), messages(survivor(1)));
-    assertEquals(List.of(), messages(survivor(2)));
+  void survivorWithOneTraitGetsAnExtraPerk() {
     assertEquals(1, OriginRules.extraPerks(survivor(1)));
     assertEquals(0, OriginRules.extraPerks(survivor(2)));
   }

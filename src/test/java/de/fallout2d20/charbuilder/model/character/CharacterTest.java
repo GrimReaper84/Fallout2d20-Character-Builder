@@ -133,6 +133,54 @@ class CharacterTest {
     assertThrows(IllegalStateException.class, () -> complete.setNoPincer(true));
   }
 
+  /** CRB p. 56: Gifted raises two chosen attributes by 1; an imported Gifted adds nothing. */
+  @Test
+  void giftedRaisesTwoAttributes() {
+    Character survivor = Character.createNew();
+    survivor.chooseOrigin(CatalogRef.of("survivor"));
+    survivor.chooseTrait(CatalogRef.of("gifted"));
+    survivor.setTraitAttributeChoices("gifted", List.of(Attribute.STRENGTH, Attribute.AGILITY));
+    assertEquals(6, survivor.attributeValue(Attribute.STRENGTH));
+    assertEquals(6, survivor.attributeValue(Attribute.AGILITY));
+    assertEquals(5, survivor.attributeValue(Attribute.LUCK));
+
+    // Without a baseline, so only the imported flag keeps the choice from counting.
+    Character imported = new Character("Imported", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0,
+        true, EnumSet.allOf(Book.class), Map.of(), Map.of(),
+        List.of(new TraitSelection(CatalogRef.of("gifted"), true, List.of(Attribute.STRENGTH))),
+        List.of(), Progression.NONE, Vitals.FULL, null, null);
+    assertEquals(5, imported.attributeValue(Attribute.STRENGTH));
+  }
+
+  /** Choices of traits without attribute choices have no effect. */
+  @Test
+  void onlyTraitsWithAttributeChoicesRaiseAttributes() {
+    Character survivor = Character.createNew();
+    survivor.chooseOrigin(CatalogRef.of("survivor"));
+    survivor.chooseTrait(CatalogRef.of("educated"));
+    survivor.setTraitAttributeChoices("educated", List.of(Attribute.STRENGTH));
+    assertEquals(5, survivor.attributeValue(Attribute.STRENGTH));
+  }
+
+  @Test
+  void traitMutatorsWorkOnlyDuringCreation() {
+    Character survivor = Character.createNew();
+    survivor.chooseOrigin(CatalogRef.of("survivor"));
+    survivor.chooseTrait(CatalogRef.of("small-frame"));
+    survivor.chooseTrait(CatalogRef.of("small-frame"));
+    survivor.chooseTrait(CatalogRef.of("gifted"));
+    assertEquals(List.of("small-frame", "gifted"),
+        survivor.getTraits().stream().map(trait -> trait.trait().id()).toList());
+    survivor.removeTrait("small-frame");
+    assertEquals(1, survivor.getTraits().size());
+
+    Character complete = create(Map.of(), Map.of(), baseline(6));
+    assertThrows(IllegalStateException.class, () -> complete.chooseTrait(CatalogRef.of("gifted")));
+    assertThrows(IllegalStateException.class, () -> complete.removeTrait("gifted"));
+    assertThrows(IllegalStateException.class,
+        () -> complete.setTraitAttributeChoices("gifted", List.of(Attribute.STRENGTH)));
+  }
+
   private static LegacyBaseline baseline(int value) {
     Map<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {

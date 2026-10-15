@@ -1,18 +1,23 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
+import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
-import de.fallout2d20.charbuilder.model.character.TraitSelection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Formulas of the derived statistics. Origin effects (fixed carry weight, immunities, base radiation
- * DR) come from the origin catalog; perk and trait effects are looked up by catalog id here, until
- * their catalogs exist. A character without origin or with an origin that is not in the catalog
- * (e.g. an unsupported legacy origin) gets no origin effects.
+ * DR) come from the origin catalog, trait effects (Small Frame, Heavy Handed, Gifted) from the trait
+ * catalog; perk effects are looked up by catalog id here, until the perk catalog exists. A
+ * character without origin or with an origin that is not in the catalog (e.g. an unsupported legacy
+ * origin) gets no origin effects.
  *
  * <p>Effects of imported perk ranks and traits count fully: a legacy baseline only contains
  * attribute and skill values, never derived statistics.
@@ -24,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 final class DerivedStatsCalculator {
 
   private static final int CARRY_BASE = 150;
+  private static final int CARRY_PER_STRENGTH = 10;
   private static final int STRONG_BACK_CARRY_PER_RANK = 25;
   private static final int SNAKEATER_POISON_DR = 2;
 
@@ -34,10 +40,6 @@ final class DerivedStatsCalculator {
   private static final String REFRACTOR = "refractor";
   private static final String RAD_RESISTANCE = "rad-resistance";
   private static final String SNAKEATER = "snakeater";
-
-  private static final String SMALL_FRAME = "small-frame";
-  private static final String HEAVY_HANDED = "heavy-handed";
-  private static final String GIFTED = "gifted";
 
   private DerivedStatsCalculator() {}
 
@@ -82,7 +84,8 @@ final class DerivedStatsCalculator {
     if (origin != null && origin.fixedCarryWeight() != null) {
       return origin.fixedCarryWeight();
     }
-    int perStrength = hasTrait(character, SMALL_FRAME) ? 5 : 10;
+    int perStrength = traits(character).stream().map(TraitDefinition::carryWeightPerStrength)
+        .filter(Objects::nonNull).min(Integer::compare).orElse(CARRY_PER_STRENGTH);
     return CARRY_BASE + perStrength * character.attributeValue(Attribute.STRENGTH)
         + STRONG_BACK_CARRY_PER_RANK * perkRank(character, STRONG_BACK);
   }
@@ -90,12 +93,13 @@ final class DerivedStatsCalculator {
   /** CRB p. 47: STR 7–8 +1, 9–10 +2, 11+ +3 Combat Dice; Heavy Handed +1 (CRB p. 56). */
   private static int meleeBonusDice(@NonNull Character character) {
     return strengthTier(character.attributeValue(Attribute.STRENGTH))
-        + (hasTrait(character, HEAVY_HANDED) ? 1 : 0);
+        + traits(character).stream().mapToInt(TraitDefinition::meleeBonusDice).sum();
   }
 
   /** CRB p. 21: at most as many Luck points as the Luck attribute; Gifted one fewer (CRB p. 56). */
   private static int maxLuckPoints(@NonNull Character character) {
-    int luck = character.attributeValue(Attribute.LUCK) - (hasTrait(character, GIFTED) ? 1 : 0);
+    int luck = character.attributeValue(Attribute.LUCK)
+        - traits(character).stream().mapToInt(TraitDefinition::luckPointPenalty).sum();
     return Math.max(0, luck);
   }
 
@@ -149,12 +153,10 @@ final class DerivedStatsCalculator {
     return rank;
   }
 
-  private static boolean hasTrait(@NonNull Character character, @NonNull String traitId) {
-    for (TraitSelection trait : character.getTraits()) {
-      if (trait.trait().id().equals(traitId)) {
-        return true;
-      }
-    }
-    return false;
+  /** Catalog entries of the character's traits; imported traits count too (not in the baseline). */
+  private static @NonNull List<TraitDefinition> traits(@NonNull Character character) {
+    return character.getTraits().stream()
+        .map(selection -> TraitCatalog.byId(selection.trait().id()))
+        .flatMap(Optional::stream).toList();
   }
 }

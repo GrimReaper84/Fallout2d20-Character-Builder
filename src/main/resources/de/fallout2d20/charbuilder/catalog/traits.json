@@ -1,0 +1,88 @@
+[
+  {
+    "id": "educated",
+    "name": "Educated",
+    "list": "survivor",
+    "sources": [{"book": "CRB", "page": 56}],
+    "benefit": "One more Tag skill.",
+    "penalty": "Each failed test with an untagged skill gives the GM 1 AP.",
+    "extraTagSkills": 1
+  },
+  {
+    "id": "fast-shot",
+    "name": "Fast Shot",
+    "list": "survivor",
+    "sources": [{"book": "CRB", "page": 56}],
+    "benefit": "A second major action used for a ranged attack costs only 1 AP.",
+    "penalty": "The Aim minor action gives you no benefit."
+  },
+  {
+    "id": "gifted",
+    "name": "Gifted",
+    "list": "survivor",
+    "sources": [{"book": "CRB", "page": 56}],
+    "benefit": "+1 to two different S.P.E.C.I.A.L. attributes of your choice.",
+    "penalty": "Your maximum Luck points are one below your Luck.",
+    "attributeChoices": 2,
+    "luckPointPenalty": 1
+  },
+  {
+    "id": "heavy-handed",
+    "name": "Heavy Handed",
+    "list": "survivor",
+    "sources": [{"book": "CRB", "page": 56}],
+    "benefit": "+1 CD to your melee damage bonus.",
+    "penalty": "Melee and unarmed attacks complicate on 19 and 20.",
+    "meleeBonusDice": 1
+  },
+  {
+    "id": "small-frame",
+    "name": "Small Frame",
+    "list": "survivor",
+    "sources": [{"book": "CRB", "page": 56}],
+    "benefit": "Re-roll 1d20 on AGI tests about balance or contortion.",
+    "penalty": "Carry weight uses 5 × STR instead of 10 × STR.",
+    "carryWeightPerStrength": 5
+  },
+  {
+    "id": "mother-wasteland",
+    "name": "Mother Wasteland",
+    "list": "tribal",
+    "sources": [{"book": "WG", "page": 15}],
+    "benefit": "Spend 1 Luck for a cryptic insight, worth three uses of Obtain Information.",
+    "penalty": "Complications make pre-War artifacts harder for you to understand and use."
+  },
+  {
+    "id": "nomad",
+    "name": "Nomad",
+    "list": "tribal",
+    "sources": [{"book": "WG", "page": 15}],
+    "benefit": "Re-roll 1d20 on Survival tests for travel, camping and foraging; the first complication there is ignored.",
+    "penalty": "Barter and Speech with settlers are harder and complicate more easily; Science cannot be a Tag skill.",
+    "forbiddenTagSkills": ["SCIENCE"]
+  },
+  {
+    "id": "rite-of-passage",
+    "name": "Rite of Passage",
+    "list": "tribal",
+    "sources": [{"book": "WG", "page": 15}],
+    "benefit": "The first Luck point spent in a scene may be refunded on an effect rolled on 1 CD.",
+    "penalty": "Assisting another player character costs you 1 AP first."
+  },
+  {
+    "id": "tools-of-the-old-world",
+    "name": "Tools of the Old World",
+    "list": "tribal",
+    "sources": [{"book": "WG", "page": 15}],
+    "benefit": "Survival can replace Repair or Science for repairing or using pre-War tech.",
+    "penalty": "Tests with pre-War technology (other than weapons) complicate 2 points more easily."
+  },
+  {
+    "id": "the-chosen-one",
+    "name": "The Chosen One",
+    "list": "tribal",
+    "sources": [{"book": "WG", "page": 15}],
+    "benefit": "The first bought d20 is free on tests for your tribe's quest, and you may succeed at a cost.",
+    "penalty": "The GM gains 2 AP whenever your quest comes up."
+  }
+]

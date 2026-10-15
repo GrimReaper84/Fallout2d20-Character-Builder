@@ -8,10 +8,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.Skill;
-import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
-import de.fallout2d20.charbuilder.model.character.creation.OriginRules;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.scene.control.CheckBox;
@@ -22,15 +19,14 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Origin choice of a character in creation: the origin (limited to the enabled books), the
- * origin's own options and the origin rule hints. Every change goes to the model and then to
+ * Origin choice of a character in creation: the origin (limited to the enabled books) and the
+ * origin's own options. Every change goes to the model and then to
  * {@code onChanged}, which rebuilds the overview.
  */
 final class OriginSection {
 
   private static final String NO_PINCER_TOOLTIP =
       "No unarmed attacks or object handling; no Lockpick, Repair or Throwing tests (CRB p. 55).";
-  private static final String HINT_STYLE = "-fx-text-fill: #a35200;";
 
   private OriginSection() {}
 
@@ -60,7 +56,6 @@ final class OriginSection {
     pane.add(new Label("Origin"));
     pane.add(origins, "span 3");
     selected.ifPresent(origin -> addOptions(pane, character, origin, onEdited, onChanged));
-    addHints(pane, OriginRules.problems(character));
   }
 
   private static void addOptions(@NonNull MigPane pane, @NonNull Character character,
@@ -121,19 +116,6 @@ final class OriginSection {
       pane.add(new Label("Purpose"));
       pane.add(purpose, "span 3");
     }
-  }
-
-  private static void addHints(@NonNull MigPane pane, @NonNull List<CreationProblem> problems) {
-    pane.add(new Label("Rule hints"), "top");
-    if (problems.isEmpty()) {
-      pane.add(new Label("No problems with the origin rules."), "span 3");
-      return;
-    }
-    Label hints = new Label(problems.stream().map(CreationProblem::message)
-        .collect(Collectors.joining("\n")));
-    hints.setStyle(HINT_STYLE);
-    hints.setWrapText(true);
-    pane.add(hints, "span 3");
   }
 
   /** Sources and own summary of the origin trait, e.g. {@code CRB p. 52 – Immune to …}. */
