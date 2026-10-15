@@ -6,10 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 
 class CharacterTest {
@@ -395,6 +397,54 @@ class CharacterTest {
     assertEquals(0, huge.getXp());
     Character complete = create(Map.of(), Map.of(), baseline(6));
     assertThrows(IllegalStateException.class, () -> complete.setStartingLevel(2));
+  }
+
+  /** CRB p. 50: creation ends once; afterwards creation choices are fixed. */
+  @Test
+  void completeCreationEndsCreation() {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    character.setStartingLevel(3);
+    assertEquals(OptionalInt.of(3), character.getStartingLevel(), "during creation the current level");
+    character.completeCreation();
+    assertTrue(character.isCreationComplete());
+    assertEquals(OptionalInt.of(3), character.getStartingLevel());
+    assertThrows(IllegalStateException.class, character::completeCreation);
+    assertThrows(IllegalStateException.class, () -> character.chooseOrigin(CatalogRef.of("ghoul")));
+    assertThrows(IllegalStateException.class, () -> character.setFreeTag(Skill.SNEAK, true));
+    assertThrows(IllegalStateException.class, () -> character.addPerkRank(CatalogRef.of("gun-nut"), null, null));
+    assertThrows(IllegalStateException.class, () -> character.chooseEquipmentPack(CatalogRef.of("settler")));
+    assertThrows(IllegalStateException.class, () -> character.setStartingLevel(4));
+  }
+
+  /** CRB p. 58: the creation rank cap of 3 no longer applies after creation. */
+  @Test
+  void completionLiftsTheCreationRankCap() {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    assertEquals(3, character.skillRankCap());
+    character.completeCreation();
+    assertEquals(6, character.skillRankCap());
+  }
+
+  /** Imported characters are complete with an unknown starting level. */
+  @Test
+  void importedCharactersHaveNoKnownStartingLevel() {
+    assertEquals(OptionalInt.empty(), create(Map.of(), Map.of(), baseline(6)).getStartingLevel());
+  }
+
+  @Test
+  void storedStartingLevelMustFitTheCharacter() {
+    assertEquals(OptionalInt.of(2), withStartingLevel(true, 2).getStartingLevel());
+    assertThrows(IllegalArgumentException.class, () -> withStartingLevel(true, 3), "above the level");
+    assertThrows(IllegalArgumentException.class, () -> withStartingLevel(true, 0), "below 1");
+    assertThrows(IllegalArgumentException.class, () -> withStartingLevel(false, 2), "only complete characters");
+  }
+
+  private static Character withStartingLevel(boolean complete, int startingLevel) {
+    return new Character("Test", null, OriginChoices.NONE, 2, 100, complete, EnumSet.allOf(Book.class), Map.of(),
+        Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
+        startingLevel);
   }
 
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */

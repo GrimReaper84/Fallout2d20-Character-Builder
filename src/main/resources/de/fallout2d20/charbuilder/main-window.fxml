@@ -28,6 +28,9 @@
         <SeparatorMenuItem/>
         <MenuItem text="Exit" onAction="#onExit"/>
       </Menu>
+      <Menu text="Character">
+        <MenuItem fx:id="createCharacterItem" text="Create Character" onAction="#onCreateCharacter" disable="true"/>
+      </Menu>
     </MenuBar>
   </top>
   <center>

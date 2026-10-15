@@ -1,14 +1,18 @@
 package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import de.fallout2d20.charbuilder.persistence.legacy.ImportReport;
+import de.fallout2d20.charbuilder.view.dialog.CreateCharacterDialog;
 import de.fallout2d20.charbuilder.view.dialog.ImportReportDialog;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -35,6 +40,7 @@ public class MainWindowController {
   private final CharacterStore store = new CharacterStore();
 
   @FXML private ScrollPane overviewPane;
+  @FXML private MenuItem createCharacterItem;
 
   private @Nullable Stage stage;
   private @Nullable Character character;
@@ -110,6 +116,27 @@ public class MainWindowController {
     }
   }
 
+  @FXML
+  private void onCreateCharacter() {
+    completeCreation();
+  }
+
+  /**
+   * Ends character creation (one-way, user decision) after the player confirms; open creation hints are
+   * listed in the confirmation.
+   */
+  private void completeCreation() {
+    if (character == null || character.isCreationComplete()) {
+      return;
+    }
+    List<CreationProblem> problems = CreationRules.problems(character);
+    if (!CreateCharacterDialog.confirm(stage, problems)) {
+      return;
+    }
+    character.completeCreation();
+    onChanged();
+  }
+
   private void onCloseRequest(WindowEvent event) {
     if (!confirmDiscard()) {
       event.consume();
@@ -174,7 +201,9 @@ public class MainWindowController {
     if (character == null) {
       return;
     }
-    overviewPane.setContent(CharacterOverview.build(character, this::onEdited, this::onChanged));
+    createCharacterItem.setDisable(character.isCreationComplete());
+    overviewPane.setContent(CharacterOverview.build(character, this::onEdited, this::onChanged,
+        this::completeCreation));
   }
 
   /** A creation edit changed the character: mark it unsaved and rebuild the overview afterwards. */

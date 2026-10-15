@@ -109,14 +109,24 @@ class StartingEquipmentItemsTest {
     assertThrows(IllegalArgumentException.class, () -> new StartingCaps(-1, 0, 0));
   }
 
-  /** A complete character's level may have grown since creation: no level caps then. */
+  /** CRB p. 81: a completed character keeps the caps of its stored starting level. */
   @Test
-  void completeCharactersShowPackAndDiceCapsOnly() {
+  void completedCharactersKeepTheLevelCaps() {
+    Character trader = character("survivor");
+    trader.chooseEquipmentPack(CatalogRef.of("trader"));
+    trader.setStartingLevel(2);
+    trader.completeCreation();
+    assertEquals(new StartingCaps(50, 100, 0), StartingEquipmentItems.caps(trader));
+  }
+
+  /** An imported character's starting level is unknown (its level may have grown): no level caps then. */
+  @Test
+  void unknownStartingLevelGivesNoLevelCaps() {
     StartingEquipment wanderer = new StartingEquipment(CatalogRef.of("wanderer"), List.of(), Map.of(), null,
         false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 5, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(Skill.BARTER, new SkillState(true, 0, 0)), List.of(),
-        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "");
+        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null);
     assertEquals(new StartingCaps(30, 0, 2), StartingEquipmentItems.caps(complete));
     assertTrue(StartingEquipmentItems.lines(complete).contains("Melee weapon: not chosen yet"));
   }

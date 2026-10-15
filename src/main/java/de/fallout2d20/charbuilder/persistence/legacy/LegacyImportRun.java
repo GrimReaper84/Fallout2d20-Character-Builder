@@ -102,7 +102,7 @@ final class LegacyImportRun {
         EnumSet.allOf(Book.class), Map.of(), skillStates, traits, perks, progression, vitals,
         new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload),
-        startingEquipment, inventoryNotes);
+        startingEquipment, inventoryNotes, null);
     compareDerived(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
   }

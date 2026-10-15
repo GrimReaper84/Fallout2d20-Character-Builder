@@ -17,24 +17,20 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
-import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
-import de.fallout2d20.charbuilder.model.character.creation.EquipmentRules;
-import de.fallout2d20.charbuilder.model.character.creation.OriginRules;
-import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
-import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
-import de.fallout2d20.charbuilder.model.character.creation.TraitRules;
+import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import org.jspecify.annotations.NonNull;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
@@ -60,9 +56,11 @@ final class CharacterOverview {
   /**
    * @param onEdited called after an edit that needs no rebuild (typed text such as the name)
    * @param onChanged called after an edit that changes other values; the caller rebuilds the overview
+   * @param onComplete called by the "Create Character" button; the caller confirms open hints and ends
+   *     creation
    */
   static @NonNull Node build(@NonNull Character character, @NonNull Runnable onEdited,
-      @NonNull Runnable onChanged) {
+      @NonNull Runnable onChanged, @NonNull Runnable onComplete) {
     MigPane pane = new MigPane("insets 16, gap 8 4, wrap 4", "[right][grow,fill][right][grow,fill]");
 
     TextField name = new TextField(character.getName());
@@ -81,13 +79,7 @@ final class CharacterOverview {
     } else {
       OriginSection.addTo(pane, character, onEdited, onChanged);
       TraitSection.addTo(pane, character, onChanged);
-      List<CreationProblem> problems = new ArrayList<>(OriginRules.problems(character));
-      problems.addAll(TraitRules.problems(character));
-      problems.addAll(AttributeRules.problems(character));
-      problems.addAll(SkillRules.problems(character));
-      problems.addAll(PerkRules.problems(character));
-      problems.addAll(EquipmentRules.problems(character));
-      addHints(pane, problems);
+      addHints(pane, CreationRules.problems(character));
     }
     if (character.isCreationComplete()) {
       pane.add(new Label("Level"));
@@ -162,6 +154,9 @@ final class CharacterOverview {
 
     heading(pane, "Equipment");
     EquipmentSection.addTo(pane, character, onEdited, onChanged);
+    if (!character.isCreationComplete()) {
+      addCreateButton(pane, onComplete);
+    }
 
     heading(pane, "Advancement and session");
     Progression progression = character.getProgression();
@@ -185,6 +180,15 @@ final class CharacterOverview {
           + "the inventory notes."), "span 4");
     }
     return pane;
+  }
+
+  /** CRB p. 50: equipment is the last creation step, so creation ends below it. */
+  private static void addCreateButton(@NonNull MigPane pane, @NonNull Runnable onComplete) {
+    Button create = new Button("Create Character");
+    create.setGraphic(new FontIcon("fas-check"));
+    create.setTooltip(new Tooltip("End character creation; creation choices cannot be changed afterwards."));
+    create.setOnAction(event -> onComplete.run());
+    pane.add(create, "span 4, gaptop 16, right");
   }
 
   private static void heading(MigPane pane, String text) {

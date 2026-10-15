@@ -23,6 +23,7 @@ import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -62,6 +63,7 @@ final class CharacterMapper {
         character.getLevel(),
         character.getXp(),
         character.isCreationComplete(),
+        startingLevel(character),
         character.getEnabledBooks().stream().map(Book::name).toList(),
         allocation,
         skills,
@@ -133,10 +135,17 @@ final class CharacterMapper {
           legacyImport == null ? null : new LegacyImport(legacyImport.sourceSchemaVersion(),
               legacyImport.importedOn(), legacyImport.payload()),
           startingEquipment,
-          inventoryNotes == null ? "" : inventoryNotes);
+          inventoryNotes == null ? "" : inventoryNotes,
+          data.startingLevel());
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
+  }
+
+  /** Stored only for a complete character whose starting level is known (CRB p. 81 starting caps). */
+  private static @Nullable Integer startingLevel(@NonNull Character character) {
+    OptionalInt level = character.getStartingLevel();
+    return character.isCreationComplete() && level.isPresent() ? level.getAsInt() : null;
   }
 
   /** Enabled books; a file without the field (written before it existed) enables all books. */

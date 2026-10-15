@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Stream;
 import org.jspecify.annotations.NonNull;
 
@@ -62,13 +63,14 @@ public final class StartingEquipmentItems {
   }
 
   /**
-   * Starting caps: pack caps, the d20 of Tag skill items (Barter) and, during creation, the extra caps
-   * of the starting level (CRB p. 81). A complete character's level may have grown since creation, so
-   * its level part is left out.
+   * Starting caps: pack caps, the d20 of Tag skill items (Barter) and the extra caps of the starting
+   * level (CRB p. 81). The level part is left out when the starting level is unknown (imported
+   * characters, see {@link Character#getStartingLevel()}).
    */
   public static @NonNull StartingCaps caps(@NonNull Character character) {
     int packCaps = character.getEquipmentPack().map(EquipmentPackData::caps).orElse(0);
-    long levelCaps = character.isCreationComplete() ? 0 : StartingEquipmentAllowance.caps(character.getLevel());
+    OptionalInt startingLevel = character.getStartingLevel();
+    long levelCaps = startingLevel.isPresent() ? StartingEquipmentAllowance.caps(startingLevel.getAsInt()) : 0;
     int d20 = taggedSkillItems(character).mapToInt(TagSkillItemData::capsD20).sum();
     return new StartingCaps(packCaps, levelCaps, d20);
   }

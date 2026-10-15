@@ -21,6 +21,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.ToIntFunction;
 import org.jspecify.annotations.NonNull;
@@ -60,7 +61,7 @@ public class Character {
   private @NonNull OriginChoices originChoices;
   private int level;
   private long xp;
-  private final boolean creationComplete;
+  private boolean creationComplete;
   private final Set<Book> enabledBooks;
   private final Map<Attribute, Integer> attributeAllocation;
   private final Map<Skill, SkillState> skills;
@@ -72,6 +73,8 @@ public class Character {
   private final @Nullable LegacyImport legacyImport;
   private @NonNull StartingEquipment startingEquipment;
   private @NonNull String inventoryNotes;
+  /** Level at completion; null while in creation (then the current level) or when unknown (imports). */
+  private @Nullable Integer completedStartingLevel;
 
   /**
    * Creates a character from stored parts without starting equipment and inventory notes – a test
@@ -95,13 +98,17 @@ public class Character {
       @Nullable LegacyBaseline legacyBaseline,
       @Nullable LegacyImport legacyImport) {
     this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
-        skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "");
+        skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
+        null);
   }
 
   /**
    * Creates a character from stored parts. Missing attributes count as allocation 0, missing
    * skills as untrained; the starting equipment is fitted to the catalog (see
    * {@link StartingEquipment#fittedToCatalog(boolean)}; a complete character keeps stale picks).
+   *
+   * @param startingLevel the level a complete character started at, {@code null} if unknown (imported
+   *     characters); always {@code null} for a character in creation (see {@link #getStartingLevel()})
    */
   public Character(
       @NonNull String name,
@@ -120,9 +127,17 @@ public class Character {
       @Nullable LegacyBaseline legacyBaseline,
       @Nullable LegacyImport legacyImport,
       @NonNull StartingEquipment startingEquipment,
-      @NonNull String inventoryNotes) {
+      @NonNull String inventoryNotes,
+      @Nullable Integer startingLevel) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
+    }
+    if (startingLevel != null && !creationComplete) {
+      throw new IllegalArgumentException("Only a complete character has a stored starting level");
+    }
+    if (startingLevel != null && (startingLevel < 1 || startingLevel > level)) {
+      throw new IllegalArgumentException("Starting level " + startingLevel + " must lie between 1 and the level "
+          + level);
     }
     this.name = name;
     this.origin = origin;
@@ -148,6 +163,7 @@ public class Character {
     this.legacyImport = legacyImport;
     this.startingEquipment = startingEquipment.fittedToCatalog(creationComplete);
     this.inventoryNotes = inventoryNotes;
+    this.completedStartingLevel = startingLevel;
   }
 
   /** A new, empty character at the start of character creation. */
@@ -630,6 +646,32 @@ public class Character {
 
   private @NonNull EquipmentPackData requireEquipmentPack() {
     return getEquipmentPack().orElseThrow(() -> new IllegalStateException("No equipment pack chosen"));
+  }
+
+  /**
+   * Ends character creation (CRB p. 50: creation is done after its six steps, from origin to starting
+   * equipment); one-way by user decision, corrections are a GM matter (D2). The creation rules are not
+   * checked here – the caller confirms open hints with the player. Afterwards creation edits are refused,
+   * the creation rank cap of 3 no longer applies (CRB p. 58; see {@link #skillRankCap()}), and the
+   * starting level is kept for the starting caps (CRB p. 81).
+   *
+   * @throws IllegalStateException if creation is already complete
+   */
+  public void completeCreation() {
+    requireCreation();
+    creationComplete = true;
+    completedStartingLevel = level;
+  }
+
+  /**
+   * The level the character starts at: during creation the current level; after completion the level
+   * stored at that moment; empty for an imported character, whose starting level is unknown.
+   */
+  public @NonNull OptionalInt getStartingLevel() {
+    if (!creationComplete) {
+      return OptionalInt.of(level);
+    }
+    return completedStartingLevel == null ? OptionalInt.empty() : OptionalInt.of(completedStartingLevel);
   }
 
   private void requireCreation() {

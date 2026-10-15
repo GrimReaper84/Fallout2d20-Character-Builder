@@ -247,18 +247,19 @@ final class EquipmentSection {
       pane.add(items, "span 3");
     }
     StartingCaps caps = StartingEquipmentItems.caps(character);
-    if (character.isCreationComplete() && character.getStartingEquipment().pack() == null && caps.d20() == 0) {
+    if (character.isCreationComplete() && character.getStartingEquipment().pack() == null && caps.levelCaps() == 0
+        && caps.d20() == 0) {
       return;
     }
     Label capsLabel = new Label(caps.toString());
-    if (character.isCreationComplete()) {
-      capsLabel.setTooltip(new Tooltip("Caps of the pack and dice of Tag skill items (Barter); extra caps of a "
-          + "higher starting level are not included, because the starting level is not stored."));
-      pane.add(new Label("Starting caps (pack, Tag skills)"));
-    } else {
+    if (character.getStartingLevel().isPresent()) {
       capsLabel.setTooltip(new Tooltip("Pack: " + caps.packCaps() + ", starting level: " + caps.levelCaps()
           + (caps.d20() == 0 ? "" : ", Tag skill items (Barter): " + caps.d20() + "d20")));
       pane.add(new Label("Starting caps"));
+    } else {
+      capsLabel.setTooltip(new Tooltip("Caps of the pack and dice of Tag skill items (Barter); extra caps of a "
+          + "higher starting level are not included, because the starting level is not known for this character."));
+      pane.add(new Label("Starting caps (pack, Tag skills)"));
     }
     pane.add(capsLabel, "span 3");
   }

@@ -31,7 +31,9 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -121,9 +123,9 @@ class CharacterStoreTest {
     assertUnreadable(file, baselineWithoutSkill);
   }
 
-  private void assertUnreadable(Path file, ObjectNode content) throws IOException {
+  private SaveFormatException assertUnreadable(Path file, ObjectNode content) throws IOException {
     Files.writeString(file, content.toString());
-    assertThrows(SaveFormatException.class, () -> store.load(file));
+    return assertThrows(SaveFormatException.class, () -> store.load(file));
   }
 
   /** CRB is always enabled, so a file listing only WOA loads (and saves) as CRB + WOA. */
@@ -253,7 +255,7 @@ class CharacterStoreTest {
         null, false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "");
+        null, null, settler, "", null);
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());
@@ -279,6 +281,43 @@ class CharacterStoreTest {
     ObjectNode unknownSkill = valid.deepCopy();
     ((ObjectNode) unknownSkill.get("startingEquipment")).putObject("tagSkillItems").put("hacking", "Terminal");
     assertUnreadable(file, unknownSkill);
+  }
+
+  /** The starting level is stored with the completion; characters in creation omit it. */
+  @Test
+  void roundTripsCompletionAndStartingLevel() throws Exception {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    character.setStartingLevel(2);
+    Path file = dir.resolve("level2.json");
+    store.save(character, file);
+    assertFalse(JSON.readTree(file.toFile()).has("startingLevel"), "omitted during creation");
+
+    character.completeCreation();
+    store.save(character, file);
+    Character loaded = store.load(file).character();
+    assertTrue(loaded.isCreationComplete());
+    assertEquals(OptionalInt.of(2), loaded.getStartingLevel());
+    assertEquals(2, JSON.readTree(file.toFile()).get("startingLevel").asInt());
+  }
+
+  @Test
+  void rejectsInvalidStartingLevel() throws Exception {
+    Character character = Character.createNew();
+    character.setStartingLevel(2);
+    character.completeCreation();
+    Path file = dir.resolve("invalid-level.json");
+    store.save(character, file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+
+    node.put("startingLevel", 3);
+    assertStartingLevelMessage(assertUnreadable(file, node.deepCopy()));
+    node.put("startingLevel", 2).put("creationComplete", false);
+    assertStartingLevelMessage(assertUnreadable(file, node));
+  }
+
+  private static void assertStartingLevelMessage(SaveFormatException error) {
+    assertTrue(error.getMessage().toLowerCase(Locale.ROOT).contains("starting level"), error.getMessage());
   }
 
   @Test
