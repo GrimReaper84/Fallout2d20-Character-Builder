@@ -52,8 +52,8 @@ public class Character {
   private String name;
   private @Nullable CatalogRef origin;
   private @NonNull OriginChoices originChoices;
-  private final int level;
-  private final long xp;
+  private int level;
+  private long xp;
   private final boolean creationComplete;
   private final Set<Book> enabledBooks;
   private final Map<Attribute, Integer> attributeAllocation;
@@ -366,6 +366,30 @@ public class Character {
     requireCreation();
     SkillState state = skillState(skill);
     skills.put(skill, new SkillState(state.tagged(), creationRanks, state.advancementRanks()));
+  }
+
+  /**
+   * Sets the starting level during creation. CRB p. 49: characters start at level 1 unless the group
+   * agrees on a higher one; the book sets no upper limit (user decision). XP becomes the minimum of
+   * that level (user decision; CRB p. 49 table and formula). Skill ranks above the rank cap of the new
+   * level are trimmed (user decision, see {@link #adjustSkillsToRules()}); perks and skill points that
+   * no longer fit stay and are reported by the creation rules.
+   *
+   * @throws IllegalArgumentException if the level is below 1, or so high (above roughly 400 million)
+   *     that its XP no longer fits into a number – a technical limit, not a rule
+   */
+  public void setStartingLevel(int startingLevel) {
+    requireCreation();
+    if (startingLevel < 1) {
+      throw new IllegalArgumentException("Level must be at least 1");
+    }
+    try {
+      xp = ExperienceTable.xpForLevel(startingLevel);
+    } catch (ArithmeticException e) {
+      throw new IllegalArgumentException("Level " + startingLevel + " is too high to compute its XP", e);
+    }
+    level = startingLevel;
+    adjustSkillsToRules();
   }
 
   /** Mister Handy without a pincer (CRB p. 55). */

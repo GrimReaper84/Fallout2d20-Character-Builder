@@ -22,7 +22,6 @@ final class AttributeSection {
     pane.add(new Label("Points left"));
     pane.add(new Label(Integer.toString(left)), "span 3");
     for (Attribute attribute : Attribute.values()) {
-      int allocation = character.attributeAllocation(attribute);
       pane.add(new Label(attribute.displayName()));
       pane.add(new Label(Integer.toString(character.attributeValue(attribute))));
       boolean canLower = AttributeRules.canLower(character, attribute);
@@ -30,16 +29,21 @@ final class AttributeSection {
       pane.add(StepButtons.of(
           StepButtons.minus(canLower ? "Lower " + attribute.displayName()
                   : attribute.displayName() + " cannot go more than 1 below its starting value.",
-              canLower, () -> change(character, attribute, allocation - 1, onChanged)),
+              canLower, () -> step(character, attribute, -1, onChanged)),
           StepButtons.plus(canRaise ? "Raise " + attribute.displayName() : raiseBlocked(character, attribute, left),
-              canRaise, () -> change(character, attribute, allocation + 1, onChanged))),
+              canRaise, () -> step(character, attribute, 1, onChanged))),
           "span 2");
     }
   }
 
-  private static void change(@NonNull Character character, @NonNull Attribute attribute, int allocation,
+  /** Raises (+1) or lowers (−1) the allocation, checked again against the current model state. */
+  private static void step(@NonNull Character character, @NonNull Attribute attribute, int delta,
       @NonNull Runnable onChanged) {
-    character.setAttributeAllocation(attribute, allocation);
+    boolean allowed = delta > 0 ? AttributeRules.canRaise(character, attribute)
+        : AttributeRules.canLower(character, attribute);
+    if (allowed) {
+      character.setAttributeAllocation(attribute, character.attributeAllocation(attribute) + delta);
+    }
     onChanged.run();
   }
 

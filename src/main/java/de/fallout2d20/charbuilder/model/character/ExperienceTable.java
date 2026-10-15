@@ -15,7 +15,12 @@ public final class ExperienceTable {
 
   private ExperienceTable() {}
 
-  /** Total XP needed to reach {@code level} (at least 1). */
+  /**
+   * Total XP needed to reach {@code level} (at least 1).
+   *
+   * @throws ArithmeticException for absurd levels (above roughly 400 million) whose XP no longer fits
+   *     into a {@code long}
+   */
   public static long xpForLevel(int level) {
     if (level < 1) {
       throw new IllegalArgumentException("Level must be at least 1");
@@ -23,7 +28,7 @@ public final class ExperienceTable {
     if (level <= TABLE.length) {
       return TABLE[level - 1];
     }
-    return (long) level * (level - 1) / 2 * 100;
+    return Math.multiplyExact((long) level * (level - 1) / 2, 100L);
   }
 
   /** Highest level whose XP threshold is reached by {@code xp}. */

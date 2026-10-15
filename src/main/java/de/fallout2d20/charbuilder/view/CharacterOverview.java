@@ -38,9 +38,9 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Overview of a character. Only the name and, during creation, origin, traits, S.P.E.C.I.A.L.
- * allocation and skills can be edited; after every change the overview is rebuilt by the caller, so
- * all values stay current.
+ * Overview of a character. Only the name and, during creation, origin, traits, starting level,
+ * S.P.E.C.I.A.L. allocation, skills and perks can be edited; after every change the overview is
+ * rebuilt by the caller, so all values stay current.
  */
 final class CharacterOverview {
 
@@ -88,10 +88,14 @@ final class CharacterOverview {
       problems.addAll(PerkRules.problems(character));
       addHints(pane, problems);
     }
-    pane.add(new Label("Level"));
-    pane.add(new Label(Integer.toString(character.getLevel())));
-    pane.add(new Label("XP"));
-    pane.add(new Label(Long.toString(character.getXp())));
+    if (character.isCreationComplete()) {
+      pane.add(new Label("Level"));
+      pane.add(new Label(Integer.toString(character.getLevel())));
+      pane.add(new Label("XP"));
+      pane.add(new Label(Long.toString(character.getXp())));
+    } else {
+      LevelSection.addTo(pane, character, onChanged);
+    }
     pane.add(new Label("Books"));
     pane.add(new Label(character.getEnabledBooks().stream().map(Book::name)
         .collect(Collectors.joining(", "))), "span 3");

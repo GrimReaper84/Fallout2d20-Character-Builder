@@ -70,7 +70,9 @@ final class PerkCard {
     card.getChildren().add(StepButtons.of(
         StepButtons.minus(canRemove ? "Give back a rank of " + perk.name() : "No rank to give back.",
             canRemove, () -> {
-              character.removePerkRank(perk.id());
+              if (PerkRules.canRemove(character, perk.id())) {
+                character.removePerkRank(perk.id());
+              }
               onChanged.run();
             }),
         StepButtons.plus(canAdd ? "Take a rank of " + perk.name() : addBlocked(character, blockers),
@@ -128,11 +130,16 @@ final class PerkCard {
     return PerkRules.perksLeft(character) <= 0 ? "No perk choices left." : "";
   }
 
-  /** Takes a rank; choice perks first ask for their attribute or skill (cancel adds nothing). */
+  /**
+   * Takes a rank; choice perks first ask for their attribute or skill (cancel adds nothing). Checked
+   * again against the current model state, which may have changed since the card was built.
+   */
   private static void add(@NonNull Character character, @NonNull PerkDefinition perk,
       @NonNull Runnable onChanged) {
     CatalogRef ref = CatalogRef.of(perk.id());
-    if (perk.choice() == PerkChoice.ATTRIBUTE) {
+    if (!PerkRules.canAdd(character, perk)) {
+      onChanged.run();
+    } else if (perk.choice() == PerkChoice.ATTRIBUTE) {
       Optional<Attribute> attribute = choose("Choose the attribute " + perk.name() + " raises",
           PerkRules.attributeOptions(character), Attribute::displayName);
       attribute.ifPresent(choice -> character.addPerkRank(ref, choice, null));

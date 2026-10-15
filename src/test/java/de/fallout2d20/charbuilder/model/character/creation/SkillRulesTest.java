@@ -76,14 +76,33 @@ class SkillRulesTest {
     assertEquals(17, SkillRules.skillPointBudget(smart));
   }
 
-  /** CRB p. 71: Skilled adds 2 skill points per rank. */
+  /** CRB p. 71: Skilled adds 2 skill points per rank (level 3: 9 + INT 5 + 2 levels + 2). */
   @Test
   void skilledAddsTwoPointsPerRank() {
     Character skilled = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 3, 0, false,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
         List.of(new PerkSelection(CatalogRef.of("skilled"), 1, 0, List.of(), List.of())),
         Progression.NONE, Vitals.FULL, null, null);
-    assertEquals(16, SkillRules.skillPointBudget(skilled));
+    assertEquals(18, SkillRules.skillPointBudget(skilled));
+  }
+
+  /** After lowering the level, the lower creation cap blocks buying further ranks (CRB p. 58). */
+  @Test
+  void loweringTheLevelBlocksRanksAboveTheNewCap() {
+    Character character = character("survivor", Map.of(), List.of());
+    character.setStartingLevel(3);
+    character.setCreationRanks(Skill.SNEAK, 5);
+    character.setStartingLevel(1);
+    assertEquals(3, character.skillRank(Skill.SNEAK));
+    assertFalse(SkillRules.canRaise(character, Skill.SNEAK));
+  }
+
+  /** CRB p. 49: one skill rank per level above 1 (level 3, INT 5 → 16). */
+  @Test
+  void skillPointsGrowWithLevel() {
+    Character character = character("survivor", Map.of(), List.of());
+    character.setStartingLevel(3);
+    assertEquals(16, SkillRules.skillPointBudget(character));
   }
 
   /** User decision: Gifted on INT raises the skill points. */

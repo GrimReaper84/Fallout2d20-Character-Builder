@@ -20,8 +20,8 @@ import org.jspecify.annotations.NonNull;
  * effective Intelligence, which counts Gifted and Intense Training taken during creation (user
  * decision); one point buys one rank. All free Tags and all skill points must be used (user
  * decision). No skill may exceed {@link Character#skillRankCap()}. Soft checks only, for characters
- * in creation. Skilled adds 2 skill points per rank (CRB p. 71); the level skill ranks of a higher
- * starting level are not counted yet (B6).
+ * in creation. A higher starting level adds one skill point per level above 1 (CRB p. 49), Skilled 2
+ * per rank (CRB p. 71).
  */
 public final class SkillRules {
 
@@ -56,9 +56,12 @@ public final class SkillRules {
     return freeTagBudget(character) - chosen;
   }
 
-  /** Skill points of the character: 9 + effective Intelligence, +2 per rank of Skilled (CRB p. 71). */
+  /**
+   * Skill points of the character: 9 + effective Intelligence (CRB p. 58), +1 per level above 1 (CRB
+   * p. 49: one skill rank per level), +2 per rank of Skilled (CRB p. 71).
+   */
   public static int skillPointBudget(@NonNull Character character) {
-    return SKILL_POINTS_BASE + character.attributeValue(Attribute.INTELLIGENCE)
+    return SKILL_POINTS_BASE + character.attributeValue(Attribute.INTELLIGENCE) + character.getLevel() - 1
         + character.perkEffect(PerkDefinition::skillPointsPerRank);
   }
 

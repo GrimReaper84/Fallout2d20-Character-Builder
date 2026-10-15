@@ -39,17 +39,16 @@ final class SkillSection {
       pane.add(tagBox(character, skill, onChanged));
       pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
       pane.add(new Label(Integer.toString(character.skillRank(skill))));
-      int ranks = character.skillState(skill).creationRanks();
       boolean canLower = SkillRules.canLower(character, skill);
       boolean canRaise = SkillRules.canRaise(character, skill);
       pane.add(StepButtons.of(
           StepButtons.minus(canLower ? "Take back a rank of " + skill.displayName()
                   : "No bought ranks of " + skill.displayName() + " to take back.",
-              canLower, () -> setRanks(character, skill, ranks - 1, onChanged)),
+              canLower, () -> step(character, skill, -1, onChanged)),
           StepButtons.plus(canRaise ? "Buy a rank of " + skill.displayName()
                   : pointsLeft <= 0 ? "No skill points left."
                   : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
-              canRaise, () -> setRanks(character, skill, ranks + 1, onChanged))));
+              canRaise, () -> step(character, skill, 1, onChanged))));
     }
   }
 
@@ -84,9 +83,17 @@ final class SkillSection {
     return SkillRules.canToggleTag(character, skill) ? TAG_TOOLTIP : FULL_TOOLTIP;
   }
 
-  private static void setRanks(@NonNull Character character, @NonNull Skill skill, int ranks,
+  /**
+   * Buys (+1) or gives back (−1) a rank. The model may have changed since the view was built (e.g. a
+   * level typed into the level field is taken when the button gets the focus), so the handler works on
+   * the current ranks and checks again; the overview is rebuilt either way.
+   */
+  private static void step(@NonNull Character character, @NonNull Skill skill, int delta,
       @NonNull Runnable onChanged) {
-    character.setCreationRanks(skill, ranks);
+    boolean allowed = delta > 0 ? SkillRules.canRaise(character, skill) : SkillRules.canLower(character, skill);
+    if (allowed) {
+      character.setCreationRanks(skill, character.skillState(skill).creationRanks() + delta);
+    }
     onChanged.run();
   }
 }

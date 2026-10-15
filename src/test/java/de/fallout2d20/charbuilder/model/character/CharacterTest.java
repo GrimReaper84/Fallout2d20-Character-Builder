@@ -352,6 +352,52 @@ class CharacterTest {
     assertThrows(IllegalStateException.class, () -> complete.removePerkRank("jury-rigging"));
   }
 
+  /** CRB p. 49: XP becomes the minimum of the starting level (user decision); no upper limit. */
+  @Test
+  void setStartingLevelSetsXp() {
+    Character character = Character.createNew();
+    character.setStartingLevel(5);
+    assertEquals(5, character.getLevel());
+    assertEquals(1_000, character.getXp());
+    character.setStartingLevel(21);
+    assertEquals(21_000, character.getXp());
+    character.setStartingLevel(25);
+    assertEquals(30_000, character.getXp());
+  }
+
+  /** User decision: lowering the level trims skill ranks above the new cap (CRB p. 58). */
+  @Test
+  void loweringTheLevelTrimsSkillRanks() {
+    Character character = Character.createNew();
+    character.setStartingLevel(3);
+    character.setCreationRanks(Skill.SNEAK, 6);
+    character.setStartingLevel(2);
+    assertEquals(3, character.skillRank(Skill.SNEAK));
+  }
+
+  /** Raising the level changes nothing else: extra skill points and perks only show as "left". */
+  @Test
+  void raisingTheLevelKeepsSkillsAndPerks() {
+    Character character = Character.createNew();
+    character.setCreationRanks(Skill.SNEAK, 3);
+    character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
+    character.setStartingLevel(6);
+    assertEquals(3, character.skillRank(Skill.SNEAK));
+    assertEquals(1, character.getPerks().size());
+    assertEquals(1, character.getPerks().get(0).rank());
+  }
+
+  @Test
+  void startingLevelOnlyDuringCreationAndAtLeastOne() {
+    assertThrows(IllegalArgumentException.class, () -> Character.createNew().setStartingLevel(0));
+    Character huge = Character.createNew();
+    assertThrows(IllegalArgumentException.class, () -> huge.setStartingLevel(Integer.MAX_VALUE));
+    assertEquals(1, huge.getLevel());
+    assertEquals(0, huge.getXp());
+    Character complete = create(Map.of(), Map.of(), baseline(6));
+    assertThrows(IllegalStateException.class, () -> complete.setStartingLevel(2));
+  }
+
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */
   @Test
   void skillRankCap() {
