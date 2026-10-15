@@ -79,6 +79,10 @@ Feature workflow (stop and report after each step, the user approves each one):
 4. **java-developer** – implementation after explicit approval, verified with `./gradlew build`
 5. **java-code-quality-reviewer** (diff mode) – automatic final review by a fresh agent; reports only
 
+Streamlined mode (user decision 2026-10-15, to save tokens): one combined analysis + plan document,
+one approval, all implementation steps in one go, one review at the end of the feature. Details in
+`.claude/skills/_shared/project-rules.md` section 2.
+
 Side workflow: **catalog-extractor** transcribes catalogs from the books into JSON catalog files.
 `java-code-quality-reviewer` can also be used on its own to review existing code.
 

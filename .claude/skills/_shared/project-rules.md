@@ -46,7 +46,15 @@ The fifth step runs **automatically at the end of every implementation**: after 
 complexity, over-abstraction, duplication). It only reports; the user decides which findings get
 implemented. Skipped when the implementation itself consisted of review findings.
 
-**Stop and report after every step.** The user approves each step individually. A finished plan is
+**Streamlined mode (user decision 2026-10-15, active until revoked):** to save tokens, one feature runs
+as (1) **one combined document** `docs/plans/<feature>_plan.md` – legacy behavior, Java state, book
+check, scope decisions and implementation steps (the separate `_legacy_analysis.md` / `_java_analysis.md`
+are skipped); the user approves it once; (2) **all implementation steps in one go**, `./gradlew build`
+after every step, no stop in between; (3) **one** fresh-context review at the end of the feature instead
+of one per step; the user picks the findings. Catalog extraction may run inside step (2) when the plan
+names it. Domain decisions are still asked before or in the plan.
+
+**Stop and report after every step** (outside streamlined mode). The user approves each step individually. A finished plan is
 *not* an approval to implement; code is written only when the user explicitly says so ("leg los",
 "setz das um", "implement step 3"). Not even as a "small fix" on the side.
 
