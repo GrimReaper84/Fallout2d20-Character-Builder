@@ -1,0 +1,175 @@
+[
+  {
+    "id": "brotherhood-of-steel-initiate",
+    "name": "Brotherhood of Steel Initiate",
+    "sources": [{"book": "CRB", "page": 76}],
+    "origins": ["brotherhood-initiate"],
+    "items": ["Brotherhood fatigues", "Brotherhood hood", "Combat knife", "Brotherhood holotags"],
+    "choices": [
+      {"label": "Sidearm", "options": ["Laser pistol with a fusion cell of 10 + 5 CD shots", "10mm pistol with 10 + 5 CD rounds of 10mm ammunition"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "brotherhood-of-steel-scribe",
+    "name": "Brotherhood of Steel Scribe",
+    "sources": [{"book": "CRB", "page": 76}],
+    "origins": ["brotherhood-initiate"],
+    "items": ["Brotherhood Field Scribe's armor", "Brotherhood Scribe's hat", "Combat knife", "Brotherhood holotags"],
+    "choices": [
+      {"label": "Sidearm", "options": ["Laser pistol with a fusion cell of 6 + 3 CD shots", "10mm pistol with 6 + 3 CD rounds of 10mm ammunition"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "miss-nanny",
+    "name": "Miss Nanny",
+    "sources": [{"book": "CRB", "page": 77}],
+    "origins": ["mister-handy"],
+    "items": ["Standard plating", "Behavioral analysis mod", "Hazard detection mod"],
+    "caps": 10,
+    "arms": [{"options": ["PINCER"]}, {"options": ["FLAMER"]}, {"options": ["AUTO_PISTOL_10MM", "BUZZ_SAW", "FLAMER", "LASER_EMITTER", "PINCER"]}]
+  },
+  {
+    "id": "mister-farmhand",
+    "name": "Mister Farmhand",
+    "sources": [{"book": "CRB", "page": 77}],
+    "origins": ["mister-handy"],
+    "items": ["Standard plating", "Bag of fertilizer", "2 mutfruits"],
+    "caps": 25,
+    "arms": [{"options": ["PINCER"]}, {"options": ["BUZZ_SAW"]}, {"options": ["LASER_EMITTER"]}]
+  },
+  {
+    "id": "mister-gutsy",
+    "name": "Mister Gutsy",
+    "sources": [{"book": "CRB", "page": 77}],
+    "origins": ["mister-handy"],
+    "items": ["Mister Gutsy plating", "Recon sensors mod"],
+    "caps": 10,
+    "arms": [{"options": ["AUTO_PISTOL_10MM"]}, {"options": ["BUZZ_SAW"]}, {"options": ["LASER_EMITTER"]}]
+  },
+  {
+    "id": "mister-handy",
+    "name": "Mister Handy",
+    "sources": [{"book": "CRB", "page": 77}],
+    "origins": ["mister-handy"],
+    "items": ["Standard plating", "Robot repair kit", "Integral boiler mod"],
+    "caps": 10,
+    "arms": [{"options": ["PINCER"]}, {"options": ["FLAMER"]}, {"options": ["BUZZ_SAW"]}]
+  },
+  {
+    "id": "nurse-handy",
+    "name": "Nurse Handy",
+    "sources": [{"book": "CRB", "page": 77}],
+    "origins": ["mister-handy"],
+    "items": ["Standard plating", "Stimpak", "Diagnosis mod"],
+    "caps": 10,
+    "arms": [{"options": ["PINCER", "BUZZ_SAW"]}, {"options": ["BUZZ_SAW"]}, {"options": ["AUTO_PISTOL_10MM", "BUZZ_SAW", "FLAMER", "LASER_EMITTER", "PINCER"]}]
+  },
+  {
+    "id": "brute",
+    "name": "Brute",
+    "sources": [{"book": "CRB", "page": 78}],
+    "origins": ["super-mutant"],
+    "items": ["Raider armor torso", "Pipe rifle", "6 + 3 CD rounds of .38 ammunition"],
+    "choices": [
+      {"label": "Additional raider armor", "options": ["Raider armor head", "Raider armor leg", "Raider armor arm"]},
+      {"label": "Melee weapon", "options": ["Baseball bat", "Machete"]}
+    ],
+    "trinket": true,
+    "caps": 5
+  },
+  {
+    "id": "skirmisher",
+    "name": "Skirmisher",
+    "sources": [{"book": "CRB", "page": 78}],
+    "origins": ["super-mutant"],
+    "items": ["Raider armor torso", "Heavy bolt-action pipe rifle", "8 + 4 CD rounds of .308 ammunition", "Board"],
+    "choices": [
+      {"label": "Additional raider armor", "options": ["Raider armor head", "Raider armor leg", "Raider armor arm"]}
+    ],
+    "trinket": true,
+    "caps": 5
+  },
+  {
+    "id": "vault-tec-resident",
+    "name": "Vault-Tec Resident",
+    "sources": [{"book": "CRB", "page": 78}],
+    "origins": ["vault-dweller"],
+    "originsWithGmPermission": ["ghoul"],
+    "items": ["Vault jumpsuit", "Vault-Tec canteen with 1 purified water", "Pip-Boy", "Switchblade", "10mm pistol", "6 + 3 CD rounds of 10mm ammunition", "2 stimpaks"],
+    "caps": 10
+  },
+  {
+    "id": "vault-tec-security",
+    "name": "Vault-Tec Security",
+    "sources": [{"book": "CRB", "page": 78}],
+    "origins": ["vault-dweller"],
+    "originsWithGmPermission": ["ghoul"],
+    "items": ["Vault jumpsuit", "Vault-Tec security armor", "Vault-Tec security helmet", "Vault-Tec canteen with 1 purified water", "Pip-Boy", "Baton", "10mm pistol", "8 + 4 CD rounds of 10mm ammunition", "1 stimpak"],
+    "caps": 0
+  },
+  {
+    "id": "mercenary",
+    "name": "Mercenary",
+    "sources": [{"book": "CRB", "page": 79}],
+    "origins": ["ghoul", "survivor"],
+    "items": ["Tough clothing", "10 + 5 CD rounds of ammunition for the chosen ranged weapon", "Note advertising a job in a nearby settlement that pays 50 caps"],
+    "choices": [
+      {"label": "Armor", "options": ["Leather armor chest piece", "Leather armor arm and leather armor leg (choose sides)"]},
+      {"label": "Melee weapon", "options": ["Machete", "Baseball bat", "Tire iron"]},
+      {"label": "Ranged weapon", "options": ["10mm automatic pistol", ".44 pistol", "Hunting rifle", "Bolt-action pipe gun"]}
+    ],
+    "caps": 15
+  },
+  {
+    "id": "raider",
+    "name": "Raider",
+    "sources": [{"book": "CRB", "page": 79}],
+    "origins": ["ghoul", "survivor"],
+    "items": ["Harness", "Raider armor chest piece", "Raider armor arm (choose side)", "Pipe gun", "10 + 5 CD rounds of .38 ammunition"],
+    "choices": [
+      {"label": "Melee weapon", "options": ["Lead pipe", "Pool cue", "Tire iron"]},
+      {"label": "Aid", "options": ["1 dose of Jet", "1 dose of RadAway"]},
+      {"label": "Extra item", "options": ["Molotov cocktail", "Stimpak"]}
+    ],
+    "caps": 15
+  },
+  {
+    "id": "settler",
+    "name": "Settler",
+    "sources": [{"book": "CRB", "page": 79}],
+    "origins": ["ghoul", "survivor"],
+    "items": ["Tough clothing", "Pipe gun", "6 + 3 CD rounds of .38 ammunition", "2 rolls on the random food table (CRB p. 202)"],
+    "choices": [
+      {"label": "Melee weapon", "options": ["Switchblade", "Pipe wrench", "Rolling pin", "Knuckles"]}
+    ],
+    "trinket": true,
+    "caps": 45
+  },
+  {
+    "id": "trader",
+    "name": "Trader",
+    "sources": [{"book": "CRB", "page": 80}],
+    "origins": ["ghoul", "survivor"],
+    "items": ["Tough clothing", "Pipe gun", "8 + 4 CD rounds of .38 ammunition", "Wares: 3 rolls each on the ammunition, aid and junk loot tables", "Pack brahmin"],
+    "choices": [
+      {"label": "Armor", "options": ["Leather armor chest piece", "Leather armor arm and leather armor leg (choose sides)"]}
+    ],
+    "trinket": true,
+    "caps": 50
+  },
+  {
+    "id": "wanderer",
+    "name": "Wanderer",
+    "sources": [{"book": "CRB", "page": 80}],
+    "origins": ["ghoul", "survivor"],
+    "items": ["Drifter outfit", "Pipe gun", "8 + 4 CD rounds of .38 ammunition"],
+    "choices": [
+      {"label": "Melee weapon", "options": ["Switchblade", "Pipe wrench", "Rolling pin", "Knuckles"]},
+      {"label": "Aid", "options": ["1 dose of Jet", "1 dose of RadAway"]}
+    ],
+    "trinket": true,
+    "caps": 30
+  }
+]

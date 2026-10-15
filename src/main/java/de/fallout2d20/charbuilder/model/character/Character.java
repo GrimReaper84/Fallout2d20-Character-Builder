@@ -1,6 +1,10 @@
 package de.fallout2d20.charbuilder.model.character;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
+import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
+import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
+import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
@@ -8,6 +12,8 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
+import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -29,8 +35,8 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>Origin and trait effects (attribute modifiers, origin Tag skills, Gifted) are applied only to
  * characters without a legacy baseline: an imported baseline already contains them. Origin, origin
- * choices, traits, attribute allocation, free Tags and bought skill ranks can only be changed while
- * creation is not complete.
+ * choices, traits, attribute allocation, free Tags, bought skill ranks and the starting equipment can
+ * only be changed while creation is not complete; the inventory notes can always be edited.
  */
 public class Character {
 
@@ -64,27 +70,57 @@ public class Character {
   private final Vitals vitals;
   private final @Nullable LegacyBaseline legacyBaseline;
   private final @Nullable LegacyImport legacyImport;
+  private @NonNull StartingEquipment startingEquipment;
+  private @NonNull String inventoryNotes;
 
   /**
-   * Creates a character from stored parts. Missing attributes count as allocation 0, missing
-   * skills as untrained.
+   * Creates a character from stored parts without starting equipment and inventory notes – a test
+   * convenience only; the application uses the full constructor. Missing attributes count as allocation
+   * 0, missing skills as untrained.
    */
   public Character(
-      String name,
+      @NonNull String name,
       @Nullable CatalogRef origin,
       @NonNull OriginChoices originChoices,
       int level,
       long xp,
       boolean creationComplete,
       @NonNull Set<Book> enabledBooks,
-      Map<Attribute, Integer> attributeAllocation,
-      Map<Skill, SkillState> skills,
-      List<TraitSelection> traits,
-      List<PerkSelection> perks,
-      Progression progression,
-      Vitals vitals,
+      @NonNull Map<Attribute, Integer> attributeAllocation,
+      @NonNull Map<Skill, SkillState> skills,
+      @NonNull List<TraitSelection> traits,
+      @NonNull List<PerkSelection> perks,
+      @NonNull Progression progression,
+      @NonNull Vitals vitals,
       @Nullable LegacyBaseline legacyBaseline,
       @Nullable LegacyImport legacyImport) {
+    this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
+        skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "");
+  }
+
+  /**
+   * Creates a character from stored parts. Missing attributes count as allocation 0, missing
+   * skills as untrained; the starting equipment is fitted to the catalog (see
+   * {@link StartingEquipment#fittedToCatalog(boolean)}; a complete character keeps stale picks).
+   */
+  public Character(
+      @NonNull String name,
+      @Nullable CatalogRef origin,
+      @NonNull OriginChoices originChoices,
+      int level,
+      long xp,
+      boolean creationComplete,
+      @NonNull Set<Book> enabledBooks,
+      @NonNull Map<Attribute, Integer> attributeAllocation,
+      @NonNull Map<Skill, SkillState> skills,
+      @NonNull List<TraitSelection> traits,
+      @NonNull List<PerkSelection> perks,
+      @NonNull Progression progression,
+      @NonNull Vitals vitals,
+      @Nullable LegacyBaseline legacyBaseline,
+      @Nullable LegacyImport legacyImport,
+      @NonNull StartingEquipment startingEquipment,
+      @NonNull String inventoryNotes) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
     }
@@ -110,6 +146,8 @@ public class Character {
     this.vitals = vitals;
     this.legacyBaseline = legacyBaseline;
     this.legacyImport = legacyImport;
+    this.startingEquipment = startingEquipment.fittedToCatalog(creationComplete);
+    this.inventoryNotes = inventoryNotes;
   }
 
   /** A new, empty character at the start of character creation. */
@@ -274,13 +312,18 @@ public class Character {
   /**
    * Chooses the origin during creation. Origin choices and traits are reset, because they depend on
    * the origin (user decision); attribute allocation and free Tag skills are kept, then adjusted to
-   * the new origin (see {@link #adjustAttributesToOrigin()} and {@link #adjustSkillsToRules()}).
+   * the new origin (see {@link #adjustAttributesToOrigin()} and {@link #adjustSkillsToRules()}). The
+   * starting equipment stays if its pack is offered to the new origin too (e.g. Ghoul and Survivor
+   * share the Wastelander packs), otherwise it is cleared.
    */
   public void chooseOrigin(@NonNull CatalogRef newOrigin) {
     requireCreation();
     origin = newOrigin;
     originChoices = OriginChoices.NONE;
     traits.clear();
+    if (getEquipmentPack().filter(pack -> pack.isOfferedTo(newOrigin.id())).isEmpty()) {
+      startingEquipment = StartingEquipment.NONE;
+    }
     adjustAttributesToOrigin();
     adjustSkillsToRules();
   }
@@ -392,12 +435,6 @@ public class Character {
     adjustSkillsToRules();
   }
 
-  /** Mister Handy without a pincer (CRB p. 55). */
-  public void setNoPincer(boolean noPincer) {
-    requireCreation();
-    originChoices = originChoices.withNoPincer(noPincer);
-  }
-
   /** Purpose of a Protectron (WOA p. 21); blank means not chosen. */
   public void setPurpose(@Nullable String purpose) {
     requireCreation();
@@ -488,6 +525,113 @@ public class Character {
         ? new TraitSelection(selection.trait(), selection.imported(), choices) : selection);
   }
 
+  /**
+   * Chooses the starting equipment pack during creation (CRB p. 50, step 6); whether the origin may take
+   * it is checked by the creation rules. All pack choices start open; Tag skill item picks and the
+   * trinket stay (a trinket only counts for a pack that has one). A Mister Handy pack sets the arms the
+   * pack fixes and leaves the choosable ones open (CRB p. 77); free arms are switched off.
+   *
+   * @throws IllegalArgumentException if the pack is not in the catalog
+   */
+  public void chooseEquipmentPack(@NonNull CatalogRef pack) {
+    requireCreation();
+    EquipmentPackData data = EquipmentCatalog.packById(pack.id())
+        .orElseThrow(() -> new IllegalArgumentException("Unknown equipment pack: " + pack.id()));
+    List<@Nullable String> choices = new ArrayList<>(Collections.nCopies(data.choices().size(), null));
+    startingEquipment = new StartingEquipment(pack, choices, startingEquipment.tagSkillItems(),
+        startingEquipment.trinket(), false, StartingEquipment.packArms(data, List.of()));
+  }
+
+  /**
+   * Picks an option of one of the pack's choices during creation; {@code null} opens it again.
+   *
+   * @throws IllegalArgumentException if the pack has no such choice or the choice no such option
+   * @throws IllegalStateException if no equipment pack is chosen
+   */
+  public void chooseEquipmentOption(int index, @Nullable String option) {
+    requireCreation();
+    List<PackChoice> choices = requireEquipmentPack().choices();
+    if (index < 0 || index >= choices.size()
+        || (option != null && !choices.get(index).options().contains(option))) {
+      throw new IllegalArgumentException("No pack choice " + index + " with option " + option);
+    }
+    startingEquipment = startingEquipment.withChoice(index, option);
+  }
+
+  /**
+   * Picks which of the offered items a Tag skill grants (CRB p. 81) during creation; {@code null}
+   * removes the pick.
+   *
+   * @throws IllegalArgumentException if the skill's items offer no choice or not this option
+   */
+  public void chooseTagSkillItem(@NonNull Skill skill, @Nullable String option) {
+    requireCreation();
+    TagSkillItemData items = EquipmentCatalog.tagSkillItems(skill);
+    if (!items.isChoice() || (option != null && !items.options().contains(option))) {
+      throw new IllegalArgumentException("No Tag skill item choice " + option + " for " + skill);
+    }
+    startingEquipment = startingEquipment.withTagSkillItem(skill, option);
+  }
+
+  /**
+   * The personal trinket (CRB p. 80) during creation; blank means none described yet. It is kept across
+   * pack changes and only counts for a pack that includes a trinket.
+   */
+  public void setTrinket(@Nullable String trinket) {
+    requireCreation();
+    startingEquipment = startingEquipment.withTrinket(trinket);
+  }
+
+  /**
+   * Switches the Mister Handy's freely configurable arms (house-rule option beyond the book) on or off
+   * during creation. Switching on keeps the current arms as a starting point; switching off restores the
+   * arms the pack fixes and keeps choosable arms only if the pack allows them.
+   *
+   * @throws IllegalStateException if no equipment pack is chosen or it has no arms
+   */
+  public void setFreeArms(boolean free) {
+    requireCreation();
+    EquipmentPackData pack = requireEquipmentPack();
+    if (pack.arms().isEmpty()) {
+      throw new IllegalStateException("The equipment pack has no arms: " + pack.id());
+    }
+    List<ArmSelection> arms = free ? startingEquipment.arms() : StartingEquipment.packArms(pack, startingEquipment.arms());
+    startingEquipment = startingEquipment.withArms(free, arms);
+  }
+
+  /**
+   * Sets one arm (slot 0 to 2) during creation. Whether the pack allows it is checked by the creation
+   * rules, not here.
+   *
+   * @throws IllegalStateException if the starting equipment has no arms
+   * @throws IllegalArgumentException if the slot is not 0 to 2
+   */
+  public void chooseArm(int slot, @NonNull ArmSelection arm) {
+    requireCreation();
+    if (startingEquipment.arms().isEmpty()) {
+      throw new IllegalStateException("The starting equipment has no arms");
+    }
+    if (slot < 0 || slot >= startingEquipment.arms().size()) {
+      throw new IllegalArgumentException("No arm slot " + slot);
+    }
+    startingEquipment = startingEquipment.withArm(slot, arm);
+  }
+
+  /** Free-text inventory notes; editable in every mode (until phase 7 brings a real inventory). */
+  public void setInventoryNotes(@Nullable String notes) {
+    inventoryNotes = notes == null ? "" : notes;
+  }
+
+  /** The catalog entry of the chosen equipment pack; empty without pack or for an unknown one. */
+  public @NonNull Optional<EquipmentPackData> getEquipmentPack() {
+    CatalogRef pack = startingEquipment.pack();
+    return pack == null ? Optional.empty() : EquipmentCatalog.packById(pack.id());
+  }
+
+  private @NonNull EquipmentPackData requireEquipmentPack() {
+    return getEquipmentPack().orElseThrow(() -> new IllegalStateException("No equipment pack chosen"));
+  }
+
   private void requireCreation() {
     if (creationComplete) {
       throw new IllegalStateException("This can only be changed during character creation");
@@ -544,5 +688,13 @@ public class Character {
 
   public @Nullable LegacyImport getLegacyImport() {
     return legacyImport;
+  }
+
+  public @NonNull StartingEquipment getStartingEquipment() {
+    return startingEquipment;
+  }
+
+  public @NonNull String getInventoryNotes() {
+    return inventoryNotes;
   }
 }

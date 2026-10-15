@@ -1,0 +1,102 @@
+[
+  {
+    "roll": 1,
+    "name": "A gold pocket watch",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 2,
+    "name": "A garbled holodisk",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 3,
+    "name": "A brightly colored bandanna",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 4,
+    "name": "A silver locket",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 5,
+    "name": "Medal",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 6,
+    "name": "Potted plant",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 7,
+    "name": "Tickets to a pre-war event",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 8,
+    "name": "Wedding ring",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 9,
+    "name": "Pre-war party invitation",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 10,
+    "name": "An engraved flip lighter",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 11,
+    "name": "Loaded casino dice",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 12,
+    "name": "Id card",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 13,
+    "name": "Cosmetics case",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 14,
+    "name": "Musical Instrument",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 15,
+    "name": "Broken eyeglasses",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 16,
+    "name": "Necklace made of junk",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 17,
+    "name": "Pages of an unfinished story",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 18,
+    "name": "Overdue library book",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 19,
+    "name": "A postcard with an address",
+    "source": {"book": "CRB", "page": 80}
+  },
+  {
+    "roll": 20,
+    "name": "A pre-war neck-tie",
+    "source": {"book": "CRB", "page": 80}
+  }
+]

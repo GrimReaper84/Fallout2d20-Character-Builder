@@ -27,5 +27,7 @@ public record CharacterData(
     @Nullable List<PerkData> perks,
     @Nullable ProgressionData progression,
     @Nullable VitalsData vitals,
+    @Nullable StartingEquipmentData startingEquipment,
+    @Nullable String inventoryNotes,
     @Nullable LegacyBaselineData legacyBaseline,
     @Nullable LegacyImportData legacyImport) {}

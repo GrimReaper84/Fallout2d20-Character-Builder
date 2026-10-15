@@ -95,7 +95,10 @@ public final class OriginRules {
     }
   }
 
-  /** Choices only some origins have (Mister Handy pincer, CRB p. 55; Protectron purpose, WOA p. 21). */
+  /**
+   * Choices only some origins have: the Protectron's purpose (WOA p. 21) and an extra Tag skill (e.g.
+   * Vault Kid, CRB p. 57).
+   */
   private static void checkChoices(@NonNull OriginChoices choices, @NonNull OriginData origin,
       @NonNull List<CreationProblem> problems) {
     if (!origin.purposeSuggestions().isEmpty() && choices.purpose() == null) {
@@ -103,9 +106,6 @@ public final class OriginRules {
     }
     if (origin.purposeSuggestions().isEmpty() && choices.purpose() != null) {
       problems.add(new CreationProblem(ORIGIN, origin.name() + " has no purpose to choose."));
-    }
-    if (!origin.pincerOptional() && choices.noPincer()) {
-      problems.add(new CreationProblem(ORIGIN, "Only a Mister Handy can go without a pincer."));
     }
     if (origin.extraTagSkill() == null && choices.tagSkill() != null) {
       problems.add(new CreationProblem(ORIGIN, origin.name() + " grants no extra Tag skill."));

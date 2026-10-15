@@ -130,7 +130,6 @@ class CharacterTest {
   void completeCharactersCannotChangeTheirOrigin() {
     Character complete = create(Map.of(), Map.of(), baseline(6));
     assertThrows(IllegalStateException.class, () -> complete.chooseOrigin(CatalogRef.of("ghoul")));
-    assertThrows(IllegalStateException.class, () -> complete.setNoPincer(true));
   }
 
   /** CRB p. 56: Gifted raises two chosen attributes by 1; an imported Gifted adds nothing. */

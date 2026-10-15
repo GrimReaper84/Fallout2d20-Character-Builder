@@ -19,6 +19,7 @@ import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.creation.EquipmentRules;
 import de.fallout2d20.charbuilder.model.character.creation.OriginRules;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
@@ -31,16 +32,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Overview of a character. Only the name and, during creation, origin, traits, starting level,
- * S.P.E.C.I.A.L. allocation, skills and perks can be edited; after every change the overview is
- * rebuilt by the caller, so all values stay current.
+ * Overview of a character. Only the name, the inventory notes and, during creation, origin, traits,
+ * starting level, S.P.E.C.I.A.L. allocation, skills, perks and starting equipment can be edited; after
+ * every change the overview is rebuilt by the caller, so all values stay current.
  */
 final class CharacterOverview {
 
@@ -86,6 +86,7 @@ final class CharacterOverview {
       problems.addAll(AttributeRules.problems(character));
       problems.addAll(SkillRules.problems(character));
       problems.addAll(PerkRules.problems(character));
+      problems.addAll(EquipmentRules.problems(character));
       addHints(pane, problems);
     }
     if (character.isCreationComplete()) {
@@ -159,6 +160,9 @@ final class CharacterOverview {
       PerkSection.addTo(pane, character, onChanged);
     }
 
+    heading(pane, "Equipment");
+    EquipmentSection.addTo(pane, character, onEdited, onChanged);
+
     heading(pane, "Advancement and session");
     Progression progression = character.getProgression();
     Vitals vitals = character.getVitals();
@@ -177,12 +181,8 @@ final class CharacterOverview {
     LegacyImport legacy = character.getLegacyImport();
     if (legacy != null) {
       heading(pane, "Legacy data (imported " + legacy.importedOn() + ")");
-      pane.add(new Label("Weapons, armor values and origin options are kept for later features."), "span 4");
-      TextArea equipment = new TextArea(legacy.payload().path("equipment").asText(""));
-      equipment.setEditable(false);
-      equipment.setPrefRowCount(8);
-      pane.add(new Label("Equipment"), "top");
-      pane.add(equipment, "span 3, growx");
+      pane.add(new Label("Weapons and armor values are kept for later features; the equipment text is in "
+          + "the inventory notes."), "span 4");
     }
     return pane;
   }
@@ -235,10 +235,6 @@ final class CharacterOverview {
     if (tagSkill != null) {
       pane.add(new Label("Extra Tag skill"));
       pane.add(new Label(tagSkill.displayName()), "span 3");
-    }
-    if (choices.noPincer()) {
-      pane.add(new Label("Pincer"));
-      pane.add(new Label("No pincer"), "span 3");
     }
     String purpose = choices.purpose();
     if (purpose != null) {

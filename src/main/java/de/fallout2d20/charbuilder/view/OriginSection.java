@@ -11,7 +11,6 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -24,9 +23,6 @@ import org.tbee.javafx.scene.layout.MigPane;
  * {@code onChanged}, which rebuilds the overview.
  */
 final class OriginSection {
-
-  private static final String NO_PINCER_TOOLTIP =
-      "No unarmed attacks or object handling; no Lockpick, Repair or Throwing tests (CRB p. 55).";
 
   private OriginSection() {}
 
@@ -84,17 +80,6 @@ final class OriginSection {
       });
       pane.add(new Label("Extra Tag skill"));
       pane.add(tagSkill, "span 3");
-    }
-    if (origin.pincerOptional()) {
-      CheckBox noPincer = new CheckBox("No pincer");
-      noPincer.setSelected(choices.noPincer());
-      noPincer.setTooltip(new Tooltip(NO_PINCER_TOOLTIP));
-      noPincer.selectedProperty().addListener((obs, old, value) -> {
-        character.setNoPincer(value);
-        onChanged.run();
-      });
-      pane.add(new Label("Pincer"));
-      pane.add(noPincer, "span 3");
     }
     if (!origin.purposeSuggestions().isEmpty()) {
       ComboBox<String> purpose = new ComboBox<>();

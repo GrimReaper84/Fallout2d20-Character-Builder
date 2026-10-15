@@ -9,13 +9,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
+import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -24,6 +30,8 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -166,12 +174,111 @@ class CharacterStoreTest {
     character.setPurpose("Scout");
     store.save(character, file);
     Character loaded = store.load(file).character();
-    assertEquals(new OriginChoices(Skill.SNEAK, false, "Scout"), loaded.getOriginChoices());
+    assertEquals(new OriginChoices(Skill.SNEAK, "Scout"), loaded.getOriginChoices());
     assertEquals("sneak", JSON.readTree(file.toFile()).get("originChoices").get("tagSkill").asText());
 
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     ((ObjectNode) node.get("originChoices")).put("tagSkill", "hacking");
     assertUnreadable(file, node);
+  }
+
+  @Test
+  void roundTripsStartingEquipmentAndInventoryNotes() throws Exception {
+    Character settler = Character.createNew();
+    Path file = dir.resolve("settler.json");
+    store.save(settler, file);
+    JsonNode empty = JSON.readTree(file.toFile());
+    assertFalse(empty.has("startingEquipment"), "omitted when nothing is chosen");
+    assertFalse(empty.has("inventoryNotes"), "omitted when blank");
+
+    settler.chooseOrigin(CatalogRef.of("survivor"));
+    settler.setFreeTag(Skill.THROWING, true);
+    settler.chooseEquipmentPack(CatalogRef.of("raider"));
+    settler.chooseEquipmentOption(1, "1 dose of RadAway");
+    settler.chooseTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
+    settler.setInventoryNotes("Owes 20 caps to the Diamond City bar");
+    store.save(settler, file);
+    Character loaded = store.load(file).character();
+    assertEquals(settler.getStartingEquipment(), loaded.getStartingEquipment());
+    assertEquals("Owes 20 caps to the Diamond City bar", loaded.getInventoryNotes());
+    JsonNode written = JSON.readTree(file.toFile()).get("startingEquipment");
+    assertEquals("[null,\"1 dose of RadAway\",null]", written.get("choices").toString());
+    assertEquals("2 + 1 CD tomahawks", written.get("tagSkillItems").get("throwing").asText());
+    assertFalse(written.has("arms"));
+  }
+
+  /** Free arms (house-rule option) with a weapon text survive saving. */
+  @Test
+  void roundTripsMisterHandyArms() throws Exception {
+    Character handy = Character.createNew();
+    handy.chooseOrigin(CatalogRef.of("mister-handy"));
+    handy.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
+    handy.setFreeArms(true);
+    handy.chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
+    handy.chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
+    Path file = dir.resolve("handy.json");
+    store.save(handy, file);
+    assertEquals(handy.getStartingEquipment(), store.load(file).character().getStartingEquipment());
+    assertEquals("[{\"attachment\":\"PINCER\"},{\"attachment\":\"BUZZ_SAW\"},{\"weapon\":\"Hunting rifle\"}]",
+        JSON.readTree(file.toFile()).get("startingEquipment").get("arms").toString());
+  }
+
+  /** Picks that no longer fit the catalog (e.g. after a text correction) are opened, not rejected. */
+  @Test
+  void opensPicksThatNoLongerFitTheCatalog() throws Exception {
+    Character handy = Character.createNew();
+    handy.chooseOrigin(CatalogRef.of("mister-handy"));
+    handy.setFreeTag(Skill.EXPLOSIVES, true);
+    handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    Path file = dir.resolve("stale.json");
+    store.save(handy, file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    ObjectNode equipment = (ObjectNode) node.get("startingEquipment");
+    equipment.putArray("choices").add("Spoon");
+    equipment.putObject("tagSkillItems").put("explosives", "3 Molotov cocktails").put("repair", "Multi-Tool");
+    ((ArrayNode) equipment.get("arms")).remove(2);
+    Files.writeString(file, node.toString());
+
+    StartingEquipment loaded = store.load(file).character().getStartingEquipment();
+    assertEquals(List.of(), loaded.choices(), "Mister Gutsy has no choices");
+    assertEquals(Map.of(), loaded.tagSkillItems());
+    assertEquals(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM), ArmSelection.of(ArmAttachment.BUZZ_SAW),
+        ArmSelection.of(ArmAttachment.LASER_EMITTER)), loaded.arms(), "the pack's arms");
+  }
+
+  /** A complete character cannot pick again, so stale picks keep their text. */
+  @Test
+  void completeCharactersKeepStalePicks() throws Exception {
+    StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), List.of("Spoon"), Map.of(),
+        null, false, List.of());
+    Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
+        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
+        null, null, settler, "");
+    Path file = dir.resolve("complete.json");
+    store.save(complete, file);
+    assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());
+  }
+
+  @Test
+  void rejectsUnknownAttachmentsAndSkills() throws Exception {
+    Character handy = Character.createNew();
+    handy.chooseOrigin(CatalogRef.of("mister-handy"));
+    handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    Path file = dir.resolve("arms.json");
+    store.save(handy, file);
+    ObjectNode valid = (ObjectNode) JSON.readTree(file.toFile());
+
+    ObjectNode unknownArm = valid.deepCopy();
+    ((ObjectNode) unknownArm.get("startingEquipment").get("arms").get(0)).put("attachment", "CLAW");
+    assertUnreadable(file, unknownArm);
+
+    ObjectNode bothOnOneArm = valid.deepCopy();
+    ((ObjectNode) bothOnOneArm.get("startingEquipment").get("arms").get(0)).put("weapon", "Hunting rifle");
+    assertUnreadable(file, bothOnOneArm);
+
+    ObjectNode unknownSkill = valid.deepCopy();
+    ((ObjectNode) unknownSkill.get("startingEquipment")).putObject("tagSkillItems").put("hacking", "Terminal");
+    assertUnreadable(file, unknownSkill);
   }
 
   @Test

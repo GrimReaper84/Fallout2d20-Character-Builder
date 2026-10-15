@@ -37,8 +37,7 @@
     "fixedCarryWeight": 150,
     "robot": true,
     "radiationImmune": true,
-    "poisonImmune": true,
-    "pincerOptional": true
+    "poisonImmune": true
   },
   {
     "id": "survivor",

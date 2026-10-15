@@ -8,13 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.model.character.Attribute;
+import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
+import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import java.io.IOException;
@@ -22,6 +28,7 @@ import java.io.InputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -80,9 +87,11 @@ class LegacyCharacterImporterTest {
     assertNotNull(legacy);
     assertEquals(2, legacy.sourceSchemaVersion());
     assertEquals("2026-10-15", legacy.importedOn());
-    for (String field : List.of("equipment", "equipmentPack", "trinket", "weapons", "armor",
-        "originOptions")) {
+    for (String field : List.of("weapons", "armor")) {
       assertTrue(legacy.payload().has(field), field);
+    }
+    for (String field : List.of("equipment", "equipmentPack", "trinket", "originOptions")) {
+      assertFalse(legacy.payload().has(field), field + " is imported");
     }
     assertFalse(legacy.payload().has("derived"), "derived values are recomputed, not kept");
     assertFalse(hasInfo(result, "derived"), "JC's stored derived values match the rules");
@@ -150,29 +159,140 @@ class LegacyCharacterImporterTest {
     assertTrue(derivedWarnings(importer.importCharacter(root)).isEmpty());
   }
 
-  /** CRB p. 55: the legacy "no pincer" flag becomes an origin choice; attachments stay for B7. */
+  /** JC.json: Survivor with the Settler pack (CRB p. 79); the edited equipment text becomes the notes. */
   @Test
-  void importsMisterHandyWithoutPincer() throws Exception {
+  void importsPackTrinketAndEquipmentTextOfTheV2SurvivorFixture() throws Exception {
+    ObjectNode root = fixture("test-survivor-v2.json");
+    Character character = importer.importCharacter(root).character();
+    StartingEquipment equipment = character.getStartingEquipment();
+    assertEquals(new CatalogRef("settler", "Settler"), equipment.pack());
+    assertEquals(Arrays.asList((String) null), equipment.choices(), "choices only exist in the legacy text");
+    assertNull(equipment.trinket(), "the fixture's trinket field is empty");
+    assertEquals(List.of(), equipment.arms());
+    assertEquals(root.get("equipment").asText(), character.getInventoryNotes());
+  }
+
+  /** CRB p. 77: legacy arms that fit the pack (in any order) keep the pack's arms. */
+  @Test
+  void importsMisterHandyArmsThatFitThePack() throws Exception {
+    ObjectNode root = misterHandy("Nurse Handy", "Flamer", "Buzz-Saw", "Pincer");
+    root.put("trinket", "  Oil can ");
+    CharacterFile result = importer.importCharacter(root);
+    StartingEquipment equipment = result.character().getStartingEquipment();
+    assertFalse(equipment.freeArms());
+    assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.of(ArmAttachment.BUZZ_SAW),
+        ArmSelection.of(ArmAttachment.FLAMER)), equipment.arms());
+    assertEquals("Oil can", equipment.trinket());
+    assertFalse(result.character().getLegacyImport().payload().has("originOptions"));
+    assertFalse(result.importReport().hasWarnings(), result.importReport().warnings().toString());
+    assertFalse(hasInfo(result, "originOptions"));
+  }
+
+  /** CRB p. 77: a Miss Nanny whose third arm was never chosen keeps the pack's arms with that arm open. */
+  @Test
+  void importsIncompleteArmsThatFitThePack() throws Exception {
+    CharacterFile result = importer.importCharacter(misterHandy("Miss Nanny", "Flamer", "Pincer"));
+    StartingEquipment equipment = result.character().getStartingEquipment();
+    assertFalse(equipment.freeArms());
+    assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.of(ArmAttachment.FLAMER),
+        ArmSelection.OPEN), equipment.arms());
+    assertFalse(hasInfo(result, "originOptions"));
+  }
+
+  /** Arms the pack does not allow become freely configurable arms, keeping the legacy positions. */
+  @Test
+  void importsOtherArmsAsFreeArms() throws Exception {
+    CharacterFile result = importer.importCharacter(misterHandy("Mister Handy", "Pincer", "", "Pincer"));
+    StartingEquipment equipment = result.character().getStartingEquipment();
+    assertTrue(equipment.freeArms());
+    assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.OPEN,
+        ArmSelection.of(ArmAttachment.PINCER)), equipment.arms());
+    assertTrue(hasInfo(result, "originOptions"));
+
+    StartingEquipment packArms = importer.importCharacter(misterHandy("Mister Gutsy")).character()
+        .getStartingEquipment();
+    assertEquals(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM), ArmSelection.of(ArmAttachment.BUZZ_SAW),
+        ArmSelection.of(ArmAttachment.LASER_EMITTER)), packArms.arms(), "no legacy names: the pack's arms");
+  }
+
+  /** CRB p. 55: "no pincer" now follows from the arms; a contradicting legacy flag is reported. */
+  @Test
+  void reportsANoPincerFlagThatContradictsTheArms() throws Exception {
+    ObjectNode handy = misterHandy("Mister Handy", "Pincer", "Flamer", "Buzz-Saw");
+    ((ObjectNode) handy.get("originOptions")).put("noPincer", true);
+    CharacterFile result = importer.importCharacter(handy);
+    assertTrue(result.importReport().warnings().stream().anyMatch(w -> w.severity() == WarningSeverity.INFO
+        && w.field().equals("originOptions") && w.message().contains("the arms count")));
+    assertFalse(result.character().getStartingEquipment().lacksPincer());
+
+    ObjectNode gutsy = misterHandy("Mister Gutsy");
+    ((ObjectNode) gutsy.get("originOptions")).put("noPincer", true);
+    CharacterFile consistent = importer.importCharacter(gutsy);
+    assertTrue(consistent.character().getStartingEquipment().lacksPincer());
+    assertFalse(hasInfo(consistent, "originOptions"));
+  }
+
+  /** A pack outside the catalog (e.g. a WOA pack) stays in the legacy data together with its trinket. */
+  @Test
+  void keepsUnknownPacksWithTheirTrinket() throws Exception {
+    ObjectNode unknownPack = minimal();
+    unknownPack.put("equipmentPack", "Synth Infiltrator");
+    unknownPack.put("trinket", "Broken holotape");
+    CharacterFile result = importer.importCharacter(unknownPack);
+    assertEquals(StartingEquipment.NONE, result.character().getStartingEquipment());
+    ObjectNode payload = result.character().getLegacyImport().payload();
+    assertEquals("Synth Infiltrator", payload.get("equipmentPack").asText());
+    assertEquals("Broken holotape", payload.get("trinket").asText());
+    assertTrue(has(result, WarningSeverity.WARNING, "equipmentPack"));
+
+    ObjectNode numberPack = minimal();
+    numberPack.put("equipmentPack", 7);
+    CharacterFile odd = importer.importCharacter(numberPack);
+    assertEquals(7, odd.character().getLegacyImport().payload().get("equipmentPack").asInt(), "kept, not dropped");
+    assertTrue(odd.importReport().warnings().stream().anyMatch(w -> w.message().contains("equipmentPack")));
+  }
+
+  @Test
+  void keepsUnknownArmAttachments() throws Exception {
+    CharacterFile claw = importer.importCharacter(misterHandy("Mister Handy", "Claw", "Pincer", "Flamer"));
+    assertEquals("[\"Claw\"]",
+        claw.character().getLegacyImport().payload().get("originOptions").get("attachments").toString());
+    assertTrue(has(claw, WarningSeverity.WARNING, "originOptions"));
+  }
+
+  /** Typical for v1 files: a Mister Handy with arms but no equipment pack. */
+  @Test
+  void keepsArmsWithoutAMisterHandyPack() throws Exception {
     ObjectNode root = minimal();
     root.put("origin", "Mister Handy");
-    ObjectNode options = root.putObject("originOptions");
-    options.put("noPincer", true);
-    options.putArray("attachments").add("Buzz-Saw");
-    Character handy = importer.importCharacter(root).character();
-    assertTrue(handy.getOriginChoices().noPincer());
-    assertEquals("{\"attachments\":[\"Buzz-Saw\"]}",
-        handy.getLegacyImport().payload().get("originOptions").toString());
-
-    root.put("origin", "Survivor");
-    options.removeAll();
-    options.put("noPincer", true);
+    root.putObject("originOptions").put("noPincer", true).putArray("attachments").add("Pincer");
     CharacterFile result = importer.importCharacter(root);
-    Character survivor = result.character();
-    assertFalse(survivor.getOriginChoices().noPincer(), "only a Mister Handy can go without pincer");
-    assertFalse(survivor.getLegacyImport().payload().has("originOptions"));
-    assertTrue(hasInfo(result, "originOptions"));
-    assertTrue(result.importReport().warnings().stream()
-        .noneMatch(w -> w.message().contains("Kept for later features")), "nothing was kept");
+    assertEquals(StartingEquipment.NONE, result.character().getStartingEquipment());
+    assertEquals("{\"attachments\":[\"Pincer\"]}",
+        result.character().getLegacyImport().payload().get("originOptions").toString());
+    assertTrue(has(result, WarningSeverity.WARNING, "originOptions"));
+    assertTrue(hasInfo(result, "originOptions"), "the no-pincer flag cannot be kept without arms");
+  }
+
+  @Test
+  void ignoresPincerAndArmsOfOtherOrigins() throws Exception {
+    ObjectNode survivor = minimal();
+    survivor.putObject("originOptions").put("noPincer", true).putArray("attachments").add("Pincer");
+    CharacterFile ignored = importer.importCharacter(survivor);
+    assertEquals(OriginChoices.NONE, ignored.character().getOriginChoices());
+    assertFalse(ignored.character().getLegacyImport().payload().has("originOptions"));
+    assertTrue(hasInfo(ignored, "originOptions"));
+  }
+
+  private static ObjectNode misterHandy(String pack, String... attachments) {
+    ObjectNode root = minimal();
+    root.put("origin", "Mister Handy");
+    root.put("equipmentPack", pack);
+    ArrayNode names = root.putObject("originOptions").put("noPincer", false).putArray("attachments");
+    for (String attachment : attachments) {
+      names.add(attachment);
+    }
+    return root;
   }
 
   @Test
@@ -295,8 +415,12 @@ class LegacyCharacterImporterTest {
   }
 
   private static boolean hasInfo(CharacterFile result, String field) {
+    return has(result, WarningSeverity.INFO, field);
+  }
+
+  private static boolean has(CharacterFile result, WarningSeverity severity, String field) {
     return result.importReport().warnings().stream()
-        .anyMatch(w -> w.severity() == WarningSeverity.INFO && w.field().equals(field));
+        .anyMatch(w -> w.severity() == severity && w.field().equals(field));
   }
 
   private static ObjectNode minimal() {

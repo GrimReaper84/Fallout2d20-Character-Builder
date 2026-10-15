@@ -1,6 +1,8 @@
 package de.fallout2d20.charbuilder.persistence;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
+import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -13,6 +15,8 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -66,6 +70,8 @@ final class CharacterMapper {
         new ProgressionData(character.getProgression().pendingSkillRanks(),
             character.getProgression().pendingPerks()),
         new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints()),
+        toData(character.getStartingEquipment()),
+        character.getInventoryNotes().isBlank() ? null : character.getInventoryNotes(),
         toData(character.getLegacyBaseline()),
         legacyImport == null ? null : new LegacyImportData(legacyImport.sourceSchemaVersion(),
             legacyImport.importedOn(), legacyImport.payload()));
@@ -104,6 +110,8 @@ final class CharacterMapper {
     CatalogRefData origin = data.origin();
     LegacyImportData legacyImport = data.legacyImport();
     String name = data.name();
+    StartingEquipment startingEquipment = toModel(data.startingEquipment());
+    String inventoryNotes = data.inventoryNotes();
     try {
       return new Character(
           name == null ? "" : name,
@@ -123,7 +131,9 @@ final class CharacterMapper {
               : new Vitals(vitals.currentHp(), vitals.rads(), vitals.radiationPoints()),
           toModel(data.legacyBaseline()),
           legacyImport == null ? null : new LegacyImport(legacyImport.sourceSchemaVersion(),
-              legacyImport.importedOn(), legacyImport.payload()));
+              legacyImport.importedOn(), legacyImport.payload()),
+          startingEquipment,
+          inventoryNotes == null ? "" : inventoryNotes);
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
@@ -151,8 +161,7 @@ final class CharacterMapper {
       return null;
     }
     Skill tagSkill = choices.tagSkill();
-    return new OriginChoicesData(tagSkill == null ? null : tagSkill.id(), choices.noPincer(),
-        choices.purpose());
+    return new OriginChoicesData(tagSkill == null ? null : tagSkill.id(), choices.purpose());
   }
 
   private static @NonNull OriginChoices toModel(@Nullable OriginChoicesData data)
@@ -161,7 +170,69 @@ final class CharacterMapper {
       return OriginChoices.NONE;
     }
     String tagSkill = data.tagSkill();
-    return new OriginChoices(tagSkill == null ? null : skill(tagSkill), data.noPincer(), data.purpose());
+    return new OriginChoices(tagSkill == null ? null : skill(tagSkill), data.purpose());
+  }
+
+  /** Omitted from the file when nothing is chosen. */
+  private static @Nullable StartingEquipmentData toData(@NonNull StartingEquipment equipment) {
+    if (equipment.equals(StartingEquipment.NONE)) {
+      return null;
+    }
+    CatalogRef pack = equipment.pack();
+    Map<String, String> picks = new LinkedHashMap<>();
+    equipment.tagSkillItems().forEach((skill, option) -> picks.put(skill.id(), option));
+    List<ArmData> arms = equipment.arms().stream()
+        .map(arm -> {
+          ArmAttachment attachment = arm.attachment();
+          return new ArmData(attachment == null ? null : attachment.name(), arm.weapon());
+        })
+        .toList();
+    return new StartingEquipmentData(pack == null ? null : toData(pack), equipment.choices(),
+        picks.isEmpty() ? null : picks, equipment.trinket(), equipment.freeArms(), arms.isEmpty() ? null : arms);
+  }
+
+  /**
+   * The starting equipment of a file; unknown skill ids and attachment names make the file unreadable.
+   * Picks and arms that no longer fit the catalog are opened again by the character (see
+   * {@link StartingEquipment#fittedToCatalog(boolean)}).
+   */
+  private static @NonNull StartingEquipment toModel(@Nullable StartingEquipmentData data)
+      throws SaveFormatException {
+    if (data == null) {
+      return StartingEquipment.NONE;
+    }
+    Map<Skill, String> picks = new EnumMap<>(Skill.class);
+    Map<String, @Nullable String> tagSkillItems = data.tagSkillItems();
+    if (tagSkillItems != null) {
+      for (Map.Entry<String, @Nullable String> entry : tagSkillItems.entrySet()) {
+        Skill skill = skill(entry.getKey());
+        String option = entry.getValue();
+        if (option != null) {
+          picks.put(skill, option);
+        }
+      }
+    }
+    List<ArmSelection> arms = new ArrayList<>();
+    for (@Nullable ArmData arm : orEmpty(data.arms())) {
+      if (arm == null) {
+        throw new SaveFormatException("Arm without data");
+      }
+      arms.add(toModel(arm));
+    }
+    CatalogRefData pack = data.pack();
+    List<@Nullable String> choices = data.choices();
+    // Any other number of arms than three is dropped; the character fits the arms to the pack.
+    return new StartingEquipment(pack == null ? null : toModel(pack), choices == null ? List.of() : choices,
+        picks, data.trinket(), data.freeArms(), arms.size() == EquipmentPackData.ARM_COUNT ? arms : List.of());
+  }
+
+  private static @NonNull ArmSelection toModel(@NonNull ArmData data) throws SaveFormatException {
+    String attachment = data.attachment();
+    try {
+      return new ArmSelection(attachment == null ? null : ArmAttachment.valueOf(attachment), data.weapon());
+    } catch (IllegalArgumentException e) {
+      throw new SaveFormatException("Invalid arm: " + attachment + " / " + data.weapon(), e);
+    }
   }
 
   private static CatalogRefData toData(CatalogRef ref) {

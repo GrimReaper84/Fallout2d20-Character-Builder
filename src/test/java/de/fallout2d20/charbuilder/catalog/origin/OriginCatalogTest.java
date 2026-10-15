@@ -118,7 +118,6 @@ class OriginCatalogTest {
     assertEquals(List.of("tribal", "survivor"), origin("tribal").traitLists());
     assertEquals(Set.of("survivor", "tribal"), idsWhere(origin -> !origin.traitLists().isEmpty()));
     assertEquals(Set.of("child-of-atom"), idsWhere(origin -> origin.extraPerks() == 1));
-    assertEquals(Set.of("mister-handy"), idsWhere(OriginData::pincerOptional));
     assertEquals(List.of("Fire Brigadier", "Law Enforcer", "Construction Worker", "Medical Responder"),
         origin("protectron").purposeSuggestions());
     assertEquals(Set.of("protectron"), idsWhere(origin -> !origin.purposeSuggestions().isEmpty()));

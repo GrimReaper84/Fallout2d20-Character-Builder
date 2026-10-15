@@ -1,0 +1,87 @@
+[
+  {
+    "skill": "ATHLETICS",
+    "options": ["Casual clothing, 1 Buffout"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "BARTER",
+    "capsD20": 2,
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "BIG_GUNS",
+    "options": ["4 + 2 CD shots of flamer fuel"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "ENERGY_WEAPONS",
+    "options": ["Fusion cell with 6 + 3 CD shots"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "EXPLOSIVES",
+    "options": ["2 Molotov cocktails", "2 baseball grenades"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "LOCKPICK",
+    "options": ["4 + 2 CD bobby pins"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "MEDICINE",
+    "options": ["1 first aid kit, 1 Stimpak"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "MELEE_WEAPONS",
+    "options": ["Machete", "Baseball bat"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "PILOT",
+    "options": ["Broken car parts (5 common scrap)"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "REPAIR",
+    "options": ["Multi-Tool"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "SCIENCE",
+    "options": ["Lab coat, 1 dose of Mentats"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "SMALL_GUNS",
+    "options": ["6 + 3 CD extra shots of an ammunition type you already own"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "SNEAK",
+    "options": ["1 dose of Calmex"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "SPEECH",
+    "options": ["Formal hat, formal clothing"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "SURVIVAL",
+    "options": ["2 purified water, 1 iguana on a stick"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "THROWING",
+    "options": ["4 + 2 CD throwing knives", "2 + 1 CD tomahawks"],
+    "sources": [{"book": "CRB", "page": 81}]
+  },
+  {
+    "skill": "UNARMED",
+    "options": ["Knuckles"],
+    "sources": [{"book": "CRB", "page": 81}]
+  }
+]

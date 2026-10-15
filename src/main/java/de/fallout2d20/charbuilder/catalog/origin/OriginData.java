@@ -42,7 +42,6 @@ import org.jspecify.annotations.Nullable;
  * @param traitLists ids of the trait lists the origin offers; the character takes two traits from
  *     one list, or one trait plus one extra perk (Survivor CRB p. 56, Tribal WG p. 15)
  * @param extraPerks perks granted in addition at level 1 (Child of Atom 1, WOA p. 25)
- * @param pincerOptional whether the character may go without a pincer (Mister Handy, CRB p. 55)
  * @param purposeSuggestions suggested purposes; non-empty means the origin requires a purpose
  *     (Protectron, WOA p. 21)
  */
@@ -64,7 +63,6 @@ public record OriginData(
     @Nullable ExtraTagSkill extraTagSkill,
     @NonNull List<String> traitLists,
     int extraPerks,
-    boolean pincerOptional,
     @NonNull List<String> purposeSuggestions) {
 
   /** CRB p. 58: no attribute may exceed 10 unless the origin changes the maximum. */

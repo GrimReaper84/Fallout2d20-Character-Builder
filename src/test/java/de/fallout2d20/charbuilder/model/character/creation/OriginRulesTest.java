@@ -147,10 +147,10 @@ class OriginRulesTest {
   @Test
   void reportsChoicesTheOriginDoesNotHave() {
     Character ghoul = new Character("Test", CatalogRef.of("ghoul"),
-        new OriginChoices(Skill.SNEAK, true, "Medic"), 1, 0, false, EnumSet.allOf(Book.class),
+        new OriginChoices(Skill.SNEAK, "Medic"), 1, 0, false, EnumSet.allOf(Book.class),
         Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null);
-    assertEquals(Set.of("Ghoul has no purpose to choose.", "Only a Mister Handy can go without a pincer.",
-        "Ghoul grants no extra Tag skill."), Set.copyOf(messages(ghoul)));
+    assertEquals(Set.of("Ghoul has no purpose to choose.", "Ghoul grants no extra Tag skill."),
+        Set.copyOf(messages(ghoul)));
   }
 
   @Test
