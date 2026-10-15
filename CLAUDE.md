@@ -28,7 +28,9 @@ The project plan lives in `docs/plans/project_plan.md` (local only, see below).
   `de.fallout2d20.charbuilder.App`. New packages with FXML controllers must be
   `opens ... to javafx.fxml`; packages deserialized by Jackson must be `opens ... to
   com.fasterxml.jackson.databind`. Tests run on the classpath (no test `module-info`).
-- Error Prone + NullAway (error level) on main code; jspecify `@Nullable` for nullable values;
+- Error Prone + NullAway (error level) on main code; jspecify `@NonNull`/`@Nullable` written
+  explicitly on every reference type in signatures, private ones included (see project rules,
+  section 6);
   fields annotated with `@FXML` are excluded from NullAway.
 - Libraries: JavaFX (controls, fxml), ControlsFX, MigLayout, Ikonli (FontAwesome 6), Jackson, JUnit 5.
 

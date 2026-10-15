@@ -16,6 +16,8 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
+import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import java.time.Clock;
@@ -28,6 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /** State and steps of one legacy import, see {@link LegacyCharacterImporter}. */
@@ -35,8 +40,17 @@ final class LegacyImportRun {
 
   private static final String DEFAULT_NAME = "Wanderer";
   private static final int MAX_RADIATION_POINTS = 5;
-  private static final Set<String> CONSUMED_FIELDS = Set.of("schemaVersion", "name", "origin",
-      "level", "xp", "attributes", "skills", "perks", "traits", "progression", "vitals");
+  // Top-level fields of the legacy save format.
+  private static final String ORIGIN = "origin";
+  private static final String ATTRIBUTES = "attributes";
+  private static final String SKILLS = "skills";
+  private static final String PERKS = "perks";
+  private static final String TRAITS = "traits";
+  private static final String VITALS = "vitals";
+  private static final String DERIVED = "derived";
+  private static final Set<String> CONSUMED_FIELDS = Set.of("schemaVersion", "name", ORIGIN,
+      "level", "xp", ATTRIBUTES, SKILLS, PERKS, TRAITS, "progression", VITALS, DERIVED);
+  private static final Pattern MELEE_DICE = Pattern.compile("\\+(\\d+)");
 
   private final ObjectNode root;
   private final Clock clock;
@@ -50,11 +64,11 @@ final class LegacyImportRun {
 
   CharacterFile execute() throws SaveFormatException {
     int sourceVersion = sourceVersion();
-    JsonNode originNode = root.get("origin");
+    JsonNode originNode = root.get(ORIGIN);
     if (originNode == null || !originNode.isTextual() || !CatalogRef.canDeriveId(originNode.asText())) {
       throw new SaveFormatException("Legacy file has no valid origin");
     }
-    JsonNode attributesNode = root.get("attributes");
+    JsonNode attributesNode = root.get(ATTRIBUTES);
     if (attributesNode == null || !attributesNode.isObject()) {
       throw new SaveFormatException("Legacy file has no attributes");
     }
@@ -77,6 +91,7 @@ final class LegacyImportRun {
     Character character = new Character(name, origin, level, xp, true, Map.of(), skillStates,
         traits, perks, progression, vitals, new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload));
+    compareDerived(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
   }
 
@@ -106,10 +121,10 @@ final class LegacyImportRun {
       return new CatalogRef(supported.get(), legacyId);
     }
     if (LegacyOriginIds.isFromUnsupportedBook(legacyId)) {
-      info("origin", "Origin \"" + legacyId + "\" is from a book that is not supported; "
+      info(ORIGIN, "Origin \"" + legacyId + "\" is from a book that is not supported; "
           + "kept as unverified legacy entry.");
     } else {
-      warning("origin", "Unknown origin \"" + legacyId + "\"; kept as unverified legacy entry.");
+      warning(ORIGIN, "Unknown origin \"" + legacyId + "\"; kept as unverified legacy entry.");
     }
     return new CatalogRef(LegacyOriginIds.legacyId(legacyId), legacyId);
   }
@@ -120,11 +135,11 @@ final class LegacyImportRun {
       JsonNode value = node.get(attribute.id());
       Integer parsed = value == null ? null : parseInt(value);
       if (parsed == null) {
-        warning("attributes", attribute.displayName() + " is missing or invalid; using "
+        warning(ATTRIBUTES, attribute.displayName() + " is missing or invalid; using "
             + Character.ATTRIBUTE_BASE + ".");
         parsed = Character.ATTRIBUTE_BASE;
       } else if (parsed < 4 || parsed > 10) {
-        info("attributes", attribute.displayName() + " is " + parsed
+        info(ATTRIBUTES, attribute.displayName() + " is " + parsed
             + ", outside the usual range 4–10.");
       }
       attributes.put(attribute, parsed);
@@ -138,34 +153,45 @@ final class LegacyImportRun {
     }
     if (!unknown.isEmpty()) {
       payload.set("unknownAttributes", unknown);
-      warning("attributes", "Unknown attributes kept in the legacy data: " + fieldNames(unknown));
+      warning(ATTRIBUTES, "Unknown attributes kept in the legacy data: " + fieldNames(unknown));
     }
     return attributes;
   }
 
-  private Map<Skill, Integer> skills(Map<Skill, SkillState> states) {
+  private @NonNull Map<Skill, Integer> skills(@NonNull Map<Skill, SkillState> states) {
     Map<Skill, Integer> ranks = new EnumMap<>(Skill.class);
-    JsonNode node = root.get("skills");
+    JsonNode node = root.get(SKILLS);
     ObjectNode unknown = JsonNodeFactory.instance.objectNode();
     if (node != null && node.isObject()) {
       for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
-        Map.Entry<String, JsonNode> entry = it.next();
-        Optional<Skill> skill = Skill.fromDisplayName(entry.getKey());
-        if (skill.isEmpty()) {
-          unknown.set(entry.getKey(), entry.getValue());
-          continue;
-        }
-        JsonNode rankNode = entry.getValue().get("rank");
-        Integer rank = rankNode == null ? null : parseInt(rankNode);
-        JsonNode tagNode = entry.getValue().get("tag");
-        ranks.put(skill.get(), rank == null ? 0 : Math.max(0, rank));
-        states.put(skill.get(), new SkillState(tagNode != null && tagNode.asBoolean(), 0, 0));
+        readSkill(it.next(), ranks, states, unknown);
       }
     }
     if (!unknown.isEmpty()) {
       payload.set("unknownSkills", unknown);
-      warning("skills", "Unknown skills kept in the legacy data: " + fieldNames(unknown));
+      warning(SKILLS, "Unknown skills kept in the legacy data: " + fieldNames(unknown));
     }
+    fillMissingSkills(ranks);
+    return ranks;
+  }
+
+  /** Reads rank and Tag flag of one legacy skill entry; unknown skill names go to {@code unknown}. */
+  private static void readSkill(Map.@NonNull Entry<String, JsonNode> entry,
+      @NonNull Map<Skill, Integer> ranks, @NonNull Map<Skill, SkillState> states,
+      @NonNull ObjectNode unknown) {
+    Optional<Skill> skill = Skill.fromDisplayName(entry.getKey());
+    if (skill.isEmpty()) {
+      unknown.set(entry.getKey(), entry.getValue());
+      return;
+    }
+    JsonNode rankNode = entry.getValue().get("rank");
+    Integer rank = rankNode == null ? null : parseInt(rankNode);
+    JsonNode tagNode = entry.getValue().get("tag");
+    ranks.put(skill.get(), rank == null ? 0 : Math.max(0, rank));
+    states.put(skill.get(), new SkillState(tagNode != null && tagNode.asBoolean(), 0, 0));
+  }
+
+  private void fillMissingSkills(@NonNull Map<Skill, Integer> ranks) {
     int missing = 0;
     for (Skill skill : Skill.values()) {
       if (!ranks.containsKey(skill)) {
@@ -174,54 +200,28 @@ final class LegacyImportRun {
       }
     }
     if (missing > 0) {
-      info("skills", missing + " skill(s) missing; imported with rank 0.");
+      info(SKILLS, missing + " skill(s) missing; imported with rank 0.");
     }
-    return ranks;
   }
 
-  private List<PerkSelection> perks() {
+  private @NonNull List<PerkSelection> perks() {
     Map<String, Integer> ranks = new LinkedHashMap<>();
     Map<String, List<Attribute>> choices = new LinkedHashMap<>();
     ArrayNode invalid = JsonNodeFactory.instance.arrayNode();
     ObjectNode invalidChoices = JsonNodeFactory.instance.objectNode();
     boolean merged = false;
-    for (JsonNode item : elements(root.get("perks"))) {
+    for (JsonNode item : elements(root.get(PERKS))) {
       String perkName = item.isTextual() ? item.asText() : textOrNull(item.get("name"));
       if (perkName == null || !CatalogRef.canDeriveId(perkName)) {
         invalid.add(item);
         continue;
       }
-      int rank = 1;
-      if (item.isObject()) {
-        JsonNode rankNode = item.get("rank");
-        Integer parsed = rankNode == null ? null : parseInt(rankNode);
-        rank = parsed == null ? 1 : Math.max(1, parsed);
-      }
       merged |= ranks.containsKey(perkName);
-      ranks.merge(perkName, rank, Integer::sum);
-      List<Attribute> perkChoices = choices.computeIfAbsent(perkName, k -> new ArrayList<>());
-      for (JsonNode choice : elements(item.get("choices"))) {
-        Optional<Attribute> attribute = Attribute.fromId(choice.asText());
-        if (attribute.isPresent()) {
-          perkChoices.add(attribute.get());
-        } else {
-          ArrayNode kept = invalidChoices.has(perkName)
-              ? (ArrayNode) invalidChoices.get(perkName) : invalidChoices.putArray(perkName);
-          kept.add(choice);
-        }
-      }
+      ranks.merge(perkName, perkRank(item), Integer::sum);
+      collectChoices(perkName, item, choices.computeIfAbsent(perkName, k -> new ArrayList<>()),
+          invalidChoices);
     }
-    if (merged) {
-      info("perks", "Repeated perk entries were merged into ranks.");
-    }
-    if (!invalid.isEmpty()) {
-      payload.set("invalidPerks", invalid);
-      warning("perks", invalid.size() + " invalid perk entr(y/ies) kept in the legacy data.");
-    }
-    if (!invalidChoices.isEmpty()) {
-      payload.set("invalidPerkChoices", invalidChoices);
-      warning("perks", "Unknown attribute choices kept in the legacy data: " + fieldNames(invalidChoices));
-    }
+    reportPerkProblems(merged, invalid, invalidChoices);
     List<PerkSelection> perks = new ArrayList<>();
     for (Map.Entry<String, Integer> entry : ranks.entrySet()) {
       perks.add(new PerkSelection(CatalogRef.fromLegacyName(entry.getKey()), entry.getValue(),
@@ -230,10 +230,47 @@ final class LegacyImportRun {
     return perks;
   }
 
+  /** Rank of a legacy perk entry; plain name strings and missing or invalid ranks count as 1. */
+  private static int perkRank(@NonNull JsonNode item) {
+    JsonNode rankNode = item.get("rank");
+    Integer parsed = rankNode == null ? null : parseInt(rankNode);
+    return parsed == null ? 1 : Math.max(1, parsed);
+  }
+
+  /** Attribute choices (Intense Training); unknown ones are kept per perk in {@code invalidChoices}. */
+  private static void collectChoices(@NonNull String perkName, @NonNull JsonNode item,
+      @NonNull List<Attribute> perkChoices, @NonNull ObjectNode invalidChoices) {
+    for (JsonNode choice : elements(item.get("choices"))) {
+      Optional<Attribute> attribute = Attribute.fromId(choice.asText());
+      if (attribute.isPresent()) {
+        perkChoices.add(attribute.get());
+      } else {
+        ArrayNode kept = invalidChoices.has(perkName)
+            ? (ArrayNode) invalidChoices.get(perkName) : invalidChoices.putArray(perkName);
+        kept.add(choice);
+      }
+    }
+  }
+
+  private void reportPerkProblems(boolean merged, @NonNull ArrayNode invalid,
+      @NonNull ObjectNode invalidChoices) {
+    if (merged) {
+      info(PERKS, "Repeated perk entries were merged into ranks.");
+    }
+    if (!invalid.isEmpty()) {
+      payload.set("invalidPerks", invalid);
+      warning(PERKS, invalid.size() + " invalid perk entr(y/ies) kept in the legacy data.");
+    }
+    if (!invalidChoices.isEmpty()) {
+      payload.set("invalidPerkChoices", invalidChoices);
+      warning(PERKS, "Unknown attribute choices kept in the legacy data: " + fieldNames(invalidChoices));
+    }
+  }
+
   private List<TraitSelection> traits() {
     List<TraitSelection> traits = new ArrayList<>();
     ArrayNode invalid = JsonNodeFactory.instance.arrayNode();
-    for (JsonNode item : elements(root.get("traits"))) {
+    for (JsonNode item : elements(root.get(TRAITS))) {
       if (item.isTextual() && CatalogRef.canDeriveId(item.asText())) {
         traits.add(new TraitSelection(CatalogRef.fromLegacyName(item.asText()), true, List.of()));
       } else {
@@ -242,7 +279,7 @@ final class LegacyImportRun {
     }
     if (!invalid.isEmpty()) {
       payload.set("invalidTraits", invalid);
-      warning("traits", invalid.size() + " invalid trait entr(y/ies) kept in the legacy data.");
+      warning(TRAITS, invalid.size() + " invalid trait entr(y/ies) kept in the legacy data.");
     }
     return traits;
   }
@@ -256,21 +293,84 @@ final class LegacyImportRun {
   }
 
   private Vitals vitals() {
-    JsonNode node = root.get("vitals");
+    JsonNode node = root.get(VITALS);
     if (node == null || !node.isObject()) {
       return Vitals.FULL;
     }
     Integer currentHp = parseNonNegative(node.get("currentHP"));
     if (currentHp == null) {
-      JsonNode derived = root.get("derived");
+      JsonNode derived = root.get(DERIVED);
       currentHp = derived == null ? null : parseNonNegative(derived.get("hp"));
     }
     int radiationPoints = intField(node, "radiationPoints", 0, 0);
     if (radiationPoints > MAX_RADIATION_POINTS) {
-      info("vitals", "Radiation points " + radiationPoints + " reduced to " + MAX_RADIATION_POINTS + ".");
+      info(VITALS, "Radiation points " + radiationPoints + " reduced to " + MAX_RADIATION_POINTS + ".");
       radiationPoints = MAX_RADIATION_POINTS;
     }
     return new Vitals(currentHp, intField(node, "rads", 0, 0), radiationPoints);
+  }
+
+  /**
+   * Compares the derived values the legacy app stored with the computed ones and reports all
+   * differences in one info. Missing or unreadable values are skipped; the computed values win.
+   */
+  private void compareDerived(@NonNull Character character) {
+    JsonNode derived = root.get(DERIVED);
+    if (derived == null || !derived.isObject()) {
+      return;
+    }
+    DerivedStats stats = DerivedStats.of(character);
+    List<String> differences = new ArrayList<>();
+    addDifference(differences, "HP", intOrNull(derived.get("hp")), stats.maxHp());
+    addDifference(differences, "Initiative", intOrNull(derived.get("init")), stats.initiative());
+    addDifference(differences, "Defense", intOrNull(derived.get("def")), stats.defense());
+    addDifference(differences, "carry weight", intOrNull(derived.get("carry")), stats.carryWeight());
+    addDifference(differences, "melee bonus dice", meleeDice(derived.get("melee")), stats.meleeBonusDice());
+    addDifference(differences, "physical DR", resistance(derived.get("physDR")), stats.physical());
+    addDifference(differences, "energy DR", resistance(derived.get("enDR")), stats.energy());
+    addDifference(differences, "radiation DR", resistance(derived.get("radDR")), stats.radiation());
+    addDifference(differences, "poison DR", resistance(derived.get("poisDR")), stats.poison());
+    if (!differences.isEmpty()) {
+      info(DERIVED, "Stored values differ from the rules and were recomputed: "
+          + String.join(", ", differences) + ".");
+    }
+  }
+
+  private static <T> void addDifference(@NonNull List<String> differences, @NonNull String label,
+      @Nullable T stored, @NonNull T computed) {
+    if (stored != null && !stored.equals(computed)) {
+      differences.add(label + " " + stored + " → " + computed);
+    }
+  }
+
+  private static @Nullable Integer intOrNull(@Nullable JsonNode node) {
+    return node == null ? null : parseInt(node);
+  }
+
+  /**
+   * Legacy melee bonus such as {@code "+1 CD"} or {@code "+1 CD (+1 CD Heavy Handed)"}: the sum of
+   * all {@code +N} parts.
+   */
+  private static @Nullable Integer meleeDice(@Nullable JsonNode node) {
+    if (node == null || !node.isTextual()) {
+      return intOrNull(node);
+    }
+    Matcher matcher = MELEE_DICE.matcher(node.asText());
+    Integer dice = null;
+    while (matcher.find()) {
+      dice = (dice == null ? 0 : dice) + Integer.parseInt(matcher.group(1));
+    }
+    return dice;
+  }
+
+  /** Legacy DR: a number, or {@code "Immune"} / {@code "Heals"} (ghouls) for immunity. */
+  private static @Nullable Resistance resistance(@Nullable JsonNode node) {
+    if (node != null && node.isTextual()
+        && (node.asText().equalsIgnoreCase("Immune") || node.asText().equalsIgnoreCase("Heals"))) {
+      return Resistance.IMMUNITY;
+    }
+    Integer value = parseNonNegative(node);
+    return value == null ? null : Resistance.of(value);
   }
 
   private void keepRemainingFields() {

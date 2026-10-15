@@ -133,6 +133,14 @@ text verbatim (copyright, public repository); `docs/` analyses may quote short p
 - **JPMS:** a new package with FXML controllers needs `opens <pkg> to javafx.fxml`; packages read or
   written by Jackson need `opens <pkg> to com.fasterxml.jackson.databind`. Exports only for what other
   modules really need.
+- **Explicit nullness annotations (user preference):** every reference type in a signature is
+  annotated explicitly with jspecify `@NonNull` or `@Nullable`, although non-null is NullAway's
+  default, so the nullness is visible at a glance. Applies to parameters, return types, fields and
+  record components of **all** methods and constructors, private ones included; type-use position (`public @NonNull String abbreviation()`,
+  `record CatalogRef(@NonNull String id, @Nullable String legacyName)`). Not on primitives, `void`,
+  local variables or lambda parameters. Generic type arguments only where they can be null
+  (`List<@Nullable String>`). Nested types take the annotation after the outer type
+  (`Map.@NonNull Entry<K, V>`), otherwise javac rejects it. Model: `model.character.CatalogRef`.
 - **Null handling:** jspecify `@Nullable`, NullAway runs as an error. Check nullable fields
   **directly** (`if (field == null) return;`); no local helper variable just for NullAway. Only if a
   lambda captures the field and NullAway really fails the build, solve it structurally.
@@ -158,6 +166,7 @@ This section grows with the project. Until a pattern exists in the code, the ent
 | Character instance | planned: class referencing its `XData` plus mutable state (rank, choices, equipped). Until a catalog exists, selections reference it via `CatalogRef` (id + legacy name), e.g. `PerkSelection`, `TraitSelection` |
 | Character aggregate | `model.character.Character`: stores parts (allocation, `SkillState`, `LegacyBaseline`), one computing method per value (`attributeValue`, `skillRank`) – extend these methods, do not add parallel ones |
 | Persistence | `persistence.CharacterStore` + DTO records (`CharacterData` …) + `CharacterMapper` (only place knowing model and DTOs); new fields: DTO record field + mapper both ways + round-trip test in `CharacterStoreTest` |
+| Derived values | `model.character.derived.DerivedStats.of(character)`: computed on every call, never stored; perk/trait/origin effects by id only in `DerivedStatsCalculator` (until catalogs exist) |
 | Legacy import | `persistence.legacy.LegacyCharacterImporter`: tree-model import, `ImportWarning` instead of silent drops, unported fields stay in `LegacyImport.payload`; a feature that ports a legacy field takes it out of the payload |
 
 Prefer existing patterns and extend them only when they do not fit. Keep changes to base classes

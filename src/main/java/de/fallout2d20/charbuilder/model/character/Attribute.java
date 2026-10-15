@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character;
 
 import java.util.Optional;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The seven S.P.E.C.I.A.L. attributes.
@@ -35,7 +36,7 @@ public enum Attribute {
   }
 
   /** Three-letter abbreviation as used on the character sheet, e.g. {@code STR}. */
-  public String abbreviation() {
+  public @NonNull String abbreviation() {
     return id.toUpperCase(java.util.Locale.ROOT);
   }
 

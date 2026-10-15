@@ -9,6 +9,8 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
+import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
@@ -16,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
@@ -30,6 +33,9 @@ final class CharacterOverview {
       "Imported from a legacy file; its effect is already included in the imported values.";
   private static final String UNRESOLVED_TOOLTIP =
       "Not yet checked against the rulebooks (shown with its legacy name).";
+  private static final String RESISTANCE_TOOLTIP = "Innate resistance from origin and perks; armor is not included.";
+  private static final String PHYSICAL_RESISTANCE_TOOLTIP =
+      RESISTANCE_TOOLTIP + " A Barbarian bonus does not apply while wearing Power Armor.";
 
   private CharacterOverview() {}
 
@@ -55,6 +61,25 @@ final class CharacterOverview {
       pane.add(baselineMarked(Integer.toString(character.attributeValue(attribute)), character.isLegacyImport()),
           "span 3");
     }
+
+    DerivedStats derived = DerivedStats.of(character);
+    heading(pane, "Derived statistics");
+    pane.add(new Label("Max HP"));
+    pane.add(new Label(Integer.toString(derived.maxHp())));
+    pane.add(new Label("Initiative"));
+    pane.add(new Label(Integer.toString(derived.initiative())));
+    pane.add(new Label("Defense"));
+    pane.add(new Label(Integer.toString(derived.defense())));
+    pane.add(new Label("Carry weight"));
+    pane.add(new Label(derived.carryWeight() + " lbs."));
+    pane.add(new Label("Melee damage"));
+    pane.add(new Label(derived.meleeBonusDice() == 0 ? "+0" : "+" + derived.meleeBonusDice() + " CD"));
+    pane.add(new Label("Luck points"));
+    pane.add(new Label(Integer.toString(derived.maxLuckPoints())));
+    resistance(pane, "Physical DR", derived.physical(), PHYSICAL_RESISTANCE_TOOLTIP);
+    resistance(pane, "Energy DR", derived.energy(), RESISTANCE_TOOLTIP);
+    resistance(pane, "Radiation DR", derived.radiation(), RESISTANCE_TOOLTIP);
+    resistance(pane, "Poison DR", derived.poison(), RESISTANCE_TOOLTIP);
 
     heading(pane, "Skills");
     for (Skill skill : Skill.values()) {
@@ -94,7 +119,8 @@ final class CharacterOverview {
     pane.add(new Label("Unspent perks"));
     pane.add(new Label(Integer.toString(progression.pendingPerks())));
     pane.add(new Label("Current HP"));
-    pane.add(new Label(vitals.currentHp() == null ? "maximum" : Integer.toString(vitals.currentHp())));
+    int currentHp = vitals.currentHp() == null ? derived.maxHp() : vitals.currentHp();
+    pane.add(new Label(currentHp + " / " + derived.maxHp()));
     pane.add(new Label("Rads"));
     pane.add(new Label(Integer.toString(vitals.rads())));
     pane.add(new Label("Radiation points"));
@@ -117,6 +143,14 @@ final class CharacterOverview {
     Label label = new Label(text);
     label.setStyle("-fx-font-weight: bold; -fx-font-size: 1.15em;");
     pane.add(label, "span 4, gaptop 12, left");
+  }
+
+  private static void resistance(@NonNull MigPane pane, @NonNull String text,
+      @NonNull Resistance resistance, @NonNull String tooltip) {
+    Label label = new Label(text);
+    label.setTooltip(new Tooltip(tooltip));
+    pane.add(label);
+    pane.add(new Label(resistance.toString()));
   }
 
   private static Label reference(CatalogRef ref) {

@@ -32,9 +32,8 @@ class LegacyCharacterImporterTest {
       Clock.fixed(Instant.parse("2026-10-15T10:00:00Z"), ZoneOffset.UTC));
 
   @Test
-  void importsTheV2SurvivorFixture() throws Exception {
-    CharacterFile result = importer.importCharacter(fixture("test-survivor-v2.json"));
-    Character character = result.character();
+  void importsBaseDataAndAttributesOfTheV2SurvivorFixture() throws Exception {
+    Character character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
 
     assertEquals("Test Survivor", character.getName());
     assertEquals("survivor", character.getOrigin().id());
@@ -48,6 +47,13 @@ class LegacyCharacterImporterTest {
       assertEquals(value, character.attributeValue(attribute), attribute.id());
       assertEquals(0, character.attributeAllocation(attribute));
     });
+    assertEquals(11, character.getVitals().currentHp());
+  }
+
+  @Test
+  void importsSkillsPerksAndTraitsOfTheV2SurvivorFixture() throws Exception {
+    Character character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
+
     assertTag(character, Skill.LOCKPICK, 3);
     assertTag(character, Skill.REPAIR, 4);
     assertTag(character, Skill.SCIENCE, 3);
@@ -61,16 +67,22 @@ class LegacyCharacterImporterTest {
     }
     assertEquals("small-frame", character.getTraits().get(0).trait().id());
     assertTrue(character.getTraits().get(0).imported());
-    assertEquals(11, character.getVitals().currentHp());
+  }
 
-    LegacyImport legacy = character.getLegacyImport();
+  @Test
+  void keepsUnportedFieldsOfTheV2SurvivorFixtureWithoutWarnings() throws Exception {
+    CharacterFile result = importer.importCharacter(fixture("test-survivor-v2.json"));
+
+    LegacyImport legacy = result.character().getLegacyImport();
     assertNotNull(legacy);
     assertEquals(2, legacy.sourceSchemaVersion());
     assertEquals("2026-10-15", legacy.importedOn());
     for (String field : List.of("equipment", "equipmentPack", "trinket", "weapons", "armor",
-        "originOptions", "derived")) {
+        "originOptions")) {
       assertTrue(legacy.payload().has(field), field);
     }
+    assertFalse(legacy.payload().has("derived"), "derived values are recomputed, not kept");
+    assertFalse(hasInfo(result, "derived"), "JC's stored derived values match the rules");
     assertEquals("Laser Gun", legacy.payload().get("weapons").get(0).get("name").asText());
     assertFalse(result.importReport().hasWarnings(), result.importReport().warnings().toString());
   }
@@ -92,6 +104,47 @@ class LegacyCharacterImporterTest {
     assertTrue(hasInfo(result, "skills"));
     assertNull(character.getVitals().currentHp(), "no vitals in the file: health at maximum");
     assertEquals(0, character.getProgression().pendingPerks());
+  }
+
+  /** test-v1.json stores only HP 15; the rules give 6 + 6 + 2 + 2 × 6 (Life Giver 2) = 26. */
+  @Test
+  void reportsStoredDerivedValuesThatDifferFromTheRules() throws Exception {
+    List<ImportWarning> derived = derivedWarnings(importer.importCharacter(fixture("test-v1.json")));
+
+    assertEquals(1, derived.size());
+    assertEquals(WarningSeverity.INFO, derived.get(0).severity());
+    assertEquals("Stored values differ from the rules and were recomputed: HP 15 → 26.",
+        derived.get(0).message());
+  }
+
+  @Test
+  void readsLegacyMeleeTextAndImmunities() throws Exception {
+    ObjectNode root = minimal();
+    root.put("origin", "Super Mutant");
+    ObjectNode attributes = (ObjectNode) root.get("attributes");
+    attributes.put("str", 7);
+    root.putArray("traits").add("Heavy Handed");
+    ObjectNode derived = root.putObject("derived");
+    derived.put("melee", "+1 CD (+1 CD Heavy Handed)");
+    derived.put("radDR", "Immune");
+    derived.put("poisDR", "Immune");
+    derived.put("physDR", 0);
+    assertFalse(hasInfo(importer.importCharacter(root), "derived"));
+
+    derived.put("melee", "+0");
+    derived.put("radDR", 0);
+    assertEquals(List.of("Stored values differ from the rules and were recomputed: melee bonus dice "
+        + "0 → 2, radiation DR 0 → Immune."),
+        derivedWarnings(importer.importCharacter(root)).stream().map(ImportWarning::message).toList());
+  }
+
+  /** The legacy app stored "Heals" as radiation DR of a ghoul; it counts as immunity. */
+  @Test
+  void readsLegacyHealsAsRadiationImmunity() throws Exception {
+    ObjectNode root = minimal();
+    root.put("origin", "Ghoul");
+    root.putObject("derived").put("radDR", "Heals");
+    assertTrue(derivedWarnings(importer.importCharacter(root)).isEmpty());
   }
 
   @Test
@@ -196,6 +249,10 @@ class LegacyCharacterImporterTest {
   private static void assertTag(Character character, Skill skill, int rank) {
     assertTrue(character.skillState(skill).tagged(), skill.id());
     assertEquals(rank, character.skillRank(skill), skill.id());
+  }
+
+  private static List<ImportWarning> derivedWarnings(CharacterFile result) {
+    return result.importReport().warnings().stream().filter(w -> w.field().equals("derived")).toList();
   }
 
   private static boolean hasInfo(CharacterFile result, String field) {
