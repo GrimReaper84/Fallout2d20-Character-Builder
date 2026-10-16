@@ -16,6 +16,12 @@ import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
+import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
+import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
+import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import java.util.LinkedHashMap;
 import java.util.ArrayList;
@@ -92,6 +98,11 @@ public class Character {
   /** Shots per ammunition id (CRB p. 91: counted per type, shared by all weapons using it); only counts above 0. */
   private final Map<String, Integer> ammunition;
   private final List<WornApparel> apparel;
+  private final List<CarriedItem> items;
+  /** Caps on hand; any mode (found, earned, spent at any time). */
+  private long caps;
+  private @NonNull Materials materials;
+  private boolean packItemsAdded;
 
   /**
    * Creates a character from stored parts without starting equipment and inventory notes – a test
@@ -116,7 +127,7 @@ public class Character {
       @Nullable LegacyImport legacyImport) {
     this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
         skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
-        null, null, List.of(), Map.of(), List.of());
+        null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
   }
 
   /**
@@ -132,6 +143,7 @@ public class Character {
    * @param weapons the carried weapons
    * @param ammunition shots per ammunition id; counts of 0 are dropped
    * @param apparel the worn clothing, armor and robot armor
+   * @param inventory the carried items, caps and junk/material counters
    */
   public Character(
       @NonNull String name,
@@ -155,7 +167,8 @@ public class Character {
       @Nullable Set<Skill> startingTagSkills,
       @NonNull List<CarriedWeapon> weapons,
       @NonNull Map<String, Integer> ammunition,
-      @NonNull List<WornApparel> apparel) {
+      @NonNull List<WornApparel> apparel,
+      @NonNull Inventory inventory) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
     }
@@ -203,6 +216,10 @@ public class Character {
       }
     });
     this.apparel = new ArrayList<>(apparel);
+    this.items = new ArrayList<>(inventory.items());
+    this.caps = inventory.caps();
+    this.materials = inventory.materials();
+    this.packItemsAdded = inventory.packItemsAdded();
   }
 
   /** A new, empty character at the start of character creation. */
@@ -810,6 +827,92 @@ public class Character {
     return List.copyOf(apparel);
   }
 
+  /** Adds an item to the inventory (any mode). */
+  public void addItem(@NonNull CarriedItem item) {
+    items.add(item);
+  }
+
+  /**
+   * Removes the item at the index.
+   *
+   * @throws IndexOutOfBoundsException if there is no item at the index
+   */
+  public void removeItem(int index) {
+    items.remove(index);
+  }
+
+  /** How many of the item at the index the character carries. */
+  public void setItemQuantity(int index, int quantity) {
+    items.set(index, items.get(index).withQuantity(quantity));
+  }
+
+  /** The issue of the magazine at the index (CRB p. 172); {@code null} while not rolled. */
+  public void setItemIssue(int index, @Nullable String issue) {
+    items.set(index, items.get(index).withIssue(issue));
+  }
+
+  /** Free note of the item at the index. */
+  public void setItemNotes(int index, @Nullable String notes) {
+    items.set(index, items.get(index).withNotes(notes));
+  }
+
+  public @NonNull List<CarriedItem> getItems() {
+    return List.copyOf(items);
+  }
+
+  public long getCaps() {
+    return caps;
+  }
+
+  /**
+   * Caps on hand.
+   *
+   * @throws IllegalArgumentException for a negative amount
+   */
+  public void setCaps(long caps) {
+    if (caps < 0) {
+      throw new IllegalArgumentException("Caps cannot be negative");
+    }
+    this.caps = caps;
+  }
+
+  public @NonNull Materials getMaterials() {
+    return materials;
+  }
+
+  public void setMaterials(@NonNull Materials materials) {
+    this.materials = materials;
+  }
+
+  /** Whether the equipment pack was already turned into inventory entries ({@link #addPackItemsToInventory()}). */
+  public boolean isPackItemsAdded() {
+    return packItemsAdded;
+  }
+
+  /** Whether the pack items can be added: a pack is chosen and its items were not added yet. */
+  public boolean canAddPackItems() {
+    return !packItemsAdded && getEquipmentPack().isPresent();
+  }
+
+  /**
+   * Adds the starting equipment (pack, choices, trinket, Tag skill items) as weapons, worn apparel and items,
+   * once (user decision; see {@link PackInventory}).
+   *
+   * @return what was added
+   * @throws IllegalStateException if no pack is chosen or its items were already added
+   */
+  public @NonNull PackItems addPackItemsToInventory() {
+    if (!canAddPackItems()) {
+      throw new IllegalStateException("No equipment pack or its items were already added");
+    }
+    PackItems added = PackInventory.resolve(this);
+    weapons.addAll(added.weapons());
+    apparel.addAll(added.apparel());
+    items.addAll(added.items());
+    packItemsAdded = true;
+    return added;
+  }
+
   /** The catalog entry of the chosen equipment pack; empty without pack or for an unknown one. */
   public @NonNull Optional<EquipmentPackData> getEquipmentPack() {
     CatalogRef pack = startingEquipment.pack();
@@ -825,12 +928,17 @@ public class Character {
    * equipment); one-way by user decision, corrections are a GM matter (D2). The creation rules are not
    * checked here – the caller confirms open hints with the player. Afterwards creation edits are refused,
    * the creation rank cap of 3 no longer applies (CRB p. 58; see {@link #skillRankCap()}), and the
-   * starting level and the Tag skills are kept for the starting equipment (CRB p. 81).
+   * starting level and the Tag skills are kept for the starting equipment (CRB p. 81). Caps still at 0 are
+   * set to the fixed starting caps (pack, starting level; user decision); dice caps such as the Barter d20
+   * are rolled and added by the player.
    *
    * @throws IllegalStateException if creation is already complete
    */
   public void completeCreation() {
     requireCreation();
+    if (caps == 0) {
+      caps = StartingEquipmentItems.caps(this).fixedTotal();
+    }
     completedTagSkills = Set.copyOf(currentTagSkills());
     creationComplete = true;
     completedStartingLevel = level;

@@ -14,6 +14,7 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,8 @@ class CharacterWeaponsTest {
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.setWeaponQuantity(0, 3);
     character.setWeaponNotes(1, "Long Barrel");
-    assertEquals(List.of(new CarriedWeapon(CatalogRef.of("frag-grenade"), null, 3, ""),
-        new CarriedWeapon(CatalogRef.of("10mm-pistol"), null, 1, "Long Barrel")), character.getWeapons());
+    assertEquals(List.of(new CarriedWeapon(CatalogRef.of("frag-grenade"), null, 3, "", false),
+        new CarriedWeapon(CatalogRef.of("10mm-pistol"), null, 1, "Long Barrel", false)), character.getWeapons());
     assertThrows(IllegalArgumentException.class, () -> character.setWeaponQuantity(0, 0));
     character.removeWeapon(0);
     assertEquals("10mm Pistol", character.getWeapons().get(0).displayName());
@@ -92,6 +93,6 @@ class CharacterWeaponsTest {
   private static Character create(Map<String, Integer> ammunition) {
     return new Character("Test", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class), Map.of(),
         Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        null, null, List.of(), ammunition, List.of());
+        null, null, List.of(), ammunition, List.of(), Inventory.EMPTY);
   }
 }

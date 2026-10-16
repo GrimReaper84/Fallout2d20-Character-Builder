@@ -27,6 +27,10 @@ import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.item.CustomItem;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
+import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import java.io.IOException;
@@ -52,6 +56,31 @@ class CharacterStoreTest {
       new CharacterStore(Clock.fixed(Instant.parse("2026-10-15T10:00:00Z"), ZoneOffset.UTC));
 
   @TempDir Path dir;
+
+  /** Items (catalog, magazine issue, custom), caps and materials survive a save; empty parts are not written. */
+  @Test
+  void roundTripsTheInventory() throws Exception {
+    Character character = Character.createNew();
+    character.addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(2).withNotes("for Nora"));
+    character.addItem(CarriedItem.of(CatalogRef.of("tumblers-today")).withIssue("Open Any Lock in 5 Seconds Flat"));
+    character.addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "Cute")));
+    character.setCaps(123);
+    character.setMaterials(new Materials(3, 2, 1, 0));
+    Path file = dir.resolve("inventory.json");
+    store.save(character, file);
+
+    Character loaded = store.load(file).character();
+    assertEquals(character.getItems(), loaded.getItems());
+    assertEquals(123, loaded.getCaps());
+    assertEquals(new Materials(3, 2, 1, 0), loaded.getMaterials());
+
+    Path empty = dir.resolve("empty.json");
+    store.save(Character.createNew(), empty);
+    JsonNode written = JSON.readTree(empty.toFile());
+    assertNull(written.get("items"));
+    assertNull(written.get("caps"));
+    assertNull(written.get("materials"));
+  }
 
   @Test
   void roundTripsANewCharacter() throws Exception {
@@ -328,7 +357,7 @@ class CharacterStoreTest {
         null, false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "", null, null, List.of(), Map.of(), List.of());
+        null, null, settler, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());

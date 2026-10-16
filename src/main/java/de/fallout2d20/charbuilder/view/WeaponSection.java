@@ -14,9 +14,7 @@ import de.fallout2d20.charbuilder.view.dialog.AddWeaponDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.Set;
-import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -43,7 +41,6 @@ final class WeaponSection {
   private static final @NonNull String UNARMED_STRIKE = "unarmed-strike";
   private static final @NonNull List<String> HEADERS = List.of("Weapon", "Attack", "Damage", "Effects", "Type",
       "Rate", "Range", "Qualities", "Ammo", "Qty", "Notes", "");
-  private static final double NUMBER_WIDTH = 60;
   private static final double NOTES_WIDTH = 160;
 
   private WeaponSection() {}
@@ -87,7 +84,7 @@ final class WeaponSection {
     CustomWeapon custom = weapon.custom();
     Node skillChoice = custom != null && custom.skill() == null ? skillChoice(character, index, onChanged) : null;
     addAttack(table, character, WeaponAttack.of(character, weapon), source, skillChoice);
-    table.add(weapon.isCounted() ? numberField(weapon.quantity(), 1, quantity -> {
+    table.add(weapon.isCounted() ? NumberField.of(weapon.quantity(), 1, quantity -> {
       character.setWeaponQuantity(index, quantity);
       onChanged.run();
     }) : new Label(""));
@@ -161,7 +158,7 @@ final class WeaponSection {
       WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip("Found: "
           + orDash(data.quantityFound()) + ", rarity " + orDash(data.rarity()) + " (" + data.sources().get(0) + ")")));
       rows.add(name);
-      rows.add(numberField(character.ammunition(id), 0, shots -> {
+      rows.add(NumberField.of(character.ammunition(id), 0, shots -> {
         character.setAmmunition(id, shots);
         onChanged.run();
       }));
@@ -198,37 +195,6 @@ final class WeaponSection {
       }
     });
     return box;
-  }
-
-  /**
-   * A number field that takes its value on Enter or when it loses the focus, once: the commit rebuilds the
-   * overview, and the old field must not commit again when it loses the focus on removal. Anything but a
-   * whole number of at least {@code minimum} resets it.
-   */
-  private static @NonNull TextField numberField(int value, int minimum, @NonNull IntConsumer commit) {
-    TextField field = new TextField(Integer.toString(value));
-    field.setPrefWidth(NUMBER_WIDTH);
-    Runnable take = () -> {
-      if (field.getUserData() != null) {
-        return;
-      }
-      OptionalInt typed = WholeNumber.parse(field.getText());
-      if (typed.isPresent() && typed.getAsInt() >= minimum) {
-        if (typed.getAsInt() != value) {
-          field.setUserData(Boolean.TRUE);
-          commit.accept(typed.getAsInt());
-        }
-      } else {
-        field.setText(Integer.toString(value));
-      }
-    };
-    field.setOnAction(event -> take.run());
-    field.focusedProperty().addListener((obs, old, focused) -> {
-      if (!focused) {
-        take.run();
-      }
-    });
-    return field;
   }
 
   private static @NonNull String ammunitionName(@NonNull String id) {

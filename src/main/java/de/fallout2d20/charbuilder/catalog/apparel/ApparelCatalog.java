@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.catalog.apparel;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.CatalogNames;
 import de.fallout2d20.charbuilder.catalog.CatalogReader;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,6 +30,15 @@ public final class ApparelCatalog {
   /** Items of the enabled books, in catalog order. */
   public static @NonNull List<ApparelData> available(@NonNull Set<Book> books) {
     return BY_ID.values().stream().filter(item -> item.isAvailableWith(books)).toList();
+  }
+
+  /** The item with this name or alias, ignoring case, blanks and apostrophe form ({@link CatalogNames}). */
+  public static @NonNull Optional<ApparelData> byName(@NonNull String name) {
+    String key = CatalogNames.normalize(name);
+    return BY_ID.values().stream()
+        .filter(item -> CatalogNames.normalize(item.name()).equals(key)
+            || item.aliases().stream().anyMatch(alias -> CatalogNames.normalize(alias).equals(key)))
+        .findFirst();
   }
 
   private static @NonNull Map<String, ApparelData> load() {

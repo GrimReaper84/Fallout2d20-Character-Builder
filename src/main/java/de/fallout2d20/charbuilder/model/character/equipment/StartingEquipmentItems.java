@@ -33,7 +33,14 @@ import org.jspecify.annotations.NonNull;
  */
 public final class StartingEquipmentItems {
 
-  private static final @NonNull String NOT_CHOSEN = "not chosen yet";
+  /** Text of an open choice; {@link PackInventory} skips such lines. */
+  static final @NonNull String NOT_CHOSEN = "not chosen yet";
+  /** Start of a Mister Handy arm line; arms are part of the robot, not the inventory. */
+  static final @NonNull String ARM = "Arm ";
+  /** Start of the personal trinket line. */
+  static final @NonNull String TRINKET = "Personal trinket: ";
+  /** Trinket text while the player has not described it. */
+  static final @NonNull String NOT_DESCRIBED = "not described yet";
   private static final int WEAPON_ARM_SHOTS = 20;
 
   private StartingEquipmentItems() {}
@@ -51,11 +58,11 @@ public final class StartingEquipmentItems {
         lines.add(picked != null ? picked : choices.get(i).label() + ": " + NOT_CHOSEN);
       }
       for (int slot = 0; slot < selection.arms().size(); slot++) {
-        lines.add("Arm " + (slot + 1) + ": " + arm(selection.arms().get(slot)));
+        lines.add(ARM + (slot + 1) + ": " + arm(selection.arms().get(slot)));
       }
       if (pack.get().trinket()) {
         String trinket = selection.trinket();
-        lines.add("Personal trinket: " + (trinket != null ? trinket : "not described yet"));
+        lines.add(TRINKET + (trinket != null ? trinket : NOT_DESCRIBED));
       }
     }
     taggedSkillItems(character).forEach(items -> tagSkillItems(items, selection).ifPresent(lines::add));

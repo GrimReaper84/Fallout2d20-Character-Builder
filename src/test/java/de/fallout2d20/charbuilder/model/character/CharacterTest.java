@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
@@ -444,7 +445,7 @@ class CharacterTest {
   private static Character withStartingLevel(boolean complete, int startingLevel) {
     return new Character("Test", null, OriginChoices.NONE, 2, 100, complete, EnumSet.allOf(Book.class), Map.of(),
         Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        startingLevel, null, List.of(), Map.of(), List.of());
+        startingLevel, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
   }
 
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */

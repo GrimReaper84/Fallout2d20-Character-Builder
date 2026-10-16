@@ -53,6 +53,10 @@
     "rarity": 1,
     "ammunition": [
       "10mm"
+    ],
+    "aliases": [
+      "10mm automatic pistol",
+      "10mm Auto Pistol"
     ]
   },
   {
@@ -312,6 +316,10 @@
     "rarity": 0,
     "ammunition": [
       "308"
+    ],
+    "aliases": [
+      "Bolt-action pipe gun",
+      "Heavy bolt-action pipe rifle"
     ]
   },
   {
@@ -339,6 +347,9 @@
     "rarity": 0,
     "ammunition": [
       "38"
+    ],
+    "aliases": [
+      "Pipe rifle"
     ]
   },
   {
@@ -511,6 +522,9 @@
     "rarity": 2,
     "ammunition": [
       "fusion-cell"
+    ],
+    "aliases": [
+      "Laser pistol"
     ]
   },
   {
@@ -1669,6 +1683,9 @@
     ],
     "legacyNames": [
       "Protectron Claws"
+    ],
+    "aliases": [
+      "Claw"
     ]
   },
   {

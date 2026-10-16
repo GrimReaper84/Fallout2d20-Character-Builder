@@ -17,6 +17,7 @@ module de.fallout2d20.charbuilder {
   opens de.fallout2d20.charbuilder.catalog.equipment to com.fasterxml.jackson.databind;
   opens de.fallout2d20.charbuilder.catalog.weapon to com.fasterxml.jackson.databind;
   opens de.fallout2d20.charbuilder.catalog.apparel to com.fasterxml.jackson.databind;
+  opens de.fallout2d20.charbuilder.catalog.item to com.fasterxml.jackson.databind;
   // HitLocation is read as enum value in save files.
   opens de.fallout2d20.charbuilder.model.character.apparel to com.fasterxml.jackson.databind;
   // Attribute and Skill are read as enum values inside catalog records.

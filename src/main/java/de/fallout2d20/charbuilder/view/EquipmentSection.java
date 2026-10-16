@@ -11,9 +11,12 @@ import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
+import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingCaps;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
+import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.stage.Window;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -37,7 +41,8 @@ import org.tbee.javafx.scene.layout.MigPane;
  * origin (CRB pp. 76–80), its choices, a Mister Handy's arms (CRB p. 77; or freely configurable arms, a
  * house-rule option), the personal trinket with a roll on the trinket table (CRB p. 80) and the Tag
  * skill items that offer a choice (CRB p. 81). In every mode: the resulting starting equipment, the
- * starting caps and the editable inventory notes. Picks rebuild the overview; typed text only marks the
+ * starting caps, a button to add the starting equipment to the inventory (once) and the editable
+ * inventory notes. Picks rebuild the overview; typed text only marks the
  * character as edited.
  */
 final class EquipmentSection {
@@ -72,6 +77,9 @@ final class EquipmentSection {
       pane.add(noPincer, "span 3");
     }
     addItemsAndCaps(pane, character);
+    if (character.canAddPackItems()) {
+      addPackButton(pane, character, onChanged);
+    }
     TextArea notes = new TextArea(character.getInventoryNotes());
     notes.setPromptText("Gear bought, found or used up, rolled amounts, …");
     notes.setWrapText(true);
@@ -82,6 +90,33 @@ final class EquipmentSection {
     });
     pane.add(new Label("Inventory notes"), "top");
     pane.add(notes, "span 3, growx");
+  }
+
+  /**
+   * Turns the starting equipment into weapons, apparel and items once (user decision); the confirmation
+   * names the lines that become custom items (rolls, ammunition formulas, unknown things).
+   */
+  private static void addPackButton(@NonNull MigPane pane, @NonNull Character character,
+      @NonNull Runnable onChanged) {
+    Button button = new Button("Add pack items to inventory");
+    button.setGraphic(new FontIcon("fas-box-open"));
+    button.setTooltip(new Tooltip("Adds the starting equipment as weapons, apparel and items; only once."));
+    button.setOnAction(event -> {
+      PackItems preview = PackInventory.resolve(character);
+      List<String> custom = preview.customNames();
+      String text = preview.weapons().size() + " weapons, " + preview.apparel().size() + " apparel items and "
+          + preview.items().size() + " items will be added."
+          + (custom.isEmpty() ? "" : "\n\nKept as custom items (roll amounts and enter them, or replace them):\n"
+              + custom.stream().map(name -> "• " + name).collect(Collectors.joining("\n")));
+      Window owner = button.getScene() == null ? null : button.getScene().getWindow();
+      if (ConfirmDialog.confirm(owner, "Add pack items", "Add the starting equipment to the inventory?", text,
+          "Add")) {
+        character.addPackItemsToInventory();
+        onChanged.run();
+      }
+    });
+    pane.add(new Label(""));
+    pane.add(button, "span 3, left");
   }
 
   private static void addPackName(@NonNull MigPane pane, @NonNull Character character) {

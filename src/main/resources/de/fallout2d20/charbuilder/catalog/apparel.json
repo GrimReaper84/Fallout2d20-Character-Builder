@@ -168,7 +168,10 @@
     "radiation": 2,
     "weight": "4",
     "cost": 20,
-    "rarity": 3
+    "rarity": 3,
+    "aliases": [
+      "Brotherhood fatigues"
+    ]
   },
   {
     "id": "brotherhood-scribes-armor",
@@ -190,7 +193,10 @@
     "radiation": 2,
     "weight": "4",
     "cost": 20,
-    "rarity": 2
+    "rarity": 2,
+    "aliases": [
+      "Brotherhood Field Scribe's armor"
+    ]
   },
   {
     "id": "cage-armor",
@@ -443,7 +449,10 @@
     "energy": 1,
     "weight": "<1",
     "cost": 12,
-    "rarity": 2
+    "rarity": 2,
+    "aliases": [
+      "Brotherhood hood"
+    ]
   },
   {
     "id": "brotherhood-scribes-hat",
@@ -617,7 +626,11 @@
     "energy": 1,
     "weight": "7",
     "cost": 18,
-    "rarity": 0
+    "rarity": 0,
+    "aliases": [
+      "Raider armor chest piece",
+      "Raider armor torso"
+    ]
   },
   {
     "id": "raider-leg",
@@ -636,7 +649,10 @@
     "energy": 1,
     "weight": "3",
     "cost": 8,
-    "rarity": 0
+    "rarity": 0,
+    "aliases": [
+      "Raider armor leg"
+    ]
   },
   {
     "id": "raider-arm",
@@ -655,7 +671,10 @@
     "energy": 1,
     "weight": "3",
     "cost": 6,
-    "rarity": 0
+    "rarity": 0,
+    "aliases": [
+      "Raider armor arm"
+    ]
   },
   {
     "id": "sturdy-raider-chest-piece",
@@ -788,7 +807,10 @@
     "energy": 2,
     "weight": "5",
     "cost": 25,
-    "rarity": 1
+    "rarity": 1,
+    "aliases": [
+      "Leather armor chest piece"
+    ]
   },
   {
     "id": "leather-leg",
@@ -807,7 +829,10 @@
     "energy": 2,
     "weight": "2",
     "cost": 10,
-    "rarity": 1
+    "rarity": 1,
+    "aliases": [
+      "Leather armor leg"
+    ]
   },
   {
     "id": "leather-arm",
@@ -826,7 +851,10 @@
     "energy": 2,
     "weight": "2",
     "cost": 8,
-    "rarity": 1
+    "rarity": 1,
+    "aliases": [
+      "Leather armor arm"
+    ]
   },
   {
     "id": "sturdy-leather-chest-piece",

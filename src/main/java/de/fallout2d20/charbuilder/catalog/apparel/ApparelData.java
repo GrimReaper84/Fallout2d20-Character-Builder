@@ -26,6 +26,7 @@ import org.jspecify.annotations.Nullable;
  * @param rarity rarity; {@code null} if the table has none (robot items)
  * @param carryWeight change of a robot's carry weight in lbs.; 0 for none
  * @param perk perk needed to install the robot armor, e.g. {@code Armorer 1}; {@code null} for none
+ * @param aliases other names the item is found by, e.g. wordings of equipment packs
  */
 public record ApparelData(
     @JsonProperty(required = true) @NonNull String id,
@@ -41,7 +42,8 @@ public record ApparelData(
     @Nullable Integer cost,
     @Nullable Integer rarity,
     int carryWeight,
-    @Nullable String perk) {
+    @Nullable String perk,
+    @NonNull List<String> aliases) {
 
   public ApparelData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()
@@ -54,6 +56,7 @@ public record ApparelData(
     }
     sources = List.copyOf(sources);
     coverage = List.copyOf(coverage);
+    aliases = aliases == null ? List.of() : List.copyOf(aliases);
   }
 
   /** Whether one of the books describing the item is enabled. */

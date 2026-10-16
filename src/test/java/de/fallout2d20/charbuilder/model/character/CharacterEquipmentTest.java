@@ -10,6 +10,7 @@ import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -153,7 +154,7 @@ class CharacterEquipmentTest {
         Map.of(), "Medal", false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE,
-        Vitals.FULL, null, null, settler, "Notes", null, null, List.of(), Map.of(), List.of());
+        Vitals.FULL, null, null, settler, "Notes", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
     assertEquals(settler, complete.getStartingEquipment());
     assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentPack(CatalogRef.of("raider")));
     assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentOption(0, "Rolling pin"));

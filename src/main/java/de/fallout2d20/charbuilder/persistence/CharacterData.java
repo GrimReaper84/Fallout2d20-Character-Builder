@@ -12,7 +12,8 @@ import org.jspecify.annotations.Nullable;
  * ({@code CRB}, {@code WOA}, {@code WG}); files written before it existed enable all books.
  * {@code startingLevel} is written only for a complete character whose starting level is known;
  * {@code startingTagSkills} (skill ids) only for a complete character. {@code ammunition} maps ammunition
- * ids to shots.
+ * ids to shots. {@code items}, {@code caps} and {@code materials} hold the inventory (written only when not
+ * empty or 0).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CharacterData(
@@ -37,5 +38,9 @@ public record CharacterData(
     @Nullable List<WeaponEntryData> weapons,
     @Nullable Map<String, Integer> ammunition,
     @Nullable List<WornApparelData> apparel,
+    @Nullable List<CarriedItemData> items,
+    @Nullable Long caps,
+    @Nullable MaterialsData materials,
+    @Nullable Boolean packItemsAdded,
     @Nullable LegacyBaselineData legacyBaseline,
     @Nullable LegacyImportData legacyImport) {}

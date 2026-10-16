@@ -17,6 +17,10 @@ import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
+import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.item.CustomItem;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
+import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -85,6 +89,10 @@ final class CharacterMapper {
         character.getWeapons().isEmpty() ? null : character.getWeapons().stream().map(CharacterMapper::toData).toList(),
         character.getAmmunition().isEmpty() ? null : new LinkedHashMap<>(character.getAmmunition()),
         character.getApparel().isEmpty() ? null : character.getApparel().stream().map(CharacterMapper::toData).toList(),
+        character.getItems().isEmpty() ? null : character.getItems().stream().map(CharacterMapper::toData).toList(),
+        character.getCaps() == 0 ? null : character.getCaps(),
+        toData(character.getMaterials()),
+        character.isPackItemsAdded() ? Boolean.TRUE : null,
         toData(character.getLegacyBaseline()),
         legacyImport == null ? null : new LegacyImportData(legacyImport.sourceSchemaVersion(),
             legacyImport.importedOn(), legacyImport.payload()));
@@ -152,7 +160,8 @@ final class CharacterMapper {
           startingTagSkills(data.startingTagSkills()),
           weapons(data.weapons()),
           data.ammunition() == null ? Map.of() : data.ammunition(),
-          apparel(data.apparel()));
+          apparel(data.apparel()),
+          inventory(data));
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
@@ -175,7 +184,7 @@ final class CharacterMapper {
           blankToNull(custom.qualities()), custom.ammunition());
     }
     return new WeaponEntryData(ref == null ? null : toData(ref), customData, weapon.quantity(),
-        blankToNull(weapon.notes()));
+        blankToNull(weapon.notes()), weapon.builtIn() ? Boolean.TRUE : null);
   }
 
   private static @NonNull List<CarriedWeapon> weapons(@Nullable List<WeaponEntryData> entries)
@@ -186,7 +195,7 @@ final class CharacterMapper {
       CustomWeaponData custom = entry.custom();
       String notes = entry.notes();
       weapons.add(new CarriedWeapon(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
-          entry.quantity(), notes == null ? "" : notes));
+          entry.quantity(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.builtIn())));
     }
     return weapons;
   }
@@ -196,6 +205,36 @@ final class CharacterMapper {
     return new CustomWeapon(data.name(), skill == null ? null : skill(skill), data.damage(),
         nullToEmpty(data.effects()), nullToEmpty(data.damageType()), data.fireRate(), data.range(),
         nullToEmpty(data.qualities()), data.ammunition());
+  }
+
+  private static @NonNull CarriedItemData toData(@NonNull CarriedItem item) {
+    CatalogRef ref = item.item();
+    CustomItem custom = item.custom();
+    CustomItemData customData = custom == null ? null
+        : new CustomItemData(custom.name(), custom.weight(), blankToNull(custom.effects()));
+    return new CarriedItemData(ref == null ? null : toData(ref), customData, item.issue(), item.quantity(),
+        blankToNull(item.notes()));
+  }
+
+  private static @Nullable MaterialsData toData(@NonNull Materials materials) {
+    return materials.equals(Materials.NONE) ? null
+        : new MaterialsData(materials.junk(), materials.common(), materials.uncommon(), materials.rare());
+  }
+
+  private static @NonNull Inventory inventory(@NonNull CharacterData data) throws SaveFormatException {
+    List<CarriedItem> items = new ArrayList<>();
+    for (CarriedItemData entry : orEmpty(data.items())) {
+      CatalogRefData ref = entry.ref();
+      CustomItemData custom = entry.custom();
+      items.add(new CarriedItem(ref == null ? null : toModel(ref), custom == null ? null
+          : new CustomItem(custom.name(), custom.weight(), nullToEmpty(custom.effects())), entry.issue(),
+          entry.quantity(), nullToEmpty(entry.notes())));
+    }
+    MaterialsData materials = data.materials();
+    Long caps = data.caps();
+    return new Inventory(items, caps == null ? 0 : caps, materials == null ? Materials.NONE
+        : new Materials(materials.junk(), materials.common(), materials.uncommon(), materials.rare()),
+        Boolean.TRUE.equals(data.packItemsAdded()));
   }
 
   private static @NonNull WornApparelData toData(@NonNull WornApparel item) {

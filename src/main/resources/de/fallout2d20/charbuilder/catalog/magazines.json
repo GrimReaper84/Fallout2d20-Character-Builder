@@ -1,0 +1,667 @@
+[
+  {
+    "id": "la-fantoma",
+    "name": "¡La Fantoma!",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 172
+      }
+    ],
+    "summary": "Once, after a successful Sneak test to stay unnoticed, spend 1 AP for a distraction within Medium range that draws the searcher; learned, once per scene."
+  },
+  {
+    "id": "astoundingly-awesome-tales",
+    "name": "Astoundingly Awesome Tales",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 172
+      }
+    ],
+    "summary": "Each issue grants bonus damage or damage resistance for a single attack; learned, for all such attacks.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "Attack of the Fishmen!",
+        "effect": "+1 CD on attacks against mirelurks"
+      },
+      {
+        "roll": "3-4",
+        "title": "Rise of the Mutants!",
+        "effect": "+1 CD on attacks against super mutants"
+      },
+      {
+        "roll": "5-6",
+        "title": "Attack of the Metal Men!",
+        "effect": "+2 Physical and Energy damage resistance against robots"
+      },
+      {
+        "roll": "7-8",
+        "title": "The Mad Russian’s Revenge!",
+        "effect": "+2 Poison damage resistance"
+      },
+      {
+        "roll": "9-10",
+        "title": "The Starlet Sniper!",
+        "effect": "+1 CD on attacks with Accurate weapons"
+      },
+      {
+        "roll": "11-12",
+        "title": "Curse of the Burned!",
+        "effect": "+1 CD on attacks against ghouls"
+      },
+      {
+        "roll": "13-14",
+        "title": "Giant Insects Invade!",
+        "effect": "+2 Radiation damage resistance"
+      },
+      {
+        "roll": "15-16",
+        "title": "Deadly Lasers!",
+        "effect": "+1 CD on attacks with Energy weapons"
+      },
+      {
+        "roll": "17-18",
+        "title": "Science Gone Mad!",
+        "effect": "+2 Energy damage resistance"
+      },
+      {
+        "roll": "19-20",
+        "title": "Surrounded by the Dead!",
+        "effect": "+1 CD on attacks that spend ammunition for bonus damage"
+      }
+    ]
+  },
+  {
+    "id": "backwoodsman",
+    "name": "Backwoodsman",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 173
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "Get Off My Lawn",
+        "effect": "Twice the meat from a butchered creature"
+      },
+      {
+        "roll": "3-4",
+        "title": "Down Home Cookin’",
+        "effect": "+2 CD damage on a Thrown weapon attack (not Explosives)"
+      },
+      {
+        "roll": "5-6",
+        "title": "Homesteading Horror",
+        "effect": "Crafting a weapon −1 difficulty (min. 0)"
+      },
+      {
+        "roll": "7-8",
+        "title": "Hardy as a Sasquatch",
+        "effect": "Twice the yield when scavenging from plants"
+      },
+      {
+        "roll": "9-10",
+        "title": "Carnivorous Rabbits of Appalachia",
+        "effect": "+2 CD damage on an attack against a mammal or lizard"
+      },
+      {
+        "roll": "11-12",
+        "title": "The Appalachia Squirrel Massacre",
+        "effect": "One cooked food item you make and eat heals +3 HP"
+      },
+      {
+        "roll": "13-14",
+        "title": "Art of the Tomahawk",
+        "effect": "Resisting a disease −1 difficulty (min. 0)"
+      },
+      {
+        "roll": "15-16",
+        "title": "The Gunsmith of Harper’s Ferry",
+        "effect": "+2 CD more shots when you find ammunition"
+      },
+      {
+        "roll": "17-18",
+        "title": "The Ohio River Hermit",
+        "effect": "Repairing a damaged item −1 difficulty (min. 0)"
+      },
+      {
+        "roll": "19-20",
+        "title": "Nightmare in the Garden",
+        "effect": "Heal +2 HP when you drink an Alcoholic beverage"
+      }
+    ]
+  },
+  {
+    "id": "boxing-times",
+    "name": "Boxing Times",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 173
+      }
+    ],
+    "summary": "Once, a successful Unarmed attack boosted with AP gains the Stun damage effect; learned, on every successful Unarmed attack."
+  },
+  {
+    "id": "duck-and-cover",
+    "name": "Duck and Cover!",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 174
+      }
+    ],
+    "summary": "Once, when hit by a Blast, drop prone for +3 to all damage resistances against it; learned, whenever hit by a Blast for 1 AP."
+  },
+  {
+    "id": "fixin-things",
+    "name": "Fixin’ Things",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 174
+      }
+    ],
+    "summary": "Once, a repair needs only half the materials (round up); learned, on every repair."
+  },
+  {
+    "id": "future-weapons-today",
+    "name": "Future Weapons Today",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 174
+      }
+    ],
+    "summary": "Once, overcharge an Energy Weapon for +2 CD damage; it cannot attack the next turn; learned, once per scene."
+  },
+  {
+    "id": "grognak-the-barbarian",
+    "name": "Grognak the Barbarian",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 174
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "Blood on the Harp",
+        "effect": "+2 CD damage on one successful melee attack"
+      },
+      {
+        "roll": "3-4",
+        "title": "Cometh the Trickster",
+        "effect": "+1 difficulty on another character's test to detect you"
+      },
+      {
+        "roll": "5-6",
+        "title": "Jungle of the Bat-Babies",
+        "effect": "+3 Poison damage resistance when you take Poison damage"
+      },
+      {
+        "roll": "7-8",
+        "title": "In the Bosom of the Corsair Queen",
+        "effect": "One successful melee attack is automatically a Critical Hit"
+      },
+      {
+        "roll": "9-10",
+        "title": "Demon Slaves, Demon Sands",
+        "effect": "+2 CD damage on one attack against ghouls"
+      },
+      {
+        "roll": "11-12",
+        "title": "Enter Maula: War Maiden of Mars",
+        "effect": "Melee attacks with Two-Handed melee weapons gain Piercing 1 (or +1 Piercing)"
+      },
+      {
+        "roll": "13-14",
+        "title": "Fatherless Cur!",
+        "effect": "Ignore one complication on a melee attack"
+      },
+      {
+        "roll": "15-16",
+        "title": "Lost in the Snows of Lust",
+        "effect": "+2 Physical damage resistance against one attack"
+      },
+      {
+        "roll": "17-18",
+        "title": "The Lair of the Virgin Eaters",
+        "effect": "+10 carry weight for one scene"
+      },
+      {
+        "roll": "19-20",
+        "title": "What Sorcery is This?",
+        "effect": "+2 Energy damage resistance against one attack"
+      }
+    ]
+  },
+  {
+    "id": "guns-and-bullets",
+    "name": "Guns and Bullets",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 175
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "The Future of Hunting?",
+        "effect": "+2 CD damage on one attack against robots"
+      },
+      {
+        "roll": "3-4",
+        "title": "Lasers & Hunting: Acceptable Overkill",
+        "effect": "One attack with a Laser weapon gains Vicious"
+      },
+      {
+        "roll": "5-6",
+        "title": "Little Guns for Little Ladies",
+        "effect": "One attack with a Small Guns weapon gains Vicious"
+      },
+      {
+        "roll": "7-8",
+        "title": "Street Guns of Detroit",
+        "effect": "2 extra AP after one successful attack, to spend at once"
+      },
+      {
+        "roll": "9-10",
+        "title": "Avoid Those Pesky Gun Laws!",
+        "effect": "2 AP when salvaging a weapon, only for extra material units"
+      },
+      {
+        "roll": "11-12",
+        "title": "The Moon: A Communist Doomsday Device?!",
+        "effect": "+2 Physical or Energy damage resistance against one attack at night"
+      },
+      {
+        "roll": "13-14",
+        "title": "Take Aim, Army Style",
+        "effect": "+2 CD damage on one aimed attack with a weapon without Accurate"
+      },
+      {
+        "roll": "15-16",
+        "title": "Bear-Proofing your Campsite",
+        "effect": "+3 CD damage on one attack against yao guai"
+      },
+      {
+        "roll": "17-18",
+        "title": "Plasma: The Weapon of Tomorrow",
+        "effect": "One attack with a Plasma weapon gains Vicious"
+      },
+      {
+        "roll": "19-20",
+        "title": "Guide to Hunting Commies!",
+        "effect": "+2 CD damage on one attack against an enemy of lower level"
+      }
+    ]
+  },
+  {
+    "id": "live-and-love",
+    "name": "Live & Love",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 176
+      }
+    ],
+    "summary": "Each issue grants its bonus for one scene; learned, constantly.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "Life Long Best Friends!",
+        "effect": "+1 maximum HP for the whole party for one scene"
+      },
+      {
+        "roll": "3-4",
+        "title": "Nuke-the-Man!",
+        "effect": "+1 CD damage on attacks of the whole party for one scene"
+      },
+      {
+        "roll": "5-6",
+        "title": "Trim the Fat!",
+        "effect": "Twice the HP from fruit or vegetables eaten in one scene"
+      },
+      {
+        "roll": "7-8",
+        "title": "The Secretary Charmer",
+        "effect": "+1 AP to the group pool at the start of one scene"
+      },
+      {
+        "roll": "9-10",
+        "title": "Talk Yourself Sober",
+        "effect": "1 Luck point when drinking an Alcoholic beverage (lost at the end of the scene)"
+      },
+      {
+        "roll": "11-12",
+        "title": "Advice from Married Men",
+        "effect": "+1 Physical damage resistance for the whole party for one scene"
+      },
+      {
+        "roll": "13-14",
+        "title": "Beware the Man Handler",
+        "effect": "The group AP pool holds 1 AP more for one scene"
+      },
+      {
+        "roll": "15-16",
+        "title": "An Experience to Remember",
+        "effect": "Another magazine perk you used but did not learn takes effect again"
+      },
+      {
+        "roll": "17-18",
+        "title": "I Married a Robot",
+        "effect": "+2 to all damage resistances against robots for one scene"
+      }
+    ]
+  },
+  {
+    "id": "massachusetts-surgical-journal",
+    "name": "Massachusetts Surgical Journal",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 176
+      }
+    ],
+    "summary": "Once, when assisting an END + Survival test to heal injuries, your assistance die counts as a 1; learned, once per session."
+  },
+  {
+    "id": "meeting-people",
+    "name": "Meeting People",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 176
+      }
+    ],
+    "summary": "Once, ignore the complications of a Speech test; learned, once per scene."
+  },
+  {
+    "id": "programmers-digest",
+    "name": "Programmer’s Digest",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 176
+      }
+    ],
+    "summary": "Once, avoid being locked out of a terminal after a failed hacking test; learned, whenever locked out."
+  },
+  {
+    "id": "tales-of-a-junktown-jerky-vendor",
+    "name": "Tales of a Junktown Jerky Vendor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 177
+      }
+    ],
+    "summary": "Once, spend 1 Luck point after a haggling Barter test to shift the price 10% your way; learned, on every haggle at a rising Luck cost per session."
+  },
+  {
+    "id": "tesla-science-magazine",
+    "name": "Tesla Science Magazine",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 177
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "Will Robots Rule the World?",
+        "effect": "+2 Physical and Energy damage resistance against robots"
+      },
+      {
+        "roll": "3-4",
+        "title": "What is Plasma, anyway?",
+        "effect": "+2 Physical and Energy damage resistance against Plasma weapons"
+      },
+      {
+        "roll": "5-6",
+        "title": "Rocket Science for Toddlers",
+        "effect": "+2 CD damage on one attack with a Blast weapon"
+      },
+      {
+        "roll": "7-8",
+        "title": "Tomorrow’s Technology for Today’s Super Soldiers",
+        "effect": "Spend 1 Luck point to keep a spent fusion core charge"
+      },
+      {
+        "roll": "9-10",
+        "title": "Giant Super Weapons!",
+        "effect": "A Gatling weapon uses ammunition at 8x instead of 10x the rate once"
+      },
+      {
+        "roll": "11-12",
+        "title": "Geckos and Gamma Radiation",
+        "effect": "+2 CD damage on one attack against a Mutated creature"
+      },
+      {
+        "roll": "13-14",
+        "title": "U.S. Army Goes to Space",
+        "effect": "One Energy weapon attack is a Critical Hit from 3 damage after resistance (instead of 5)"
+      },
+      {
+        "roll": "15-16",
+        "title": "10 Number 1 Hits!!! Rock-o-bot Takes the Nation by Storm!!",
+        "effect": "+2 total damage on one Critical Hit"
+      },
+      {
+        "roll": "17-18",
+        "title": "Future of Warfare?",
+        "effect": "One Big Gun attack is a Critical Hit from 3 damage after resistance (instead of 5)"
+      }
+    ]
+  },
+  {
+    "id": "true-police-stories",
+    "name": "True Police Stories",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 178
+      }
+    ],
+    "summary": "Once, spend a Luck point to set up to three CD of a damage roll to any face; learned, once per scene."
+  },
+  {
+    "id": "tumblers-today",
+    "name": "Tumblers Today",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 178
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-4",
+        "title": "Mysteries of the Master Key Exposed!",
+        "effect": "Re-roll 1d20 on one Lockpick test"
+      },
+      {
+        "roll": "5-8",
+        "title": "Bobby Pins: More Effective Than Lockpicks?",
+        "effect": "With a bobby pin, a Lockpick test −1 more difficulty (min. 0)"
+      },
+      {
+        "roll": "9-12",
+        "title": "Confessions of a Housebreaker",
+        "effect": "Spend 1 Luck while scavenging or looting to find 2 + 2 CD bobby pins"
+      },
+      {
+        "roll": "13-16",
+        "title": "Open Any Lock in 5 Seconds Flat",
+        "effect": "Use the Reduce Time AP option for free after picking a lock"
+      },
+      {
+        "roll": "17-20",
+        "title": "Locksmith Certification Special—Pass with Flying Colors",
+        "effect": "Spend 1 Luck point to ignore complications on a Lockpick test"
+      }
+    ]
+  },
+  {
+    "id": "unstoppables",
+    "name": "Unstoppables",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 178
+      }
+    ],
+    "summary": "Each issue lets you spend Luck points to avoid damage once; learned, as often as you can pay.",
+    "issues": [
+      {
+        "roll": "1-4",
+        "title": "Dr. Brainwash and His Army of De-Capitalists!",
+        "effect": "3 Luck points: avoid all damage of one attack or hazard"
+      },
+      {
+        "roll": "5-8",
+        "title": "Who Can Stop the Unstoppable Grog-Na-Rok?!",
+        "effect": "2 Luck points: avoid all damage of an attack by a Mutated Human (incl. ghouls and super mutants)"
+      },
+      {
+        "roll": "9-12",
+        "title": "Commie-Kazi vs. Manta Man",
+        "effect": "1 Luck point: avoid all damage of a Blast weapon"
+      },
+      {
+        "roll": "13-16",
+        "title": "Trapped in the Dimension of the Pterror-dactyls!",
+        "effect": "1 Luck point: avoid all damage of one melee attack"
+      },
+      {
+        "roll": "17-20",
+        "title": "Visit the Ux-Ron Galaxy!",
+        "effect": "1 Luck point: avoid all Energy damage of one attack"
+      }
+    ]
+  },
+  {
+    "id": "u-s-covert-operations-manual",
+    "name": "U.S. Covert Operations Manual",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 179
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-2",
+        "title": "FH 5-01 Whistling in the Dark",
+        "effect": "+2 Physical damage resistance against the first attack after you are detected sneaking"
+      },
+      {
+        "roll": "3-4",
+        "title": "FH 5-02 Urban Camouflage",
+        "effect": "+1 difficulty for enemies to detect you (does not stack with darkness)"
+      },
+      {
+        "roll": "5-6",
+        "title": "FH 5-03 Facepaint Fundamentals",
+        "effect": "+1 to all damage resistances against attacks of Character NPCs"
+      },
+      {
+        "roll": "7-8",
+        "title": "FH 5-04 Not the Soldiers You’re Looking For",
+        "effect": "+1 CD damage on attacks against Character NPCs"
+      },
+      {
+        "roll": "9-10",
+        "title": "FH 5-05 Who Goes There?",
+        "effect": "A d20 re-rolled with Luck on a PER test counts as a 1"
+      },
+      {
+        "roll": "11-12",
+        "title": "FH 5-06 Squeaky Floorboard, Sudden Death",
+        "effect": "Ignore the complications of one Sneak test"
+      },
+      {
+        "roll": "13-14",
+        "title": "FH 5-07 Getting the Drop on the Communists",
+        "effect": "An enemy aiming at you loses the benefit of aiming once"
+      },
+      {
+        "roll": "15-16",
+        "title": "FH 5-08 Bushes, Boxes, and Beehives: Camouflage Special",
+        "effect": "+2 CD damage on an unarmed or knife attack"
+      },
+      {
+        "roll": "17-18",
+        "title": "FH 5-09 Look Better in Black",
+        "effect": "A Stealth Boy lasts one more turn once"
+      },
+      {
+        "roll": "19-20",
+        "title": "FH 5-10 Tiptoe Through the Tulips",
+        "effect": "A d20 re-rolled with Luck on an AGI test counts as a 1"
+      }
+    ]
+  },
+  {
+    "id": "wasteland-survival-guide",
+    "name": "Wasteland Survival Guide",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 180
+      }
+    ],
+    "summary": "Each issue grants its bonus once; learned, once per scene.",
+    "issues": [
+      {
+        "roll": "1-3",
+        "title": "Farming the Wastes",
+        "effect": "Fruit or vegetable food heals twice the HP"
+      },
+      {
+        "roll": "4-6",
+        "title": "Insect Repellent Special",
+        "effect": "+2 to all damage resistances against an insect's attack"
+      },
+      {
+        "roll": "7-9",
+        "title": "The Bright Side of Radiation Poisoning",
+        "effect": "Irradiated food or drink heals extra HP equal to the CD roll"
+      },
+      {
+        "roll": "10-12",
+        "title": "Coupon Spectacular",
+        "effect": "Buying food or drink shifts the price another 10% your way"
+      },
+      {
+        "roll": "13-15",
+        "title": "Water Aerobics for Ghouls",
+        "effect": "Athletics tests to swim −1 difficulty (min. 0)"
+      },
+      {
+        "roll": "16-18",
+        "title": "Self Defense Secrets",
+        "effect": "+1 Defense against a melee attack"
+      },
+      {
+        "roll": "19-20",
+        "title": "Hunting in the Wastes",
+        "effect": "1 bonus AP to raise the meat found when butchering your kill"
+      }
+    ]
+  }
+]

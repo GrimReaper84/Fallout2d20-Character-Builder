@@ -159,6 +159,8 @@ final class CharacterOverview {
     WeaponSection.addTo(pane, character, onEdited, onChanged);
     heading(pane, "Apparel");
     ApparelSection.addTo(pane, character, onEdited, onChanged);
+    heading(pane, "Inventory");
+    ItemSection.addTo(pane, character, onEdited, onChanged);
     if (!character.isCreationComplete()) {
       addCreateButton(pane, onComplete);
     }

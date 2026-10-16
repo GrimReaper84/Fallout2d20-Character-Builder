@@ -35,7 +35,10 @@ class WeaponCatalogTest {
     WeaponData pistol = WeaponCatalog.byId("10mm-pistol").orElseThrow();
     assertEquals(new WeaponData("10mm-pistol", "10mm Pistol", List.of(new Source(Book.CRB, 95)), Skill.SMALL_GUNS,
         4, List.of(), List.of(DamageType.PHYSICAL), 2, WeaponRange.CLOSE, List.of("Close Quarters", "Reliable"),
-        "4", 50, 1, List.of("10mm"), List.of(), null, List.of()), pistol);
+        "4", 50, 1, List.of("10mm"), List.of(), null, List.of(),
+        List.of("10mm automatic pistol", "10mm Auto Pistol")), pistol);
+    assertTrue(WeaponCatalog.byName("Pipe rifle").isEmpty(), "pack wordings are not legacy names");
+    assertEquals("pipe-gun", WeaponCatalog.byNameOrAlias("Pipe rifle").orElseThrow().id());
   }
 
   /** CRB p. 111: Unarmed Strike has no weight, cost or rarity. */
@@ -95,7 +98,7 @@ class WeaponCatalogTest {
     assertEquals(new WeaponData("cryojet", "Cryojet", List.of(new Source(Book.WOA, 22), new Source(Book.WOA, 23)), Skill.ENERGY_WEAPONS, 3,
         List.of("Stun", "Persistent"), List.of(DamageType.ENERGY), 4, WeaponRange.CLOSE,
         List.of("Debilitating", "Inaccurate"), "6", 156, 4, List.of("cryo-cell"), List.of(), null,
-        List.of("protectron")), cryojet);
+        List.of("protectron"), List.of()), cryojet);
     AmmunitionData cell = WeaponCatalog.ammunitionById("cryo-cell").orElseThrow();
     assertNull(cell.quantityFound());
     assertNull(cell.rarity());

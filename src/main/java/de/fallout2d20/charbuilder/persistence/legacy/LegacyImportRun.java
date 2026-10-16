@@ -22,6 +22,7 @@ import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import java.time.Clock;
@@ -112,7 +113,11 @@ final class LegacyImportRun {
         new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload),
         startingEquipment, inventoryNotes, null, startingTags, weapons.weapons(), weapons.ammunition(),
-        armor.apparel());
+        armor.apparel(), Inventory.EMPTY);
+    if (!inventoryNotes.isBlank()) {
+      // Legacy saves keep items and caps only as free text; the inventory starts empty.
+      info("equipment", "Items and caps stay in the inventory notes; enter the caps balance and items by hand.");
+    }
     compareDerived(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
   }

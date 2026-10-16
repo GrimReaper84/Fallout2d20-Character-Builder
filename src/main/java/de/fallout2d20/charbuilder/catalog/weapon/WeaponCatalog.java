@@ -1,10 +1,10 @@
 package de.fallout2d20.charbuilder.catalog.weapon;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.CatalogNames;
 import de.fallout2d20.charbuilder.catalog.CatalogReader;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -46,12 +46,20 @@ public final class WeaponCatalog {
     return available(books).stream().filter(weapon -> weapon.isOfferedTo(originId)).toList();
   }
 
+  /** The weapon with this name, legacy name or alias (equipment pack wording), as {@link #byName}. */
+  public static @NonNull Optional<WeaponData> byNameOrAlias(@NonNull String name) {
+    String key = CatalogNames.normalize(name);
+    return byName(name).or(() -> BY_ID.values().stream()
+        .filter(weapon -> weapon.aliases().stream().anyMatch(alias -> CatalogNames.normalize(alias).equals(key)))
+        .findFirst());
+  }
+
   /** The weapon with this name or legacy name, ignoring case and surrounding blanks. */
   public static @NonNull Optional<WeaponData> byName(@NonNull String name) {
-    String key = normalize(name);
+    String key = CatalogNames.normalize(name);
     return BY_ID.values().stream()
-        .filter(weapon -> normalize(weapon.name()).equals(key)
-            || weapon.legacyNames().stream().anyMatch(legacy -> normalize(legacy).equals(key)))
+        .filter(weapon -> CatalogNames.normalize(weapon.name()).equals(key)
+            || weapon.legacyNames().stream().anyMatch(legacy -> CatalogNames.normalize(legacy).equals(key)))
         .findFirst();
   }
 
@@ -62,10 +70,6 @@ public final class WeaponCatalog {
 
   public static @NonNull Optional<AmmunitionData> ammunitionById(@NonNull String id) {
     return Optional.ofNullable(AMMUNITION_BY_ID.get(id));
-  }
-
-  private static @NonNull String normalize(@NonNull String name) {
-    return name.strip().toLowerCase(Locale.ROOT);
   }
 
   private static @NonNull Map<String, AmmunitionData> loadAmmunition() {

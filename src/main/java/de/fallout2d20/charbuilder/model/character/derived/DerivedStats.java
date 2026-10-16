@@ -11,11 +11,11 @@ import org.jspecify.annotations.NonNull;
  *
  * @param maxHp maximum health points: END + LCK, +1 per level after the first, + END per rank of
  *     Life Giver (CRB p. 49, 66, 74)
- * @param initiative PER + AGI (CRB p. 47); encumbrance penalties are not included yet
+ * @param initiative PER + AGI (CRB p. 47), unencumbered; {@link CarryLoad} names the reduction (CRB p. 87)
  * @param defense 1, or 2 from AGI 9 (CRB p. 47)
  * @param carryWeight carry weight in lbs.: 150 + 10 × STR (Small Frame: 5 × STR), +25 per rank of
- *     Strong Back; fixed for Mister Handy, Protectron and Assaultron (CRB p. 47, 55, 56, 73;
- *     WOA p. 21; WG p. 11)
+ *     Strong Back, + 5 or 10 × STR for a backpack; fixed for Mister Handy, Protectron and Assaultron,
+ *     changed by robot armor and modules (CRB p. 47, 55, 56, 73, 146, 181, 185; WOA p. 21; WG p. 11)
  * @param meleeBonusDice bonus Combat Dice on melee and unarmed damage from STR, +1 for Heavy
  *     Handed (CRB p. 47, 56)
  * @param maxLuckPoints Luck points a character can hold: the Luck attribute, one fewer with Gifted

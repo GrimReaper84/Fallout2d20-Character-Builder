@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
+import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
@@ -8,9 +9,11 @@ import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelValues;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
+import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -72,17 +75,29 @@ final class DerivedStatsCalculator {
   }
 
   /**
-   * CRB p. 47, 74: 150 + 10 × STR; Small Frame 5 × STR (CRB p. 56); Strong Back +25 per rank (CRB p. 73).
-   * A fixed carry weight (Mister Handy) changes with robot plating and armor (CRB p. 146).
+   * CRB p. 47, 74: 150 + 10 × STR; Small Frame 5 × STR (CRB p. 56); Strong Back +25 per rank (CRB p. 73);
+   * a backpack adds 5 or 10 × STR (CRB p. 181; only one is worn, the best counts). A fixed carry weight
+   * (robots) changes with robot plating and armor (CRB p. 146) and installed robot modules (CRB p. 185;
+   * every carried module counts as installed), not with backpacks.
    */
   private static int carryWeight(@NonNull Character character, @Nullable OriginData origin) {
     if (origin != null && origin.fixedCarryWeight() != null) {
-      return origin.fixedCarryWeight() + robotArmorCarryWeight(character);
+      return origin.fixedCarryWeight() + robotArmorCarryWeight(character)
+          + carriedItems(character).mapToInt(ItemData::robotCarryWeight).sum();
     }
+    int backpack = carriedItems(character).mapToInt(ItemData::carryWeightPerStrength).max().orElse(0);
     int perStrength = traits(character).stream().map(TraitDefinition::carryWeightPerStrength)
         .filter(Objects::nonNull).min(Integer::compare).orElse(CARRY_PER_STRENGTH);
-    return CARRY_BASE + perStrength * character.attributeValue(Attribute.STRENGTH)
+    return CARRY_BASE + (perStrength + backpack) * character.attributeValue(Attribute.STRENGTH)
         + character.perkEffect(PerkDefinition::carryWeightPerRank);
+  }
+
+  /**
+   * The catalog entries of the carried items, once per entry: a module is installed once and only one
+   * backpack is worn, so the quantity of an entry does not matter here.
+   */
+  private static @NonNull Stream<ItemData> carriedItems(@NonNull Character character) {
+    return character.getItems().stream().map(CarriedItem::data).flatMap(Optional::stream);
   }
 
   /**

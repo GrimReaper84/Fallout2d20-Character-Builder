@@ -11,13 +11,16 @@ import org.jspecify.annotations.Nullable;
 /**
  * A weapon the character carries: a catalog weapon or a custom one (exactly one of both), how many of
  * it (grenades, mines, thrown weapons; 1 for everything else) and a free note, e.g. installed mods
- * (user decision: mods as a note until they are modelled).
+ * (user decision: mods as a note until they are modelled), and whether it is built into the character (a
+ * robot's integrated weapon, e.g. the laser guns in a Protectron's claws, WOA p. 22): built-in weapons
+ * weigh nothing against the carry weight (user decision 2026-10-16).
  */
 public record CarriedWeapon(
     @Nullable CatalogRef weapon,
     @Nullable CustomWeapon custom,
     int quantity,
-    @NonNull String notes) {
+    @NonNull String notes,
+    boolean builtIn) {
 
   public CarriedWeapon {
     if ((weapon == null) == (custom == null)) {
@@ -30,12 +33,12 @@ public record CarriedWeapon(
 
   /** One catalog weapon without a note. */
   public static @NonNull CarriedWeapon of(@NonNull CatalogRef weapon) {
-    return new CarriedWeapon(weapon, null, 1, "");
+    return new CarriedWeapon(weapon, null, 1, "", false);
   }
 
   /** One custom weapon without a note. */
   public static @NonNull CarriedWeapon of(@NonNull CustomWeapon custom) {
-    return new CarriedWeapon(null, custom, 1, "");
+    return new CarriedWeapon(null, custom, 1, "", false);
   }
 
   /** The catalog entry; empty for a custom weapon or an id outside the catalog. */
@@ -64,7 +67,7 @@ public record CarriedWeapon(
   }
 
   public @NonNull CarriedWeapon withNotes(@Nullable String newNotes) {
-    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes);
+    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn);
   }
 
   /**
@@ -76,10 +79,22 @@ public record CarriedWeapon(
     if (custom == null) {
       throw new IllegalStateException("Only a custom weapon has a choosable skill");
     }
-    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes);
+    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn);
   }
 
   public @NonNull CarriedWeapon withQuantity(int newQuantity) {
-    return new CarriedWeapon(weapon, custom, newQuantity, notes);
+    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn);
+  }
+
+  public @NonNull CarriedWeapon withBuiltIn(boolean newBuiltIn) {
+    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn);
+  }
+
+  /**
+   * Whether the weapon is part of the character: marked as built in, or a catalog weapon only offered to
+   * the origins it is built into (WOA p. 22: Protectron weapons).
+   */
+  public boolean isIntegrated() {
+    return builtIn || data().map(entry -> !entry.origins().isEmpty()).orElse(false);
   }
 }

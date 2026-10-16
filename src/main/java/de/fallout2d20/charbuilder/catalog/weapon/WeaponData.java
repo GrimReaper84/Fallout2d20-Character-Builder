@@ -31,8 +31,10 @@ import org.jspecify.annotations.Nullable;
  * @param rarity rarity 0–6; {@code null} where the table has none
  * @param ammunition ids of the ammunition types the weapon can use, usually one (Gatling Laser: fusion cells
  *     or a fusion core, CRB p. 107); empty if none
- * @param legacyNames other names the weapon is found by: those of the legacy app and other spellings in the
- *     book (WOA p. 22 "Shock Hand")
+ * @param legacyNames names used by legacy saves and other spellings in the book (WOA p. 22 "Shock Hand");
+ *     the legacy import finds weapons by them
+ * @param aliases wordings of equipment packs and other book text for the weapon or a modded variant of it
+ *     (e.g. "Pipe rifle", "Laser pistol"); only the pack import uses them
  * @param attribute the attribute of the attack where the book names another than the governing attribute
  *     of the skill (WOA p. 22: Self-Destruct uses END + Explosives); {@code null} for the governing one
  * @param origins ids of the origins the weapon is built into (WOA p. 22: Protectron weapons); empty if
@@ -55,7 +57,8 @@ public record WeaponData(
     @NonNull List<String> ammunition,
     @NonNull List<String> legacyNames,
     @Nullable Attribute attribute,
-    @NonNull List<String> origins) {
+    @NonNull List<String> origins,
+    @NonNull List<String> aliases) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;
@@ -76,6 +79,7 @@ public record WeaponData(
     ammunition = ammunition == null ? List.of() : List.copyOf(ammunition);
     legacyNames = legacyNames == null ? List.of() : List.copyOf(legacyNames);
     origins = origins == null ? List.of() : List.copyOf(origins);
+    aliases = aliases == null ? List.of() : List.copyOf(aliases);
   }
 
   /** The attribute the attack is rolled with: {@link #attribute()} or else the skill's governing attribute. */

@@ -27,7 +27,8 @@ class ApparelCatalogTest {
   @Test
   void raiderChestPiece() {
     assertEquals(new ApparelData("raider-chest-piece", "Raider Chest Piece", List.of(new Source(Book.CRB, 130)),
-        ApparelKind.ARMOR, List.of(Coverage.TORSO), 1, 1, 0, false, "7", 18, 0, 0, null),
+        ApparelKind.ARMOR, List.of(Coverage.TORSO), 1, 1, 0, false, "7", 18, 0, 0, null,
+        List.of("Raider armor chest piece", "Raider armor torso")),
         ApparelCatalog.byId("raider-chest-piece").orElseThrow());
     assertTrue(ApparelCatalog.byId("raider-arm").orElseThrow().needsLocation());
   }

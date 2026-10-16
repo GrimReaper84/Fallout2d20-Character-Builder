@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +144,7 @@ class StartingEquipmentItemsTest {
         false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 5, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(Skill.BARTER, new SkillState(true, 0, 0)), List.of(),
-        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null, null, List.of(), Map.of(), List.of());
+        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
     assertEquals(new StartingCaps(30, 0, 2), StartingEquipmentItems.caps(complete));
     assertTrue(StartingEquipmentItems.lines(complete).contains("Melee weapon: not chosen yet"));
   }
