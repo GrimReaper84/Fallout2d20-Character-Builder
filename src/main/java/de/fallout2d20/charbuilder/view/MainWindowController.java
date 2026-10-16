@@ -1,11 +1,13 @@
 package de.fallout2d20.charbuilder.view;
 
+import de.fallout2d20.charbuilder.AppInfo;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import de.fallout2d20.charbuilder.persistence.legacy.ImportReport;
+import de.fallout2d20.charbuilder.view.dialog.AboutDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import de.fallout2d20.charbuilder.view.dialog.CreateCharacterDialog;
 import de.fallout2d20.charbuilder.view.dialog.ImportReportDialog;
@@ -36,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class MainWindowController {
 
-  private static final String APP_TITLE = "Fallout 2d20 Character Builder";
+  private static final String APP_TITLE = AppInfo.NAME;
 
   private final CharacterStore store = new CharacterStore();
 
@@ -117,6 +119,11 @@ public class MainWindowController {
     if (confirmDiscard() && stage != null) {
       stage.close();
     }
+  }
+
+  @FXML
+  private void onAbout() {
+    AboutDialog.show(stage);
   }
 
   @FXML

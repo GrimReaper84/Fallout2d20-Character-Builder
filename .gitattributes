@@ -1,0 +1,5 @@
+# Shell scripts keep LF line endings on every OS (Git Bash on Windows runners fails on CRLF).
+/gradlew text eol=lf
+*.sh text eol=lf
+# Windows batch files need CRLF.
+*.bat text eol=crlf

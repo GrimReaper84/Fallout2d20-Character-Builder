@@ -1,0 +1,89 @@
+name: Release
+
+# Push a tag like v1.0.0 to build the installers on every OS and attach them to a draft release.
+# Run it manually (Actions -> Release -> Run workflow) to build the packages as workflow artifacts only.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The .deb depends on the system libraries of the build machine; 22.04's package names also
+          # resolve on newer Ubuntu releases and Debian 12.
+          - os: ubuntu-22.04
+            installer: build/jpackage/*.deb
+          - os: windows-2022
+            installer: build/jpackage/*.msi
+          - os: macos-latest
+            installer: build/jpackage/*.dmg
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Check that the tag matches the version in gradle.properties
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version=$(grep '^version=' gradle.properties | cut -d= -f2 | tr -d '\r')
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match version $version in gradle.properties" >&2
+            exit 1
+          fi
+
+      # JDK 21's jpackage needs WiX Toolset 3 for MSI installers.
+      - name: Make sure WiX Toolset 3 is available
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          if (-not (Get-Command candle.exe -ErrorAction SilentlyContinue)) {
+            $wix = Get-ChildItem 'C:\Program Files (x86)' -Filter 'WiX Toolset v3*' -Directory -ErrorAction SilentlyContinue | Select-Object -First 1
+            if (-not $wix) {
+              choco install wixtoolset --version 3.14.1 -y --no-progress
+              $wix = Get-ChildItem 'C:\Program Files (x86)' -Filter 'WiX Toolset v3*' -Directory | Select-Object -First 1
+            }
+            if (-not $wix) { throw 'WiX Toolset 3 not found after installation' }
+            "$($wix.FullName)\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          }
+
+      - name: Build, test and package
+        run: ./gradlew build jpackage jlinkZip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.os }}
+          path: |
+            ${{ matrix.installer }}
+            build/portable/*.zip
+          if-no-files-found: error
+
+  release:
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: packages-*
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          # The artifacts keep their folders (jpackage/, portable/), so match files in subfolders.
+          files: dist/**/*
+          fail_on_unmatched_files: true

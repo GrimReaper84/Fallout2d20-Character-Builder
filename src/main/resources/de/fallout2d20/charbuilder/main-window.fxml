@@ -34,6 +34,9 @@
         <SeparatorMenuItem/>
         <CheckMenuItem fx:id="gmModeItem" text="GM mode" onAction="#onGmMode" disable="true"/>
       </Menu>
+      <Menu text="Help">
+        <MenuItem text="About" onAction="#onAbout"/>
+      </Menu>
     </MenuBar>
   </top>
   <center>

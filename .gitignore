@@ -43,3 +43,8 @@ bin/
 .DS_Store
 ### Local project documentation (rulebooks, plans, analyses) - never published ###
 docs/
+
+### AI working files (skills, project rules) - kept locally, never published ###
+.claude/
+.aicoding/
+CLAUDE.md
