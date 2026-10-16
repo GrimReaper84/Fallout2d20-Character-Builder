@@ -84,6 +84,8 @@ class OriginCatalogTest {
     assertEquals(7, radiationImmune.size());
     assertEquals(Set.of("child-of-atom"), idsWhere(origin -> origin.baseRadiationDr() > 0));
     assertEquals(1, OriginCatalog.byId("child-of-atom").orElseThrow().baseRadiationDr());
+    assertEquals(Set.of("child-of-atom"), idsWhere(origin -> origin.maxRadiationPoints() > 0));
+    assertEquals(5, OriginCatalog.byId("child-of-atom").orElseThrow().maxRadiationPoints(), "WOA p. 25");
   }
 
   /** Creation rules: CRB p. 51–58, WOA p. 19–25, WG p. 12–15. */

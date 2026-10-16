@@ -512,14 +512,35 @@ class LegacyCharacterImporterTest {
     }
   }
 
+  /** WOA p. 25: a Child of Atom stores up to 5 Radiation Points, other origins none. */
   @Test
-  void clampsRadiationPoints() throws Exception {
+  void clampsRadiationPointsToTheOriginMaximum() throws Exception {
     ObjectNode root = minimal();
-    root.putObject("vitals").put("currentHP", 8).put("rads", 3).put("radiationPoints", 9);
+    root.put("origin", "ChildOfAtom");
+    root.putObject("vitals").put("rads", 3).put("radiationPoints", 9);
     CharacterFile result = importer.importCharacter(root);
     assertEquals(5, result.character().getVitals().radiationPoints());
     assertEquals(3, result.character().getVitals().rads());
     assertTrue(hasInfo(result, "vitals"));
+
+    // Other origins store none (before D5 the import kept up to 5 for every origin).
+    ObjectNode survivor = minimal();
+    survivor.putObject("vitals").put("radiationPoints", 2);
+    CharacterFile survivorResult = importer.importCharacter(survivor);
+    assertEquals(0, survivorResult.character().getVitals().radiationPoints());
+    assertTrue(survivorResult.importReport().warnings().stream()
+        .anyMatch(w -> w.field().equals("vitals") && w.message().contains("reduced to 0")));
+  }
+
+  /** The legacy app ignored rads for the maximum HP; CRB p. 31 lowers it, and the current HP with it. */
+  @Test
+  void lowersCurrentHpAboveTheRadLoweredMaximum() throws Exception {
+    ObjectNode root = minimal();
+    root.putObject("vitals").put("currentHP", 9).put("rads", 3);
+    CharacterFile result = importer.importCharacter(root);
+    assertNull(result.character().getVitals().currentHp(), "9 above END 5 + LCK 5 − 3 rads: at maximum");
+    assertTrue(result.importReport().warnings().stream()
+        .anyMatch(w -> w.field().equals("vitals") && w.message().contains("lowered to 7")));
   }
 
   @Test

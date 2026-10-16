@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +13,7 @@ import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
+import de.fallout2d20.charbuilder.model.character.session.SessionValues;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +124,8 @@ class GmModeTest {
     character.setGmMode(true);
     character.setLevelAsGm(3, 300);
     assertEquals(new Progression(1, 0), character.getProgression());
-    assertEquals(12, character.getVitals().currentHp(), "END 5 + LCK 5 + 2 levels (CRB p. 49)");
+    assertEquals(12, SessionValues.of(character).currentHp(), "END 5 + LCK 5 + 2 levels (CRB p. 49)");
+    assertNull(character.getVitals().currentHp(), "capped at the maximum = stored as full");
     character.setLevelAsGm(6, 1_500);
     assertEquals(new Progression(1, 0), character.getProgression(), "raising grants no points");
   }

@@ -83,7 +83,8 @@
     "traitName": "Rad Sponge",
     "traitSummary": "One extra perk at level 1 and a base radiation DR of 1; absorbs radiation for nearby allies and stores up to 5 Radiation Points to boost melee damage.",
     "baseRadiationDr": 1,
-    "extraPerks": 1
+    "extraPerks": 1,
+    "maxRadiationPoints": 5
   },
   {
     "id": "assaultron",

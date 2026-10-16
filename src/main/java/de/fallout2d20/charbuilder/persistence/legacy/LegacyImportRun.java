@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -23,6 +25,7 @@ import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.item.Inventory;
+import de.fallout2d20.charbuilder.model.character.session.SessionValues;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import java.time.Clock;
@@ -45,7 +48,6 @@ import org.jspecify.annotations.Nullable;
 final class LegacyImportRun {
 
   private static final String DEFAULT_NAME = "Wanderer";
-  private static final int MAX_RADIATION_POINTS = 5;
   // Top-level fields of the legacy save format.
   private static final String ORIGIN = "origin";
   private static final String ATTRIBUTES = "attributes";
@@ -92,7 +94,7 @@ final class LegacyImportRun {
     List<PerkSelection> perks = perks();
     List<TraitSelection> traits = traits();
     Progression progression = progression();
-    Vitals vitals = vitals();
+    Vitals vitals = vitals(origin);
     List<String> kept = keepRemainingFields();
     LegacyEquipmentImport equipment = new LegacyEquipmentImport(payload, warnings);
     StartingEquipment startingEquipment = equipment.startingEquipment(origin);
@@ -119,6 +121,7 @@ final class LegacyImportRun {
       info("equipment", "Items and caps stay in the inventory notes; enter the caps balance and items by hand.");
     }
     compareDerived(character);
+    capCurrentHp(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
   }
 
@@ -332,7 +335,7 @@ final class LegacyImportRun {
    * Session state. Current HP equal to the stored legacy maximum (or missing) become "at maximum"
    * ({@code null}, user decision), so they follow later level-ups and maximum changes.
    */
-  private Vitals vitals() {
+  private Vitals vitals(@NonNull CatalogRef origin) {
     JsonNode node = root.get(VITALS);
     if (node == null || !node.isObject()) {
       return Vitals.FULL;
@@ -344,11 +347,25 @@ final class LegacyImportRun {
       currentHp = null;
     }
     int radiationPoints = intField(node, "radiationPoints", 0, 0);
-    if (radiationPoints > MAX_RADIATION_POINTS) {
-      info(VITALS, "Radiation points " + radiationPoints + " reduced to " + MAX_RADIATION_POINTS + ".");
-      radiationPoints = MAX_RADIATION_POINTS;
+    int maxRadiationPoints = OriginCatalog.byId(origin.id()).map(OriginData::maxRadiationPoints).orElse(0);
+    if (radiationPoints > maxRadiationPoints) {
+      info(VITALS, "Radiation points " + radiationPoints + " reduced to " + maxRadiationPoints + ".");
+      radiationPoints = maxRadiationPoints;
     }
     return new Vitals(currentHp, intField(node, "rads", 0, 0), radiationPoints);
+  }
+
+  /**
+   * The legacy app ignored rads for the maximum HP; here they lower it (CRB p. 31), so current HP above
+   * the lowered maximum fall to it.
+   */
+  private void capCurrentHp(@NonNull Character character) {
+    Integer currentHp = character.getVitals().currentHp();
+    int max = SessionValues.of(character).effectiveMaxHp();
+    if (currentHp != null && currentHp > max) {
+      character.setCurrentHp(currentHp);
+      info(VITALS, "Current HP " + currentHp + " lowered to " + max + ": rads lower the maximum HP.");
+    }
   }
 
   /**

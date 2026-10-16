@@ -22,6 +22,8 @@ class OriginDataTest {
     assertThrows(IllegalArgumentException.class, () -> origin(CRB, " ", null, 0));
     assertThrows(IllegalArgumentException.class, () -> origin(CRB, "Summary", 0, 0));
     assertThrows(IllegalArgumentException.class, () -> origin(CRB, "Summary", null, -1));
+    assertThrows(IllegalArgumentException.class, () -> new OriginData("x", "X", CRB, null, "Summary", null,
+        false, false, false, 0, Map.of(), Map.of(), null, null, null, List.of(), 0, List.of(), -1));
   }
 
   @Test
@@ -48,13 +50,13 @@ class OriginDataTest {
   private static OriginData origin(List<Source> sources, String summary,
       @Nullable Integer fixedCarry, int baseRadiationDr) {
     return new OriginData("x", "X", sources, null, summary, fixedCarry, false, false, false,
-        baseRadiationDr, Map.of(), Map.of(), null, null, null, List.of(), 0, List.of());
+        baseRadiationDr, Map.of(), Map.of(), null, null, null, List.of(), 0, List.of(), 0);
   }
 
   private static OriginData rules(@Nullable Map<Attribute, Integer> modifiers,
       @Nullable Map<Attribute, Integer> maximums, @Nullable Integer skillCap,
       @Nullable Skill fixedTag, @Nullable ExtraTagSkill extraTag) {
     return new OriginData("x", "X", CRB, null, "Summary", null, false, false, false, 0, modifiers,
-        maximums, skillCap, fixedTag, extraTag, null, 0, null);
+        maximums, skillCap, fixedTag, extraTag, null, 0, null, 0);
   }
 }

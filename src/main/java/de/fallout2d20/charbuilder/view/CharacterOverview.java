@@ -15,7 +15,6 @@ import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
-import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
@@ -125,12 +124,16 @@ final class CharacterOverview {
     pane.add(new Label(derived.carryWeight() + " lbs."));
     pane.add(new Label("Melee damage"));
     pane.add(new Label(derived.meleeBonusDice() == 0 ? "+0" : "+" + derived.meleeBonusDice() + " CD"));
-    pane.add(new Label("Luck points"));
+    pane.add(new Label("Max Luck points"));
     pane.add(new Label(Integer.toString(derived.maxLuckPoints())));
     resistance(pane, "Physical DR", derived.physical(), PHYSICAL_RESISTANCE_TOOLTIP);
     resistance(pane, "Energy DR", derived.energy(), RESISTANCE_TOOLTIP);
     resistance(pane, "Radiation DR", derived.radiation(), RESISTANCE_TOOLTIP);
     resistance(pane, "Poison DR", derived.poison(), RESISTANCE_TOOLTIP);
+    if (character.isCreationComplete()) {
+      heading(pane, "Session");
+      SessionSection.addTo(pane, character, onEdited, onChanged);
+    }
 
     heading(pane, "Skills");
     if (locked && AdvancementRules.choosesSkills(character)) {
@@ -175,15 +178,6 @@ final class CharacterOverview {
       addCreateButton(pane, onComplete);
     }
 
-    heading(pane, "Session");
-    Vitals vitals = character.getVitals();
-    pane.add(new Label("Current HP"));
-    int currentHp = vitals.currentHp() == null ? derived.maxHp() : vitals.currentHp();
-    pane.add(new Label(currentHp + " / " + derived.maxHp()));
-    pane.add(new Label("Rads"));
-    pane.add(new Label(Integer.toString(vitals.rads())));
-    pane.add(new Label("Radiation points"));
-    pane.add(new Label(Integer.toString(vitals.radiationPoints())), "span 3");
 
     LegacyImport legacy = character.getLegacyImport();
     if (legacy != null) {

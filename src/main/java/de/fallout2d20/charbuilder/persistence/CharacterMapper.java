@@ -83,7 +83,9 @@ final class CharacterMapper {
         perks,
         new ProgressionData(character.getProgression().pendingSkillRanks(),
             character.getProgression().pendingPerks()),
-        new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints()),
+        new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints(), vitals.luckPoints(),
+            vitals.injuries().isEmpty() ? null : vitals.injuries().stream().sorted().toList(),
+            blankToNull(vitals.notes())),
         toData(character.getStartingEquipment()),
         character.getInventoryNotes().isBlank() ? null : character.getInventoryNotes(),
         character.getWeapons().isEmpty() ? null : character.getWeapons().stream().map(CharacterMapper::toData).toList(),
@@ -134,6 +136,7 @@ final class CharacterMapper {
     String name = data.name();
     StartingEquipment startingEquipment = toModel(data.startingEquipment());
     String inventoryNotes = data.inventoryNotes();
+    String sessionNotes = vitals == null ? null : vitals.notes();
     try {
       return new Character(
           name == null ? "" : name,
@@ -150,7 +153,8 @@ final class CharacterMapper {
           progression == null ? Progression.NONE
               : new Progression(progression.pendingSkillRanks(), progression.pendingPerks()),
           vitals == null ? Vitals.FULL
-              : new Vitals(vitals.currentHp(), vitals.rads(), vitals.radiationPoints()),
+              : new Vitals(vitals.currentHp(), vitals.rads(), vitals.radiationPoints(), vitals.luckPoints(),
+                  Set.copyOf(orEmpty(vitals.injuries())), sessionNotes == null ? "" : sessionNotes),
           toModel(data.legacyBaseline()),
           legacyImport == null ? null : new LegacyImport(legacyImport.sourceSchemaVersion(),
               legacyImport.importedOn(), legacyImport.payload()),

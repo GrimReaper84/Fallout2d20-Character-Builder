@@ -44,6 +44,8 @@ import org.jspecify.annotations.Nullable;
  * @param extraPerks perks granted in addition at level 1 (Child of Atom 1, WOA p. 25)
  * @param purposeSuggestions suggested purposes; non-empty means the origin requires a purpose
  *     (Protectron, WOA p. 21)
+ * @param maxRadiationPoints most Radiation Points the character can store (Child of Atom Rad Sponge: 5,
+ *     WOA p. 25, WG p. 13); 0 for origins without them
  */
 public record OriginData(
     @JsonProperty(required = true) @NonNull String id,
@@ -63,7 +65,8 @@ public record OriginData(
     @Nullable ExtraTagSkill extraTagSkill,
     @NonNull List<String> traitLists,
     int extraPerks,
-    @NonNull List<String> purposeSuggestions) {
+    @NonNull List<String> purposeSuggestions,
+    int maxRadiationPoints) {
 
   /** CRB p. 58: no attribute may exceed 10 unless the origin changes the maximum. */
   public static final int DEFAULT_ATTRIBUTE_MAXIMUM = 10;
@@ -83,7 +86,8 @@ public record OriginData(
     purposeSuggestions = purposeSuggestions == null ? List.of() : List.copyOf(purposeSuggestions);
     if (attributeModifiers.values().stream().anyMatch(value -> value < -2 || value > 2)
         || attributeMaximums.values().stream().anyMatch(value -> value < 1 || value > 12)
-        || (skillRankCap != null && (skillRankCap < 1 || skillRankCap > 6)) || extraPerks < 0) {
+        || (skillRankCap != null && (skillRankCap < 1 || skillRankCap > 6)) || extraPerks < 0
+        || maxRadiationPoints < 0) {
       throw new IllegalArgumentException("Invalid creation rules for origin " + id);
     }
     if (fixedTagSkill != null && extraTagSkill != null && extraTagSkill.options().contains(fixedTagSkill)) {

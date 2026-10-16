@@ -76,6 +76,29 @@ class CharacterStoreTest {
     assertNull(skills.get(Skill.SCIENCE.id()).get("gmRanks"));
   }
 
+  /** Session vitals (D5) survive a save; a full character writes no Luck points, injuries or notes. */
+  @Test
+  void roundTripsSessionVitals() throws Exception {
+    Character character = Character.createNew();
+    character.completeCreation();
+    Path file = dir.resolve("vitals.json");
+    store.save(character, file);
+    JsonNode written = JSON.readTree(file.toFile()).get("vitals");
+    assertNull(written.get("luckPoints"));
+    assertNull(written.get("injuries"));
+    assertNull(written.get("notes"));
+
+    character.setRads(2);
+    character.setCurrentHp(5);
+    character.setLuckPoints(1);
+    character.setInjured(HitLocation.RIGHT_LEG, true);
+    character.setInjured(HitLocation.HEAD, true);
+    character.setSessionNotes("Bleeding torso treated");
+    store.save(character, file);
+    assertEquals(character.getVitals(), store.load(file).character().getVitals());
+    assertEquals("[\"HEAD\",\"RIGHT_LEG\"]", JSON.readTree(file.toFile()).get("vitals").get("injuries").toString());
+  }
+
   /** Items (catalog, magazine issue, custom), caps and materials survive a save; empty parts are not written. */
   @Test
   void roundTripsTheInventory() throws Exception {
