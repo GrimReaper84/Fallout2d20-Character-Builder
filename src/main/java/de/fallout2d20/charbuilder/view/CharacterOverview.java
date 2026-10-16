@@ -34,7 +34,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Overview of a character. Only the name, the inventory notes and, during creation, origin, traits,
+ * Overview of a character. Only the name, the inventory notes, weapons, ammunition and, during creation, origin, traits,
  * starting level, S.P.E.C.I.A.L. allocation, skills, perks and starting equipment can be edited; after
  * creation XP and levels, and while points are left or choices staged, skill ranks and perks. After
  * every change the overview is rebuilt by the caller, so all values stay current.
@@ -154,6 +154,8 @@ final class CharacterOverview {
 
     heading(pane, "Equipment");
     EquipmentSection.addTo(pane, character, onEdited, onChanged);
+    heading(pane, "Weapons");
+    WeaponSection.addTo(pane, character, onEdited, onChanged);
     if (!character.isCreationComplete()) {
       addCreateButton(pane, onComplete);
     }
@@ -171,7 +173,7 @@ final class CharacterOverview {
     LegacyImport legacy = character.getLegacyImport();
     if (legacy != null) {
       heading(pane, "Legacy data (imported " + legacy.importedOn() + ")");
-      pane.add(new Label("Weapons and armor values are kept for later features; the equipment text is in "
+      pane.add(new Label("Armor values are kept for a later feature; the equipment text is in "
           + "the inventory notes."), "span 4");
     }
     return pane;

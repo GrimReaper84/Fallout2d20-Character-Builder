@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -21,6 +22,8 @@ import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import java.io.IOException;
@@ -87,16 +90,69 @@ class LegacyCharacterImporterTest {
     assertNotNull(legacy);
     assertEquals(2, legacy.sourceSchemaVersion());
     assertEquals("2026-10-15", legacy.importedOn());
-    for (String field : List.of("weapons", "armor")) {
-      assertTrue(legacy.payload().has(field), field);
-    }
-    for (String field : List.of("equipment", "equipmentPack", "trinket", "originOptions")) {
+    assertTrue(legacy.payload().has("armor"));
+    for (String field : List.of("equipment", "equipmentPack", "trinket", "originOptions", "weapons")) {
       assertFalse(legacy.payload().has(field), field + " is imported");
     }
     assertFalse(legacy.payload().has("derived"), "derived values are recomputed, not kept");
     assertFalse(hasInfo(result, "derived"), "JC's stored derived values match the rules");
-    assertEquals("Laser Gun", legacy.payload().get("weapons").get(0).get("name").asText());
     assertFalse(result.importReport().hasWarnings(), result.importReport().warnings().toString());
+  }
+
+  /**
+   * Like JC.json: a Laser Gun with 3 CD (book: 4 CD, CRB p. 101) and 16 shots in the magazine becomes the
+   * catalog weapon with a note, and the shots become 16 fusion cells (CRB p. 91, its ammunition).
+   */
+  @Test
+  void importsTheLaserGunAndItsShotsAsFusionCells() throws Exception {
+    CharacterFile result = importer.importCharacter(fixture("test-survivor-v2.json"));
+    Character character = result.character();
+
+    CarriedWeapon laser = character.getWeapons().get(0);
+    assertEquals(CatalogRef.of("laser-gun"), laser.weapon());
+    assertEquals("Legacy values: damage 3 CD", laser.notes());
+    assertEquals(Map.of("fusion-cell", 16), character.getAmmunition());
+    assertTrue(hasInfo(result, "weapons"));
+  }
+
+  /**
+   * Unarmed Strike is skipped (every character has it); shots written with decimals still count; the
+   * Gatling Laser's shots go to fusion cells with a hint that it also takes a fusion core (CRB p. 106).
+   */
+  @Test
+  void skipsUnarmedStrikeReadsDecimalShotsAndHintsAtAlternativeAmmunition() throws Exception {
+    ObjectNode root = minimal();
+    ArrayNode weapons = root.putArray("weapons");
+    weapons.addObject().put("name", "Unarmed Strike").put("dmg", "2");
+    weapons.addObject().put("name", "Gatling Laser").put("dmg", "3").put("eff", "Burst, Piercing 1")
+        .put("rate", "6").put("range", "M").put("mag", 100.0).put("pool", "50.0");
+    CharacterFile result = importer.importCharacter(root);
+
+    assertEquals(List.of("Gatling Laser"),
+        result.character().getWeapons().stream().map(CarriedWeapon::displayName).toList());
+    assertEquals(Map.of("fusion-cell", 150), result.character().getAmmunition());
+    assertTrue(result.importReport().warnings().stream()
+        .anyMatch(warning -> warning.message().contains("Fusion Core")));
+    assertFalse(result.importReport().hasWarnings());
+  }
+
+  @Test
+  void unknownWeaponsBecomeCustomWeaponsAndKeepTheirShotsInTheNote() throws Exception {
+    ObjectNode root = minimal();
+    ObjectNode blaster = root.putArray("weapons").addObject();
+    blaster.put("name", "Alien Blaster").put("dmg", "5").put("eff", "-").put("type", "Ener/Rad")
+        .put("qual", "-").put("rate", "1").put("range", "M").put("mag", 4).put("pool", 6);
+    root.withArray("weapons").addObject().put("dmg", "3");
+    CharacterFile result = importer.importCharacter(root);
+
+    CarriedWeapon weapon = result.character().getWeapons().get(0);
+    assertEquals(new CustomWeapon("Alien Blaster", null, 5, "", "Energy/Radiation", 1, WeaponRange.MEDIUM, "",
+        null), weapon.custom());
+    assertEquals("Legacy ammunition: 10 shots", weapon.notes());
+    assertEquals(1, result.character().getWeapons().size());
+    assertTrue(result.character().getAmmunition().isEmpty());
+    assertTrue(result.importReport().hasWarnings());
+    assertEquals(1, result.character().getLegacyImport().payload().get("invalidWeapons").size());
   }
 
   @Test

@@ -17,6 +17,8 @@ import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -78,6 +80,8 @@ final class CharacterMapper {
         new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints()),
         toData(character.getStartingEquipment()),
         character.getInventoryNotes().isBlank() ? null : character.getInventoryNotes(),
+        character.getWeapons().isEmpty() ? null : character.getWeapons().stream().map(CharacterMapper::toData).toList(),
+        character.getAmmunition().isEmpty() ? null : new LinkedHashMap<>(character.getAmmunition()),
         toData(character.getLegacyBaseline()),
         legacyImport == null ? null : new LegacyImportData(legacyImport.sourceSchemaVersion(),
             legacyImport.importedOn(), legacyImport.payload()));
@@ -142,7 +146,9 @@ final class CharacterMapper {
           startingEquipment,
           inventoryNotes == null ? "" : inventoryNotes,
           data.startingLevel(),
-          startingTagSkills(data.startingTagSkills()));
+          startingTagSkills(data.startingTagSkills()),
+          weapons(data.weapons()),
+          data.ammunition() == null ? Map.of() : data.ammunition());
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
@@ -152,6 +158,48 @@ final class CharacterMapper {
   private static @Nullable Integer startingLevel(@NonNull Character character) {
     OptionalInt level = character.getStartingLevel();
     return character.isCreationComplete() && level.isPresent() ? level.getAsInt() : null;
+  }
+
+  private static @NonNull WeaponEntryData toData(@NonNull CarriedWeapon weapon) {
+    CatalogRef ref = weapon.weapon();
+    CustomWeapon custom = weapon.custom();
+    CustomWeaponData customData = null;
+    if (custom != null) {
+      Skill skill = custom.skill();
+      customData = new CustomWeaponData(custom.name(), skill == null ? null : skill.id(), custom.damage(),
+          blankToNull(custom.effects()), blankToNull(custom.damageType()), custom.fireRate(), custom.range(),
+          blankToNull(custom.qualities()), custom.ammunition());
+    }
+    return new WeaponEntryData(ref == null ? null : toData(ref), customData, weapon.quantity(),
+        blankToNull(weapon.notes()));
+  }
+
+  private static @NonNull List<CarriedWeapon> weapons(@Nullable List<WeaponEntryData> entries)
+      throws SaveFormatException {
+    List<CarriedWeapon> weapons = new ArrayList<>();
+    for (WeaponEntryData entry : orEmpty(entries)) {
+      CatalogRefData ref = entry.ref();
+      CustomWeaponData custom = entry.custom();
+      String notes = entry.notes();
+      weapons.add(new CarriedWeapon(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
+          entry.quantity(), notes == null ? "" : notes));
+    }
+    return weapons;
+  }
+
+  private static @NonNull CustomWeapon toModel(@NonNull CustomWeaponData data) throws SaveFormatException {
+    String skill = data.skill();
+    return new CustomWeapon(data.name(), skill == null ? null : skill(skill), data.damage(),
+        nullToEmpty(data.effects()), nullToEmpty(data.damageType()), data.fireRate(), data.range(),
+        nullToEmpty(data.qualities()), data.ammunition());
+  }
+
+  private static @Nullable String blankToNull(@NonNull String text) {
+    return text.isBlank() ? null : text;
+  }
+
+  private static @NonNull String nullToEmpty(@Nullable String text) {
+    return text == null ? "" : text;
   }
 
   /** Stored Tag skills of a complete character; {@code null} if the file has none. */

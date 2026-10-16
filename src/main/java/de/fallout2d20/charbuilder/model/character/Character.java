@@ -14,6 +14,8 @@ import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import java.util.LinkedHashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -37,7 +39,8 @@ import org.jspecify.annotations.Nullable;
  * <p>Origin and trait effects (attribute modifiers, origin Tag skills, Gifted) are applied only to
  * characters without a legacy baseline: an imported baseline already contains them. Origin, origin
  * choices, traits, attribute allocation, free Tags, bought skill ranks and the starting equipment can
- * only be changed while creation is not complete; the inventory notes can always be edited.
+ * only be changed while creation is not complete; the inventory notes, weapons and ammunition can always
+ * be edited.
  *
  * <p>After creation the character advances (CRB p. 49): XP and levels grant skill ranks and perks,
  * which are first staged (they count everywhere but can be taken back) and then applied.
@@ -80,6 +83,9 @@ public class Character {
   private @Nullable Integer completedStartingLevel;
   /** Tag skills at completion (CRB p. 81 Tag skill items); null while in creation or when not stored. */
   private @Nullable Set<Skill> completedTagSkills;
+  private final List<CarriedWeapon> weapons;
+  /** Shots per ammunition id (CRB p. 91: counted per type, shared by all weapons using it); only counts above 0. */
+  private final Map<String, Integer> ammunition;
 
   /**
    * Creates a character from stored parts without starting equipment and inventory notes – a test
@@ -104,7 +110,7 @@ public class Character {
       @Nullable LegacyImport legacyImport) {
     this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
         skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
-        null, null);
+        null, null, List.of(), Map.of());
   }
 
   /**
@@ -117,6 +123,8 @@ public class Character {
    * @param startingTagSkills the Tag skills of a complete character at the end of creation, {@code null}
    *     if not stored (then its current Tag skills count); always {@code null} for a character in creation
    *     (see {@link #getStartingTagSkills()})
+   * @param weapons the carried weapons
+   * @param ammunition shots per ammunition id; counts of 0 are dropped
    */
   public Character(
       @NonNull String name,
@@ -137,7 +145,9 @@ public class Character {
       @NonNull StartingEquipment startingEquipment,
       @NonNull String inventoryNotes,
       @Nullable Integer startingLevel,
-      @Nullable Set<Skill> startingTagSkills) {
+      @Nullable Set<Skill> startingTagSkills,
+      @NonNull List<CarriedWeapon> weapons,
+      @NonNull Map<String, Integer> ammunition) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
     }
@@ -174,6 +184,16 @@ public class Character {
     this.inventoryNotes = inventoryNotes;
     this.completedStartingLevel = startingLevel;
     this.completedTagSkills = startingTagSkills == null ? null : Set.copyOf(startingTagSkills);
+    this.weapons = new ArrayList<>(weapons);
+    this.ammunition = new LinkedHashMap<>();
+    ammunition.forEach((id, shots) -> {
+      if (id.isBlank() || shots < 0) {
+        throw new IllegalArgumentException("Ammunition needs an id and a non-negative number of shots");
+      }
+      if (shots > 0) {
+        this.ammunition.put(id, shots);
+      }
+    });
   }
 
   /** A new, empty character at the start of character creation. */
@@ -669,6 +689,74 @@ public class Character {
   /** Free-text inventory notes; editable in every mode (until phase 7 brings a real inventory). */
   public void setInventoryNotes(@Nullable String notes) {
     inventoryNotes = notes == null ? "" : notes;
+  }
+
+  /** Adds a carried weapon (any mode: weapons are bought and found at any time). */
+  public void addWeapon(@NonNull CarriedWeapon weapon) {
+    weapons.add(weapon);
+  }
+
+  /**
+   * Removes the carried weapon at the index.
+   *
+   * @throws IndexOutOfBoundsException if there is no weapon at the index
+   */
+  public void removeWeapon(int index) {
+    weapons.remove(index);
+  }
+
+  /** Free note of the weapon at the index, e.g. installed mods. */
+  public void setWeaponNotes(int index, @Nullable String notes) {
+    weapons.set(index, weapons.get(index).withNotes(notes));
+  }
+
+  /**
+   * How many of the weapon at the index are carried (grenades, mines, thrown weapons).
+   *
+   * @throws IllegalArgumentException if the quantity is below 1
+   */
+  public void setWeaponQuantity(int index, int quantity) {
+    weapons.set(index, weapons.get(index).withQuantity(quantity));
+  }
+
+  /**
+   * Chooses the attack skill of the custom weapon at the index (e.g. one imported without skill).
+   *
+   * @throws IllegalStateException if the weapon at the index is a catalog weapon
+   */
+  public void setCustomWeaponSkill(int index, @Nullable Skill skill) {
+    weapons.set(index, weapons.get(index).withCustomSkill(skill));
+  }
+
+  public @NonNull List<CarriedWeapon> getWeapons() {
+    return List.copyOf(weapons);
+  }
+
+  /**
+   * Sets the shots of an ammunition type (CRB p. 91: shots are counted per type, all weapons using the
+   * type share them; no magazines, user decision against the legacy app). 0 removes the type.
+   *
+   * @throws IllegalArgumentException if the id is blank or the shots are negative
+   */
+  public void setAmmunition(@NonNull String ammunitionId, int shots) {
+    if (ammunitionId.isBlank() || shots < 0) {
+      throw new IllegalArgumentException("Ammunition needs an id and a non-negative number of shots");
+    }
+    if (shots == 0) {
+      ammunition.remove(ammunitionId);
+    } else {
+      ammunition.put(ammunitionId, shots);
+    }
+  }
+
+  /** Shots of the ammunition type; 0 if none. */
+  public int ammunition(@NonNull String ammunitionId) {
+    return ammunition.getOrDefault(ammunitionId, 0);
+  }
+
+  /** Shots per ammunition id, only types with shots. */
+  public @NonNull Map<String, Integer> getAmmunition() {
+    return Collections.unmodifiableMap(ammunition);
   }
 
   /** The catalog entry of the chosen equipment pack; empty without pack or for an unknown one. */

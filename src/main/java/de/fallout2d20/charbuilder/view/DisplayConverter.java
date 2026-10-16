@@ -6,11 +6,11 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /** Shows items of a non-editable choice control by a display text (e.g. a catalog name). */
-final class DisplayConverter<T> extends StringConverter<T> {
+public final class DisplayConverter<T> extends StringConverter<T> {
 
   private final @NonNull Function<T, String> text;
 
-  DisplayConverter(@NonNull Function<T, String> text) {
+  public DisplayConverter(@NonNull Function<T, String> text) {
     this.text = text;
   }
 

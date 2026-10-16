@@ -1,0 +1,281 @@
+[
+  {
+    "id": "38",
+    "name": ".38",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "10+5 CD",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 0
+  },
+  {
+    "id": "10mm",
+    "name": "10mm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "8+4 CD",
+    "weight": "<1",
+    "cost": 2,
+    "rarity": 0
+  },
+  {
+    "id": "308",
+    "name": ".308",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "6+3 CD",
+    "weight": "<1",
+    "cost": 3,
+    "rarity": 1
+  },
+  {
+    "id": "flare",
+    "name": "Flare",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "2+1 CD",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 1
+  },
+  {
+    "id": "shotgun-shell",
+    "name": "Shotgun Shell",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "6+3 CD",
+    "weight": "<1",
+    "cost": 3,
+    "rarity": 1
+  },
+  {
+    "id": "45",
+    "name": ".45",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "8+4 CD",
+    "weight": "<1",
+    "cost": 3,
+    "rarity": 2
+  },
+  {
+    "id": "flamer-fuel",
+    "name": "Flamer Fuel",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "12+6 CD",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 2
+  },
+  {
+    "id": "fusion-cell",
+    "name": "Fusion Cell",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "14+7 CD",
+    "weight": "<1",
+    "cost": 3,
+    "rarity": 2
+  },
+  {
+    "id": "gamma-round",
+    "name": "Gamma Round",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 2
+  },
+  {
+    "id": "railway-spike",
+    "name": "Railway Spike",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "6+3 CD",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 2
+  },
+  {
+    "id": "syringer-ammo",
+    "name": "Syringer Ammo",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "rarity": 2
+  },
+  {
+    "id": "44-magnum",
+    "name": ".44 Magnum",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 3,
+    "rarity": 3
+  },
+  {
+    "id": "50",
+    "name": ".50",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 4,
+    "rarity": 3
+  },
+  {
+    "id": "5-56mm",
+    "name": "5.56mm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "8+4 CD",
+    "weight": "<1",
+    "cost": 2,
+    "rarity": 3
+  },
+  {
+    "id": "5mm",
+    "name": "5mm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "10× (12+6 CD)",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 3
+  },
+  {
+    "id": "fusion-core",
+    "name": "Fusion Core",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "1",
+    "weight": "4",
+    "cost": 200,
+    "rarity": 3
+  },
+  {
+    "id": "missile",
+    "name": "Missile",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "2+1 CD",
+    "weight": "7",
+    "cost": 25,
+    "rarity": 3
+  },
+  {
+    "id": "plasma-cartridge",
+    "name": "Plasma Cartridge",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "10+5 CD",
+    "weight": "<1",
+    "cost": 5,
+    "rarity": 4
+  },
+  {
+    "id": "2mm-ec",
+    "name": "2mm EC",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "6+3 CD",
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 5
+  },
+  {
+    "id": "mini-nuke",
+    "name": "Mini-Nuke",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 91
+      }
+    ],
+    "quantityFound": "1+1 CD",
+    "weight": "12",
+    "cost": 100,
+    "rarity": 6
+  }
+]

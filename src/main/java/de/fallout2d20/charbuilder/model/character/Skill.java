@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,6 +51,16 @@ public enum Skill {
 
   public Attribute governingAttribute() {
     return governingAttribute;
+  }
+
+  /** The weapon types, i.e. the skills used to attack (CRB p. 88), in book order. */
+  public static List<Skill> weaponSkills() {
+    return List.of(SMALL_GUNS, ENERGY_WEAPONS, BIG_GUNS, MELEE_WEAPONS, UNARMED, THROWING, EXPLOSIVES);
+  }
+
+  /** Whether attacks with weapons of this skill use up the weapon itself, so they are counted (CRB p. 27, 120). */
+  public boolean isCountedWeapon() {
+    return this == EXPLOSIVES || this == THROWING;
   }
 
   public static Optional<Skill> fromId(String id) {

@@ -1,0 +1,1653 @@
+[
+  {
+    "id": "44-pistol",
+    "name": ".44 Pistol",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 6,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters"
+    ],
+    "weight": "4",
+    "cost": 99,
+    "rarity": 2,
+    "ammunition": [
+      "44-magnum"
+    ]
+  },
+  {
+    "id": "10mm-pistol",
+    "name": "10mm Pistol",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Reliable"
+    ],
+    "weight": "4",
+    "cost": 50,
+    "rarity": 1,
+    "ammunition": [
+      "10mm"
+    ]
+  },
+  {
+    "id": "flare-gun",
+    "name": "Flare Gun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Reliable"
+    ],
+    "weight": "2",
+    "cost": 50,
+    "rarity": 1,
+    "ammunition": [
+      "flare"
+    ]
+  },
+  {
+    "id": "assault-rifle",
+    "name": "Assault Rifle",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "13",
+    "cost": 144,
+    "rarity": 2,
+    "ammunition": [
+      "5-56mm"
+    ]
+  },
+  {
+    "id": "combat-rifle",
+    "name": "Combat Rifle",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "11",
+    "cost": 117,
+    "rarity": 2,
+    "ammunition": [
+      "45"
+    ]
+  },
+  {
+    "id": "gauss-rifle",
+    "name": "Gauss Rifle",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 10,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "LONG",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "16",
+    "cost": 228,
+    "rarity": 4,
+    "ammunition": [
+      "2mm-ec"
+    ]
+  },
+  {
+    "id": "hunting-rifle",
+    "name": "Hunting Rifle",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 6,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "10",
+    "cost": 55,
+    "rarity": 2,
+    "ammunition": [
+      "308"
+    ]
+  },
+  {
+    "id": "submachine-gun",
+    "name": "Submachine Gun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 3,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 3,
+    "range": "CLOSE",
+    "qualities": [
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "12",
+    "cost": 109,
+    "rarity": 1,
+    "ammunition": [
+      "45"
+    ]
+  },
+  {
+    "id": "combat-shotgun",
+    "name": "Combat Shotgun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Spread"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "CLOSE",
+    "qualities": [
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "11",
+    "cost": 87,
+    "rarity": 2,
+    "ammunition": [
+      "shotgun-shell"
+    ]
+  },
+  {
+    "id": "double-barrel-shotgun",
+    "name": "Double-Barrel Shotgun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Spread",
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "qualities": [
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "9",
+    "cost": 39,
+    "rarity": 1,
+    "ammunition": [
+      "shotgun-shell"
+    ]
+  },
+  {
+    "id": "pipe-bolt-action",
+    "name": "Pipe Bolt-Action",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "qualities": [
+      "Unreliable"
+    ],
+    "weight": "3",
+    "cost": 30,
+    "rarity": 0,
+    "ammunition": [
+      "308"
+    ]
+  },
+  {
+    "id": "pipe-gun",
+    "name": "Pipe Gun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Unreliable"
+    ],
+    "weight": "2",
+    "cost": 30,
+    "rarity": 0,
+    "ammunition": [
+      "38"
+    ]
+  },
+  {
+    "id": "pipe-revolver",
+    "name": "Pipe Revolver",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Unreliable"
+    ],
+    "weight": "4",
+    "cost": 25,
+    "rarity": 0,
+    "ammunition": [
+      "45"
+    ]
+  },
+  {
+    "id": "railway-rifle",
+    "name": "Railway Rifle",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 10,
+    "damageEffects": [
+      "Breaking"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Debilitating",
+      "Two-Handed",
+      "Unreliable"
+    ],
+    "weight": "14",
+    "cost": 290,
+    "rarity": 4,
+    "ammunition": [
+      "railway-spike"
+    ]
+  },
+  {
+    "id": "syringer",
+    "name": "Syringer",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 95
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "6",
+    "cost": 132,
+    "rarity": 2,
+    "ammunition": [
+      "syringer-ammo"
+    ]
+  },
+  {
+    "id": "institute-laser",
+    "name": "Institute Laser",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 3,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Inaccurate"
+    ],
+    "weight": "4",
+    "cost": 50,
+    "rarity": 2,
+    "ammunition": [
+      "fusion-cell"
+    ]
+  },
+  {
+    "id": "laser-musket",
+    "name": "Laser Musket",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "13",
+    "cost": 57,
+    "rarity": 1,
+    "ammunition": [
+      "fusion-cell"
+    ]
+  },
+  {
+    "id": "laser-gun",
+    "name": "Laser Gun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 2,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters"
+    ],
+    "weight": "4",
+    "cost": 69,
+    "rarity": 2,
+    "ammunition": [
+      "fusion-cell"
+    ]
+  },
+  {
+    "id": "plasma-gun",
+    "name": "Plasma Gun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 6,
+    "damageTypes": [
+      "PHYSICAL",
+      "ENERGY"
+    ],
+    "fireRate": 1,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters"
+    ],
+    "weight": "4",
+    "cost": 123,
+    "rarity": 3,
+    "ammunition": [
+      "plasma-cartridge"
+    ]
+  },
+  {
+    "id": "gamma-gun",
+    "name": "Gamma Gun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Piercing 1",
+      "Stun"
+    ],
+    "damageTypes": [
+      "RADIATION"
+    ],
+    "fireRate": 1,
+    "range": "MEDIUM",
+    "qualities": [
+      "Blast",
+      "Inaccurate"
+    ],
+    "weight": "3",
+    "cost": 156,
+    "rarity": 5,
+    "ammunition": [
+      "gamma-round"
+    ]
+  },
+  {
+    "id": "fat-man",
+    "name": "Fat Man",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 21,
+    "damageEffects": [
+      "Breaking",
+      "Radioactive",
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Blast",
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "31",
+    "cost": 512,
+    "rarity": 4,
+    "ammunition": [
+      "mini-nuke"
+    ]
+  },
+  {
+    "id": "flamer",
+    "name": "Flamer",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 3,
+    "damageEffects": [
+      "Burst",
+      "Persistent",
+      "Spread"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 4,
+    "range": "CLOSE",
+    "qualities": [
+      "Debilitating",
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "16",
+    "cost": 137,
+    "rarity": 3,
+    "ammunition": [
+      "flamer-fuel"
+    ]
+  },
+  {
+    "id": "gatling-laser",
+    "name": "Gatling Laser",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 3,
+    "damageEffects": [
+      "Burst",
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 6,
+    "range": "MEDIUM",
+    "qualities": [
+      "Gatling",
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "19",
+    "cost": 804,
+    "rarity": 3,
+    "ammunition": [
+      "fusion-cell",
+      "fusion-core"
+    ]
+  },
+  {
+    "id": "heavy-incinerator",
+    "name": "Heavy Incinerator",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Burst",
+      "Persistent",
+      "Spread"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 3,
+    "range": "MEDIUM",
+    "qualities": [
+      "Debilitating",
+      "Two-Handed"
+    ],
+    "weight": "20",
+    "cost": 350,
+    "rarity": 4,
+    "ammunition": [
+      "flamer-fuel"
+    ]
+  },
+  {
+    "id": "junk-jet",
+    "name": "Junk Jet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 6,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "30",
+    "cost": 285,
+    "rarity": 3
+  },
+  {
+    "id": "minigun",
+    "name": "Minigun",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 3,
+    "damageEffects": [
+      "Burst",
+      "Spread"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 5,
+    "range": "MEDIUM",
+    "qualities": [
+      "Gatling",
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "27",
+    "cost": 382,
+    "rarity": 2,
+    "ammunition": [
+      "5mm"
+    ]
+  },
+  {
+    "id": "missile-launcher",
+    "name": "Missile Launcher",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 106
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 11,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "LONG",
+    "qualities": [
+      "Blast",
+      "Two-Handed"
+    ],
+    "weight": "21",
+    "cost": 314,
+    "rarity": 4,
+    "ammunition": [
+      "missile"
+    ]
+  },
+  {
+    "id": "unarmed-strike",
+    "name": "Unarmed Strike",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 2,
+    "damageTypes": [
+      "PHYSICAL"
+    ]
+  },
+  {
+    "id": "handy-rock",
+    "name": "Handy Rock",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 2,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Thrown (C)"
+    ],
+    "weight": "1"
+  },
+  {
+    "id": "gun-bash-1h",
+    "name": "Gun Bash (1H)",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 2,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ]
+  },
+  {
+    "id": "gun-bash",
+    "name": "Gun Bash",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ]
+  },
+  {
+    "id": "sword",
+    "name": "Sword",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Parry"
+    ],
+    "weight": "3",
+    "cost": 50,
+    "rarity": 2
+  },
+  {
+    "id": "combat-knife",
+    "name": "Combat Knife",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "1",
+    "cost": 25,
+    "rarity": 1
+  },
+  {
+    "id": "machete",
+    "name": "Machete",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "2",
+    "cost": 25,
+    "rarity": 1
+  },
+  {
+    "id": "ripper",
+    "name": "Ripper",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "6",
+    "cost": 50,
+    "rarity": 2
+  },
+  {
+    "id": "shishkebab",
+    "name": "Shishkebab",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Parry"
+    ],
+    "weight": "3",
+    "cost": 200,
+    "rarity": 3
+  },
+  {
+    "id": "switchblade",
+    "name": "Switchblade",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 2,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Concealed"
+    ],
+    "weight": "1",
+    "cost": 20,
+    "rarity": 0
+  },
+  {
+    "id": "baseball-bat",
+    "name": "Baseball Bat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "3",
+    "cost": 25,
+    "rarity": 1
+  },
+  {
+    "id": "aluminum-baseball-bat",
+    "name": "Aluminum Baseball Bat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "2",
+    "cost": 32,
+    "rarity": 2
+  },
+  {
+    "id": "board",
+    "name": "Board",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "3",
+    "cost": 20,
+    "rarity": 0
+  },
+  {
+    "id": "lead-pipe",
+    "name": "Lead Pipe",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "3",
+    "cost": 15,
+    "rarity": 0
+  },
+  {
+    "id": "pipe-wrench",
+    "name": "Pipe Wrench",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "2",
+    "cost": 30,
+    "rarity": 1
+  },
+  {
+    "id": "pool-cue",
+    "name": "Pool cue",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "1",
+    "cost": 10,
+    "rarity": 0
+  },
+  {
+    "id": "rolling-pin",
+    "name": "Rolling Pin",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "1",
+    "cost": 10,
+    "rarity": 0
+  },
+  {
+    "id": "baton",
+    "name": "Baton",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "2",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "sledgehammer",
+    "name": "Sledgehammer",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "12",
+    "cost": 40,
+    "rarity": 2
+  },
+  {
+    "id": "super-sledge",
+    "name": "Super Sledge",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 6,
+    "damageEffects": [
+      "Breaking"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "20",
+    "cost": 180,
+    "rarity": 3
+  },
+  {
+    "id": "tire-iron",
+    "name": "Tire Iron",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "2",
+    "cost": 25,
+    "rarity": 1
+  },
+  {
+    "id": "walking-cane",
+    "name": "Walking Cane",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "2",
+    "cost": 10,
+    "rarity": 0
+  },
+  {
+    "id": "boxing-glove",
+    "name": "Boxing Glove",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 3,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "1",
+    "cost": 10,
+    "rarity": 1
+  },
+  {
+    "id": "deathclaw-gauntlet",
+    "name": "Deathclaw Gauntlet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "10",
+    "cost": 75,
+    "rarity": 3
+  },
+  {
+    "id": "knuckles",
+    "name": "Knuckles",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Concealed"
+    ],
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 1
+  },
+  {
+    "id": "power-fist",
+    "name": "Power Fist",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 111
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 4,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "4",
+    "cost": 100,
+    "rarity": 2
+  },
+  {
+    "id": "throwing-knives",
+    "name": "Throwing Knives",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 119
+      }
+    ],
+    "skill": "THROWING",
+    "damage": 3,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Concealed",
+      "Suppressed",
+      "Thrown (C)"
+    ],
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 1
+  },
+  {
+    "id": "tomahawk",
+    "name": "Tomahawk",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 119
+      }
+    ],
+    "skill": "THROWING",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Suppressed",
+      "Thrown (C)"
+    ],
+    "weight": "<1",
+    "cost": 15,
+    "rarity": 2
+  },
+  {
+    "id": "javelin",
+    "name": "Javelin",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 119
+      }
+    ],
+    "skill": "THROWING",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Suppressed",
+      "Thrown (M)"
+    ],
+    "weight": "4",
+    "cost": 10,
+    "rarity": 1
+  },
+  {
+    "id": "baseball-grenade",
+    "name": "Baseball Grenade",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 40,
+    "rarity": 1
+  },
+  {
+    "id": "frag-grenade",
+    "name": "Frag Grenade",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "<1",
+    "cost": 50,
+    "rarity": 2
+  },
+  {
+    "id": "molotov-cocktail",
+    "name": "Molotov Cocktail",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 4,
+    "damageEffects": [
+      "Persistent"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 20,
+    "rarity": 1,
+    "legacyNames": [
+      "Molotov"
+    ]
+  },
+  {
+    "id": "nuka-grenade",
+    "name": "Nuka Grenade",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 9,
+    "damageEffects": [
+      "Breaker",
+      "Radioactive",
+      "Vicious"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 100,
+    "rarity": 4
+  },
+  {
+    "id": "plasma-grenade",
+    "name": "Plasma Grenade",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 9,
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "<1",
+    "cost": 135,
+    "rarity": 3
+  },
+  {
+    "id": "pulse-grenade",
+    "name": "Pulse Grenade",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "<1",
+    "cost": 100,
+    "rarity": 3
+  },
+  {
+    "id": "bottlecap-mine",
+    "name": "Bottlecap Mine",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Mine"
+    ],
+    "weight": "1",
+    "cost": 75,
+    "rarity": 2
+  },
+  {
+    "id": "frag-mine",
+    "name": "Frag Mine",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Mine"
+    ],
+    "weight": "1",
+    "cost": 50,
+    "rarity": 2
+  },
+  {
+    "id": "nuke-mine",
+    "name": "Nuke Mine",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 9,
+    "damageEffects": [
+      "Breaker",
+      "Radioactive",
+      "Vicious"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 100,
+    "rarity": 4
+  },
+  {
+    "id": "plasma-mine",
+    "name": "Plasma Mine",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 9,
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "<1",
+    "cost": 135,
+    "rarity": 3
+  },
+  {
+    "id": "pulse-mine",
+    "name": "Pulse Mine",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 120
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "<1",
+    "cost": 100,
+    "rarity": 3
+  }
+]

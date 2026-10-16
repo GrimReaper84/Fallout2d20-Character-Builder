@@ -444,7 +444,7 @@ class CharacterTest {
   private static Character withStartingLevel(boolean complete, int startingLevel) {
     return new Character("Test", null, OriginChoices.NONE, 2, 100, complete, EnumSet.allOf(Book.class), Map.of(),
         Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        startingLevel, null);
+        startingLevel, null, List.of(), Map.of());
   }
 
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */

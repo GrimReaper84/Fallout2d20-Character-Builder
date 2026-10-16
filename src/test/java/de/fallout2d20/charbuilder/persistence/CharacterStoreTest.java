@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -22,6 +23,8 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -275,6 +278,23 @@ class CharacterStoreTest {
     assertEquals(List.of("sneak"), List.of(written.get("startingTagSkills").get(0).asText()));
   }
 
+  /** Catalog and custom weapons with quantity and note, and the ammunition per type (C1). */
+  @Test
+  void roundTripsWeaponsAndAmmunition() throws Exception {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withNotes("Long Barrel"));
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")).withQuantity(3));
+    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "Piercing 1",
+        "Energy", 1, WeaponRange.MEDIUM, "Close Quarters", "fusion-cell")));
+    character.setAmmunition("10mm", 34);
+    Path file = dir.resolve("weapons.json");
+    store.save(character, file);
+
+    Character loaded = store.load(file).character();
+    assertEquals(character.getWeapons(), loaded.getWeapons());
+    assertEquals(Map.of("10mm", 34), loaded.getAmmunition());
+  }
+
   @Test
   void characterInCreationWritesNoStartingTagSkills() throws Exception {
     Character character = Character.createNew();
@@ -291,7 +311,7 @@ class CharacterStoreTest {
         null, false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "", null, null);
+        null, null, settler, "", null, null, List.of(), Map.of());
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());

@@ -143,7 +143,7 @@ class StartingEquipmentItemsTest {
         false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 5, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(Skill.BARTER, new SkillState(true, 0, 0)), List.of(),
-        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null, null);
+        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null, null, List.of(), Map.of());
     assertEquals(new StartingCaps(30, 0, 2), StartingEquipmentItems.caps(complete));
     assertTrue(StartingEquipmentItems.lines(complete).contains("Melee weapon: not chosen yet"));
   }
