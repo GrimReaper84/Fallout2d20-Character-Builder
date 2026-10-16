@@ -20,7 +20,6 @@ at the table.
 - **Session values:** current HP (rads lower the maximum), Luck points, Rad Sponge points, injuries,
   notes.
 - **Character sheet** export as PDF for printing.
-- **Import** of save files from the earlier web-based character manager.
 
 Characters are saved as JSON files wherever you like.
 
