@@ -36,14 +36,24 @@ import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-/** Converts between the character model and the v3 save-file records. */
+/** Converts between the character model and the save-file records. */
 final class CharacterMapper {
 
-  static final int SCHEMA_VERSION = 3;
+  /** Marker of this app's save files; legacy files (web app) have none. */
+  static final @NonNull String FORMAT = "fallout2d20-character-builder";
+  /** Current structure version of the save file. */
+  static final int FORMAT_VERSION = 1;
+  /** {@code schemaVersion} of files from the 1.0.0 test builds, same structure as format 1. */
+  static final int TEST_BUILD_SCHEMA_VERSION = 3;
 
   private CharacterMapper() {}
 
-  static CharacterData toData(Character character) {
+  /**
+   * The save-file records of a character in the current format.
+   *
+   * @param savedWith the app version writing the file
+   */
+  static CharacterData toData(Character character, @NonNull String savedWith) {
     Map<String, Integer> allocation = new LinkedHashMap<>();
     for (Attribute attribute : Attribute.values()) {
       allocation.put(attribute.id(), character.attributeAllocation(attribute));
@@ -66,7 +76,10 @@ final class CharacterMapper {
     Vitals vitals = character.getVitals();
     LegacyImport legacyImport = character.getLegacyImport();
     return new CharacterData(
-        SCHEMA_VERSION,
+        FORMAT,
+        FORMAT_VERSION,
+        character.getCreatedWith().orElse(null),
+        savedWith,
         character.getName(),
         origin == null ? null : toData(origin),
         toData(character.getOriginChoices()),
@@ -165,7 +178,8 @@ final class CharacterMapper {
           weapons(data.weapons()),
           data.ammunition() == null ? Map.of() : data.ammunition(),
           apparel(data.apparel()),
-          inventory(data));
+          inventory(data),
+          data.createdWith());
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }

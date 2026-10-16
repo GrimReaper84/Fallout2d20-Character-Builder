@@ -1,5 +1,8 @@
 {
-  "schemaVersion" : 3,
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "1.0.0",
+  "savedWith" : "1.0.0",
   "name" : "Nora Mayfield",
   "origin" : {
     "id" : "survivor"

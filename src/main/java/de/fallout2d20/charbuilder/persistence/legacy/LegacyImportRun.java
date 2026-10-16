@@ -115,7 +115,7 @@ final class LegacyImportRun {
         new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload),
         startingEquipment, inventoryNotes, null, startingTags, weapons.weapons(), weapons.ammunition(),
-        armor.apparel(), Inventory.EMPTY);
+        armor.apparel(), Inventory.EMPTY, null);
     if (!inventoryNotes.isBlank()) {
       // Legacy saves keep items and caps only as free text; the inventory starts empty.
       info("equipment", "Items and caps stay in the inventory notes; enter the caps balance and items by hand.");

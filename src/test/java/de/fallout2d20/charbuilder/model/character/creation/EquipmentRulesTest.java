@@ -34,7 +34,7 @@ class EquipmentRulesTest {
         false, List.of());
     Character protectron = new Character("Test", CatalogRef.of("protectron"), OriginChoices.NONE, 1, 0, false,
         EnumSet.of(Book.CRB), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, medic, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
+        null, null, medic, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
     assertEquals(List.of("Protectron Medic needs a book that is not enabled."), messages(protectron));
   }
 
@@ -88,7 +88,7 @@ class EquipmentRulesTest {
         List.of(), Map.of(), null, false, List.of());
     Character synth = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, false,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, unknown, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
+        null, null, unknown, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
     assertEquals(List.of("\"Lone Wanderer\" is not an equipment pack of the supported books."),
         messages(synth));
   }

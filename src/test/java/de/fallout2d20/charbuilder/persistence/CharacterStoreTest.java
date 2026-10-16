@@ -44,6 +44,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,7 @@ class CharacterStoreTest {
 
   private static final ObjectMapper JSON = new ObjectMapper();
   private final CharacterStore store =
-      new CharacterStore(Clock.fixed(Instant.parse("2026-10-15T10:00:00Z"), ZoneOffset.UTC));
+      new CharacterStore(Clock.fixed(Instant.parse("2026-10-15T10:00:00Z"), ZoneOffset.UTC), "1.0.0");
 
   @TempDir Path dir;
 
@@ -140,7 +141,11 @@ class CharacterStoreTest {
     assertEquals("Nora", loaded.character().getName());
     assertEquals(5, loaded.character().attributeValue(Attribute.LUCK));
     JsonNode written = JSON.readTree(file.toFile());
-    assertEquals(3, written.get("schemaVersion").asInt());
+    assertEquals("fallout2d20-character-builder", written.get("format").asText());
+    assertEquals(1, written.get("formatVersion").asInt());
+    assertEquals("1.0.0", written.get("savedWith").asText());
+    assertFalse(written.has("schemaVersion"), "no longer continues the legacy numbering");
+    assertFalse(written.has("createdWith"), "unknown for a character made without an app version");
     assertEquals(7, written.get("attributeAllocation").size());
     assertEquals(17, written.get("skills").size());
     assertFalse(written.has("legacyBaseline"));
@@ -396,14 +401,14 @@ class CharacterStoreTest {
     assertFalse(JSON.readTree(file.toFile()).has("startingTagSkills"));
   }
 
-  /** A complete character cannot pick again, so stale picks keep their text.
+  /** A complete character cannot pick again, so stale picks keep their text. */
   @Test
   void completeCharactersKeepStalePicks() throws Exception {
     StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), List.of("Spoon"), Map.of(),
         null, false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
+        null, null, settler, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());
@@ -419,11 +424,11 @@ class CharacterStoreTest {
     ObjectNode valid = (ObjectNode) JSON.readTree(file.toFile());
 
     ObjectNode unknownArm = valid.deepCopy();
-    ((ObjectNode) unknownArm.get("startingEquipment").get("arms").getFirst()).put("attachment", "CLAW");
+    ((ObjectNode) unknownArm.get("startingEquipment").get("arms").get(0)).put("attachment", "CLAW");
     assertUnreadable(file, unknownArm);
 
     ObjectNode bothOnOneArm = valid.deepCopy();
-    ((ObjectNode) bothOnOneArm.get("startingEquipment").get("arms").getFirst()).put("weapon", "Hunting rifle");
+    ((ObjectNode) bothOnOneArm.get("startingEquipment").get("arms").get(0)).put("weapon", "Hunting rifle");
     assertUnreadable(file, bothOnOneArm);
 
     ObjectNode unknownSkill = valid.deepCopy();
@@ -476,6 +481,70 @@ class CharacterStoreTest {
     node.put("somethingNew", true);
     Files.writeString(file, node.toString());
     assertNull(store.load(file).importReport());
+  }
+
+  /** User decision 2026-10-17: the creating version is kept for good, the saving version follows each save. */
+  @Test
+  void keepsCreatedWithAndUpdatesSavedWith() throws Exception {
+    Character character = Character.createNew("1.0.0");
+    Path file = dir.resolve("new.json");
+    store.save(character, file);
+    CharacterStore newer = new CharacterStore(Clock.systemUTC(), "1.1.0");
+    Character loaded = newer.load(file).character();
+    assertEquals(Optional.of("1.0.0"), loaded.getCreatedWith());
+    newer.save(loaded, file);
+    JsonNode written = JSON.readTree(file.toFile());
+    assertEquals("1.0.0", written.get("createdWith").asText());
+    assertEquals("1.1.0", written.get("savedWith").asText());
+  }
+
+  /** User decision 2026-10-17: files of the 1.0.0 test builds still load and move to the new format on save. */
+  @Test
+  void readsTestBuildFilesAndWritesThemInTheNewFormat() throws Exception {
+    Character character = Character.createNew();
+    character.setName("Tester");
+    Path file = dir.resolve("test-build.json");
+    store.save(character, file);
+    ObjectNode testBuild = (ObjectNode) JSON.readTree(file.toFile());
+    testBuild.remove(List.of("format", "formatVersion", "savedWith"));
+    testBuild.put("schemaVersion", 3);
+    Files.writeString(file, JSON.writeValueAsString(testBuild));
+
+    CharacterFile loaded = store.load(file);
+    assertNull(loaded.importReport(), "not a legacy import");
+    assertEquals("Tester", loaded.character().getName());
+    store.save(loaded.character(), file);
+    JsonNode written = JSON.readTree(file.toFile());
+    assertEquals(1, written.get("formatVersion").asInt());
+    assertFalse(written.has("schemaVersion"));
+  }
+
+  @Test
+  void newerFormatAsksForAnUpdate() throws Exception {
+    Path file = dir.resolve("newer.json");
+    Files.writeString(file, "{\"format\": \"fallout2d20-character-builder\", \"formatVersion\": 2, "
+        + "\"savedWith\": \"1.4.0\", \"attributeAllocation\": {}, \"skills\": {}}");
+    SaveFormatException error = assertThrows(SaveFormatException.class, () -> store.load(file));
+    assertTrue(error.getMessage().contains("version 1.4.0"), error.getMessage());
+    assertTrue(error.getMessage().contains("update"), error.getMessage());
+  }
+
+  @Test
+  void rejectsForeignFormatsAndInvalidFormatVersions() throws Exception {
+    assertLoadFails("{\"format\": \"something-else\", \"formatVersion\": 1}", "Not a character file");
+    assertLoadFails("{\"format\": 5, \"formatVersion\": 1}", "Not a character file");
+    assertLoadFails("{\"format\": \"fallout2d20-character-builder\"}", "no valid format version");
+    assertLoadFails("{\"format\": \"fallout2d20-character-builder\", \"formatVersion\": \"1\"}",
+        "no valid format version");
+    assertLoadFails("{\"format\": \"fallout2d20-character-builder\", \"formatVersion\": 0}",
+        "no valid format version");
+  }
+
+  private void assertLoadFails(String json, String expectedMessage) throws IOException {
+    Path file = dir.resolve("invalid.json");
+    Files.writeString(file, json);
+    SaveFormatException error = assertThrows(SaveFormatException.class, () -> store.load(file));
+    assertTrue(error.getMessage().contains(expectedMessage), error.getMessage());
   }
 
   @Test

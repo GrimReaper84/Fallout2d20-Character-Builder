@@ -154,7 +154,7 @@ class CharacterEquipmentTest {
         Map.of(), "Medal", false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE,
-        Vitals.FULL, null, null, settler, "Notes", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
+        Vitals.FULL, null, null, settler, "Notes", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
     assertEquals(settler, complete.getStartingEquipment());
     assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentPack(CatalogRef.of("raider")));
     assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentOption(0, "Rolling pin"));

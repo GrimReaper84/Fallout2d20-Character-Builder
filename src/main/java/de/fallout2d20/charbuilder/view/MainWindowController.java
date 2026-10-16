@@ -75,7 +75,7 @@ public class MainWindowController {
     if (!confirmDiscard()) {
       return;
     }
-    show(Character.createNew(), null);
+    show(Character.createNew(AppInfo.version()), null);
   }
 
   @FXML

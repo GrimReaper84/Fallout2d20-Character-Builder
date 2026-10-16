@@ -97,6 +97,8 @@ public class Character {
   private @Nullable Integer completedStartingLevel;
   /** Tag skills at completion (CRB p. 81 Tag skill items); null while in creation or when not stored. */
   private @Nullable Set<Skill> completedTagSkills;
+  /** App version that created the character with File → New; null for imports and older files. */
+  private final @Nullable String createdWith;
   private final List<CarriedWeapon> weapons;
   /** Shots per ammunition id (CRB p. 91: counted per type, shared by all weapons using it); only counts above 0. */
   private final Map<String, Integer> ammunition;
@@ -132,7 +134,7 @@ public class Character {
       @Nullable LegacyImport legacyImport) {
     this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
         skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
-        null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY);
+        null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
   }
 
   /**
@@ -149,6 +151,8 @@ public class Character {
    * @param ammunition shots per ammunition id; counts of 0 are dropped
    * @param apparel the worn clothing, armor and robot armor
    * @param inventory the carried items, caps and junk/material counters
+   * @param createdWith the app version that created the character, {@code null} if unknown (legacy
+   *     imports, files written before it was stored)
    */
   public Character(
       @NonNull String name,
@@ -173,7 +177,8 @@ public class Character {
       @NonNull List<CarriedWeapon> weapons,
       @NonNull Map<String, Integer> ammunition,
       @NonNull List<WornApparel> apparel,
-      @NonNull Inventory inventory) {
+      @NonNull Inventory inventory,
+      @Nullable String createdWith) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
     }
@@ -225,12 +230,26 @@ public class Character {
     this.caps = inventory.caps();
     this.materials = inventory.materials();
     this.packItemsAdded = inventory.packItemsAdded();
+    this.createdWith = createdWith;
   }
 
-  /** A new, empty character at the start of character creation. */
-  public static Character createNew() {
-    return new Character("", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class),
-        Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null);
+  /**
+   * A new, empty character at the start of character creation, marked as created with {@code appVersion}
+   * (kept in the save file for good).
+   */
+  public static @NonNull Character createNew(@NonNull String appVersion) {
+    return create(appVersion);
+  }
+
+  private static @NonNull Character create(@Nullable String appVersion) {
+    return new Character("", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class), Map.of(), Map.of(),
+        List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "", null, null,
+        List.of(), Map.of(), List.of(), Inventory.EMPTY, appVersion);
+  }
+
+  /** A new, empty character at the start of character creation without an app version (tests). */
+  public static @NonNull Character createNew() {
+    return create(null);
   }
 
   /**
@@ -1364,6 +1383,11 @@ public class Character {
 
   public @NonNull StartingEquipment getStartingEquipment() {
     return startingEquipment;
+  }
+
+  /** App version that created the character, if known. */
+  public @NonNull Optional<String> getCreatedWith() {
+    return Optional.ofNullable(createdWith);
   }
 
   public @NonNull String getInventoryNotes() {
