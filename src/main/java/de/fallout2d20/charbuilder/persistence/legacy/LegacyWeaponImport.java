@@ -11,7 +11,6 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -120,7 +119,7 @@ final class LegacyWeaponImport {
   /** Damage, effects, fire rate and range of the legacy entry that differ from the catalog. */
   private static @NonNull String differences(@NonNull JsonNode item, @NonNull WeaponData data) {
     List<String> differences = new ArrayList<>();
-    Integer damage = integer(item.get("dmg"));
+    Integer damage = LegacyNumbers.integer(item.get("dmg"));
     if (damage != null && damage != data.damage()) {
       differences.add("damage " + damage + " CD");
     }
@@ -128,7 +127,7 @@ final class LegacyWeaponImport {
     if (!normalized(effects).equals(normalized(String.join(", ", data.damageEffects())))) {
       differences.add("effects " + (effects.isEmpty() ? "none" : effects));
     }
-    Integer fireRate = integer(item.get("rate"));
+    Integer fireRate = LegacyNumbers.integer(item.get("rate"));
     if (data.fireRate() != null && fireRate != null && !fireRate.equals(data.fireRate())) {
       differences.add("fire rate " + fireRate);
     }
@@ -140,8 +139,8 @@ final class LegacyWeaponImport {
   }
 
   private static @NonNull CustomWeapon custom(@NonNull String name, @NonNull JsonNode item) {
-    Integer damage = integer(item.get("dmg"));
-    Integer fireRate = integer(item.get("rate"));
+    Integer damage = LegacyNumbers.integer(item.get("dmg"));
+    Integer fireRate = LegacyNumbers.integer(item.get("rate"));
     return new CustomWeapon(name, null, damage == null ? 0 : Math.max(0, damage), orNone(text(item.get("eff"))),
         damageType(text(item.get("type"))), fireRate == null || fireRate < 0 ? null : fireRate,
         range(text(item.get("range"))), orNone(text(item.get("qual"))), null);
@@ -173,24 +172,12 @@ final class LegacyWeaponImport {
     return effects.replace(" ", "").toLowerCase(Locale.ROOT);
   }
 
-  /** A whole number from a number or a numeric text, also written with decimals (16.0); {@code null} otherwise. */
-  private static @Nullable Integer integer(@Nullable JsonNode node) {
-    if (node == null || node.isNull()) {
-      return null;
-    }
-    try {
-      return (node.isNumber() ? node.decimalValue() : new BigDecimal(node.asText().strip())).intValueExact();
-    } catch (NumberFormatException | ArithmeticException e) {
-      return null;
-    }
-  }
-
   private static @NonNull String ammunitionName(@NonNull String id) {
     return WeaponCatalog.ammunitionById(id).map(AmmunitionData::name).orElse(id);
   }
 
   private static int nonNegative(@Nullable JsonNode node) {
-    Integer value = integer(node);
+    Integer value = LegacyNumbers.integer(node);
     return value == null || value < 0 ? 0 : value;
   }
 

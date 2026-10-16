@@ -12,6 +12,8 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -39,8 +41,8 @@ import org.jspecify.annotations.Nullable;
  * <p>Origin and trait effects (attribute modifiers, origin Tag skills, Gifted) are applied only to
  * characters without a legacy baseline: an imported baseline already contains them. Origin, origin
  * choices, traits, attribute allocation, free Tags, bought skill ranks and the starting equipment can
- * only be changed while creation is not complete; the inventory notes, weapons and ammunition can always
- * be edited.
+ * only be changed while creation is not complete; the inventory notes, weapons, ammunition and apparel can
+ * always be edited.
  *
  * <p>After creation the character advances (CRB p. 49): XP and levels grant skill ranks and perks,
  * which are first staged (they count everywhere but can be taken back) and then applied.
@@ -61,6 +63,9 @@ public class Character {
 
   /** CRB p. 58: from this starting level on, the creation cap of rank 3 no longer applies. */
   private static final int FULL_SKILL_RANKS_FROM_LEVEL = 3;
+
+  /** The only origin of the Core Rulebook with its own hit locations (CRB p. 146). */
+  private static final @NonNull String MISTER_HANDY = "mister-handy";
 
   private String name;
   private @Nullable CatalogRef origin;
@@ -86,6 +91,7 @@ public class Character {
   private final List<CarriedWeapon> weapons;
   /** Shots per ammunition id (CRB p. 91: counted per type, shared by all weapons using it); only counts above 0. */
   private final Map<String, Integer> ammunition;
+  private final List<WornApparel> apparel;
 
   /**
    * Creates a character from stored parts without starting equipment and inventory notes – a test
@@ -110,7 +116,7 @@ public class Character {
       @Nullable LegacyImport legacyImport) {
     this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
         skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
-        null, null, List.of(), Map.of());
+        null, null, List.of(), Map.of(), List.of());
   }
 
   /**
@@ -125,6 +131,7 @@ public class Character {
    *     (see {@link #getStartingTagSkills()})
    * @param weapons the carried weapons
    * @param ammunition shots per ammunition id; counts of 0 are dropped
+   * @param apparel the worn clothing, armor and robot armor
    */
   public Character(
       @NonNull String name,
@@ -147,7 +154,8 @@ public class Character {
       @Nullable Integer startingLevel,
       @Nullable Set<Skill> startingTagSkills,
       @NonNull List<CarriedWeapon> weapons,
-      @NonNull Map<String, Integer> ammunition) {
+      @NonNull Map<String, Integer> ammunition,
+      @NonNull List<WornApparel> apparel) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
     }
@@ -194,6 +202,7 @@ public class Character {
         this.ammunition.put(id, shots);
       }
     });
+    this.apparel = new ArrayList<>(apparel);
   }
 
   /** A new, empty character at the start of character creation. */
@@ -757,6 +766,42 @@ public class Character {
   /** Shots per ammunition id, only types with shots. */
   public @NonNull Map<String, Integer> getAmmunition() {
     return Collections.unmodifiableMap(ammunition);
+  }
+
+  /**
+   * The hit locations of this character: those of a Mister Handy (CRB p. 146) for that origin, else the
+   * six humanoid ones (CRB p. 28). Robots of other books get theirs with their origins.
+   */
+  public @NonNull List<HitLocation> hitLocations() {
+    return origin != null && origin.id().equals(MISTER_HANDY) ? HitLocation.misterHandy() : HitLocation.humanoid();
+  }
+
+  /** Puts on an item (any mode: apparel is found, bought and changed at any time). */
+  public void addApparel(@NonNull WornApparel item) {
+    apparel.add(item);
+  }
+
+  /**
+   * Takes off the item at the index.
+   *
+   * @throws IndexOutOfBoundsException if there is no item at the index
+   */
+  public void removeApparel(int index) {
+    apparel.remove(index);
+  }
+
+  /** The limb a single-limb piece is worn on (left/right arm or leg, robot arm 1–3); checked by the rules. */
+  public void setApparelLocation(int index, @Nullable HitLocation location) {
+    apparel.set(index, apparel.get(index).withLocation(location));
+  }
+
+  /** Free note of the item at the index, e.g. installed mods. */
+  public void setApparelNotes(int index, @Nullable String notes) {
+    apparel.set(index, apparel.get(index).withNotes(notes));
+  }
+
+  public @NonNull List<WornApparel> getApparel() {
+    return List.copyOf(apparel);
   }
 
   /** The catalog entry of the chosen equipment pack; empty without pack or for an unknown one. */

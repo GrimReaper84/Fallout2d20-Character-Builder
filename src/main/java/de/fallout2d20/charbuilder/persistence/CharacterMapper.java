@@ -15,6 +15,8 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -82,6 +84,7 @@ final class CharacterMapper {
         character.getInventoryNotes().isBlank() ? null : character.getInventoryNotes(),
         character.getWeapons().isEmpty() ? null : character.getWeapons().stream().map(CharacterMapper::toData).toList(),
         character.getAmmunition().isEmpty() ? null : new LinkedHashMap<>(character.getAmmunition()),
+        character.getApparel().isEmpty() ? null : character.getApparel().stream().map(CharacterMapper::toData).toList(),
         toData(character.getLegacyBaseline()),
         legacyImport == null ? null : new LegacyImportData(legacyImport.sourceSchemaVersion(),
             legacyImport.importedOn(), legacyImport.payload()));
@@ -148,7 +151,8 @@ final class CharacterMapper {
           data.startingLevel(),
           startingTagSkills(data.startingTagSkills()),
           weapons(data.weapons()),
-          data.ammunition() == null ? Map.of() : data.ammunition());
+          data.ammunition() == null ? Map.of() : data.ammunition(),
+          apparel(data.apparel()));
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
@@ -192,6 +196,32 @@ final class CharacterMapper {
     return new CustomWeapon(data.name(), skill == null ? null : skill(skill), data.damage(),
         nullToEmpty(data.effects()), nullToEmpty(data.damageType()), data.fireRate(), data.range(),
         nullToEmpty(data.qualities()), data.ammunition());
+  }
+
+  private static @NonNull WornApparelData toData(@NonNull WornApparel item) {
+    CatalogRef ref = item.apparel();
+    CustomApparel custom = item.custom();
+    CustomApparelData customData = custom == null ? null : new CustomApparelData(custom.name(), custom.kind(),
+        custom.locations().stream().sorted().toList(), custom.physical(), custom.energy(), custom.radiation(),
+        custom.radiationImmune(), custom.carryWeight());
+    return new WornApparelData(ref == null ? null : toData(ref), customData, item.location(), blankToNull(item.notes()));
+  }
+
+  private static @NonNull List<WornApparel> apparel(@Nullable List<WornApparelData> entries) throws SaveFormatException {
+    List<WornApparel> apparel = new ArrayList<>();
+    for (WornApparelData entry : orEmpty(entries)) {
+      CatalogRefData ref = entry.ref();
+      CustomApparelData custom = entry.custom();
+      String notes = entry.notes();
+      apparel.add(new WornApparel(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
+          entry.location(), notes == null ? "" : notes));
+    }
+    return apparel;
+  }
+
+  private static @NonNull CustomApparel toModel(@NonNull CustomApparelData data) {
+    return new CustomApparel(data.name(), data.kind(), Set.copyOf(data.locations()), data.physical(), data.energy(),
+        data.radiation(), data.radiationImmune(), data.carryWeight());
   }
 
   private static @Nullable String blankToNull(@NonNull String text) {

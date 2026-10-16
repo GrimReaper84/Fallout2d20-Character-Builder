@@ -36,5 +36,6 @@ public record CharacterData(
     @Nullable String inventoryNotes,
     @Nullable List<WeaponEntryData> weapons,
     @Nullable Map<String, Integer> ammunition,
+    @Nullable List<WornApparelData> apparel,
     @Nullable LegacyBaselineData legacyBaseline,
     @Nullable LegacyImportData legacyImport) {}

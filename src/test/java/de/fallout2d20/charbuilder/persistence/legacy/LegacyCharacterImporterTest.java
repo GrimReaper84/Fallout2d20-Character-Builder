@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -20,6 +21,9 @@ import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -35,6 +39,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class LegacyCharacterImporterTest {
@@ -90,8 +95,7 @@ class LegacyCharacterImporterTest {
     assertNotNull(legacy);
     assertEquals(2, legacy.sourceSchemaVersion());
     assertEquals("2026-10-15", legacy.importedOn());
-    assertTrue(legacy.payload().has("armor"));
-    for (String field : List.of("equipment", "equipmentPack", "trinket", "originOptions", "weapons")) {
+    for (String field : List.of("equipment", "equipmentPack", "trinket", "originOptions", "weapons", "armor")) {
       assertFalse(legacy.payload().has(field), field + " is imported");
     }
     assertFalse(legacy.payload().has("derived"), "derived values are recomputed, not kept");
@@ -134,6 +138,44 @@ class LegacyCharacterImporterTest {
     assertTrue(result.importReport().warnings().stream()
         .anyMatch(warning -> warning.message().contains("Fusion Core")));
     assertFalse(result.importReport().hasWarnings());
+  }
+
+  /** The hand-typed DR per location becomes one custom item per location with a value (user decision). */
+  @Test
+  void legacyArmorValuesBecomeCustomItems() throws Exception {
+    ObjectNode root = minimal();
+    ObjectNode armor = root.putObject("armor");
+    armor.putObject("Head").put("physical", 2).put("energy", 1).put("radiation", 0);
+    armor.putObject("Torso").put("physical", 0).put("energy", 0).put("radiation", 0);
+    armor.putObject("Tail").put("physical", 1);
+    CharacterFile result = importer.importCharacter(root);
+
+    List<WornApparel> apparel = result.character().getApparel();
+    assertEquals(1, apparel.size());
+    assertEquals(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR, Set.of(HitLocation.HEAD), 2, 1, 0,
+        false, 0), apparel.get(0).custom());
+    assertTrue(result.character().getLegacyImport().payload().has("unknownArmorLocations"));
+    assertTrue(result.importReport().hasWarnings());
+  }
+
+  /** A Mister Handy location of the legacy map becomes plating for that location (CRB p. 146). */
+  @Test
+  void legacyRobotLocationsBecomePlating() throws Exception {
+    ObjectNode root = minimal();
+    root.putObject("armor").putObject("Optics").put("physical", "2").put("energy", 1.0);
+    CustomApparel optics = importer.importCharacter(root).character().getApparel().get(0).custom();
+    assertEquals(new CustomApparel("Legacy armor (Optics)", ApparelKind.ROBOT_PLATING, Set.of(HitLocation.OPTICS),
+        2, 1, 0, false, 0), optics);
+  }
+
+  @Test
+  void armorThatIsNotAMapStaysInThePayload() throws Exception {
+    ObjectNode root = minimal();
+    root.put("armor", "leather");
+    CharacterFile result = importer.importCharacter(root);
+    assertTrue(result.character().getApparel().isEmpty());
+    assertEquals("leather", result.character().getLegacyImport().payload().get("armor").asText());
+    assertTrue(result.importReport().hasWarnings());
   }
 
   @Test

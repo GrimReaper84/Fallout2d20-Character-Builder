@@ -97,6 +97,7 @@ final class LegacyImportRun {
     StartingEquipment startingEquipment = equipment.startingEquipment(origin);
     String inventoryNotes = equipment.inventoryNotes();
     LegacyWeaponImport weapons = new LegacyWeaponImport(payload, warnings);
+    LegacyArmorImport armor = new LegacyArmorImport(payload, warnings);
     reportKeptFields(kept);
     // Legacy saves know no book selection: all supported books are enabled. The imported Tags count as
     // the starting Tag skills (a legacy Tag! taken after creation cannot be told apart).
@@ -110,7 +111,8 @@ final class LegacyImportRun {
         EnumSet.allOf(Book.class), Map.of(), skillStates, traits, perks, progression, vitals,
         new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload),
-        startingEquipment, inventoryNotes, null, startingTags, weapons.weapons(), weapons.ammunition());
+        startingEquipment, inventoryNotes, null, startingTags, weapons.weapons(), weapons.ammunition(),
+        armor.apparel());
     compareDerived(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
   }

@@ -34,7 +34,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Overview of a character. Only the name, the inventory notes, weapons, ammunition and, during creation, origin, traits,
+ * Overview of a character. Only the name, the inventory notes, weapons, ammunition, apparel and, during creation, origin, traits,
  * starting level, S.P.E.C.I.A.L. allocation, skills, perks and starting equipment can be edited; after
  * creation XP and levels, and while points are left or choices staged, skill ranks and perks. After
  * every change the overview is rebuilt by the caller, so all values stay current.
@@ -48,7 +48,8 @@ final class CharacterOverview {
   private static final String UNRESOLVED_TOOLTIP =
       "Not yet checked against the rulebooks (shown with its legacy name).";
   private static final String HINT_STYLE = "-fx-text-fill: #a35200;";
-  private static final String RESISTANCE_TOOLTIP = "Innate resistance from origin and perks; armor is not included.";
+  private static final String RESISTANCE_TOOLTIP =
+      "Innate resistance from origin and perks; with apparel see Damage resistance under Apparel.";
   private static final String PHYSICAL_RESISTANCE_TOOLTIP =
       RESISTANCE_TOOLTIP + " A Barbarian bonus does not apply while wearing Power Armor.";
 
@@ -156,6 +157,8 @@ final class CharacterOverview {
     EquipmentSection.addTo(pane, character, onEdited, onChanged);
     heading(pane, "Weapons");
     WeaponSection.addTo(pane, character, onEdited, onChanged);
+    heading(pane, "Apparel");
+    ApparelSection.addTo(pane, character, onEdited, onChanged);
     if (!character.isCreationComplete()) {
       addCreateButton(pane, onComplete);
     }
@@ -173,8 +176,7 @@ final class CharacterOverview {
     LegacyImport legacy = character.getLegacyImport();
     if (legacy != null) {
       heading(pane, "Legacy data (imported " + legacy.importedOn() + ")");
-      pane.add(new Label("Armor values are kept for a later feature; the equipment text is in "
-          + "the inventory notes."), "span 4");
+      pane.add(new Label("The equipment text is in the inventory notes."), "span 4");
     }
     return pane;
   }

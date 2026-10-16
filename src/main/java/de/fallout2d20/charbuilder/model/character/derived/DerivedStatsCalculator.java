@@ -6,6 +6,8 @@ import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.apparel.ApparelValues;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -69,15 +71,29 @@ final class DerivedStatsCalculator {
     return character.attributeValue(Attribute.AGILITY) >= 9 ? 2 : 1;
   }
 
-  /** CRB p. 47, 74: 150 + 10 × STR; Small Frame 5 × STR (CRB p. 56); Strong Back +25 per rank (CRB p. 73). */
+  /**
+   * CRB p. 47, 74: 150 + 10 × STR; Small Frame 5 × STR (CRB p. 56); Strong Back +25 per rank (CRB p. 73).
+   * A fixed carry weight (Mister Handy) changes with robot plating and armor (CRB p. 146).
+   */
   private static int carryWeight(@NonNull Character character, @Nullable OriginData origin) {
     if (origin != null && origin.fixedCarryWeight() != null) {
-      return origin.fixedCarryWeight();
+      return origin.fixedCarryWeight() + robotArmorCarryWeight(character);
     }
     int perStrength = traits(character).stream().map(TraitDefinition::carryWeightPerStrength)
         .filter(Objects::nonNull).min(Integer::compare).orElse(CARRY_PER_STRENGTH);
     return CARRY_BASE + perStrength * character.attributeValue(Attribute.STRENGTH)
         + character.perkEffect(PerkDefinition::carryWeightPerRank);
+  }
+
+  /**
+   * CRB p. 146: robot plating and armor change a robot's carry weight. Only items that cover a location
+   * count (an arm piece once its arm is chosen); two items on one location both count, the apparel hints
+   * name that conflict.
+   */
+  private static int robotArmorCarryWeight(@NonNull Character character) {
+    return character.getApparel().stream().filter(item -> !item.locations().isEmpty())
+        .map(WornApparel::values).flatMap(Optional::stream)
+        .filter(values -> values.kind().isRobot()).mapToInt(ApparelValues::carryWeight).sum();
   }
 
   /** CRB p. 47: STR 7–8 +1, 9–10 +2, 11+ +3 Combat Dice; Heavy Handed +1 (CRB p. 56). */

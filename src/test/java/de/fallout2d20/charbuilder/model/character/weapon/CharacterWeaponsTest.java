@@ -92,6 +92,6 @@ class CharacterWeaponsTest {
   private static Character create(Map<String, Integer> ammunition) {
     return new Character("Test", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class), Map.of(),
         Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        null, null, List.of(), ammunition);
+        null, null, List.of(), ammunition, List.of());
   }
 }

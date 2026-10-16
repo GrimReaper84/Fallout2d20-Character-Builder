@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -21,6 +22,9 @@ import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -36,8 +40,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.OptionalInt;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -295,6 +299,19 @@ class CharacterStoreTest {
     assertEquals(Map.of("10mm", 34), loaded.getAmmunition());
   }
 
+  /** Catalog item with chosen limb and note, and a custom item (C2). */
+  @Test
+  void roundTripsApparel() throws Exception {
+    Character character = Character.createNew();
+    character.addApparel(WornApparel.of(CatalogRef.of("raider-arm")).withLocation(HitLocation.LEFT_ARM)
+        .withNotes("Studded"));
+    character.addApparel(WornApparel.of(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR,
+        Set.of(HitLocation.HEAD), 3, 2, 0, false, 0)));
+    Path file = dir.resolve("apparel.json");
+    store.save(character, file);
+    assertEquals(character.getApparel(), store.load(file).character().getApparel());
+  }
+
   @Test
   void characterInCreationWritesNoStartingTagSkills() throws Exception {
     Character character = Character.createNew();
@@ -311,7 +328,7 @@ class CharacterStoreTest {
         null, false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "", null, null, List.of(), Map.of());
+        null, null, settler, "", null, null, List.of(), Map.of(), List.of());
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());

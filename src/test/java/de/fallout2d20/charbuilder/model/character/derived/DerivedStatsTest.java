@@ -13,6 +13,8 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
@@ -191,5 +193,20 @@ class DerivedStatsTest {
 
   private static TestCharacterBuilder builder() {
     return new TestCharacterBuilder();
+  }
+
+  /** CRB p. 54, 146: fixed 150 lbs., Mister Gutsy Plating −10, Factory Storage Armor +20; an arm piece counts once its arm is chosen. */
+  @Test
+  void robotArmorChangesTheMisterHandyCarryWeight() {
+    Character handy = Character.createNew();
+    handy.chooseOrigin(CatalogRef.of("mister-handy"));
+    handy.addApparel(WornApparel.of(CatalogRef.of("mister-gutsy-plating")));
+    assertEquals(140, DerivedStats.of(handy).carryWeight());
+    handy.addApparel(WornApparel.of(CatalogRef.of("factory-storage-armor-main-body")));
+    assertEquals(160, DerivedStats.of(handy).carryWeight());
+    handy.addApparel(WornApparel.of(CatalogRef.of("primal-plate-arms")));
+    assertEquals(160, DerivedStats.of(handy).carryWeight(), "no arm chosen yet");
+    handy.setApparelLocation(2, HitLocation.ARM_2);
+    assertEquals(150, DerivedStats.of(handy).carryWeight());
   }
 }

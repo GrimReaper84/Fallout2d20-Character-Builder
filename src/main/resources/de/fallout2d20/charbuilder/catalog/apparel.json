@@ -1,0 +1,2314 @@
+[
+  {
+    "id": "brotherhood-of-steel-uniform",
+    "name": "Brotherhood of Steel Uniform",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "radiation": 1,
+    "weight": "2",
+    "cost": 20,
+    "rarity": 2
+  },
+  {
+    "id": "casual-clothing",
+    "name": "Casual Clothing",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "weight": "2",
+    "cost": 20,
+    "rarity": 1
+  },
+  {
+    "id": "harness",
+    "name": "Harness",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "weight": "1",
+    "cost": 5,
+    "rarity": 0
+  },
+  {
+    "id": "military-fatigues",
+    "name": "Military Fatigues",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 1,
+    "weight": "3",
+    "cost": 12,
+    "rarity": 1
+  },
+  {
+    "id": "road-leathers",
+    "name": "Road Leathers",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "weight": "1",
+    "cost": 5,
+    "rarity": 1
+  },
+  {
+    "id": "tough-clothing",
+    "name": "Tough Clothing",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "weight": "3",
+    "cost": 20,
+    "rarity": 1
+  },
+  {
+    "id": "vault-jumpsuit",
+    "name": "Vault Jumpsuit",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "CLOTHING",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 1,
+    "radiation": 2,
+    "weight": "1",
+    "cost": 20,
+    "rarity": 2
+  },
+  {
+    "id": "brotherhood-of-steel-fatigues",
+    "name": "Brotherhood of Steel Fatigues",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "radiation": 2,
+    "weight": "4",
+    "cost": 20,
+    "rarity": 3
+  },
+  {
+    "id": "brotherhood-scribes-armor",
+    "name": "Brotherhood Scribe’s Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 2,
+    "radiation": 2,
+    "weight": "4",
+    "cost": 20,
+    "rarity": 2
+  },
+  {
+    "id": "cage-armor",
+    "name": "Cage Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "HEAD",
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "33",
+    "cost": 110,
+    "rarity": 3
+  },
+  {
+    "id": "drifter-outfit",
+    "name": "Drifter Outfit",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 2,
+    "weight": "10",
+    "cost": 35,
+    "rarity": 1
+  },
+  {
+    "id": "engineers-armor",
+    "name": "Engineer’s Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "weight": "2",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "formal-clothing",
+    "name": "Formal Clothing",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "weight": "2",
+    "cost": 30,
+    "rarity": 2
+  },
+  {
+    "id": "hazmat-suit",
+    "name": "Hazmat Suit",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "HEAD",
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "radiationImmune": true,
+    "weight": "5",
+    "cost": 85,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-coat",
+    "name": "Heavy Coat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "radiation": 1,
+    "weight": "2",
+    "cost": 20,
+    "rarity": 1
+  },
+  {
+    "id": "hides",
+    "name": "Hides",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 0,
+    "weight": "4",
+    "cost": 13,
+    "rarity": 0
+  },
+  {
+    "id": "lab-coat",
+    "name": "Lab Coat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "weight": "2",
+    "cost": 10,
+    "rarity": 1
+  },
+  {
+    "id": "spike-armor",
+    "name": "Spike Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "HEAD",
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "17",
+    "cost": 65,
+    "rarity": 2
+  },
+  {
+    "id": "utility-coveralls",
+    "name": "Utility Coveralls",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "OUTFIT",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "weight": "2",
+    "cost": 12,
+    "rarity": 1
+  },
+  {
+    "id": "army-helmet",
+    "name": "Army Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "weight": "3",
+    "cost": 20,
+    "rarity": 1
+  },
+  {
+    "id": "brotherhood-of-steel-hood",
+    "name": "Brotherhood of Steel Hood",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 0,
+    "energy": 1,
+    "weight": "<1",
+    "cost": 12,
+    "rarity": 2
+  },
+  {
+    "id": "brotherhood-scribes-hat",
+    "name": "Brotherhood Scribe’s Hat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 0,
+    "energy": 2,
+    "weight": "<1",
+    "cost": 8,
+    "rarity": 2
+  },
+  {
+    "id": "casual-hat",
+    "name": "Casual Hat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 124
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "weight": "<1",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "formal-hat",
+    "name": "Formal Hat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 125
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "weight": "<1",
+    "cost": 15,
+    "rarity": 2
+  },
+  {
+    "id": "gas-mask",
+    "name": "Gas Mask",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 125
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 1,
+    "energy": 0,
+    "radiation": 3,
+    "weight": "3",
+    "cost": 10,
+    "rarity": 2
+  },
+  {
+    "id": "hard-hat",
+    "name": "Hard Hat",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 125
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "weight": "<1",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "hood-or-cowl",
+    "name": "Hood or Cowl",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 125
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 1,
+    "energy": 0,
+    "radiation": 1,
+    "weight": "2",
+    "cost": 5,
+    "rarity": 1
+  },
+  {
+    "id": "sack-hood",
+    "name": "Sack Hood",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 125
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 0,
+    "energy": 0,
+    "radiation": 2,
+    "weight": "1",
+    "cost": 5,
+    "rarity": 0
+  },
+  {
+    "id": "welders-visor",
+    "name": "Welder’s Visor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 125
+      }
+    ],
+    "kind": "HEADGEAR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "4",
+    "cost": 20,
+    "rarity": 2
+  },
+  {
+    "id": "raider-chest-piece",
+    "name": "Raider Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "weight": "7",
+    "cost": 18,
+    "rarity": 0
+  },
+  {
+    "id": "raider-leg",
+    "name": "Raider Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "weight": "3",
+    "cost": 8,
+    "rarity": 0
+  },
+  {
+    "id": "raider-arm",
+    "name": "Raider Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "weight": "3",
+    "cost": 6,
+    "rarity": 0
+  },
+  {
+    "id": "sturdy-raider-chest-piece",
+    "name": "Sturdy Raider Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "12",
+    "cost": 33,
+    "rarity": 1
+  },
+  {
+    "id": "sturdy-raider-leg",
+    "name": "Sturdy Raider Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "7",
+    "cost": 13,
+    "rarity": 1
+  },
+  {
+    "id": "sturdy-raider-arm",
+    "name": "Sturdy Raider Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "7",
+    "cost": 8,
+    "rarity": 1
+  },
+  {
+    "id": "heavy-raider-chest-piece",
+    "name": "Heavy Raider Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "17",
+    "cost": 48,
+    "rarity": 2
+  },
+  {
+    "id": "heavy-raider-leg",
+    "name": "Heavy Raider Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "10",
+    "cost": 18,
+    "rarity": 2
+  },
+  {
+    "id": "heavy-raider-arm",
+    "name": "Heavy Raider Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "10",
+    "cost": 15,
+    "rarity": 2
+  },
+  {
+    "id": "leather-chest-piece",
+    "name": "Leather Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 1,
+    "energy": 2,
+    "weight": "5",
+    "cost": 25,
+    "rarity": 1
+  },
+  {
+    "id": "leather-leg",
+    "name": "Leather Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 1,
+    "energy": 2,
+    "weight": "2",
+    "cost": 10,
+    "rarity": 1
+  },
+  {
+    "id": "leather-arm",
+    "name": "Leather Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 1,
+    "energy": 2,
+    "weight": "2",
+    "cost": 8,
+    "rarity": 1
+  },
+  {
+    "id": "sturdy-leather-chest-piece",
+    "name": "Sturdy Leather Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "10",
+    "cost": 50,
+    "rarity": 2
+  },
+  {
+    "id": "sturdy-leather-leg",
+    "name": "Sturdy Leather Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "5",
+    "cost": 20,
+    "rarity": 2
+  },
+  {
+    "id": "sturdy-leather-arm",
+    "name": "Sturdy Leather Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "5",
+    "cost": 18,
+    "rarity": 2
+  },
+  {
+    "id": "heavy-leather-chest-piece",
+    "name": "Heavy Leather Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "15",
+    "cost": 75,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-leather-leg",
+    "name": "Heavy Leather Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "7",
+    "cost": 30,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-leather-arm",
+    "name": "Heavy Leather Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 130
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "7",
+    "cost": 28,
+    "rarity": 3
+  },
+  {
+    "id": "metal-helmet",
+    "name": "Metal Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 1,
+    "weight": "3",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "metal-chest-piece",
+    "name": "Metal Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 1,
+    "weight": "6",
+    "cost": 40,
+    "rarity": 1
+  },
+  {
+    "id": "metal-leg",
+    "name": "Metal Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 2,
+    "energy": 1,
+    "weight": "3",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "metal-arm",
+    "name": "Metal Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 2,
+    "energy": 1,
+    "weight": "3",
+    "cost": 15,
+    "rarity": 1
+  },
+  {
+    "id": "sturdy-metal-helmet",
+    "name": "Sturdy Metal Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 3,
+    "energy": 2,
+    "weight": "8",
+    "cost": 65,
+    "rarity": 2
+  },
+  {
+    "id": "sturdy-metal-chest-piece",
+    "name": "Sturdy Metal Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 3,
+    "energy": 2,
+    "weight": "16",
+    "cost": 115,
+    "rarity": 2
+  },
+  {
+    "id": "sturdy-metal-leg",
+    "name": "Sturdy Metal Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 3,
+    "energy": 2,
+    "weight": "8",
+    "cost": 65,
+    "rarity": 2
+  },
+  {
+    "id": "sturdy-metal-arm",
+    "name": "Sturdy Metal Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 3,
+    "energy": 2,
+    "weight": "8",
+    "cost": 65,
+    "rarity": 2
+  },
+  {
+    "id": "heavy-metal-helmet",
+    "name": "Heavy Metal Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 4,
+    "energy": 3,
+    "weight": "12",
+    "cost": 115,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-metal-chest-piece",
+    "name": "Heavy Metal Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 4,
+    "energy": 3,
+    "weight": "23",
+    "cost": 190,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-metal-leg",
+    "name": "Heavy Metal Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 4,
+    "energy": 3,
+    "weight": "12",
+    "cost": 115,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-metal-arm",
+    "name": "Heavy Metal Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 4,
+    "energy": 3,
+    "weight": "12",
+    "cost": 115,
+    "rarity": 3
+  },
+  {
+    "id": "combat-helmet",
+    "name": "Combat Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "4",
+    "cost": 25,
+    "rarity": 2
+  },
+  {
+    "id": "combat-chest-piece",
+    "name": "Combat Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "8",
+    "cost": 60,
+    "rarity": 2
+  },
+  {
+    "id": "combat-leg",
+    "name": "Combat Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "2",
+    "cost": 25,
+    "rarity": 2
+  },
+  {
+    "id": "combat-arm",
+    "name": "Combat Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "weight": "2",
+    "cost": 25,
+    "rarity": 2
+  },
+  {
+    "id": "sturdy-combat-helmet",
+    "name": "Sturdy Combat Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "5",
+    "cost": 105,
+    "rarity": 3
+  },
+  {
+    "id": "sturdy-combat-chest-piece",
+    "name": "Sturdy Combat Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "12",
+    "cost": 140,
+    "rarity": 3
+  },
+  {
+    "id": "sturdy-combat-leg",
+    "name": "Sturdy Combat Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "5",
+    "cost": 105,
+    "rarity": 3
+  },
+  {
+    "id": "sturdy-combat-arm",
+    "name": "Sturdy Combat Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "weight": "5",
+    "cost": 105,
+    "rarity": 3
+  },
+  {
+    "id": "heavy-combat-helmet",
+    "name": "Heavy Combat Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 4,
+    "energy": 4,
+    "weight": "7",
+    "cost": 185,
+    "rarity": 4
+  },
+  {
+    "id": "heavy-combat-chest-piece",
+    "name": "Heavy Combat Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 4,
+    "energy": 4,
+    "weight": "16",
+    "cost": 220,
+    "rarity": 4
+  },
+  {
+    "id": "heavy-combat-leg",
+    "name": "Heavy Combat Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 4,
+    "energy": 4,
+    "weight": "7",
+    "cost": 185,
+    "rarity": 4
+  },
+  {
+    "id": "heavy-combat-arm",
+    "name": "Heavy Combat Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 131
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 4,
+    "energy": 4,
+    "weight": "7",
+    "cost": 145,
+    "rarity": 4
+  },
+  {
+    "id": "synth-helmet",
+    "name": "Synth Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "3",
+    "cost": 33,
+    "rarity": 3
+  },
+  {
+    "id": "synth-chest-piece",
+    "name": "Synth Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "7",
+    "cost": 75,
+    "rarity": 3
+  },
+  {
+    "id": "synth-leg",
+    "name": "Synth Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "3",
+    "cost": 30,
+    "rarity": 3
+  },
+  {
+    "id": "synth-arm",
+    "name": "Synth Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 2,
+    "energy": 3,
+    "weight": "3",
+    "cost": 30,
+    "rarity": 4
+  },
+  {
+    "id": "sturdy-synth-helmet",
+    "name": "Sturdy Synth Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "7",
+    "cost": 70,
+    "rarity": 4
+  },
+  {
+    "id": "sturdy-synth-chest-piece",
+    "name": "Sturdy Synth Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "12",
+    "cost": 125,
+    "rarity": 4
+  },
+  {
+    "id": "sturdy-synth-leg",
+    "name": "Sturdy Synth Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "7",
+    "cost": 80,
+    "rarity": 4
+  },
+  {
+    "id": "sturdy-synth-arm",
+    "name": "Sturdy Synth Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 3,
+    "energy": 4,
+    "weight": "7",
+    "cost": 70,
+    "rarity": 4
+  },
+  {
+    "id": "heavy-synth-helmet",
+    "name": "Heavy Synth Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 4,
+    "energy": 5,
+    "weight": "10",
+    "cost": 110,
+    "rarity": 5
+  },
+  {
+    "id": "heavy-synth-chest-piece",
+    "name": "Heavy Synth Chest Piece",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "TORSO"
+    ],
+    "physical": 4,
+    "energy": 5,
+    "weight": "17",
+    "cost": 175,
+    "rarity": 5
+  },
+  {
+    "id": "heavy-synth-leg",
+    "name": "Heavy Synth Leg",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "LEG"
+    ],
+    "physical": 4,
+    "energy": 5,
+    "weight": "10",
+    "cost": 130,
+    "rarity": 5
+  },
+  {
+    "id": "heavy-synth-arm",
+    "name": "Heavy Synth Arm",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARM"
+    ],
+    "physical": 4,
+    "energy": 5,
+    "weight": "10",
+    "cost": 110,
+    "rarity": 5
+  },
+  {
+    "id": "vault-tec-security-helmet",
+    "name": "Vault-Tec Security Helmet",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "HEAD"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "weight": "2",
+    "cost": 20,
+    "rarity": 1
+  },
+  {
+    "id": "vault-tec-security-armor",
+    "name": "Vault-Tec Security Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 132
+      }
+    ],
+    "kind": "ARMOR",
+    "coverage": [
+      "ARMS",
+      "LEGS",
+      "TORSO"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "radiation": 2,
+    "weight": "8",
+    "cost": 16,
+    "rarity": 1
+  },
+  {
+    "id": "standard-plating",
+    "name": "Standard Plating",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_PLATING",
+    "coverage": [
+      "ALL"
+    ],
+    "physical": 2,
+    "energy": 0
+  },
+  {
+    "id": "mister-gutsy-plating",
+    "name": "Mister Gutsy Plating",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_PLATING",
+    "coverage": [
+      "ALL"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "carryWeight": -10
+  },
+  {
+    "id": "factory-armor-optics",
+    "name": "Factory Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 10
+  },
+  {
+    "id": "factory-armor-main-body",
+    "name": "Factory Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 20
+  },
+  {
+    "id": "factory-armor-arms",
+    "name": "Factory Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 10
+  },
+  {
+    "id": "factory-armor-thruster",
+    "name": "Factory Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 10
+  },
+  {
+    "id": "factory-storage-armor-main-body",
+    "name": "Factory Storage Armor",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 25,
+    "carryWeight": 20,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "primal-plate-optics",
+    "name": "Primal Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 10,
+    "carryWeight": -10
+  },
+  {
+    "id": "primal-plate-main-body",
+    "name": "Primal Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 20,
+    "carryWeight": -20
+  },
+  {
+    "id": "primal-plate-arms",
+    "name": "Primal Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 10,
+    "carryWeight": -10
+  },
+  {
+    "id": "primal-plate-thruster",
+    "name": "Primal Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 10,
+    "carryWeight": -10
+  },
+  {
+    "id": "serrated-plate-optics",
+    "name": "Serrated Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "serrated-plate-main-body",
+    "name": "Serrated Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 30,
+    "carryWeight": -20,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "serrated-plate-arms",
+    "name": "Serrated Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "serrated-plate-thruster",
+    "name": "Serrated Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "noxious-plate-optics",
+    "name": "Noxious Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "noxious-plate-main-body",
+    "name": "Noxious Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 30,
+    "carryWeight": -20,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "noxious-plate-arms",
+    "name": "Noxious Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "noxious-plate-thruster",
+    "name": "Noxious Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 1"
+  },
+  {
+    "id": "toxic-plate-optics",
+    "name": "Toxic Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "toxic-plate-main-body",
+    "name": "Toxic Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 30,
+    "carryWeight": -20,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "toxic-plate-arms",
+    "name": "Toxic Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "toxic-plate-thruster",
+    "name": "Toxic Plate",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 2,
+    "energy": 0,
+    "cost": 15,
+    "carryWeight": -10,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "actuated-frame-optics",
+    "name": "Actuated Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 15,
+    "carryWeight": 10
+  },
+  {
+    "id": "actuated-frame-main-body",
+    "name": "Actuated Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 30,
+    "carryWeight": 20
+  },
+  {
+    "id": "actuated-frame-arms",
+    "name": "Actuated Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 146
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 15,
+    "carryWeight": 10
+  },
+  {
+    "id": "actuated-frame-thruster",
+    "name": "Actuated Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 1,
+    "energy": 1,
+    "cost": 15,
+    "carryWeight": 10
+  },
+  {
+    "id": "voltaic-frame-optics",
+    "name": "Voltaic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "cost": 20,
+    "carryWeight": 10,
+    "perk": "Armorer 2"
+  },
+  {
+    "id": "voltaic-frame-main-body",
+    "name": "Voltaic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "cost": 40,
+    "carryWeight": 20,
+    "perk": "Armorer 2"
+  },
+  {
+    "id": "voltaic-frame-arms",
+    "name": "Voltaic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "cost": 20,
+    "carryWeight": 10,
+    "perk": "Armorer 2"
+  },
+  {
+    "id": "voltaic-frame-thruster",
+    "name": "Voltaic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 2,
+    "energy": 2,
+    "cost": 20,
+    "carryWeight": 10,
+    "perk": "Armorer 2"
+  },
+  {
+    "id": "hydraulic-frame-optics",
+    "name": "Hydraulic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "OPTICS"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "cost": 30,
+    "carryWeight": 5,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "hydraulic-frame-main-body",
+    "name": "Hydraulic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "MAIN_BODY"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "cost": 60,
+    "carryWeight": 10,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "hydraulic-frame-arms",
+    "name": "Hydraulic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "ROBOT_ARM"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "cost": 30,
+    "carryWeight": 5,
+    "perk": "Armorer 3"
+  },
+  {
+    "id": "hydraulic-frame-thruster",
+    "name": "Hydraulic Frame",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 147
+      }
+    ],
+    "kind": "ROBOT_ARMOR",
+    "coverage": [
+      "THRUSTER"
+    ],
+    "physical": 3,
+    "energy": 3,
+    "cost": 30,
+    "carryWeight": 5,
+    "perk": "Armorer 3"
+  }
+]
