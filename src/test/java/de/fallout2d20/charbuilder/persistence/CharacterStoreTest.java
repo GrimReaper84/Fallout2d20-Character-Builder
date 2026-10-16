@@ -65,6 +65,8 @@ class CharacterStoreTest {
     character.addItem(CarriedItem.of(CatalogRef.of("tumblers-today")).withIssue("Open Any Lock in 5 Seconds Flat"));
     character.addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "Cute")));
     character.setCaps(123);
+    character.addApparel(WornApparel.of(CatalogRef.of("tough-clothing")));
+    character.addApparel(WornApparel.of(CatalogRef.of("drifter-outfit")));
     character.setMaterials(new Materials(3, 2, 1, 0));
     Path file = dir.resolve("inventory.json");
     store.save(character, file);
@@ -72,6 +74,8 @@ class CharacterStoreTest {
     Character loaded = store.load(file).character();
     assertEquals(character.getItems(), loaded.getItems());
     assertEquals(123, loaded.getCaps());
+    assertEquals(List.of(false, true), loaded.getApparel().stream().map(WornApparel::carried).toList());
+    assertNull(JSON.readTree(file.toFile()).get("apparel").get(0).get("carried"), "worn is not written");
     assertEquals(new Materials(3, 2, 1, 0), loaded.getMaterials());
 
     Path empty = dir.resolve("empty.json");

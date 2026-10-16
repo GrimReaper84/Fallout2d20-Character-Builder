@@ -12,6 +12,7 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
+import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
@@ -799,9 +800,22 @@ public class Character {
     return origin != null && origin.id().equals(MISTER_HANDY);
   }
 
-  /** Puts on an item (any mode: apparel is found, bought and changed at any time). */
+  /**
+   * Adds an item (any mode: apparel is found, bought and changed at any time): worn, unless a worn piece of
+   * the same layer already covers one of its locations – then carried (user decision 2026-10-16).
+   */
   public void addApparel(@NonNull WornApparel item) {
-    apparel.add(item);
+    apparel.add(item.withCarried(ApparelRules.clashesWithWorn(this, item)));
+  }
+
+  /** Marks the item at the index as only carried (no protection, no hints) or as worn. */
+  public void setApparelCarried(int index, boolean carried) {
+    apparel.set(index, apparel.get(index).withCarried(carried));
+  }
+
+  /** The pieces actually worn: they protect and take part in the apparel hints. */
+  public @NonNull List<WornApparel> getWornApparel() {
+    return apparel.stream().filter(item -> !item.carried()).toList();
   }
 
   /**
@@ -907,7 +921,7 @@ public class Character {
     }
     PackItems added = PackInventory.resolve(this);
     weapons.addAll(added.weapons());
-    apparel.addAll(added.apparel());
+    added.apparel().forEach(this::addApparel);
     items.addAll(added.items());
     packItemsAdded = true;
     return added;

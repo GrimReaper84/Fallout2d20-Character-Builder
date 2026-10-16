@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -30,31 +31,34 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Worn clothing, armor and robot armor, in every mode: one row per item (kind, location – a choice for a
+ * Clothing, armor and robot armor, in every mode: one row per item (a worn checkbox – carried pieces are
+ * greyed and do not protect –, kind, location – a choice for a
  * single arm or leg –, resistances, a note, e.g. mods, and a remove button), the add button, the damage
  * resistance per hit location ({@link ArmorResistances}) and the apparel hints ({@link ApparelRules}).
  * Typed notes go to {@code onEdited}; everything else to the model and then to {@code onChanged}.
  */
 final class ApparelSection {
 
-  private static final @NonNull List<String> HEADERS = List.of("Item", "Kind", "Location", "Phys", "Energy", "Rad",
-      "Notes", "");
+  private static final @NonNull List<String> HEADERS = List.of("Worn", "Item", "Kind", "Location", "Phys", "Energy",
+      "Rad", "Notes", "");
+  /** Opacity of the values of a carried piece, which do not protect. */
+  private static final double CARRIED_OPACITY = 0.5;
   private static final @NonNull String HINT_STYLE = "-fx-text-fill: #a35200;";
   private static final double NOTES_WIDTH = 160;
 
   private ApparelSection() {}
 
-  /** Adds the worn list, the add button, the resistance table and the hints to a four-column grid. */
+  /** Adds the apparel list, the add button, the resistance table and the hints to a four-column grid. */
   static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onEdited,
       @NonNull Runnable onChanged) {
-    List<WornApparel> worn = character.getApparel();
-    if (!worn.isEmpty()) {
+    List<WornApparel> apparel = character.getApparel();
+    if (!apparel.isEmpty()) {
       MigPane table = new MigPane("insets 0, gap 10 4, wrap " + HEADERS.size());
       for (String header : HEADERS) {
         table.add(bold(header));
       }
-      for (int i = 0; i < worn.size(); i++) {
-        addItem(table, character, worn.get(i), i, onEdited, onChanged);
+      for (int i = 0; i < apparel.size(); i++) {
+        addItem(table, character, apparel.get(i), i, onEdited, onChanged);
       }
       pane.add(table, "span 4, growx, wmin 0");
     }
@@ -89,16 +93,29 @@ final class ApparelSection {
   private static void addItem(@NonNull MigPane table, @NonNull Character character, @NonNull WornApparel item,
       int index, @NonNull Runnable onEdited, @NonNull Runnable onChanged) {
     Optional<ApparelData> data = item.data();
+    CheckBox worn = new CheckBox();
+    worn.setSelected(!item.carried());
+    worn.setTooltip(new Tooltip("Worn pieces protect; carried pieces only count toward the load."));
+    worn.setOnAction(event -> {
+      character.setApparelCarried(index, !worn.isSelected());
+      onChanged.run();
+    });
+    table.add(worn);
     Label name = new Label(item.displayName());
     name.setTooltip(new Tooltip(data.map(entry -> entry.sources().get(0)
         + (entry.perk() == null ? "" : ", needs " + entry.perk())).orElse("Custom item")));
-    table.add(name);
     Optional<ApparelValues> values = item.values();
-    table.add(new Label(values.map(entry -> entry.kind().displayName()).orElse("–")));
-    table.add(location(character, item, data, index, onChanged));
-    table.add(new Label(values.map(entry -> Integer.toString(entry.physical())).orElse("–")));
-    table.add(new Label(values.map(entry -> Integer.toString(entry.energy())).orElse("–")));
-    table.add(new Label(values.map(ApparelSection::radiation).orElse("–")));
+    List<Node> cells = List.of(name, new Label(values.map(entry -> entry.kind().displayName()).orElse("–")),
+        location(character, item, data, index, onChanged),
+        new Label(values.map(entry -> Integer.toString(entry.physical())).orElse("–")),
+        new Label(values.map(entry -> Integer.toString(entry.energy())).orElse("–")),
+        new Label(values.map(ApparelSection::radiation).orElse("–")));
+    for (Node cell : cells) {
+      if (item.carried()) {
+        cell.setOpacity(CARRIED_OPACITY);
+      }
+      table.add(cell);
+    }
     TextField notes = new TextField(item.notes());
     notes.setPromptText("Notes, e.g. mods");
     notes.setPrefWidth(NOTES_WIDTH);

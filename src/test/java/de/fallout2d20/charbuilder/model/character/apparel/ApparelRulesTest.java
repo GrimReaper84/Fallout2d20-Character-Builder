@@ -35,8 +35,12 @@ class ApparelRulesTest {
     wear(survivor, "hazmat-suit", null);
     wear(survivor, "raider-chest-piece", null);
     wear(survivor, "metal-chest-piece", null);
+    assertTrue(survivor.getApparel().get(2).carried(), "a clashing piece starts carried");
     wear(survivor, "leather-arm", null);
     wear(survivor, "standard-plating", null);
+    for (int i = 0; i < survivor.getApparel().size(); i++) {
+      survivor.setApparelCarried(i, false);
+    }
     assertEquals(List.of("Armor cannot be worn over an outfit (CRB p. 130).",
         "Raider Chest Piece and Metal Chest Piece both cover the Torso; the higher values count.",
         "Choose where Leather Arm is worn.",
@@ -49,6 +53,32 @@ class ApparelRulesTest {
     wear(handy, "casual-hat", null);
     wear(handy, "leather-chest-piece", null);
     assertEquals(List.of("A Mister Handy cannot wear Leather Chest Piece (CRB p. 146)."), hints(handy));
+  }
+
+  /** CRB p. 130: armor added over a worn outfit starts carried, and an outfit added over worn armor too. */
+  @Test
+  void armorAndOutfitClash() {
+    Character survivor = character("survivor");
+    wear(survivor, "drifter-outfit", null);
+    wear(survivor, "metal-helmet", null);
+    assertTrue(survivor.getApparel().get(1).carried());
+    Character soldier = character("survivor");
+    wear(soldier, "combat-leg", HitLocation.LEFT_LEG);
+    wear(soldier, "drifter-outfit", null);
+    assertTrue(soldier.getApparel().get(1).carried());
+    assertEquals(List.of(), hints(soldier));
+  }
+
+  /** Carried pieces take part in no hint except the catalog check (user decision 2026-10-16). */
+  @Test
+  void carriedPiecesGiveNoHints() {
+    Character survivor = character("survivor");
+    wear(survivor, "drifter-outfit", null);
+    wear(survivor, "leather-arm", null);
+    wear(survivor, "standard-plating", null);
+    survivor.setApparelCarried(1, true);
+    survivor.setApparelCarried(2, true);
+    assertEquals(List.of(), hints(survivor));
   }
 
   /** A limb that does not fit the piece (e.g. from an edited file) counts as not chosen. */

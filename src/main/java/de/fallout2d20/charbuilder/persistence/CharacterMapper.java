@@ -243,7 +243,8 @@ final class CharacterMapper {
     CustomApparelData customData = custom == null ? null : new CustomApparelData(custom.name(), custom.kind(),
         custom.locations().stream().sorted().toList(), custom.physical(), custom.energy(), custom.radiation(),
         custom.radiationImmune(), custom.carryWeight());
-    return new WornApparelData(ref == null ? null : toData(ref), customData, item.location(), blankToNull(item.notes()));
+    return new WornApparelData(ref == null ? null : toData(ref), customData, item.location(), blankToNull(item.notes()),
+        item.carried() ? Boolean.TRUE : null);
   }
 
   private static @NonNull List<WornApparel> apparel(@Nullable List<WornApparelData> entries) throws SaveFormatException {
@@ -253,7 +254,7 @@ final class CharacterMapper {
       CustomApparelData custom = entry.custom();
       String notes = entry.notes();
       apparel.add(new WornApparel(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
-          entry.location(), notes == null ? "" : notes));
+          entry.location(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.carried())));
     }
     return apparel;
   }

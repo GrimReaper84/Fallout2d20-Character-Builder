@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +42,34 @@ class ArmorResistancesTest {
     assertEquals(Resistance.of(1), torso.energy());
     assertEquals(Resistance.of(2), torso.radiation());
     assertEquals(Resistance.of(0), at(survivor, HitLocation.HEAD).physical(), "the jumpsuit does not cover the head");
+  }
+
+  /** User decision 2026-10-16: new pieces start worn unless they clash; carried pieces give no DR but weigh. */
+  @Test
+  void carriedPiecesDoNotProtect() {
+    Character survivor = character("survivor");
+    wear(survivor, "tough-clothing", null);
+    wear(survivor, "metal-helmet", null);
+    wear(survivor, "raider-chest-piece", null);
+    wear(survivor, "metal-chest-piece", null);
+    assertEquals(List.of(false, false, false, true), survivor.getApparel().stream().map(WornApparel::carried).toList(),
+        "clothing and armor are different layers; the second chest piece clashes");
+    assertEquals(Resistance.of(1), at(survivor, HitLocation.TORSO).physical(), "Raider Chest Piece");
+    int carried = CarryLoad.of(survivor).carried();
+    survivor.setApparelCarried(2, true);
+    survivor.setApparelCarried(3, false);
+    assertEquals(Resistance.of(2), at(survivor, HitLocation.TORSO).physical(), "Metal Chest Piece");
+    assertEquals(carried, CarryLoad.of(survivor).carried(), "worn or carried, the weight counts");
+  }
+
+  /** CRB p. 146 (robot armor changes the carry weight) + user decision 2026-10-16: only while worn. */
+  @Test
+  void carriedRobotArmorKeepsTheCarryWeight() {
+    Character protectron = character("protectron");
+    wear(protectron, "actuated-frame-main-body", null);
+    assertEquals(245, DerivedStats.of(protectron).carryWeight());
+    protectron.setApparelCarried(0, true);
+    assertEquals(225, DerivedStats.of(protectron).carryWeight());
   }
 
   /** A single-limb piece covers only the chosen side. */

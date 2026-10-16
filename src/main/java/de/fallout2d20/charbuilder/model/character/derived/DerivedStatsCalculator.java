@@ -101,12 +101,12 @@ final class DerivedStatsCalculator {
   }
 
   /**
-   * CRB p. 146: robot plating and armor change a robot's carry weight. Only items that cover a location
+   * CRB p. 146: robot plating and armor change a robot's carry weight. Only worn items that cover a location
    * count (an arm piece once its arm is chosen); two items on one location both count, the apparel hints
    * name that conflict.
    */
   private static int robotArmorCarryWeight(@NonNull Character character) {
-    return character.getApparel().stream().filter(item -> !item.locations(character.hitLocations()).isEmpty())
+    return character.getWornApparel().stream().filter(item -> !item.locations(character.hitLocations()).isEmpty())
         .map(WornApparel::values).flatMap(Optional::stream)
         .filter(values -> values.kind().isRobot()).mapToInt(ApparelValues::carryWeight).sum();
   }

@@ -47,9 +47,42 @@ public final class ApparelRules {
     return suits(character, kind, hat) || (isRobot(character) && !character.isMisterHandy());
   }
 
+  /**
+   * Whether a piece would clash with what the character wears: a worn piece of the same layer covers one
+   * of its locations, or it is armor while an outfit is worn or the other way round (CRB p. 130). A new
+   * piece that clashes starts carried (user decision 2026-10-16).
+   */
+  public static boolean clashesWithWorn(@NonNull Character character, @NonNull WornApparel item) {
+    Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
+    if (kind.isEmpty()) {
+      return false;
+    }
+    List<WornApparel> worn = character.getWornApparel();
+    if ((kind.get() == ApparelKind.ARMOR && has(worn, ApparelKind.OUTFIT))
+        || (kind.get() == ApparelKind.OUTFIT && has(worn, ApparelKind.ARMOR))) {
+      return true;
+    }
+    List<HitLocation> body = character.hitLocations();
+    return worn.stream().anyMatch(other -> sharedLocation(item, other, body).isPresent());
+  }
+
+  /** A location both pieces cover while being of the same layer; empty otherwise or for unknown pieces. */
+  private static @NonNull Optional<HitLocation> sharedLocation(@NonNull WornApparel item, @NonNull WornApparel other,
+      @NonNull List<HitLocation> body) {
+    Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
+    Optional<ApparelKind> otherKind = other.values().map(ApparelValues::kind);
+    if (kind.isEmpty() || otherKind.isEmpty() || layer(kind.get()) != layer(otherKind.get())) {
+      return Optional.empty();
+    }
+    return item.locations(body).stream().filter(other.locations(body)::contains).findFirst();
+  }
+
+  /** Hints about the worn pieces (carried ones only have to be catalog items). */
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
-    List<WornApparel> worn = character.getApparel();
+    character.getApparel().stream().filter(item -> item.values().isEmpty()).forEach(item ->
+        problems.add(new CreationProblem(TOPIC, "\"" + item.displayName() + "\" is not an item of the supported books.")));
+    List<WornApparel> worn = character.getWornApparel();
     boolean robot = isRobot(character);
     List<HitLocation> body = character.hitLocations();
     if (has(worn, ApparelKind.OUTFIT) && has(worn, ApparelKind.ARMOR)) {
@@ -58,9 +91,6 @@ public final class ApparelRules {
     for (int i = 0; i < worn.size(); i++) {
       WornApparel item = worn.get(i);
       Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
-      if (kind.isEmpty()) {
-        problems.add(new CreationProblem(TOPIC, "\"" + item.displayName() + "\" is not an item of the supported books."));
-      }
       if (item.needsLocation(body)) {
         problems.add(new CreationProblem(TOPIC, "Choose where " + item.displayName() + " is worn."));
       }
@@ -76,12 +106,9 @@ public final class ApparelRules {
       }
       for (int j = i + 1; j < worn.size(); j++) {
         WornApparel other = worn.get(j);
-        Optional<ApparelKind> otherKind = other.values().map(ApparelValues::kind);
-        if (kind.isPresent() && otherKind.isPresent() && layer(kind.get()) == layer(otherKind.get())) {
-          item.locations(body).stream().filter(other.locations(body)::contains).findFirst().ifPresent(location ->
-              problems.add(new CreationProblem(TOPIC, item.displayName() + " and " + other.displayName()
-                  + " both cover the " + location.displayName() + "; the higher values count.")));
-        }
+        sharedLocation(item, other, body).ifPresent(location ->
+            problems.add(new CreationProblem(TOPIC, item.displayName() + " and " + other.displayName()
+                + " both cover the " + location.displayName() + "; the higher values count.")));
       }
     }
     return problems;

@@ -15,13 +15,15 @@ import org.jspecify.annotations.Nullable;
  * An item the character wears: a catalog item or a custom one (exactly one of both), the chosen limb for
  * a piece covering a single arm or leg (CRB p. 130; robot armor: one of the three arms, CRB p. 146, or of
  * the two arms of a Protectron), and a
- * free note, e.g. installed mods (mods as a note until they are modelled).
+ * free note, e.g. installed mods (mods as a note until they are modelled), and whether it is only carried
+ * instead of worn (user decision 2026-10-16: only worn pieces protect; all count toward the load).
  */
 public record WornApparel(
     @Nullable CatalogRef apparel,
     @Nullable CustomApparel custom,
     @Nullable HitLocation location,
-    @NonNull String notes) {
+    @NonNull String notes,
+    boolean carried) {
 
   public WornApparel {
     if ((apparel == null) == (custom == null)) {
@@ -31,12 +33,12 @@ public record WornApparel(
 
   /** A catalog item without chosen limb and note. */
   public static @NonNull WornApparel of(@NonNull CatalogRef apparel) {
-    return new WornApparel(apparel, null, null, "");
+    return new WornApparel(apparel, null, null, "", false);
   }
 
   /** A custom item without note. */
   public static @NonNull WornApparel of(@NonNull CustomApparel custom) {
-    return new WornApparel(null, custom, null, "");
+    return new WornApparel(null, custom, null, "", false);
   }
 
   /** The catalog entry; empty for a custom item or an id outside the catalog. */
@@ -91,10 +93,14 @@ public record WornApparel(
   }
 
   public @NonNull WornApparel withLocation(@Nullable HitLocation newLocation) {
-    return new WornApparel(apparel, custom, newLocation, notes);
+    return new WornApparel(apparel, custom, newLocation, notes, carried);
   }
 
   public @NonNull WornApparel withNotes(@Nullable String newNotes) {
-    return new WornApparel(apparel, custom, location, newNotes == null ? "" : newNotes);
+    return new WornApparel(apparel, custom, location, newNotes == null ? "" : newNotes, carried);
+  }
+
+  public @NonNull WornApparel withCarried(boolean newCarried) {
+    return new WornApparel(apparel, custom, location, notes, newCarried);
   }
 }
