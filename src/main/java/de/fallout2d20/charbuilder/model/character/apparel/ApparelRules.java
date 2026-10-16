@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.creation.HintArea;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,33 +82,34 @@ public final class ApparelRules {
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
     character.getApparel().stream().filter(item -> item.values().isEmpty()).forEach(item ->
-        problems.add(new CreationProblem(TOPIC, "\"" + item.displayName() + "\" is not an item of the supported books.")));
+        problems.add(new CreationProblem(HintArea.ARMOR, TOPIC,
+            "\"" + item.displayName() + "\" is not an item of the supported books.")));
     List<WornApparel> worn = character.getWornApparel();
     boolean robot = isRobot(character);
     List<HitLocation> body = character.hitLocations();
     if (has(worn, ApparelKind.OUTFIT) && has(worn, ApparelKind.ARMOR)) {
-      problems.add(new CreationProblem(TOPIC, "Armor cannot be worn over an outfit (CRB p. 130)."));
+      problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, "Armor cannot be worn over an outfit (CRB p. 130)."));
     }
     for (int i = 0; i < worn.size(); i++) {
       WornApparel item = worn.get(i);
       Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
       if (item.needsLocation(body)) {
-        problems.add(new CreationProblem(TOPIC, "Choose where " + item.displayName() + " is worn."));
+        problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, "Choose where " + item.displayName() + " is worn."));
       }
       boolean hat = item.data().map(ApparelData::isHat).orElse(false);
       if (kind.isPresent() && robot && !suits(character, kind.get(), hat)) {
-        problems.add(new CreationProblem(TOPIC, character.isMisterHandy()
+        problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, character.isMisterHandy()
             ? "A Mister Handy cannot wear " + item.displayName() + " (CRB p. 146)."
             : "Robots like the " + character.getOriginData().map(OriginData::name).orElse("")
                 + " wear robot plating and armor; " + item.displayName() + " only with GM permission."));
       }
       if (kind.isPresent() && !robot && !suits(character, kind.get(), hat)) {
-        problems.add(new CreationProblem(TOPIC, item.displayName() + " is made for robots."));
+        problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, item.displayName() + " is made for robots."));
       }
       for (int j = i + 1; j < worn.size(); j++) {
         WornApparel other = worn.get(j);
         sharedLocation(item, other, body).ifPresent(location ->
-            problems.add(new CreationProblem(TOPIC, item.displayName() + " and " + other.displayName()
+            problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, item.displayName() + " and " + other.displayName()
                 + " both cover the " + location.displayName() + "; the higher values count.")));
       }
     }

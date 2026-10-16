@@ -25,7 +25,7 @@ public final class CreationRules {
       return problems;
     }
     if (character.getName().isBlank()) {
-      problems.add(new CreationProblem(NAME, "Give the character a name."));
+      problems.add(new CreationProblem(HintArea.HEADER, NAME, "Give the character a name."));
     }
     problems.addAll(OriginRules.problems(character));
     problems.addAll(TraitRules.problems(character));

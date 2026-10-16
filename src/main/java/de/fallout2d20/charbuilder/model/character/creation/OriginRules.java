@@ -34,17 +34,18 @@ public final class OriginRules {
     CatalogRef origin = character.getOrigin();
     Optional<OriginData> data = character.getOriginData();
     if (origin == null) {
-      problems.add(new CreationProblem(ORIGIN, "Choose an origin."));
+      problems.add(new CreationProblem(HintArea.HEADER, ORIGIN, "Choose an origin."));
       return problems;
     }
     if (data.isEmpty()) {
-      problems.add(new CreationProblem(ORIGIN, "\"" + origin.displayName()
+      problems.add(new CreationProblem(HintArea.HEADER, ORIGIN, "\"" + origin.displayName()
           + "\" is not an origin of the supported books."));
       return problems;
     }
     OriginData originData = data.get();
     if (!originData.isAvailableWith(character.getEnabledBooks())) {
-      problems.add(new CreationProblem(ORIGIN, originData.name() + " needs a book that is not enabled."));
+      problems.add(new CreationProblem(HintArea.HEADER, ORIGIN,
+          originData.name() + " needs a book that is not enabled."));
     }
     checkAttributes(character, originData, problems);
     checkExtraTagSkill(character, originData, problems);
@@ -70,7 +71,7 @@ public final class OriginRules {
     for (Attribute attribute : Attribute.values()) {
       int maximum = origin.attributeMaximum(attribute);
       if (character.attributeValue(attribute) > maximum) {
-        problems.add(new CreationProblem(attribute.displayName(),
+        problems.add(new CreationProblem(HintArea.STATS, attribute.displayName(),
             attribute.displayName() + " may not exceed " + maximum + " (" + origin.name() + ")."));
       }
     }
@@ -85,12 +86,13 @@ public final class OriginRules {
       return;
     }
     if (chosen == null) {
-      problems.add(new CreationProblem(ORIGIN, "Choose the extra Tag skill granted by " + origin.name() + "."));
+      problems.add(new CreationProblem(HintArea.STATS, ORIGIN,
+          "Choose the extra Tag skill granted by " + origin.name() + "."));
     } else if (!extraTag.allows(chosen)) {
-      problems.add(new CreationProblem(ORIGIN, chosen.displayName()
+      problems.add(new CreationProblem(HintArea.STATS, ORIGIN, chosen.displayName()
           + " cannot be the extra Tag skill granted by " + origin.name() + "."));
     } else if (character.skillState(chosen).tagged() || chosen == origin.fixedTagSkill()) {
-      problems.add(new CreationProblem(ORIGIN, chosen.displayName()
+      problems.add(new CreationProblem(HintArea.STATS, ORIGIN, chosen.displayName()
           + " is already a Tag skill; choose another extra Tag skill."));
     }
   }
@@ -102,13 +104,13 @@ public final class OriginRules {
   private static void checkChoices(@NonNull OriginChoices choices, @NonNull OriginData origin,
       @NonNull List<CreationProblem> problems) {
     if (!origin.purposeSuggestions().isEmpty() && choices.purpose() == null) {
-      problems.add(new CreationProblem(ORIGIN, "Choose a purpose (" + origin.name() + ")."));
+      problems.add(new CreationProblem(HintArea.STATS, ORIGIN, "Choose a purpose (" + origin.name() + ")."));
     }
     if (origin.purposeSuggestions().isEmpty() && choices.purpose() != null) {
-      problems.add(new CreationProblem(ORIGIN, origin.name() + " has no purpose to choose."));
+      problems.add(new CreationProblem(HintArea.STATS, ORIGIN, origin.name() + " has no purpose to choose."));
     }
     if (origin.extraTagSkill() == null && choices.tagSkill() != null) {
-      problems.add(new CreationProblem(ORIGIN, origin.name() + " grants no extra Tag skill."));
+      problems.add(new CreationProblem(HintArea.STATS, ORIGIN, origin.name() + " grants no extra Tag skill."));
     }
   }
 }

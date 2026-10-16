@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.creation.HintArea;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,11 +68,12 @@ public final class AdvancementRules {
     }
     int ranksLeft = character.advancementSkillRanksLeft();
     if (ranksLeft < 0) {
-      problems.add(new CreationProblem(SKILLS, "Too many skill ranks staged (" + -ranksLeft + " too many)."));
+      problems.add(new CreationProblem(HintArea.STATS, SKILLS,
+          "Too many skill ranks staged (" + -ranksLeft + " too many)."));
     }
     int perksLeft = character.advancementPerksLeft();
     if (perksLeft < 0) {
-      problems.add(new CreationProblem(PERKS, "Too many perks staged (" + -perksLeft + " too many)."));
+      problems.add(new CreationProblem(HintArea.PERKS, PERKS, "Too many perks staged (" + -perksLeft + " too many)."));
     }
     for (PerkSelection selection : character.getPerks()) {
       Optional<PerkDefinition> perk = PerkCatalog.byId(selection.perk().id());

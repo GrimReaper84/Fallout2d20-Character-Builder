@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.creation.HintArea;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import java.util.EnumSet;
 import java.util.List;
@@ -80,6 +81,8 @@ class AdvancementRulesTest {
     assertEquals(List.of("Too many skill ranks staged (1 too many).",
         "Comprehension: Requirement not met: INT 6."),
         AdvancementRules.problems(character).stream().map(CreationProblem::message).toList());
+    assertEquals(List.of(HintArea.STATS, HintArea.PERKS),
+        AdvancementRules.problems(character).stream().map(CreationProblem::area).toList());
     assertFalse(AdvancementRules.canApply(character));
   }
 

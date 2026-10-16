@@ -139,16 +139,18 @@ public final class SkillRules {
     }
     int tagsLeft = freeTagsLeft(character);
     if (tagsLeft > 0) {
-      problems.add(new CreationProblem(TAGS, "Choose " + tagsLeft + " more Tag skill"
+      problems.add(new CreationProblem(HintArea.STATS, TAGS, "Choose " + tagsLeft + " more Tag skill"
           + (tagsLeft == 1 ? "." : "s.")));
     } else if (tagsLeft < 0) {
-      problems.add(new CreationProblem(TAGS, "Too many Tag skills chosen (" + -tagsLeft + " too many)."));
+      problems.add(new CreationProblem(HintArea.STATS, TAGS,
+          "Too many Tag skills chosen (" + -tagsLeft + " too many)."));
     }
     int pointsLeft = skillPointsLeft(character);
     if (pointsLeft > 0) {
-      problems.add(new CreationProblem(SKILLS, "Spend all skill points (" + pointsLeft + " left)."));
+      problems.add(new CreationProblem(HintArea.STATS, SKILLS, "Spend all skill points (" + pointsLeft + " left)."));
     } else if (pointsLeft < 0) {
-      problems.add(new CreationProblem(SKILLS, "Too many skill points spent (" + -pointsLeft + " too many)."));
+      problems.add(new CreationProblem(HintArea.STATS, SKILLS,
+          "Too many skill points spent (" + -pointsLeft + " too many)."));
     }
     checkRankCap(character, problems);
     return problems;
@@ -170,7 +172,7 @@ public final class SkillRules {
     }
     for (Skill skill : Skill.values()) {
       if (character.skillRank(skill) > cap) {
-        problems.add(new CreationProblem(skill.displayName(),
+        problems.add(new CreationProblem(HintArea.STATS, skill.displayName(),
             skill.displayName() + " may not exceed rank " + cap + reason));
       }
     }

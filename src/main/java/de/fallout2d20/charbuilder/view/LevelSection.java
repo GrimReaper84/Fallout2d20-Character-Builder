@@ -3,12 +3,13 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
 import java.util.OptionalInt;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import org.jspecify.annotations.NonNull;
-import org.tbee.javafx.scene.layout.MigPane;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Starting level of a character in creation (CRB p. 49): a number field and −/+ buttons, the XP that
@@ -24,8 +25,8 @@ final class LevelSection {
 
   private LevelSection() {}
 
-  /** Adds the level, XP and starting caps rows to a four-column overview grid. */
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onChanged) {
+  /** The level field with −/+ buttons. */
+  static @NonNull Node control(@NonNull Character character, @NonNull Runnable onChanged) {
     int level = character.getLevel();
     TextField field = new TextField(Integer.toString(level));
     field.setPrefWidth(FIELD_WIDTH);
@@ -35,21 +36,23 @@ final class LevelSection {
         commit(character, field, onChanged);
       }
     });
-    pane.add(new Label("Level"));
-    pane.add(new HBox(6, field, StepButtons.of(
+    return new HBox(6, field, StepButtons.of(
         StepButtons.minus(level > 1 ? "Lower the starting level" : "Level 1 is the lowest level.", level > 1,
             () -> step(character, -1, onChanged)),
-        StepButtons.plus("Raise the starting level", true, () -> step(character, 1, onChanged)))));
-    pane.add(new Label("XP"));
-    pane.add(new Label(Long.toString(character.getXp())));
-    if (level > 1) {
-      OptionalInt rarity = StartingEquipmentAllowance.maxRarity(level);
-      Label caps = new Label(StartingEquipmentAllowance.caps(level) + " caps, "
-          + (rarity.isPresent() ? "max rarity " + rarity.getAsInt() : "any rarity"));
-      caps.setTooltip(new Tooltip(CAPS_TOOLTIP));
-      pane.add(new Label("Starting caps"));
-      pane.add(caps, "span 3");
+        StepButtons.plus("Raise the starting level", true, () -> step(character, 1, onChanged))));
+  }
+
+  /** From level 2: the extra starting caps and the maximum rarity (CRB p. 81); {@code null} at level 1. */
+  static @Nullable Label startingCaps(@NonNull Character character) {
+    int level = character.getLevel();
+    if (level <= 1) {
+      return null;
     }
+    OptionalInt rarity = StartingEquipmentAllowance.maxRarity(level);
+    Label caps = new Label("Starting caps: " + StartingEquipmentAllowance.caps(level) + " caps, "
+        + (rarity.isPresent() ? "max rarity " + rarity.getAsInt() : "any rarity"));
+    caps.setTooltip(new Tooltip(CAPS_TOOLTIP));
+    return caps;
   }
 
   /**

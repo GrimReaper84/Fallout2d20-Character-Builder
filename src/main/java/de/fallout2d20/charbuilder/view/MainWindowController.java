@@ -2,7 +2,6 @@ package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
-import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
@@ -23,7 +22,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -41,12 +40,13 @@ public class MainWindowController {
 
   private final CharacterStore store = new CharacterStore();
 
-  @FXML private ScrollPane overviewPane;
+  @FXML private StackPane contentPane;
   @FXML private MenuItem createCharacterItem;
   @FXML private CheckMenuItem gmModeItem;
 
   private @Nullable Stage stage;
   private @Nullable Character character;
+  private @Nullable CharacterView view;
   private @Nullable Path file;
   private @Nullable Path suggestedDirectory;
   private boolean dirty;
@@ -154,7 +154,8 @@ public class MainWindowController {
     if (character == null || character.isCreationComplete()) {
       return;
     }
-    List<CreationProblem> problems = CreationRules.problems(character);
+    // The same hints as the header's counter (creation and apparel hints).
+    List<CreationProblem> problems = CharacterView.hints(character);
     if (!CreateCharacterDialog.confirm(stage, problems)) {
       return;
     }
@@ -218,6 +219,10 @@ public class MainWindowController {
     character = newCharacter;
     file = newFile;
     dirty = false;
+    CharacterView newView = new CharacterView(newCharacter,
+        new ViewCallbacks(this::onEdited, this::onChanged, this::completeCreation));
+    view = newView;
+    contentPane.getChildren().setAll(newView.node());
     showOverview();
     updateTitle();
   }
@@ -229,8 +234,9 @@ public class MainWindowController {
     createCharacterItem.setDisable(character.isCreationComplete());
     gmModeItem.setDisable(false);
     gmModeItem.setSelected(character.isGmMode());
-    overviewPane.setContent(CharacterOverview.build(character, this::onEdited, this::onChanged,
-        this::completeCreation));
+    if (view != null) {
+      view.refresh();
+    }
   }
 
   /** A creation edit changed the character: mark it unsaved and rebuild the overview afterwards. */
@@ -249,7 +255,7 @@ public class MainWindowController {
   private void showEmptyState() {
     Label label = new Label("No character loaded. Use File → New or File → Open.");
     label.setStyle("-fx-padding: 24;");
-    overviewPane.setContent(label);
+    contentPane.getChildren().setAll(label);
   }
 
   private void updateTitle() {

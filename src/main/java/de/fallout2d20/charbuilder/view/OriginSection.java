@@ -18,22 +18,15 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Origin choice of a character in creation: the origin (limited to the enabled books) and the
- * origin's own options. Every change goes to the model and then to
- * {@code onChanged}, which rebuilds the overview.
+ * Origin of a character in creation: the origin choice (header bar) and the origin's own options (Stats
+ * tab). Every change goes to the model and then to {@code onChanged}, which rebuilds the view.
  */
 final class OriginSection {
 
   private OriginSection() {}
 
-  /**
-   * Adds the origin rows to a four-column overview grid.
-   *
-   * @param onEdited called after an edit that needs no rebuild (typed text)
-   * @param onChanged called after an edit that changes other values; rebuilds the overview
-   */
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onEdited,
-      @NonNull Runnable onChanged) {
+  /** The origin choice (limited to the enabled books). */
+  static @NonNull ComboBox<OriginData> choice(@NonNull Character character, @NonNull Runnable onChanged) {
     Optional<OriginData> selected = character.getOriginData();
     ComboBox<OriginData> origins = new ComboBox<>();
     origins.getItems().setAll(OriginCatalog.available(character.getEnabledBooks()));
@@ -49,13 +42,23 @@ final class OriginSection {
         onChanged.run();
       }
     });
-    pane.add(new Label("Origin"));
-    pane.add(origins, "span 3");
-    selected.ifPresent(origin -> addOptions(pane, character, origin, onEdited, onChanged));
+    return origins;
   }
 
-  private static void addOptions(@NonNull MigPane pane, @NonNull Character character,
-      @NonNull OriginData origin, @NonNull Runnable onEdited, @NonNull Runnable onChanged) {
+  /**
+   * Adds the options of the chosen origin (origin trait, fixed or extra Tag skill, purpose) to a
+   * four-column grid; nothing while no catalogued origin is chosen.
+   *
+   * @param onEdited called after an edit that needs no rebuild (typed text)
+   * @param onChanged called after an edit that changes other values; rebuilds the view
+   */
+  static void addOptions(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onEdited,
+      @NonNull Runnable onChanged) {
+    Optional<OriginData> selected = character.getOriginData();
+    if (selected.isEmpty()) {
+      return;
+    }
+    OriginData origin = selected.get();
     pane.add(new Label("Origin trait"));
     Label trait = new Label(origin.traitName() == null ? "Trait list" : origin.traitName());
     trait.setTooltip(new Tooltip(describe(origin)));

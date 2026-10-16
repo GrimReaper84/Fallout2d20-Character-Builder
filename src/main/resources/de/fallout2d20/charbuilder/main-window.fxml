@@ -4,10 +4,10 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
   fx:controller="de.fallout2d20.charbuilder.view.MainWindowController">
@@ -37,6 +37,6 @@
     </MenuBar>
   </top>
   <center>
-    <ScrollPane fx:id="overviewPane" fitToWidth="true"/>
+    <StackPane fx:id="contentPane"/>
   </center>
 </BorderPane>

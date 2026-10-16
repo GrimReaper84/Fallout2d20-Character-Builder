@@ -24,6 +24,29 @@ class CreationRulesTest {
     assertEquals(firstIndex.stream().sorted().toList(), firstIndex, "hints in creation order: " + topics);
   }
 
+  /** Each hint names the part of the character it belongs to, so the view can show it in its tab. */
+  @Test
+  void hintsNameTheirArea() {
+    Character character = Character.createNew();
+    assertEquals(HintArea.HEADER, area(character, "Name"));
+    assertEquals(HintArea.HEADER, area(character, "Origin"));
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    assertEquals(HintArea.STATS, area(character, "Traits"));
+    assertEquals(HintArea.STATS, area(character, "S.P.E.C.I.A.L."));
+    assertEquals(HintArea.STATS, area(character, "Tag skills"));
+    assertEquals(HintArea.STATS, area(character, "Skills"));
+    assertEquals(HintArea.PERKS, area(character, "Perks"));
+    assertEquals(HintArea.GEAR, area(character, "Equipment"));
+    Character vaultDweller = Character.createNew();
+    vaultDweller.chooseOrigin(CatalogRef.of("vault-dweller"));
+    assertEquals(HintArea.STATS, area(vaultDweller, "Origin"), "the extra Tag skill is chosen with the skills");
+  }
+
+  private static HintArea area(Character character, String topic) {
+    return CreationRules.problems(character).stream().filter(p -> p.topic().equals(topic)).findFirst()
+        .orElseThrow(() -> new AssertionError("no hint for " + topic)).area();
+  }
+
   @Test
   void nameHintOnlyForABlankName() {
     Character character = Character.createNew();

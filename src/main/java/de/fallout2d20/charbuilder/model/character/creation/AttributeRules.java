@@ -70,13 +70,14 @@ public final class AttributeRules {
     }
     int left = pointsLeft(character);
     if (left > 0) {
-      problems.add(new CreationProblem(TOPIC, "Spend all S.P.E.C.I.A.L. points (" + left + " left)."));
+      problems.add(new CreationProblem(HintArea.STATS, TOPIC, "Spend all S.P.E.C.I.A.L. points (" + left + " left)."));
     } else if (left < 0) {
-      problems.add(new CreationProblem(TOPIC, "Too many S.P.E.C.I.A.L. points spent (" + -left + " too many)."));
+      problems.add(new CreationProblem(HintArea.STATS, TOPIC,
+          "Too many S.P.E.C.I.A.L. points spent (" + -left + " too many)."));
     }
     for (Attribute attribute : Attribute.values()) {
       if (character.attributeAllocation(attribute) < MIN_ALLOCATION) {
-        problems.add(new CreationProblem(attribute.displayName(), attribute.displayName()
+        problems.add(new CreationProblem(HintArea.STATS, attribute.displayName(), attribute.displayName()
             + " may be lowered by at most 1 below its starting value."));
       }
     }

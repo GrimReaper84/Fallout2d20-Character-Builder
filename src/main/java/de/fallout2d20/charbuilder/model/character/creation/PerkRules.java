@@ -192,14 +192,15 @@ public final class PerkRules {
     }
     int left = character.isGmMode() ? 0 : perksLeft(character);
     if (left > 0) {
-      problems.add(new CreationProblem(TOPIC, "Choose " + left + " more perk" + (left == 1 ? "." : "s.")));
+      problems.add(new CreationProblem(HintArea.PERKS, TOPIC,
+          "Choose " + left + " more perk" + (left == 1 ? "." : "s.")));
     } else if (left < 0) {
-      problems.add(new CreationProblem(TOPIC, "Too many perks chosen (" + -left + " too many)."));
+      problems.add(new CreationProblem(HintArea.PERKS, TOPIC, "Too many perks chosen (" + -left + " too many)."));
     }
     for (PerkSelection selection : character.getPerks()) {
       Optional<PerkDefinition> perk = PerkCatalog.byId(selection.perk().id());
       if (perk.isEmpty()) {
-        problems.add(new CreationProblem(TOPIC,
+        problems.add(new CreationProblem(HintArea.PERKS, TOPIC,
             "\"" + selection.perk().displayName() + "\" is not a perk of the supported books."));
         continue;
       }
@@ -218,27 +219,27 @@ public final class PerkRules {
     List<CreationProblem> problems = new ArrayList<>();
     String name = perk.name();
     if (selection.rank() > perk.ranks()) {
-      problems.add(new CreationProblem(name, name + " has at most " + perk.ranks() + " rank(s)."));
+      problems.add(new CreationProblem(HintArea.PERKS, name, name + " has at most " + perk.ranks() + " rank(s)."));
     }
     for (String unmet : unmetForTakenRank(character, perk)) {
-      problems.add(new CreationProblem(name, name + ": " + unmet));
+      problems.add(new CreationProblem(HintArea.PERKS, name, name + ": " + unmet));
     }
     if (perk.choice() == PerkChoice.ATTRIBUTE) {
       if (!choicesComplete(selection, selection.attributeChoices())) {
-        problems.add(new CreationProblem(name, "Choose an attribute for every rank of " + name + "."));
+        problems.add(new CreationProblem(HintArea.PERKS, name, "Choose an attribute for every rank of " + name + "."));
       }
       Set<Attribute> chosen = EnumSet.noneOf(Attribute.class);
       chosen.addAll(selection.attributeChoices());
       for (Attribute attribute : chosen) {
         if (character.attributeValue(attribute) > INTENSE_TRAINING_MAXIMUM) {
-          problems.add(new CreationProblem(name, name + " cannot raise " + attribute.displayName()
+          problems.add(new CreationProblem(HintArea.PERKS, name, name + " cannot raise " + attribute.displayName()
               + " above " + INTENSE_TRAINING_MAXIMUM + "."));
         }
       }
     }
     if (perk.choice() == PerkChoice.SKILL) {
       if (!choicesComplete(selection, selection.skillChoices())) {
-        problems.add(new CreationProblem(name, "Choose a skill for every rank of " + name + "."));
+        problems.add(new CreationProblem(HintArea.PERKS, name, "Choose a skill for every rank of " + name + "."));
       }
       checkTaggedSkills(character, selection, name, problems);
     }
@@ -258,12 +259,12 @@ public final class PerkRules {
       @NonNull String name, @NonNull List<CreationProblem> problems) {
     for (Skill skill : selection.skillChoices()) {
       if (character.isTaggedByOrigin(skill)) {
-        problems.add(new CreationProblem(name, name + ": " + skill.displayName()
+        problems.add(new CreationProblem(HintArea.PERKS, name, name + ": " + skill.displayName()
             + " is already a Tag skill of the origin."));
       }
       Optional<TraitDefinition> forbidding = character.tagForbiddenBy(skill);
       if (forbidding.isPresent()) {
-        problems.add(new CreationProblem(name, name + ": " + skill.displayName()
+        problems.add(new CreationProblem(HintArea.PERKS, name, name + ": " + skill.displayName()
             + " cannot be a Tag skill with " + forbidding.get().name() + "."));
       }
     }

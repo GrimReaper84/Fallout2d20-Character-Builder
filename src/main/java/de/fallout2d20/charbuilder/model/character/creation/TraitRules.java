@@ -44,23 +44,23 @@ public final class TraitRules {
       Optional<TraitDefinition> trait = TraitCatalog.byId(selection.trait().id());
       String name = trait.map(TraitDefinition::name).orElse(selection.trait().displayName());
       if (!seen.add(selection.trait().id())) {
-        problems.add(new CreationProblem(TRAITS, name + " is chosen twice."));
+        problems.add(new CreationProblem(HintArea.STATS, TRAITS, name + " is chosen twice."));
       }
       if (trait.isEmpty()) {
-        problems.add(new CreationProblem(TRAITS, name + " is not a trait of the supported books."));
+        problems.add(new CreationProblem(HintArea.STATS, TRAITS, name + " is not a trait of the supported books."));
         continue;
       }
       lists.add(trait.get().list());
       List<String> allowedLists = origin.get().traitLists();
       if (!allowedLists.isEmpty() && !allowedLists.contains(trait.get().list())) {
-        problems.add(new CreationProblem(TRAITS,
+        problems.add(new CreationProblem(HintArea.STATS, TRAITS,
             name + " is not on the trait lists of " + origin.get().name() + "."));
       }
       checkAttributeChoices(selection, trait.get(), problems);
       checkForbiddenTags(character, trait.get(), problems);
     }
     if (lists.size() > 1) {
-      problems.add(new CreationProblem(TRAITS, "Both traits must come from the same list."));
+      problems.add(new CreationProblem(HintArea.STATS, TRAITS, "Both traits must come from the same list."));
     }
     return problems;
   }
@@ -79,10 +79,10 @@ public final class TraitRules {
       @NonNull List<CreationProblem> problems) {
     if (origin.traitLists().isEmpty()) {
       if (traits > 0) {
-        problems.add(new CreationProblem(TRAITS, origin.name() + " offers no traits."));
+        problems.add(new CreationProblem(HintArea.STATS, TRAITS, origin.name() + " offers no traits."));
       }
     } else if (traits < 1 || traits > MAX_TRAITS) {
-      problems.add(new CreationProblem(TRAITS, "Choose two traits, or one trait and an extra perk."));
+      problems.add(new CreationProblem(HintArea.STATS, TRAITS, "Choose two traits, or one trait and an extra perk."));
     }
   }
 
@@ -93,7 +93,7 @@ public final class TraitRules {
     List<Attribute> choices = selection.attributeChoices();
     if (selection.choosesAttributes()
         && (choices.size() != required || Set.copyOf(choices).size() != required)) {
-      problems.add(new CreationProblem(TRAITS,
+      problems.add(new CreationProblem(HintArea.STATS, TRAITS,
           "Choose " + required + " different attributes for " + trait.name() + "."));
     }
   }
@@ -103,7 +103,7 @@ public final class TraitRules {
       @NonNull List<CreationProblem> problems) {
     for (Skill skill : trait.forbiddenTagSkills()) {
       if (character.isTagged(skill)) {
-        problems.add(new CreationProblem(TRAITS,
+        problems.add(new CreationProblem(HintArea.STATS, TRAITS,
             skill.displayName() + " cannot be a Tag skill with " + trait.name() + "."));
       }
     }

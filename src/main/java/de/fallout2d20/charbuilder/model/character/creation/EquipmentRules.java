@@ -95,6 +95,6 @@ public final class EquipmentRules {
   }
 
   private static void add(@NonNull List<CreationProblem> problems, @NonNull String message) {
-    problems.add(new CreationProblem(EQUIPMENT, message));
+    problems.add(new CreationProblem(HintArea.GEAR, EQUIPMENT, message));
   }
 }
