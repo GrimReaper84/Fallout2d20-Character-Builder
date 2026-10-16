@@ -23,16 +23,16 @@ final class AttributeSection {
     pane.add(new Label(Integer.toString(left)), "span 3");
     for (Attribute attribute : Attribute.values()) {
       pane.add(new Label(attribute.displayName()));
-      pane.add(new Label(Integer.toString(character.attributeValue(attribute))));
       boolean canLower = AttributeRules.canLower(character, attribute);
       boolean canRaise = AttributeRules.canRaise(character, attribute);
-      pane.add(StepButtons.of(
+      pane.add(StepButtons.withValue(new Label(Integer.toString(character.attributeValue(attribute))),
+          StepButtons.NUMBER_WIDTH, StepButtons.of(
           StepButtons.minus(canLower ? "Lower " + attribute.displayName()
                   : attribute.displayName() + " cannot go more than 1 below its starting value.",
               canLower, () -> step(character, attribute, -1, onChanged)),
           StepButtons.plus(canRaise ? "Raise " + attribute.displayName() : raiseBlocked(character, attribute, left),
-              canRaise, () -> step(character, attribute, 1, onChanged))),
-          "span 2");
+              canRaise, () -> step(character, attribute, 1, onChanged)))),
+          "span 3");
     }
   }
 

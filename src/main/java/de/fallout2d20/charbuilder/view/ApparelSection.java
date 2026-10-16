@@ -60,7 +60,7 @@ final class ApparelSection {
       for (int i = 0; i < apparel.size(); i++) {
         addItem(table, character, apparel.get(i), i, onEdited, onChanged);
       }
-      pane.add(table, "span 4, growx, wmin 0");
+      pane.add(table, "span 4, left");
     }
 
     Button add = new Button("Add apparel");
@@ -78,7 +78,7 @@ final class ApparelSection {
     if (!problems.isEmpty()) {
       Label hints = new Label(problems.stream().map(CreationProblem::message).collect(Collectors.joining("\n")));
       hints.setStyle(HINT_STYLE);
-      hints.setWrapText(true);
+      OverviewParts.wrapping(hints);
       pane.add(new Label("Apparel hints"), "top");
       pane.add(hints, "span 3");
     }

@@ -89,7 +89,7 @@ final class EquipmentSection {
       onEdited.run();
     });
     pane.add(new Label("Inventory notes"), "top");
-    pane.add(notes, "span 3, growx");
+    pane.add(OverviewParts.notesArea(notes), "span 3");
   }
 
   /**
@@ -276,8 +276,8 @@ final class EquipmentSection {
   private static void addItemsAndCaps(@NonNull MigPane pane, @NonNull Character character) {
     List<String> lines = StartingEquipmentItems.lines(character);
     if (!lines.isEmpty()) {
-      Label items = new Label(lines.stream().map(line -> "• " + line).collect(Collectors.joining("\n")));
-      items.setWrapText(true);
+      Label items = OverviewParts.wrapping(
+          new Label(lines.stream().map(line -> "• " + line).collect(Collectors.joining("\n"))));
       pane.add(new Label("Starting equipment"), "top");
       pane.add(items, "span 3");
     }

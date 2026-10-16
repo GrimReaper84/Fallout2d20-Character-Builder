@@ -44,17 +44,17 @@ final class SkillSection {
     for (Skill skill : Skill.values()) {
       pane.add(tagBox(character, skill, onChanged));
       pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
-      pane.add(new Label(Integer.toString(character.skillRank(skill))));
       boolean canLower = SkillRules.canLower(character, skill);
       boolean canRaise = SkillRules.canRaise(character, skill);
-      pane.add(StepButtons.of(
+      pane.add(StepButtons.withValue(new Label(Integer.toString(character.skillRank(skill))),
+          StepButtons.NUMBER_WIDTH, StepButtons.of(
           StepButtons.minus(canLower ? "Take back a rank of " + skill.displayName()
                   : "No bought ranks of " + skill.displayName() + " to take back.",
               canLower, () -> step(character, skill, -1, onChanged)),
           StepButtons.plus(canRaise ? "Buy a rank of " + skill.displayName()
                   : pointsLeft <= 0 ? "No skill points left."
                   : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
-              canRaise, () -> step(character, skill, 1, onChanged))));
+              canRaise, () -> step(character, skill, 1, onChanged)))), "span 2");
     }
   }
 
@@ -63,16 +63,16 @@ final class SkillSection {
     for (Skill skill : Skill.values()) {
       pane.add(tagBox(character, skill, onChanged));
       pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
-      pane.add(new Label(Integer.toString(character.skillRank(skill))));
       boolean canLower = SkillRules.canLower(character, skill);
       boolean canRaise = SkillRules.canRaise(character, skill);
-      pane.add(StepButtons.of(
+      pane.add(StepButtons.withValue(new Label(Integer.toString(character.skillRank(skill))),
+          StepButtons.NUMBER_WIDTH, StepButtons.of(
           StepButtons.minus(canLower ? "Lower " + skill.displayName() + " by one rank (GM correction)"
                   : skill.displayName() + " cannot go lower (a Tag! bonus or rank 0).",
               canLower, () -> step(character, skill, -1, onChanged)),
           StepButtons.plus(canRaise ? "Raise " + skill.displayName() + " by one rank (GM correction)"
                   : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
-              canRaise, () -> step(character, skill, 1, onChanged))));
+              canRaise, () -> step(character, skill, 1, onChanged)))), "span 2");
     }
   }
 

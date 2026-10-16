@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
@@ -23,10 +24,11 @@ final class AdvancementSkillSection {
       int staged = character.skillState(skill).stagedRanks();
       pane.add(new Label((character.isTagged(skill) ? "● " : "") + skill.displayName()));
       pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
-      pane.add(new Label(character.skillRank(skill) + (staged > 0 ? " (+" + staged + " staged)" : "")));
       boolean canLower = AdvancementRules.canLower(character, skill);
       boolean canRaise = AdvancementRules.canRaise(character, skill);
-      pane.add(StepButtons.of(
+      // The staged note comes after the buttons, so they stay put while ranks are staged.
+      HBox stepper = StepButtons.withValue(new Label(Integer.toString(character.skillRank(skill))),
+          StepButtons.NUMBER_WIDTH, StepButtons.of(
           StepButtons.minus(canLower ? "Take back a staged rank of " + skill.displayName()
                   : "No staged ranks of " + skill.displayName() + " to take back.",
               canLower, () -> step(character, skill, -1, onChanged)),
@@ -34,6 +36,10 @@ final class AdvancementSkillSection {
                   : left <= 0 ? "No skill ranks left."
                   : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
               canRaise, () -> step(character, skill, 1, onChanged))));
+      if (staged > 0) {
+        stepper.getChildren().add(new Label("+" + staged + " staged"));
+      }
+      pane.add(stepper, "span 2");
     }
     pane.add(new Label("● = Tag skill"), "span 4");
   }

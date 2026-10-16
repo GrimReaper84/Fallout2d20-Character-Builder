@@ -26,7 +26,8 @@ final class PerksTab {
   /** @param hints the hints of this tab */
   static @NonNull Node build(@NonNull Character character, @NonNull List<CreationProblem> hints,
       @NonNull ViewCallbacks callbacks) {
-    MigPane pane = OverviewParts.grid();
+    // The perk cards flow over the whole width (user: Fallout 4 style grid).
+    MigPane pane = OverviewParts.fillingGrid();
     OverviewParts.addHints(pane, hints);
     boolean locked = character.isCreationComplete() && !character.isGmMode();
     if (locked && !AdvancementRules.choosesPerks(character)) {

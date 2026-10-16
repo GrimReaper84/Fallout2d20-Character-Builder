@@ -5,7 +5,9 @@ import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Region;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
@@ -22,9 +24,38 @@ final class OverviewParts {
 
   private OverviewParts() {}
 
-  /** A four-column grid as used by every tab: label, value, label, value. */
+  /** Width at which long texts (hints, starting equipment, notes) wrap, so they do not stretch the grid. */
+  static final double TEXT_WIDTH = 640;
+
+  /**
+   * A four-column grid as used by the tabs: label, value, label, value. The columns keep their natural
+   * width and the content stays on the left, so values and tables are not pulled apart in a wide window.
+   */
   static @NonNull MigPane grid() {
+    MigPane pane = new MigPane("insets 16, gap 8 4, wrap 4", "[right][left][right][left]");
+    // Never squeezed below its natural width (that cut the row names to "…"); a too narrow window scrolls.
+    pane.setMinWidth(Region.USE_PREF_SIZE);
+    return pane;
+  }
+
+  /** Like {@link #grid()}, but the value columns share the window width (for the flowing perk cards). */
+  static @NonNull MigPane fillingGrid() {
     return new MigPane("insets 16, gap 8 4, wrap 4", "[right][grow,fill][right][grow,fill]");
+  }
+
+  /** Makes a long label wrap at {@link #TEXT_WIDTH} instead of widening the grid to its whole line. */
+  static @NonNull Label wrapping(@NonNull Label label) {
+    label.setWrapText(true);
+    label.setPrefWidth(TEXT_WIDTH);
+    label.setMaxWidth(TEXT_WIDTH);
+    return label;
+  }
+
+  /** A notes area {@link #TEXT_WIDTH} wide by preference; added with "span 3", it may get narrower. */
+  static @NonNull TextArea notesArea(@NonNull TextArea area) {
+    area.setPrefWidth(TEXT_WIDTH);
+    area.setMinWidth(0);
+    return area;
   }
 
   static void heading(@NonNull MigPane pane, @NonNull String text) {
@@ -45,8 +76,7 @@ final class OverviewParts {
   static @NonNull Label hintLabel(@NonNull List<CreationProblem> problems) {
     Label hints = new Label(problems.stream().map(CreationProblem::message).collect(Collectors.joining("\n")));
     hints.setStyle(HINT_STYLE);
-    hints.setWrapText(true);
-    return hints;
+    return wrapping(hints);
   }
 
   /** A catalog reference that could not be resolved, with a hint for unresolved legacy names. */

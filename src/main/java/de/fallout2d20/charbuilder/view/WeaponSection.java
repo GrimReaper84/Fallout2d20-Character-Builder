@@ -62,7 +62,7 @@ final class WeaponSection {
     for (int i = 0; i < weapons.size(); i++) {
       addWeapon(table, character, weapons.get(i), i, onEdited, onChanged);
     }
-    pane.add(table, "span 4, growx, wmin 0");
+    pane.add(table, "span 4, left");
 
     Button add = new Button("Add weapon");
     add.setGraphic(new FontIcon("fas-plus"));

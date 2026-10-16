@@ -19,7 +19,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 import org.jspecify.annotations.NonNull;
@@ -67,7 +66,7 @@ final class ItemSection {
       for (int i = 0; i < items.size(); i++) {
         addItem(table, character, items.get(i), i, onEdited, onChanged);
       }
-      pane.add(table, "span 4, growx, wmin 0");
+      pane.add(table, "span 4, left");
     }
 
     Button add = new Button("Add item");
@@ -119,7 +118,7 @@ final class ItemSection {
     table.add(name);
     table.add(new Label(data.map(ItemSection::type).or(() -> magazine.map(entry -> MagazineData.CATEGORY)).orElse("–")));
     table.add(effect(character, item, magazine, index, onChanged));
-    table.add(new HBox(6, new Label(Integer.toString(item.quantity())), StepButtons.of(
+    table.add(StepButtons.withValue(new Label(Integer.toString(item.quantity())), StepButtons.NUMBER_WIDTH, StepButtons.of(
         StepButtons.minus(item.quantity() > 1 ? "One less" : "Use the trash button to remove the item",
             item.quantity() > 1, () -> {
               character.setItemQuantity(index, item.quantity() - 1);
@@ -213,7 +212,7 @@ final class ItemSection {
         : "Over-encumbered: +" + load.penalty() + " difficulty on STR and AGI tests, no Sprint, Initiative −"
             + load.penalty() + " (CRB p. 87).");
     penalty.setStyle(HINT_STYLE);
-    penalty.setWrapText(true);
+    OverviewParts.wrapping(penalty);
     pane.add(new VBox(2, total, penalty), "span 3");
   }
 

@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -70,7 +71,7 @@ final class SessionSection {
       injuries.getChildren().add(box);
     }
     pane.add(new Label("Injuries"), "top");
-    pane.add(injuries, "span 3, growx");
+    pane.add(injuries, "span 3");
 
     TextArea notes = new TextArea(character.getVitals().notes());
     notes.setPromptText("Conditions, chems and their duration, addictions, …");
@@ -81,23 +82,22 @@ final class SessionSection {
       onEdited.run();
     });
     pane.add(new Label("Session notes"), "top");
-    pane.add(notes, "span 3, growx");
+    pane.add(OverviewParts.notesArea(notes), "span 3");
   }
 
   private static void row(@NonNull MigPane pane, @NonNull String name, @NonNull Label value, int current,
       int minimum, int maximum, @NonNull IntConsumer set, @NonNull Runnable onChanged,
       @Nullable Button quick) {
     pane.add(new Label(name));
-    pane.add(value);
-    pane.add(StepButtons.of(
+    HBox stepper = StepButtons.withValue(value, StepButtons.FRACTION_WIDTH, StepButtons.of(
         StepButtons.minus(current > minimum ? "Lower " + name : name + " is at " + minimum + ".",
             current > minimum, () -> step(set, current - 1, onChanged)),
         StepButtons.plus(current < maximum ? "Raise " + name : name + " is at its maximum of " + maximum + ".",
-            current < maximum, () -> step(set, current + 1, onChanged))),
-        quick == null ? "span 2" : "");
+            current < maximum, () -> step(set, current + 1, onChanged))));
     if (quick != null) {
-      pane.add(quick);
+      stepper.getChildren().add(quick);
     }
+    pane.add(stepper, "span 3");
   }
 
   private static void step(@NonNull IntConsumer set, int value, @NonNull Runnable onChanged) {
