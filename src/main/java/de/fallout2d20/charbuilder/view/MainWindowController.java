@@ -1,6 +1,8 @@
 package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.AppInfo;
+import de.fallout2d20.charbuilder.export.sheet.CharacterSheetPdf;
+import de.fallout2d20.charbuilder.export.sheet.SheetContent;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
@@ -13,6 +15,8 @@ import de.fallout2d20.charbuilder.view.dialog.CreateCharacterDialog;
 import de.fallout2d20.charbuilder.view.dialog.ImportReportDialog;
 import java.io.File;
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +48,7 @@ public class MainWindowController {
 
   @FXML private StackPane contentPane;
   @FXML private MenuItem createCharacterItem;
+  @FXML private MenuItem exportSheetItem;
   @FXML private CheckMenuItem gmModeItem;
 
   private @Nullable Stage stage;
@@ -112,6 +117,36 @@ public class MainWindowController {
   @FXML
   private void onSaveAs() {
     save(true);
+  }
+
+  /**
+   * Writes the printable character sheet (E1/E2) as PDF; works in every mode and shows the current state,
+   * unsaved changes included. The PDF goes next to the character file unless the user picks another place.
+   */
+  @FXML
+  private void onExportSheet() {
+    if (character == null) {
+      return;
+    }
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Export character sheet");
+    chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
+    if (suggestedDirectory != null && suggestedDirectory.toFile().isDirectory()) {
+      chooser.setInitialDirectory(suggestedDirectory.toFile());
+    }
+    chooser.setInitialFileName(fileBaseName(character) + ".pdf");
+    File chosen = chooser.showSaveDialog(stage);
+    if (chosen == null) {
+      return;
+    }
+    // Rendered in memory first, so a failed export leaves an existing file untouched.
+    ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+    try {
+      CharacterSheetPdf.write(SheetContent.of(character), pdf);
+      Files.write(chosen.toPath(), pdf.toByteArray());
+    } catch (IOException | RuntimeException e) {
+      showError("The character sheet could not be exported.", e.getMessage());
+    }
   }
 
   @FXML
@@ -239,6 +274,7 @@ public class MainWindowController {
       return;
     }
     createCharacterItem.setDisable(character.isCreationComplete());
+    exportSheetItem.setDisable(false);
     gmModeItem.setDisable(false);
     gmModeItem.setSelected(character.isGmMode());
     if (view != null) {
@@ -282,8 +318,13 @@ public class MainWindowController {
    * legacy file; the name gets a {@code _v3} suffix so the legacy file is not proposed.
    */
   private String suggestedFileName(Character current) {
-    String base = current.getName().isBlank() ? "character" : current.getName().replaceAll("[\\\\/:*?\"<>|]", "_");
+    String base = fileBaseName(current);
     return current.isLegacyImport() && file == null ? base + "_v3.json" : base + ".json";
+  }
+
+  /** The character's name without characters that file systems reject, or "character". */
+  private static String fileBaseName(Character current) {
+    return current.getName().isBlank() ? "character" : current.getName().replaceAll("[\\\\/:*?\"<>|]", "_");
   }
 
   private FileChooser fileChooser(String title) {

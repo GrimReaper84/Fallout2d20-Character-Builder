@@ -8,23 +8,30 @@ import org.jspecify.annotations.NonNull;
  * (CRB p. 146), each with its own damage resistance.
  */
 public enum HitLocation {
-  HEAD("Head"),
-  TORSO("Torso"),
-  LEFT_ARM("Left Arm"),
-  RIGHT_ARM("Right Arm"),
-  LEFT_LEG("Left Leg"),
-  RIGHT_LEG("Right Leg"),
-  OPTICS("Optics"),
-  MAIN_BODY("Main Body"),
-  ARM_1("Arm 1"),
-  ARM_2("Arm 2"),
-  ARM_3("Arm 3"),
-  THRUSTER("Thruster");
+  HEAD("Head", "1–2"),
+  TORSO("Torso", "3–8"),
+  LEFT_ARM("Left Arm", "9–11"),
+  RIGHT_ARM("Right Arm", "12–14"),
+  LEFT_LEG("Left Leg", "15–17"),
+  RIGHT_LEG("Right Leg", "18–20"),
+  OPTICS("Optics", "1–2"),
+  MAIN_BODY("Main Body", "3–8"),
+  ARM_1("Arm 1", "9–11"),
+  ARM_2("Arm 2", "12–14"),
+  ARM_3("Arm 3", "15–17"),
+  THRUSTER("Thruster", "18–20");
 
   private final @NonNull String displayName;
+  private final @NonNull String dieRange;
 
-  HitLocation(@NonNull String displayName) {
+  HitLocation(@NonNull String displayName, @NonNull String dieRange) {
     this.displayName = displayName;
+    this.dieRange = dieRange;
+  }
+
+  /** The d20 results that hit this location (CRB p. 28; Mister Handy CRB p. 54), e.g. "9–11". */
+  public @NonNull String dieRange() {
+    return dieRange;
   }
 
   /** Name as printed, also the key of the legacy {@code armor} map. */

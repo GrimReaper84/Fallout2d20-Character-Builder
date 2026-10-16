@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.NonNull;
 
@@ -45,5 +46,13 @@ public record PerkSelection(
   public PerkSelection(@NonNull CatalogRef perk, int rank, int importedRanks,
       @NonNull List<Attribute> attributeChoices, @NonNull List<Skill> skillChoices) {
     this(perk, rank, importedRanks, attributeChoices, skillChoices, 0);
+  }
+
+  /** The attributes (abbreviated) and skills chosen for the perk's ranks, e.g. "AGI, STR" or "Sneak". */
+  public @NonNull String choiceText() {
+    List<String> names = new ArrayList<>();
+    attributeChoices.forEach(attribute -> names.add(attribute.abbreviation()));
+    skillChoices.forEach(skill -> names.add(skill.displayName()));
+    return String.join(", ", names);
   }
 }

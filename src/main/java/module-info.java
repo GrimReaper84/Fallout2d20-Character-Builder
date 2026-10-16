@@ -6,6 +6,10 @@ module de.fallout2d20.charbuilder {
   requires com.miglayout.javafx;
   requires org.kordamp.ikonli.javafx;
   requires org.kordamp.ikonli.fontawesome6;
+  requires org.apache.pdfbox;
+  // PDFBox is an automatic module and declares no requires; commons-logging is a named module, so it is
+  // only resolved on the module path (./gradlew run, IDE) when required here. The jlink image hid this.
+  requires org.apache.commons.logging;
   requires static org.jspecify;
 
   opens de.fallout2d20.charbuilder.view to javafx.fxml;

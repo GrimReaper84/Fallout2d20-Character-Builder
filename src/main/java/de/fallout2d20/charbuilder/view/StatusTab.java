@@ -40,7 +40,7 @@ final class StatusTab {
     pane.add(new Label("Carry weight"));
     pane.add(new Label(derived.carryWeight() + " lbs."));
     pane.add(new Label("Melee damage"));
-    pane.add(new Label(derived.meleeBonusDice() == 0 ? "+0" : "+" + derived.meleeBonusDice() + " CD"));
+    pane.add(new Label(derived.meleeDamageText()));
     pane.add(new Label("Max Luck points"));
     pane.add(new Label(Integer.toString(derived.maxLuckPoints())));
     resistance(pane, "Physical DR", derived.physical(), PHYSICAL_RESISTANCE_TOOLTIP);

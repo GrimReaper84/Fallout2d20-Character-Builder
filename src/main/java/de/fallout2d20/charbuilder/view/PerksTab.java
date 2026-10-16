@@ -43,7 +43,7 @@ final class PerksTab {
       pane.add(new Label("None"), "span 4");
     }
     for (PerkSelection perk : character.getPerks()) {
-      String chosen = PerkCard.choiceText(perk);
+      String chosen = perk.choiceText();
       String choices = chosen.isEmpty() ? "" : " (" + chosen + ")";
       pane.add(OverviewParts.importMarked(perk(perk), perk.importedRanks() > 0));
       pane.add(new Label("Rank " + perk.rank() + choices), "span 3");

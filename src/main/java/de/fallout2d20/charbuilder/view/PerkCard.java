@@ -127,15 +127,7 @@ final class PerkCard {
   /** The attributes or skills chosen for the perk's ranks, e.g. "AGI, STR". */
   private static @NonNull String choices(@NonNull Character character, @NonNull String perkId) {
     return character.getPerks().stream().filter(perk -> perk.perk().id().equals(perkId)).findFirst()
-        .map(PerkCard::choiceText).orElse("");
-  }
-
-  /** The attributes (abbreviated) and skills chosen for a perk, e.g. "AGI, STR" or "Sneak". */
-  static @NonNull String choiceText(@NonNull PerkSelection perk) {
-    List<String> names = new ArrayList<>();
-    perk.attributeChoices().forEach(attribute -> names.add(attribute.abbreviation()));
-    perk.skillChoices().forEach(skill -> names.add(skill.displayName()));
-    return String.join(", ", names);
+        .map(PerkSelection::choiceText).orElse("");
   }
 
   private static @NonNull String addBlocked(@NonNull Character character, @NonNull List<String> blockers) {

@@ -43,4 +43,9 @@ public record DerivedStats(
   public static @NonNull DerivedStats of(@NonNull Character character) {
     return DerivedStatsCalculator.calculate(character);
   }
+
+  /** The melee bonus as shown in the app and on the sheet: "+0" or e.g. "+2 CD". */
+  public @NonNull String meleeDamageText() {
+    return meleeBonusDice == 0 ? "+0" : "+" + meleeBonusDice + " CD";
+  }
 }

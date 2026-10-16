@@ -1,0 +1,329 @@
+{
+  "schemaVersion" : 3,
+  "name" : "Nora Mayfield",
+  "origin" : {
+    "id" : "survivor"
+  },
+  "level" : 4,
+  "xp" : 650,
+  "creationComplete" : true,
+  "startingLevel" : 3,
+  "startingTagSkills" : [ "lockpick", "repair", "science", "small-guns" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : -1,
+    "per" : 2,
+    "end" : 0,
+    "cha" : 0,
+    "int" : 2,
+    "agi" : 2,
+    "lck" : 0
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : true,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 2,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : true,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 2,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 2,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 2,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ {
+    "ref" : {
+      "id" : "educated"
+    },
+    "imported" : false,
+    "attributeChoices" : [ ]
+  }, {
+    "ref" : {
+      "id" : "fast-shot"
+    },
+    "imported" : false,
+    "attributeChoices" : [ ]
+  } ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "gun-nut"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "awareness"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "rifleman"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 1,
+    "pendingPerks" : 1
+  },
+  "vitals" : {
+    "currentHp" : 9,
+    "rads" : 2,
+    "radiationPoints" : 0,
+    "luckPoints" : 3,
+    "injuries" : [ "LEFT_LEG" ],
+    "notes" : "Session 4: cleared the Red Rocket; Dogmeat joined."
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "settler"
+    },
+    "choices" : [ "Pipe wrench" ],
+    "trinket" : "A cracked pocket watch that still ticks",
+    "freeArms" : false
+  },
+  "inventoryNotes" : "Owes Trudy at the Drumlin Diner 20 caps.",
+  "weapons" : [ {
+    "ref" : {
+      "id" : "pipe-gun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "pipe-wrench"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "hunting-rifle"
+    },
+    "quantity" : 1,
+    "notes" : "Long scope, found in a ranger station"
+  }, {
+    "ref" : {
+      "id" : "combat-knife"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "frag-grenade"
+    },
+    "quantity" : 2
+  } ],
+  "ammunition" : {
+    "38" : 14,
+    "308" : 9
+  },
+  "apparel" : [ {
+    "ref" : {
+      "id" : "tough-clothing"
+    }
+  }, {
+    "ref" : {
+      "id" : "lab-coat"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "leather-chest-piece"
+    }
+  }, {
+    "ref" : {
+      "id" : "leather-arm"
+    },
+    "location" : "LEFT_ARM"
+  }, {
+    "ref" : {
+      "id" : "army-helmet"
+    }
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "6 + 3 CD rounds of .38 ammunition",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "2 rolls on the random food table (CRB p. 202)",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "A cracked pocket watch that still ticks",
+      "weight" : 0
+    },
+    "quantity" : 1,
+    "notes" : "Personal trinket"
+  }, {
+    "custom" : {
+      "name" : "4 + 2 CD bobby pins",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "multi-tool"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mentats"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "stimpak"
+    },
+    "quantity" : 3
+  }, {
+    "ref" : {
+      "id" : "radaway"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "rad-x"
+    },
+    "quantity" : 2
+  }, {
+    "ref" : {
+      "id" : "nuka-cola"
+    },
+    "quantity" : 2
+  }, {
+    "ref" : {
+      "id" : "purified-water"
+    },
+    "quantity" : 3
+  }, {
+    "ref" : {
+      "id" : "bobby-pin"
+    },
+    "quantity" : 6
+  }, {
+    "custom" : {
+      "name" : "Holotape: Vault 81 door code",
+      "weight" : 0,
+      "effects" : "Opens the side entrance"
+    },
+    "quantity" : 1
+  } ],
+  "caps" : 407,
+  "materials" : {
+    "junk" : 3,
+    "common" : 4,
+    "uncommon" : 1,
+    "rare" : 0
+  },
+  "packItemsAdded" : true
+}

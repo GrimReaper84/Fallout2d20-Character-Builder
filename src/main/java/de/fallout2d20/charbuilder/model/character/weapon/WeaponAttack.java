@@ -58,6 +58,11 @@ public record WeaponAttack(
   }
 
   /** The attack with a carried weapon (catalog or custom). */
+  /** Damage as shown in the app and on the sheet, e.g. "4 CD" or "4 CD + 1 CD" with the melee bonus. */
+  public @NonNull String damageText() {
+    return damage + " CD" + (meleeBonus > 0 ? " + " + meleeBonus + " CD" : "");
+  }
+
   public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull CarriedWeapon weapon) {
     CustomWeapon custom = weapon.custom();
     if (custom != null) {

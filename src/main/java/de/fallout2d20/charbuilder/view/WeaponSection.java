@@ -131,7 +131,7 @@ final class WeaponSection {
       }
       table.add(roll);
     }
-    table.add(new Label(attack.damage() + " CD" + (attack.meleeBonus() > 0 ? " + " + attack.meleeBonus() + " CD" : "")));
+    table.add(new Label(attack.damageText()));
     table.add(new Label(orDash(attack.effects())));
     table.add(new Label(orDash(attack.damageType())));
     table.add(new Label(attack.fireRate() == null ? "–" : attack.fireRate().toString()));

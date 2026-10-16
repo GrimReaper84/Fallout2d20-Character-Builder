@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.miglayout.javafx)
     implementation(libs.ikonli.javafx)
     implementation(libs.ikonli.fontawesome6.pack)
+    implementation(libs.pdfbox)
 
     errorprone(libs.errorprone.core)
     errorprone(libs.nullaway)
