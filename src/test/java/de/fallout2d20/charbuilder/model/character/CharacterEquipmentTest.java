@@ -35,7 +35,7 @@ class CharacterEquipmentTest {
     assertThrows(IllegalArgumentException.class, () -> survivor.chooseEquipmentOption(0, "Machete"));
     assertThrows(IllegalArgumentException.class, () -> survivor.chooseEquipmentOption(3, null));
     assertThrows(IllegalArgumentException.class,
-        () -> survivor.chooseEquipmentPack(CatalogRef.of("synth-infiltrator")));
+        () -> survivor.chooseEquipmentPack(CatalogRef.of("lone-wanderer")));
   }
 
   @Test

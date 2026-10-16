@@ -91,7 +91,7 @@ final class DerivedStatsCalculator {
    * name that conflict.
    */
   private static int robotArmorCarryWeight(@NonNull Character character) {
-    return character.getApparel().stream().filter(item -> !item.locations().isEmpty())
+    return character.getApparel().stream().filter(item -> !item.locations(character.hitLocations()).isEmpty())
         .map(WornApparel::values).flatMap(Optional::stream)
         .filter(values -> values.kind().isRobot()).mapToInt(ApparelValues::carryWeight).sum();
   }

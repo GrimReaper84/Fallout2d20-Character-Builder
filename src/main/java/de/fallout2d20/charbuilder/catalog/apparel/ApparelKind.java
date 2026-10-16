@@ -25,7 +25,7 @@ public enum ApparelKind {
     return displayName;
   }
 
-  /** Whether the item is made for a Mister Handy rather than a humanoid. */
+  /** Whether the item is robot plating or armor (Mister Handy, Protectron) rather than human apparel. */
   public boolean isRobot() {
     return this == ROBOT_PLATING || this == ROBOT_ARMOR;
   }

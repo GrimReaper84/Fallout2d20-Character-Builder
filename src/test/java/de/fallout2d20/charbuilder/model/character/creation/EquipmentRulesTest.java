@@ -23,7 +23,28 @@ class EquipmentRulesTest {
   void asksForAPackOnlyWhenTheOriginHasPacks() {
     assertEquals(List.of(), messages(Character.createNew()), "the origin comes first");
     assertEquals(List.of("Choose an equipment pack."), messages(character("survivor")));
-    assertEquals(List.of(), messages(character("protectron")), "WOA packs follow in F2");
+    assertEquals(List.of("Choose an equipment pack."), messages(character("protectron")));
+  }
+
+  /** WOA p. 22: a Protectron pack needs Winter of Atom enabled (B7 follow-up). */
+  @Test
+  void reportsAPackOfADisabledBook() {
+    StartingEquipment medic = new StartingEquipment(CatalogRef.of("protectron-medic"), List.of(), Map.of(), null,
+        false, List.of());
+    Character protectron = new Character("Test", CatalogRef.of("protectron"), OriginChoices.NONE, 1, 0, false,
+        EnumSet.of(Book.CRB), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
+        null, null, medic, "", null, null, List.of(), Map.of(), List.of());
+    assertEquals(List.of("Protectron Medic needs a book that is not enabled."), messages(protectron));
+  }
+
+  /** WOA p. 26: the Zealot leaves the clothing to choose. */
+  @Test
+  void woaPackChoices() {
+    Character zealot = character("child-of-atom");
+    zealot.chooseEquipmentPack(CatalogRef.of("zealot"));
+    assertEquals(List.of("Choose: Clothing (Zealot pack)."), messages(zealot));
+    zealot.chooseEquipmentOption(0, "Drifter outfit");
+    assertEquals(List.of(), messages(zealot));
   }
 
   /** CRB p. 79: Settler with its melee weapon and trinket, Tags without a choice. */
@@ -62,12 +83,12 @@ class EquipmentRulesTest {
 
   @Test
   void reportsAPackOutsideTheCatalog() {
-    StartingEquipment unknown = new StartingEquipment(new CatalogRef("synth-infiltrator", "Synth Infiltrator"),
+    StartingEquipment unknown = new StartingEquipment(new CatalogRef("lone-wanderer", "Lone Wanderer"),
         List.of(), Map.of(), null, false, List.of());
     Character synth = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, false,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
         null, null, unknown, "", null, null, List.of(), Map.of(), List.of());
-    assertEquals(List.of("\"Synth Infiltrator\" is not an equipment pack of the supported books."),
+    assertEquals(List.of("\"Lone Wanderer\" is not an equipment pack of the supported books."),
         messages(synth));
   }
 

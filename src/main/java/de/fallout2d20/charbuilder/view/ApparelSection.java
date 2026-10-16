@@ -80,10 +80,10 @@ final class ApparelSection {
     }
   }
 
-  /** Catalog items of the enabled books that suit the character ({@link ApparelRules#suits}). */
+  /** Catalog items of the enabled books offered to the character ({@link ApparelRules#isOffered}). */
   private static @NonNull List<ApparelData> offered(@NonNull Character character) {
     return ApparelCatalog.available(character.getEnabledBooks()).stream()
-        .filter(item -> ApparelRules.suits(character, item.kind(), item.isHat())).toList();
+        .filter(item -> ApparelRules.isOffered(character, item.kind(), item.isHat())).toList();
   }
 
   private static void addItem(@NonNull MigPane table, @NonNull Character character, @NonNull WornApparel item,
@@ -133,10 +133,11 @@ final class ApparelSection {
       @NonNull Optional<ApparelData> data, int index, @NonNull Runnable onChanged) {
     Optional<Coverage> chosen = data.flatMap(entry -> entry.coverage().stream().filter(Coverage::isChosen).findFirst());
     if (chosen.isEmpty()) {
-      return new Label(item.locations().stream().map(HitLocation::displayName).collect(Collectors.joining(", ")));
+      return new Label(item.locations(character.hitLocations()).stream().map(HitLocation::displayName)
+          .collect(Collectors.joining(", ")));
     }
     ComboBox<HitLocation> box = new ComboBox<>();
-    box.getItems().setAll(chosen.get().locations());
+    box.getItems().setAll(chosen.get().locationsOn(character.hitLocations()));
     box.setConverter(new DisplayConverter<>(HitLocation::displayName));
     box.setPromptText("Choose");
     box.setValue(item.location());

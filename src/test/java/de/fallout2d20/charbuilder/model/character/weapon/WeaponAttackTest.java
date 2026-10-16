@@ -84,4 +84,42 @@ class WeaponAttackTest {
     assertEquals("Spear", CarriedWeapon.of(custom).displayName());
     assertEquals("Sword", CarriedWeapon.of(CatalogRef.of("sword")).displayName());
   }
+
+  /** A Protectron with STR 8, PER 5, END 7 and no ranks in the attack skills. */
+  private static Character protectron() {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("protectron"));
+    character.setAttributeAllocation(Attribute.STRENGTH, 3);
+    character.setAttributeAllocation(Attribute.ENDURANCE, 2);
+    return character;
+  }
+
+  /** WOA p. 22: Self-Destruct rolls END + Explosives (7 + 0), not the governing PER. */
+  @Test
+  void selfDestructRollsEndurance() {
+    WeaponAttack attack = WeaponAttack.of(protectron(), CarriedWeapon.of(CatalogRef.of("self-destruct")));
+    assertEquals(Attribute.ENDURANCE, attack.attribute());
+    assertEquals(7, attack.targetNumber());
+    assertEquals(6, attack.damage());
+    assertEquals(0, attack.meleeBonus());
+  }
+
+  /** WOA p. 22: the Cryojet rolls PER + Energy Weapons (5 + 0). */
+  @Test
+  void cryojetRollsPerception() {
+    WeaponAttack attack = WeaponAttack.of(protectron(), CarriedWeapon.of(CatalogRef.of("cryojet")));
+    assertEquals(Attribute.PERCEPTION, attack.attribute());
+    assertEquals(5, attack.targetNumber());
+    assertEquals(List.of("cryo-cell"), attack.ammunition());
+  }
+
+  /** WOA p. 22: Claws are unarmed attacks with the melee bonus (STR 8: +1 CD, CRB p. 48). */
+  @Test
+  void protectronClawsAddTheMeleeBonus() {
+    WeaponAttack attack = WeaponAttack.of(protectron(), CarriedWeapon.of(CatalogRef.of("protectron-claws")));
+    assertEquals(Skill.UNARMED, attack.skill());
+    assertEquals(8, attack.targetNumber());
+    assertEquals(3, attack.damage());
+    assertEquals(1, attack.meleeBonus());
+  }
 }

@@ -770,10 +770,16 @@ public class Character {
 
   /**
    * The hit locations of this character: those of a Mister Handy (CRB p. 146) for that origin, else the
-   * six humanoid ones (CRB p. 28). Robots of other books get theirs with their origins.
+   * six humanoid ones (CRB p. 28), also for a Protectron (WOA defines none; house rule, robot armor is mapped
+   * onto them, see {@code Coverage.locationsOn}).
    */
   public @NonNull List<HitLocation> hitLocations() {
-    return origin != null && origin.id().equals(MISTER_HANDY) ? HitLocation.misterHandy() : HitLocation.humanoid();
+    return isMisterHandy() ? HitLocation.misterHandy() : HitLocation.humanoid();
+  }
+
+  /** Whether the origin is the Mister Handy, the one robot with its own body shape (CRB p. 55, 146). */
+  public boolean isMisterHandy() {
+    return origin != null && origin.id().equals(MISTER_HANDY);
   }
 
   /** Puts on an item (any mode: apparel is found, bought and changed at any time). */

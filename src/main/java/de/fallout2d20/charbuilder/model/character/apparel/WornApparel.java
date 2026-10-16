@@ -13,7 +13,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * An item the character wears: a catalog item or a custom one (exactly one of both), the chosen limb for
- * a piece covering a single arm or leg (CRB p. 130; robot armor: one of the three arms, CRB p. 146), and a
+ * a piece covering a single arm or leg (CRB p. 130; robot armor: one of the three arms, CRB p. 146, or of
+ * the two arms of a Protectron), and a
  * free note, e.g. installed mods (mods as a note until they are modelled).
  */
 public record WornApparel(
@@ -56,27 +57,33 @@ public record WornApparel(
   }
 
   /**
-   * Whether a limb must still be chosen: the catalog piece covers a single limb and none of its limbs is
-   * set (none at all, or one that does not fit, e.g. from an edited file).
+   * Whether a limb must still be chosen: the catalog piece covers a single limb and none of its limbs on
+   * this body is set (none at all, or one that does not fit, e.g. from an edited file or another origin).
+   *
+   * @param body the hit locations of the wearer
    */
-  public boolean needsLocation() {
+  public boolean needsLocation(@NonNull List<HitLocation> body) {
     return data().map(data -> data.coverage().stream().filter(Coverage::isChosen)
-        .anyMatch(coverage -> location == null || !coverage.locations().contains(location))).orElse(false);
+        .anyMatch(coverage -> location == null || !coverage.locationsOn(body).contains(location))).orElse(false);
   }
 
   /**
    * The hit locations covered: the custom item's locations, or per catalog coverage the fixed locations
-   * and, for a single limb, the chosen one (none while it is not chosen).
+   * and, for a single limb, the chosen one (none while it is not chosen); robot coverage is mapped onto a
+   * humanoid body ({@link Coverage#locationsOn}).
+   *
+   * @param body the hit locations of the wearer
    */
-  public @NonNull Set<HitLocation> locations() {
+  public @NonNull Set<HitLocation> locations(@NonNull List<HitLocation> body) {
     if (custom != null) {
       return custom.locations();
     }
     Set<HitLocation> covered = EnumSet.noneOf(HitLocation.class);
     for (Coverage coverage : data().map(ApparelData::coverage).orElse(List.of())) {
+      List<HitLocation> onBody = coverage.locationsOn(body);
       if (!coverage.isChosen()) {
-        covered.addAll(coverage.locations());
-      } else if (location != null && coverage.locations().contains(location)) {
+        covered.addAll(onBody);
+      } else if (location != null && onBody.contains(location)) {
         covered.add(location);
       }
     }

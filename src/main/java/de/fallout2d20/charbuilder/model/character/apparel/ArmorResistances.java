@@ -14,8 +14,8 @@ import org.jspecify.annotations.NonNull;
  * apparel and innate resistances.
  *
  * <p>Humanoids: armor worn over clothing uses the higher resistance of each type (CRB p. 130); two pieces
- * of one layer on a location (a hint of {@link ApparelRules}) count the same way, the higher value. A
- * Mister Handy: the plating covers every location and robot armor adds to it (CRB p. 146). Innate
+ * of one layer on a location (a hint of {@link ApparelRules}) count the same way, the higher value. Robots
+ * (Mister Handy, Protectron): the plating covers every location and robot armor adds to it (CRB p. 146). Innate
  * resistances (perks such as Toughness, origin immunities) are added on every location (assumption,
  * legacy behavior: the perks name all locations); poison comes only from them, apparel has no poison
  * value. An item covering a location with radiation immunity (Hazmat Suit, CRB p. 124) makes it immune.
@@ -28,10 +28,11 @@ public final class ArmorResistances {
   public static @NonNull List<LocationResistance> of(@NonNull Character character) {
     DerivedStats innate = DerivedStats.of(character);
     List<LocationResistance> result = new ArrayList<>();
-    for (HitLocation location : character.hitLocations()) {
+    List<HitLocation> body = character.hitLocations();
+    for (HitLocation location : body) {
       List<ApparelValues> worn = new ArrayList<>();
       for (WornApparel item : character.getApparel()) {
-        if (item.locations().contains(location)) {
+        if (item.locations(body).contains(location)) {
           item.values().ifPresent(worn::add);
         }
       }

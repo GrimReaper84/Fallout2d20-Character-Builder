@@ -85,7 +85,7 @@ class StartingEquipmentTest {
         ArmSelection.of(ArmAttachment.LASER_EMITTER)), gutsy.fittedToCatalog(false).arms(),
         "missing arms become the pack's arms");
 
-    StartingEquipment unknownPack = new StartingEquipment(CatalogRef.of("synth-infiltrator"), List.of("Knife"),
+    StartingEquipment unknownPack = new StartingEquipment(CatalogRef.of("lone-wanderer"), List.of("Knife"),
         Map.of(), null, false, List.of());
     assertEquals(unknownPack, unknownPack.fittedToCatalog(false), "a pack outside the catalog is kept as it is");
     assertEquals(StartingEquipment.NONE, StartingEquipment.NONE.fittedToCatalog(false));

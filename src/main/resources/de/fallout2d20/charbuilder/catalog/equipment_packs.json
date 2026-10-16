@@ -171,5 +171,115 @@
     ],
     "trinket": true,
     "caps": 30
+  },
+  {
+    "id": "synth-infiltrator",
+    "name": "Synth Infiltrator",
+    "sources": [{"book": "WOA", "page": 20}],
+    "origins": ["generation-3-synth"],
+    "items": ["Tough clothing", "2 rolls on the Chems, Food or Beverages loot tables (CRB p. 200)"],
+    "choices": [
+      {"label": "Melee weapon", "options": ["Baseball bat", "Switchblade"]},
+      {"label": "Ranged weapon", "options": ["Pipe gun with 10 + 5 CD rounds of .38 ammunition", "10mm pistol with 8 + 4 CD rounds of 10mm ammunition"]}
+    ],
+    "trinket": true,
+    "caps": 0
+  },
+  {
+    "id": "synth-seeker",
+    "name": "Synth Seeker",
+    "sources": [{"book": "WOA", "page": 20}],
+    "origins": ["generation-3-synth"],
+    "items": ["Tough clothing", "3 + 3 CD rounds of ammunition for the chosen ranged weapon", "2 rolls on the Ammunition, Chems or Food loot tables (CRB p. 200)"],
+    "choices": [
+      {"label": "Armor", "options": ["Leather armor chest piece", "Leather armor arm and leather armor leg (choose sides)"]},
+      {"label": "Melee weapon", "options": ["Knuckles", "Lead pipe"]},
+      {"label": "Ranged weapon", "options": ["10mm pistol", "Flare gun", "Hunting rifle"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "protectron",
+    "name": "Protectron",
+    "sources": [{"book": "WOA", "page": 22}],
+    "origins": ["protectron"],
+    "items": ["Standard plating", "Claws", "Two laser guns built into the claws", "Fusion cell with 14 + 7 CD shots", "Recon sensors", "Hazard detection mod", "Robot repair kit"],
+    "caps": 20
+  },
+  {
+    "id": "protectron-fire-brigadier",
+    "name": "Protectron Fire Brigadier",
+    "sources": [{"book": "WOA", "page": 22}],
+    "origins": ["protectron"],
+    "items": ["Standard plating", "Cryojet built into the left hand", "Cryo cell with 14 + 7 CD shots", "Axe as the right hand", "1 stimpak"],
+    "choices": [
+      {"label": "Robot mod", "options": ["Hazard detection mod", "Sensor array"]}
+    ],
+    "caps": 10
+  },
+  {
+    "id": "protectron-medic",
+    "name": "Protectron Medic",
+    "sources": [{"book": "WOA", "page": 23}],
+    "origins": ["protectron"],
+    "items": ["Standard plating", "Shock Hands", "Diagnosis mod", "2 stimpaks", "1 RadAway"],
+    "caps": 0
+  },
+  {
+    "id": "utility-protectron",
+    "name": "Utility Protectron",
+    "sources": [{"book": "WOA", "page": 23}],
+    "origins": ["protectron"],
+    "items": ["Factory armor (main body and arms)", "Claw", "Robot repair kit"],
+    "choices": [
+      {"label": "Weapon", "options": ["Sledgehammer", "Baton", "Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)"]},
+      {"label": "Robot mod", "options": ["Hazard detection mod", "Sensor array"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "nukatron",
+    "name": "Nukatron",
+    "sources": [{"book": "WOA", "page": 24}],
+    "origins": ["protectron"],
+    "items": ["Standard plating", "Claw", "1 Perfectly Preserved Pie"],
+    "choices": [
+      {"label": "Robot mod", "options": ["Behavioral analysis mod", "Integral boiler mod"]},
+      {"label": "Drinks", "options": ["4 Nuka-Colas", "2 Nuka-Cherrys"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "protectron-x",
+    "name": "Protectron X",
+    "sources": [{"book": "WOA", "page": 24}],
+    "origins": ["protectron"],
+    "items": ["Standard plating", "Claws"],
+    "choices": [
+      {"label": "Armor or mod", "options": ["Factory armor (main body and arms)", "Behavioral analysis mod", "Diagnosis mod", "Hacking module", "Hazard detection mod"]},
+      {"label": "Sensors", "options": ["Radiation coils", "Recon sensors", "Sensor array"]},
+      {"label": "Weapon", "options": ["Machete", "Aluminum baseball bat", "Syringer with 10 Bleed-Out shots"]},
+      {"label": "Extra", "options": ["1 roll on the Oddities and Valuables loot table", "1 robot repair kit"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "missionary",
+    "name": "Missionary",
+    "sources": [{"book": "WOA", "page": 26}],
+    "origins": ["child-of-atom"],
+    "items": ["Tough clothing", "Walking cane", "Gamma gun with 4 + 2 CD gamma rounds", "1 stimpak", "1 roll on the random food table (CRB p. 202)"],
+    "caps": 10
+  },
+  {
+    "id": "zealot",
+    "name": "Zealot",
+    "sources": [{"book": "WOA", "page": 26}],
+    "origins": ["child-of-atom"],
+    "items": ["Machete", "Gamma gun with 4 + 2 CD gamma rounds", "Gas mask", "2 rolls on the random food table (CRB p. 202)"],
+    "choices": [
+      {"label": "Clothing", "options": ["Tough clothing", "Drifter outfit"]}
+    ],
+    "caps": 0
   }
 ]

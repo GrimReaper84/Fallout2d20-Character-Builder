@@ -1649,5 +1649,112 @@
     "weight": "<1",
     "cost": 100,
     "rarity": 3
+  },
+  {
+    "id": "protectron-claws",
+    "name": "Claws",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 22
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "origins": [
+      "protectron"
+    ],
+    "legacyNames": [
+      "Protectron Claws"
+    ]
+  },
+  {
+    "id": "cryojet",
+    "name": "Cryojet",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 22
+      },
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Stun",
+      "Persistent"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 4,
+    "range": "CLOSE",
+    "qualities": [
+      "Debilitating",
+      "Inaccurate"
+    ],
+    "weight": "6",
+    "cost": 156,
+    "rarity": 4,
+    "ammunition": [
+      "cryo-cell"
+    ],
+    "origins": [
+      "protectron"
+    ]
+  },
+  {
+    "id": "self-destruct",
+    "name": "Self-Destruct",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 22
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "attribute": "ENDURANCE",
+    "damage": 6,
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "range": "CLOSE",
+    "qualities": [
+      "Blast"
+    ],
+    "origins": [
+      "protectron"
+    ],
+    "legacyNames": [
+      "Protectron Self-Destruct"
+    ]
+  },
+  {
+    "id": "shock-hands",
+    "name": "Shock Hands",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 22
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 4,
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "origins": [
+      "protectron"
+    ],
+    "legacyNames": [
+      "Shock Hand",
+      "Protectron Shock Hands"
+    ]
   }
 ]

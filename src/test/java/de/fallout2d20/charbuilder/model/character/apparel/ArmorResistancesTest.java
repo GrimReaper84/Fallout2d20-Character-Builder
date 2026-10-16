@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -96,5 +97,39 @@ class ArmorResistancesTest {
     assertEquals("Ballistic weave", survivor.getApparel().get(0).notes());
     survivor.removeApparel(0);
     assertTrue(survivor.getApparel().isEmpty());
+  }
+
+  /** House rule (user decision 2026-10-16): a Protectron has humanoid locations and wears robot armor mapped onto them. */
+  @Test
+  void protectronWearsRobotArmorOnHumanoidLocations() {
+    Character protectron = character("protectron");
+    assertEquals(HitLocation.humanoid(), protectron.hitLocations());
+    wear(protectron, "standard-plating", null);
+    for (LocationResistance location : ArmorResistances.of(protectron)) {
+      assertEquals(Resistance.of(2), location.physical(), location.location().name());
+    }
+    wear(protectron, "factory-armor-main-body", null);
+    wear(protectron, "factory-armor-arms", HitLocation.LEFT_ARM);
+    wear(protectron, "factory-armor-optics", null);
+    wear(protectron, "factory-armor-thruster", null);
+    assertEquals(Resistance.of(3), at(protectron, HitLocation.TORSO).physical());
+    assertEquals(Resistance.of(3), at(protectron, HitLocation.HEAD).physical());
+    assertEquals(Resistance.of(3), at(protectron, HitLocation.LEFT_ARM).physical());
+    assertEquals(Resistance.of(2), at(protectron, HitLocation.RIGHT_ARM).physical(), "one arm per piece");
+    assertEquals(Resistance.of(3), at(protectron, HitLocation.LEFT_LEG).physical());
+    assertEquals(Resistance.of(3), at(protectron, HitLocation.RIGHT_LEG).physical());
+    assertEquals(Resistance.IMMUNITY, at(protectron, HitLocation.TORSO).radiation(), "WOA p. 21");
+  }
+
+  /** WOA p. 21: 225 lbs., raised only by modified (robot) armor; the frame counts once its arm is chosen. */
+  @Test
+  void protectronCarryWeightFollowsRobotArmor() {
+    Character protectron = character("protectron");
+    assertEquals(225, DerivedStats.of(protectron).carryWeight());
+    wear(protectron, "actuated-frame-main-body", null);
+    wear(protectron, "actuated-frame-arms", null);
+    assertEquals(245, DerivedStats.of(protectron).carryWeight());
+    protectron.setApparelLocation(1, HitLocation.RIGHT_ARM);
+    assertEquals(255, DerivedStats.of(protectron).carryWeight());
   }
 }

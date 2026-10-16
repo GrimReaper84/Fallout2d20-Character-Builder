@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.catalog.weapon;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
 import java.util.Set;
@@ -16,7 +17,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @param id stable catalog id, referenced by save files
  * @param name name as printed in the book
- * @param sources book and page of the table row
+ * @param sources book and page of the table row (and of a second table describing it, e.g. the Cryojet)
  * @param skill the weapon type, i.e. the skill used to attack (CRB p. 88)
  * @param damage damage rating in Combat Dice
  * @param damageEffects damage effects as printed, with their rating, e.g. {@code Piercing 1}
@@ -30,7 +31,12 @@ import org.jspecify.annotations.Nullable;
  * @param rarity rarity 0–6; {@code null} where the table has none
  * @param ammunition ids of the ammunition types the weapon can use, usually one (Gatling Laser: fusion cells
  *     or a fusion core, CRB p. 107); empty if none
- * @param legacyNames names used by the legacy app where they differ from {@code name}
+ * @param legacyNames other names the weapon is found by: those of the legacy app and other spellings in the
+ *     book (WOA p. 22 "Shock Hand")
+ * @param attribute the attribute of the attack where the book names another than the governing attribute
+ *     of the skill (WOA p. 22: Self-Destruct uses END + Explosives); {@code null} for the governing one
+ * @param origins ids of the origins the weapon is built into (WOA p. 22: Protectron weapons); empty if
+ *     anyone can carry it
  */
 public record WeaponData(
     @JsonProperty(required = true) @NonNull String id,
@@ -47,7 +53,9 @@ public record WeaponData(
     @Nullable Integer cost,
     @Nullable Integer rarity,
     @NonNull List<String> ammunition,
-    @NonNull List<String> legacyNames) {
+    @NonNull List<String> legacyNames,
+    @Nullable Attribute attribute,
+    @NonNull List<String> origins) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;
@@ -67,6 +75,17 @@ public record WeaponData(
     qualities = qualities == null ? List.of() : List.copyOf(qualities);
     ammunition = ammunition == null ? List.of() : List.copyOf(ammunition);
     legacyNames = legacyNames == null ? List.of() : List.copyOf(legacyNames);
+    origins = origins == null ? List.of() : List.copyOf(origins);
+  }
+
+  /** The attribute the attack is rolled with: {@link #attribute()} or else the skill's governing attribute. */
+  public @NonNull Attribute attackAttribute() {
+    return attribute != null ? attribute : skill.governingAttribute();
+  }
+
+  /** Whether a character of this origin is offered the weapon: anyone unless it is built into some origins. */
+  public boolean isOfferedTo(@Nullable String originId) {
+    return origins.isEmpty() || (originId != null && origins.contains(originId));
   }
 
   /** Whether one of the books describing the weapon is enabled. */

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The weapon and ammunition catalogs: the only place they are loaded. Both files are read once, when
@@ -35,6 +36,14 @@ public final class WeaponCatalog {
   /** Weapons of the enabled books, in catalog order. */
   public static @NonNull List<WeaponData> available(@NonNull Set<Book> books) {
     return BY_ID.values().stream().filter(weapon -> weapon.isAvailableWith(books)).toList();
+  }
+
+  /**
+   * Weapons a character of this origin can add: those of the enabled books that are not built into other
+   * origins ({@link WeaponData#isOfferedTo}), in catalog order.
+   */
+  public static @NonNull List<WeaponData> offered(@Nullable String originId, @NonNull Set<Book> books) {
+    return available(books).stream().filter(weapon -> weapon.isOfferedTo(originId)).toList();
   }
 
   /** The weapon with this name or legacy name, ignoring case and surrounding blanks. */

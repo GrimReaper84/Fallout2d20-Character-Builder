@@ -43,4 +43,24 @@ public enum Coverage {
   public @NonNull List<HitLocation> locations() {
     return locations;
   }
+
+  /**
+   * The covered locations on a body with these hit locations. Robot armor on a humanoid robot (a Protectron,
+   * WOA p. 20, whose hit locations the book does not define) is mapped by house rule (user decision
+   * 2026-10-16): Optics to the head, Main Body to the torso, an Arm to one chosen arm, the Thruster to both
+   * legs, All to every location. Otherwise as {@link #locations()}.
+   */
+  public @NonNull List<HitLocation> locationsOn(@NonNull List<HitLocation> body) {
+    if (body.containsAll(locations)) {
+      return locations;
+    }
+    return switch (this) {
+      case OPTICS -> List.of(HitLocation.HEAD);
+      case MAIN_BODY -> List.of(HitLocation.TORSO);
+      case ROBOT_ARM -> List.of(HitLocation.LEFT_ARM, HitLocation.RIGHT_ARM);
+      case THRUSTER -> List.of(HitLocation.LEFT_LEG, HitLocation.RIGHT_LEG);
+      case ALL -> body;
+      default -> locations;
+    };
+  }
 }

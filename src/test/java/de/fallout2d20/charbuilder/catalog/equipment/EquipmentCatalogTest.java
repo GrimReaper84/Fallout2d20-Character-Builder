@@ -24,11 +24,12 @@ class EquipmentCatalogTest {
   private static final List<ArmAttachment> ANY_ARM = List.of(ArmAttachment.values());
 
   @Test
-  void loadsSixteenCorePacksForKnownOrigins() {
+  void loadsCoreAndWinterOfAtomPacksForKnownOrigins() {
     List<EquipmentPackData> packs = EquipmentCatalog.packs();
-    assertEquals(16, packs.size());
+    assertEquals(26, packs.size());
+    assertEquals(16, EquipmentCatalog.packs().stream().filter(pack -> pack.isAvailableWith(Set.of(Book.CRB))).count());
     for (EquipmentPackData pack : packs) {
-      assertEquals(List.of(Book.CRB), pack.sources().stream().map(Source::book).toList(), pack.id());
+      assertEquals(1, pack.sources().size(), pack.id());
       for (String origin : pack.origins()) {
         assertTrue(OriginCatalog.byId(origin).isPresent(), pack.id() + ": " + origin);
       }
@@ -53,8 +54,23 @@ class EquipmentCatalogTest {
         "trader", "wanderer"), packIds("ghoul"));
     assertTrue(pack("vault-tec-resident").needsGmPermission("ghoul"));
     assertFalse(pack("settler").needsGmPermission("ghoul"));
-    assertEquals(List.of(), packIds("protectron"), "WOA packs follow in F2");
     assertEquals(List.of(), EquipmentCatalog.packsFor("survivor", Set.of(Book.WOA)));
+  }
+
+  /** WOA pp. 20, 22–24, 26: two packs per Gen 3 Synth and Child of Atom, six for a Protectron. */
+  @Test
+  void offersTheWinterOfAtomPacks() {
+    assertEquals(List.of("synth-infiltrator", "synth-seeker"), packIds("generation-3-synth"));
+    assertEquals(List.of("protectron", "protectron-fire-brigadier", "protectron-medic", "utility-protectron",
+        "nukatron", "protectron-x"), packIds("protectron"));
+    assertEquals(List.of("missionary", "zealot"), packIds("child-of-atom"));
+    assertEquals(List.of(), EquipmentCatalog.packsFor("protectron", Set.of(Book.CRB)), "needs WOA");
+    assertEquals(20, pack("protectron").caps());
+    assertEquals(10, pack("protectron-fire-brigadier").caps());
+    assertEquals(10, pack("missionary").caps());
+    assertTrue(pack("synth-infiltrator").trinket());
+    assertEquals(4, pack("protectron-x").choices().size());
+    assertFalse(pack("utility-protectron").items().contains("Standard plating"), "WOA p. 23 lists no plating");
   }
 
   /** CRB pp. 76–80: caps and personal trinkets per pack. */
@@ -68,8 +84,10 @@ class EquipmentCatalogTest {
         Map.entry("nurse-handy", 10), Map.entry("brute", 5), Map.entry("skirmisher", 5),
         Map.entry("vault-tec-resident", 10), Map.entry("vault-tec-security", 0),
         Map.entry("mercenary", 15), Map.entry("raider", 15), Map.entry("settler", 45),
-        Map.entry("trader", 50), Map.entry("wanderer", 30)), caps);
-    assertEquals(Set.of("brute", "skirmisher", "settler", "trader", "wanderer"),
+        Map.entry("trader", 50), Map.entry("wanderer", 30)), caps.entrySet().stream()
+            .filter(entry -> pack(entry.getKey()).isAvailableWith(Set.of(Book.CRB)))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    assertEquals(Set.of("brute", "skirmisher", "settler", "trader", "wanderer", "synth-infiltrator"),
         EquipmentCatalog.packs().stream().filter(EquipmentPackData::trinket)
             .map(EquipmentPackData::id).collect(Collectors.toSet()));
   }

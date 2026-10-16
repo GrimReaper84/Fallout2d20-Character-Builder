@@ -1,7 +1,10 @@
 package de.fallout2d20.charbuilder.model.character.apparel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
@@ -37,7 +40,7 @@ class ApparelRulesTest {
     assertEquals(List.of("Armor cannot be worn over an outfit (CRB p. 130).",
         "Raider Chest Piece and Metal Chest Piece both cover the Torso; the higher values count.",
         "Choose where Leather Arm is worn.",
-        "Standard Plating is made for a Mister Handy."), hints(survivor));
+        "Standard Plating is made for robots."), hints(survivor));
   }
 
   @Test
@@ -61,5 +64,33 @@ class ApparelRulesTest {
     Character survivor = character("survivor");
     survivor.addApparel(WornApparel.of(CatalogRef.fromLegacyName("Spacesuit")));
     assertEquals(List.of("\"Spacesuit\" is not an item of the supported books."), hints(survivor));
+  }
+
+  /** House rule (user decision 2026-10-16): human apparel on a Protectron is offered, with a hint; robot armor fits. */
+  @Test
+  void protectronGetsAHintForHumanApparel() {
+    Character protectron = character("protectron");
+    wear(protectron, "standard-plating", null);
+    wear(protectron, "factory-armor-arms", HitLocation.RIGHT_ARM);
+    assertEquals(List.of(), hints(protectron));
+    wear(protectron, "leather-chest-piece", null);
+    assertEquals(List.of("Robots like the Protectron wear robot plating and armor; Leather Chest Piece only with GM "
+        + "permission."), hints(protectron));
+    wear(protectron, "factory-armor-arms", HitLocation.ARM_1);
+    assertTrue(hints(protectron).contains("Choose where Factory Armor is worn."), "a Mister Handy arm does not fit");
+    assertTrue(ApparelRules.isOffered(protectron, ApparelKind.ARMOR, false));
+    assertTrue(ApparelRules.isOffered(protectron, ApparelKind.ROBOT_ARMOR, false));
+    Character handy = character("mister-handy");
+    assertFalse(ApparelRules.isOffered(handy, ApparelKind.ARMOR, false));
+    assertFalse(ApparelRules.isOffered(character("survivor"), ApparelKind.ROBOT_PLATING, false));
+  }
+
+  /** CRB p. 146: the hat exception belongs to the Mister Handy; on a Protectron a hat is human apparel too. */
+  @Test
+  void hatExceptionOnlyForAMisterHandy() {
+    Character protectron = character("protectron");
+    wear(protectron, "casual-hat", null);
+    assertEquals(List.of("Robots like the Protectron wear robot plating and armor; Casual Hat only with GM "
+        + "permission."), hints(protectron));
   }
 }

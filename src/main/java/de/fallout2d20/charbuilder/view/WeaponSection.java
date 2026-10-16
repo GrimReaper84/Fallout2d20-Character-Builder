@@ -3,6 +3,8 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
+import de.fallout2d20.charbuilder.model.character.Attribute;
+import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -67,8 +69,9 @@ final class WeaponSection {
 
     Button add = new Button("Add weapon");
     add.setGraphic(new FontIcon("fas-plus"));
-    List<WeaponData> offered = WeaponCatalog.available(character.getEnabledBooks()).stream()
-        .filter(data -> !data.id().equals(UNARMED_STRIKE)).toList();
+    CatalogRef origin = character.getOrigin();
+    List<WeaponData> offered = WeaponCatalog.offered(origin == null ? null : origin.id(), character.getEnabledBooks())
+        .stream().filter(data -> !data.id().equals(UNARMED_STRIKE)).toList();
     add.setOnAction(event -> AddWeaponDialog.show(window(add), offered).ifPresent(weapon -> {
           character.addWeapon(weapon);
           onChanged.run();
@@ -119,13 +122,14 @@ final class WeaponSection {
     name.setTooltip(new Tooltip(source));
     table.add(name);
     Skill skill = attack.skill();
+    Attribute attribute = attack.attribute();
     if (skillChoice != null) {
       table.add(skillChoice);
     } else {
       Label roll = new Label(attack.targetNumber() == null ? "–"
           : "TN " + attack.targetNumber() + ", crit ≤ " + attack.criticalRange());
-      if (skill != null) {
-        roll.setTooltip(new Tooltip(skill.governingAttribute().abbreviation() + " + " + skill.displayName()
+      if (skill != null && attribute != null) {
+        roll.setTooltip(new Tooltip(attribute.abbreviation() + " + " + skill.displayName()
             + (character.isTagged(skill) ? " (Tag skill)" : "")));
       }
       table.add(roll);
@@ -154,15 +158,16 @@ final class WeaponSection {
     MigPane rows = new MigPane("insets 0, gap 10 4, wrap 2");
     for (String id : shown) {
       Label name = new Label(ammunitionName(id));
-      WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip("Found: " + data.quantityFound()
-          + ", rarity " + data.rarity() + " (" + data.sources().get(0) + ")")));
+      WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip("Found: "
+          + orDash(data.quantityFound()) + ", rarity " + orDash(data.rarity()) + " (" + data.sources().get(0) + ")")));
       rows.add(name);
       rows.add(numberField(character.ammunition(id), 0, shots -> {
         character.setAmmunition(id, shots);
         onChanged.run();
       }));
     }
-    List<AmmunitionData> others = WeaponCatalog.ammunition().stream().filter(data -> !shown.contains(data.id())).toList();
+    List<AmmunitionData> others = WeaponCatalog.ammunition().stream()
+        .filter(data -> !shown.contains(data.id()) && data.isAvailableWith(character.getEnabledBooks())).toList();
     ComboBox<AmmunitionData> add = new ComboBox<>();
     add.getItems().setAll(others);
     add.setConverter(new DisplayConverter<>(AmmunitionData::name));
@@ -230,8 +235,8 @@ final class WeaponSection {
     return WeaponCatalog.ammunitionById(id).map(AmmunitionData::name).orElse(id);
   }
 
-  private static @NonNull String orDash(@NonNull String text) {
-    return text.isBlank() ? "–" : text;
+  private static @NonNull String orDash(@Nullable Object value) {
+    return value == null || value.toString().isBlank() ? "–" : value.toString();
   }
 
   private static @Nullable Window window(@NonNull Node node) {

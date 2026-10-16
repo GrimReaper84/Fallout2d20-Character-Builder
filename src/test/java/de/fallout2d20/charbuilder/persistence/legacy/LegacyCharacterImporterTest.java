@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -138,6 +139,21 @@ class LegacyCharacterImporterTest {
     assertTrue(result.importReport().warnings().stream()
         .anyMatch(warning -> warning.message().contains("Fusion Core")));
     assertFalse(result.importReport().hasWarnings());
+  }
+
+  /** WOA pp. 22–23: a legacy Protectron keeps its pack (by book name) and its built-in weapon (legacy name). */
+  @Test
+  void importsWinterOfAtomPacksAndProtectronWeapons() throws Exception {
+    ObjectNode root = minimal();
+    root.put("origin", "Protectron");
+    root.put("equipmentPack", "Protectron Medic");
+    root.putArray("weapons").addObject().put("name", "Protectron Shock Hands").put("dmg", "4").put("type", "Energy");
+    CharacterFile result = importer.importCharacter(root);
+
+    CatalogRef pack = result.character().getStartingEquipment().pack();
+    assertEquals("protectron-medic", pack == null ? null : pack.id());
+    assertEquals(List.of("shock-hands"), result.character().getWeapons().stream()
+        .map(weapon -> weapon.data().map(WeaponData::id).orElse("custom")).toList());
   }
 
   /** The hand-typed DR per location becomes one custom item per location with a value (user decision). */
@@ -349,16 +365,16 @@ class LegacyCharacterImporterTest {
     assertFalse(hasInfo(consistent, "originOptions"));
   }
 
-  /** A pack outside the catalog (e.g. a WOA pack) stays in the legacy data together with its trinket. */
+  /** A pack outside the catalog (e.g. homebrew) stays in the legacy data together with its trinket. */
   @Test
   void keepsUnknownPacksWithTheirTrinket() throws Exception {
     ObjectNode unknownPack = minimal();
-    unknownPack.put("equipmentPack", "Synth Infiltrator");
+    unknownPack.put("equipmentPack", "Lone Wanderer");
     unknownPack.put("trinket", "Broken holotape");
     CharacterFile result = importer.importCharacter(unknownPack);
     assertEquals(StartingEquipment.NONE, result.character().getStartingEquipment());
     ObjectNode payload = result.character().getLegacyImport().payload();
-    assertEquals("Synth Infiltrator", payload.get("equipmentPack").asText());
+    assertEquals("Lone Wanderer", payload.get("equipmentPack").asText());
     assertEquals("Broken holotape", payload.get("trinket").asText());
     assertTrue(has(result, WarningSeverity.WARNING, "equipmentPack"));
 

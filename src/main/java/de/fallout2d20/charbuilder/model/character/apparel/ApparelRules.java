@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character.apparel;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.ArrayList;
@@ -12,8 +13,9 @@ import org.jspecify.annotations.NonNull;
 /**
  * Hints about worn apparel, in every mode; soft only, the values are computed anyway (user decision): armor
  * over an outfit (CRB p. 130), two items of one layer on the same location, human apparel on a Mister Handy
- * (only hats, without effect, CRB p. 146), robot armor on anyone else, single-limb pieces without a fitting
- * limb, and items outside the catalog.
+ * (only hats, without effect, CRB p. 146) or on a humanoid robot such as the Protectron (house rule: it
+ * wears robot plating and armor, user decision 2026-10-16), robot armor on anyone else, single-limb pieces without a fitting limb, and
+ * items outside the catalog.
  */
 public final class ApparelRules {
 
@@ -21,20 +23,35 @@ public final class ApparelRules {
 
   private ApparelRules() {}
 
-  /** Whether the character has the hit locations of a Mister Handy and so wears robot plating and armor. */
+  /** Whether the character is a robot (Mister Handy, Protectron, Assaultron) and so wears robot plating and armor. */
   public static boolean isRobot(@NonNull Character character) {
-    return character.hitLocations().equals(HitLocation.misterHandy());
+    return character.getOriginData().map(OriginData::robot).orElse(false);
   }
 
-  /** Whether an item of this kind suits the character: robot items (and hats) for a Mister Handy, the rest for others. */
+  /**
+   * Whether an item of this kind suits the character: robot items for robots (plus hats for a Mister Handy,
+   * CRB p. 146), the rest for others.
+   */
   public static boolean suits(@NonNull Character character, @NonNull ApparelKind kind, boolean hat) {
-    return isRobot(character) ? kind.isRobot() || hat : !kind.isRobot();
+    if (character.isMisterHandy()) {
+      return kind.isRobot() || hat;
+    }
+    return isRobot(character) == kind.isRobot();
+  }
+
+  /**
+   * Whether the add dialog offers an item of this kind: what {@link #suits} the character, and for a
+   * humanoid robot also human apparel (allowed with GM permission, so only a hint), never for a Mister Handy.
+   */
+  public static boolean isOffered(@NonNull Character character, @NonNull ApparelKind kind, boolean hat) {
+    return suits(character, kind, hat) || (isRobot(character) && !character.isMisterHandy());
   }
 
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
     List<WornApparel> worn = character.getApparel();
     boolean robot = isRobot(character);
+    List<HitLocation> body = character.hitLocations();
     if (has(worn, ApparelKind.OUTFIT) && has(worn, ApparelKind.ARMOR)) {
       problems.add(new CreationProblem(TOPIC, "Armor cannot be worn over an outfit (CRB p. 130)."));
     }
@@ -44,21 +61,24 @@ public final class ApparelRules {
       if (kind.isEmpty()) {
         problems.add(new CreationProblem(TOPIC, "\"" + item.displayName() + "\" is not an item of the supported books."));
       }
-      if (item.needsLocation()) {
+      if (item.needsLocation(body)) {
         problems.add(new CreationProblem(TOPIC, "Choose where " + item.displayName() + " is worn."));
       }
       boolean hat = item.data().map(ApparelData::isHat).orElse(false);
       if (kind.isPresent() && robot && !suits(character, kind.get(), hat)) {
-        problems.add(new CreationProblem(TOPIC, "A Mister Handy cannot wear " + item.displayName() + " (CRB p. 146)."));
+        problems.add(new CreationProblem(TOPIC, character.isMisterHandy()
+            ? "A Mister Handy cannot wear " + item.displayName() + " (CRB p. 146)."
+            : "Robots like the " + character.getOriginData().map(OriginData::name).orElse("")
+                + " wear robot plating and armor; " + item.displayName() + " only with GM permission."));
       }
       if (kind.isPresent() && !robot && !suits(character, kind.get(), hat)) {
-        problems.add(new CreationProblem(TOPIC, item.displayName() + " is made for a Mister Handy."));
+        problems.add(new CreationProblem(TOPIC, item.displayName() + " is made for robots."));
       }
       for (int j = i + 1; j < worn.size(); j++) {
         WornApparel other = worn.get(j);
         Optional<ApparelKind> otherKind = other.values().map(ApparelValues::kind);
         if (kind.isPresent() && otherKind.isPresent() && layer(kind.get()) == layer(otherKind.get())) {
-          item.locations().stream().filter(other.locations()::contains).findFirst().ifPresent(location ->
+          item.locations(body).stream().filter(other.locations(body)::contains).findFirst().ifPresent(location ->
               problems.add(new CreationProblem(TOPIC, item.displayName() + " and " + other.displayName()
                   + " both cover the " + location.displayName() + "; the higher values count.")));
         }

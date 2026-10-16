@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.model.character.weapon;
 import de.fallout2d20.charbuilder.catalog.weapon.DamageType;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
+import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
@@ -17,13 +18,15 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>CRB p. 27: the attack is a test of the skill of the weapon type with its governing attribute (STR +
  * Melee Weapons, AGI + Small Guns, END + Big Guns, PER + Energy Weapons, PER + Explosives, AGI + Throwing,
- * STR + Unarmed), so the target number is attribute + skill rank. CRB p. 13: with a Tag skill every d20
+ * STR + Unarmed), so the target number is attribute + skill rank; a catalog weapon may name another
+ * attribute (WOA p. 22: Self-Destruct, END + Explosives). CRB p. 13: with a Tag skill every d20
  * up to the skill rank is a critical success, otherwise only a 1. CRB p. 88: melee and unarmed attacks
  * add the melee bonus (CRB p. 48) to the damage. Perk damage bonuses and mods are not included (user
  * decision).
  *
  * @param name weapon name
  * @param skill the attack skill; {@code null} if unknown (custom weapon without skill, unknown id)
+ * @param attribute the attribute rolled with the skill; {@code null} without skill
  * @param targetNumber attribute + skill rank; {@code null} without skill
  * @param criticalRange highest d20 result that is a critical success; {@code null} without skill
  * @param damage damage rating in CD
@@ -38,6 +41,7 @@ import org.jspecify.annotations.Nullable;
 public record WeaponAttack(
     @NonNull String name,
     @Nullable Skill skill,
+    @Nullable Attribute attribute,
     @Nullable Integer targetNumber,
     @Nullable Integer criticalRange,
     int damage,
@@ -58,41 +62,43 @@ public record WeaponAttack(
     CustomWeapon custom = weapon.custom();
     if (custom != null) {
       String ammunition = custom.ammunition();
-      return create(character, custom.name(), custom.skill(), custom.damage(), custom.effects(),
+      Skill skill = custom.skill();
+      return create(character, custom.name(), skill, skill == null ? null : skill.governingAttribute(),
+          custom.damage(), custom.effects(),
           custom.damageType(), custom.fireRate(), custom.range(), custom.qualities(),
           ammunition == null ? List.of() : List.of(ammunition));
     }
     Optional<WeaponData> data = weapon.data();
     if (data.isEmpty()) {
-      return create(character, weapon.displayName(), null, 0, "", "", null, null, "", List.of());
+      return create(character, weapon.displayName(), null, null, 0, "", "", null, null, "", List.of());
     }
     return of(character, data.get());
   }
 
   /** The attack with a catalog weapon, e.g. the Unarmed Strike every character has (CRB p. 111). */
   public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull WeaponData weapon) {
-    return create(character, weapon.name(), weapon.skill(), weapon.damage(),
+    return create(character, weapon.name(), weapon.skill(), weapon.attackAttribute(), weapon.damage(),
         String.join(", ", weapon.damageEffects()),
         weapon.damageTypes().stream().map(DamageType::displayName).collect(Collectors.joining("/")),
         weapon.fireRate(), weapon.range(), String.join(", ", weapon.qualities()), weapon.ammunition());
   }
 
   private static @NonNull WeaponAttack create(@NonNull Character character, @NonNull String name,
-      @Nullable Skill skill, int damage, @NonNull String effects, @NonNull String damageType,
+      @Nullable Skill skill, @Nullable Attribute attribute, int damage, @NonNull String effects, @NonNull String damageType,
       @Nullable Integer fireRate, @Nullable WeaponRange range, @NonNull String qualities,
       @NonNull List<String> ammunition) {
     Integer targetNumber = null;
     Integer criticalRange = null;
     int meleeBonus = 0;
-    if (skill != null) {
+    if (skill != null && attribute != null) {
       int rank = character.skillRank(skill);
-      targetNumber = character.attributeValue(skill.governingAttribute()) + rank;
+      targetNumber = character.attributeValue(attribute) + rank;
       criticalRange = character.isTagged(skill) ? Math.max(1, rank) : 1;
       if (skill == Skill.MELEE_WEAPONS || skill == Skill.UNARMED) {
         meleeBonus = DerivedStats.of(character).meleeBonusDice();
       }
     }
-    return new WeaponAttack(name, skill, targetNumber, criticalRange, damage, meleeBonus, effects, damageType,
+    return new WeaponAttack(name, skill, attribute, targetNumber, criticalRange, damage, meleeBonus, effects, damageType,
         fireRate, range, qualities, ammunition);
   }
 }
