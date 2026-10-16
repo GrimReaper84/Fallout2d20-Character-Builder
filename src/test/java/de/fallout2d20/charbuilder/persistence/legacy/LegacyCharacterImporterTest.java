@@ -84,8 +84,8 @@ class LegacyCharacterImporterTest {
       assertEquals(1, perk.rank());
       assertEquals(1, perk.importedRanks());
     }
-    assertEquals("small-frame", character.getTraits().get(0).trait().id());
-    assertTrue(character.getTraits().get(0).imported());
+    assertEquals("small-frame", character.getTraits().getFirst().trait().id());
+    assertTrue(character.getTraits().getFirst().imported());
   }
 
   @Test
@@ -113,7 +113,7 @@ class LegacyCharacterImporterTest {
     CharacterFile result = importer.importCharacter(fixture("test-survivor-v2.json"));
     Character character = result.character();
 
-    CarriedWeapon laser = character.getWeapons().get(0);
+    CarriedWeapon laser = character.getWeapons().getFirst();
     assertEquals(CatalogRef.of("laser-gun"), laser.weapon());
     assertEquals("Legacy values: damage 3 CD", laser.notes());
     assertEquals(Map.of("fusion-cell", 16), character.getAmmunition());
@@ -169,7 +169,7 @@ class LegacyCharacterImporterTest {
     List<WornApparel> apparel = result.character().getApparel();
     assertEquals(1, apparel.size());
     assertEquals(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR, Set.of(HitLocation.HEAD), 2, 1, 0,
-        false, 0), apparel.get(0).custom());
+        false, 0), apparel.getFirst().custom());
     assertTrue(result.character().getLegacyImport().payload().has("unknownArmorLocations"));
     assertTrue(result.importReport().hasWarnings());
   }
@@ -179,7 +179,7 @@ class LegacyCharacterImporterTest {
   void legacyRobotLocationsBecomePlating() throws Exception {
     ObjectNode root = minimal();
     root.putObject("armor").putObject("Optics").put("physical", "2").put("energy", 1.0);
-    CustomApparel optics = importer.importCharacter(root).character().getApparel().get(0).custom();
+    CustomApparel optics = importer.importCharacter(root).character().getApparel().getFirst().custom();
     assertEquals(new CustomApparel("Legacy armor (Optics)", ApparelKind.ROBOT_PLATING, Set.of(HitLocation.OPTICS),
         2, 1, 0, false, 0), optics);
   }
@@ -203,7 +203,7 @@ class LegacyCharacterImporterTest {
     root.withArray("weapons").addObject().put("dmg", "3");
     CharacterFile result = importer.importCharacter(root);
 
-    CarriedWeapon weapon = result.character().getWeapons().get(0);
+    CarriedWeapon weapon = result.character().getWeapons().getFirst();
     assertEquals(new CustomWeapon("Alien Blaster", null, 5, "", "Energy/Radiation", 1, WeaponRange.MEDIUM, "",
         null), weapon.custom());
     assertEquals("Legacy ammunition: 10 shots", weapon.notes());
@@ -219,7 +219,7 @@ class LegacyCharacterImporterTest {
     Character character = result.character();
 
     assertEquals(1, result.importReport().sourceSchemaVersion());
-    PerkSelection lifeGiver = character.getPerks().get(0);
+    PerkSelection lifeGiver = character.getPerks().getFirst();
     assertEquals("life-giver", lifeGiver.perk().id());
     assertEquals(2, lifeGiver.rank());
     assertEquals(2, lifeGiver.importedRanks());
@@ -257,9 +257,9 @@ class LegacyCharacterImporterTest {
     List<ImportWarning> derived = derivedWarnings(importer.importCharacter(fixture("test-v1.json")));
 
     assertEquals(1, derived.size());
-    assertEquals(WarningSeverity.INFO, derived.get(0).severity());
+    assertEquals(WarningSeverity.INFO, derived.getFirst().severity());
     assertEquals("Stored values differ from the rules and were recomputed: HP 15 → 26.",
-        derived.get(0).message());
+        derived.getFirst().message());
   }
 
   @Test
@@ -470,7 +470,7 @@ class LegacyCharacterImporterTest {
     assertTrue(payload.get("unknownSkills").has("Hacking"));
     assertEquals(42, payload.get("invalidPerks").get(0).asInt());
     assertEquals(List.of(Attribute.AGILITY, Attribute.PERCEPTION),
-        result.character().getPerks().get(0).attributeChoices());
+        result.character().getPerks().getFirst().attributeChoices());
     assertTrue(result.importReport().hasWarnings());
   }
 
@@ -498,7 +498,7 @@ class LegacyCharacterImporterTest {
     assertEquals("!", payload.get("invalidTraits").get(0).asText());
     assertEquals("?", payload.get("invalidPerks").get(0).asText());
     assertEquals("xyz", payload.get("invalidPerkChoices").get("Intense Training").get(0).asText());
-    assertTrue(result.character().getPerks().get(0).attributeChoices().isEmpty());
+    assertTrue(result.character().getPerks().getFirst().attributeChoices().isEmpty());
     assertTrue(result.importReport().hasWarnings());
   }
 

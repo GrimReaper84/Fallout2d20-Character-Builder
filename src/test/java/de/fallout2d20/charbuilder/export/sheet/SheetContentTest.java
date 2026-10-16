@@ -62,9 +62,9 @@ class SheetContentTest {
     assertEquals(List.of("Optics", "Main Body", "Arm 1", "Arm 2", "Arm 3", "Thruster"),
         sheet.hitLocations().stream().map(HitLocationRow::name).toList());
     assertEquals("18–20", sheet.hitLocations().get(5).dieRange());
-    assertEquals("Immune", sheet.hitLocations().get(0).radiation());
+    assertEquals("Immune", sheet.hitLocations().getFirst().radiation());
     assertEquals("Immune", sheet.poisonDr());
-    assertEquals("Mister Handy Robot", sheet.perks().get(0).name(), "origin trait first");
+    assertEquals("Mister Handy Robot", sheet.perks().getFirst().name(), "origin trait first");
     assertEquals("150", sheet.carryWeightMax());
     assertEquals(3, sheet.notes().stream().filter(note -> note.startsWith("Arm ")).count());
   }
@@ -75,7 +75,7 @@ class SheetContentTest {
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Spiked"));
     SheetContent sheet = SheetContent.of(character);
-    WeaponRow pistol = sheet.weapons().get(0);
+    WeaponRow pistol = sheet.weapons().getFirst();
     assertEquals("10mm Pistol", pistol.name());
     assertEquals("Small Guns", pistol.skill());
     assertEquals("7", pistol.targetNumber(), "AGI 5 + Small Guns 2");
@@ -96,7 +96,7 @@ class SheetContentTest {
     character.addApparel(WornApparel.of(CatalogRef.of("vault-jumpsuit")));
     character.setApparelCarried(0, true);
     SheetContent sheet = SheetContent.of(character);
-    assertEquals(new GearRow("Stimpak ×3", "<1"), sheet.gear().get(0), "light items keep the printed weight");
+    assertEquals(new GearRow("Stimpak ×3", "<1"), sheet.gear().getFirst(), "light items keep the printed weight");
     assertEquals(new GearRow("Toolbox ×3", "6"), sheet.gear().get(1));
     assertEquals("Vault Jumpsuit (carried)", sheet.gear().get(2).item());
     assertTrue(Integer.parseInt(sheet.carryWeightCurrent()) >= 6, "the toolboxes alone weigh 6 lbs.");
@@ -110,7 +110,7 @@ class SheetContentTest {
     character.addPerkRank(CatalogRef.of("awareness"), null, null);
     SheetContent sheet = SheetContent.of(character);
     assertEquals(2, sheet.perks().size(), "Survivor has no named origin trait");
-    PerkRow trait = sheet.perks().get(0);
+    PerkRow trait = sheet.perks().getFirst();
     assertEquals("Educated", trait.name());
     assertEquals("", trait.rank());
     assertTrue(trait.effect().contains("Penalty: "));

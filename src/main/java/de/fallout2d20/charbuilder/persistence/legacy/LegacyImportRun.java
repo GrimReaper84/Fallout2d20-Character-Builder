@@ -224,8 +224,7 @@ final class LegacyImportRun {
   private void fillMissingSkills(@NonNull Map<Skill, Integer> ranks) {
     int missing = 0;
     for (Skill skill : Skill.values()) {
-      if (!ranks.containsKey(skill)) {
-        ranks.put(skill, 0);
+      if (ranks.putIfAbsent(skill, 0) == null) {
         missing++;
       }
     }

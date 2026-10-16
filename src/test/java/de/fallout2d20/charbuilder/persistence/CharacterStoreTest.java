@@ -348,8 +348,8 @@ class CharacterStoreTest {
     assertEquals(5, loaded.getLevel());
     assertEquals(new Progression(4, 4), loaded.getProgression());
     assertEquals(1, loaded.skillState(Skill.REPAIR).stagedRanks());
-    assertEquals(1, loaded.getPerks().get(0).stagedRanks());
-    assertEquals(List.of(Skill.SCIENCE), loaded.getPerks().get(0).skillChoices());
+    assertEquals(1, loaded.getPerks().getFirst().stagedRanks());
+    assertEquals(List.of(Skill.SCIENCE), loaded.getPerks().getFirst().skillChoices());
     assertEquals(Set.of(Skill.SNEAK), loaded.getStartingTagSkills());
     assertEquals(3, loaded.advancementSkillRanksLeft());
     assertEquals(3, loaded.advancementPerksLeft());
@@ -419,11 +419,11 @@ class CharacterStoreTest {
     ObjectNode valid = (ObjectNode) JSON.readTree(file.toFile());
 
     ObjectNode unknownArm = valid.deepCopy();
-    ((ObjectNode) unknownArm.get("startingEquipment").get("arms").get(0)).put("attachment", "CLAW");
+    ((ObjectNode) unknownArm.get("startingEquipment").get("arms").getFirst()).put("attachment", "CLAW");
     assertUnreadable(file, unknownArm);
 
     ObjectNode bothOnOneArm = valid.deepCopy();
-    ((ObjectNode) bothOnOneArm.get("startingEquipment").get("arms").get(0)).put("weapon", "Hunting rifle");
+    ((ObjectNode) bothOnOneArm.get("startingEquipment").get("arms").getFirst()).put("weapon", "Hunting rifle");
     assertUnreadable(file, bothOnOneArm);
 
     ObjectNode unknownSkill = valid.deepCopy();

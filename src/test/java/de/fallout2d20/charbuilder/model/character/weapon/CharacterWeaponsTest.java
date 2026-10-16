@@ -38,7 +38,7 @@ class CharacterWeaponsTest {
         new CarriedWeapon(CatalogRef.of("10mm-pistol"), null, 1, "Long Barrel", false)), character.getWeapons());
     assertThrows(IllegalArgumentException.class, () -> character.setWeaponQuantity(0, 0));
     character.removeWeapon(0);
-    assertEquals("10mm Pistol", character.getWeapons().get(0).displayName());
+    assertEquals("10mm Pistol", character.getWeapons().getFirst().displayName());
     assertThrows(IndexOutOfBoundsException.class, () -> character.removeWeapon(5));
   }
 
@@ -68,7 +68,7 @@ class CharacterWeaponsTest {
     character.addWeapon(CarriedWeapon.of(BLASTER));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("laser-gun")));
     character.setCustomWeaponSkill(0, Skill.ENERGY_WEAPONS);
-    assertEquals(Skill.ENERGY_WEAPONS, character.getWeapons().get(0).skill().orElseThrow());
+    assertEquals(Skill.ENERGY_WEAPONS, character.getWeapons().getFirst().skill().orElseThrow());
     assertThrows(IllegalStateException.class, () -> character.setCustomWeaponSkill(1, Skill.SMALL_GUNS));
   }
 

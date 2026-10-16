@@ -17,11 +17,11 @@ record ItemChoice(@NonNull String id, @NonNull String name, @NonNull String cate
   static @NonNull ItemChoice of(@NonNull ItemData item) {
     String effects = item.effects();
     return new ItemChoice(item.id(), item.name(), item.category().displayName(),
-        (effects == null ? "" : effects + " – ") + item.sources().get(0));
+        (effects == null ? "" : effects + " – ") + item.sources().getFirst());
   }
 
   static @NonNull ItemChoice of(@NonNull MagazineData magazine) {
     return new ItemChoice(magazine.id(), magazine.name(), MagazineData.CATEGORY,
-        (magazine.issues().isEmpty() ? "" : magazine.issues().size() + " issues – ") + magazine.sources().get(0));
+        (magazine.issues().isEmpty() ? "" : magazine.issues().size() + " issues – ") + magazine.sources().getFirst());
   }
 }

@@ -120,7 +120,7 @@ public final class AddWeaponDialog {
   /** One list line, e.g. "10mm Pistol – Small Guns, 4 CD, CRB p. 95". */
   private static @NonNull String describe(@NonNull WeaponData weapon) {
     return weapon.name() + " – " + weapon.skill().displayName() + ", " + weapon.damage() + " CD, "
-        + weapon.sources().get(0);
+        + weapon.sources().getFirst();
   }
 
   /** A whole number of at least 0, or {@code null} for anything else. */

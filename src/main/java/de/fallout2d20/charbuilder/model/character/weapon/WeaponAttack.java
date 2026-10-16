@@ -57,12 +57,12 @@ public record WeaponAttack(
     ammunition = List.copyOf(ammunition);
   }
 
-  /** The attack with a carried weapon (catalog or custom). */
   /** Damage as shown in the app and on the sheet, e.g. "4 CD" or "4 CD + 1 CD" with the melee bonus. */
   public @NonNull String damageText() {
     return damage + " CD" + (meleeBonus > 0 ? " + " + meleeBonus + " CD" : "");
   }
 
+  /** The attack with a carried weapon (catalog or custom). */
   public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull CarriedWeapon weapon) {
     CustomWeapon custom = weapon.custom();
     if (custom != null) {
@@ -74,10 +74,8 @@ public record WeaponAttack(
           ammunition == null ? List.of() : List.of(ammunition));
     }
     Optional<WeaponData> data = weapon.data();
-    if (data.isEmpty()) {
-      return create(character, weapon.displayName(), null, null, 0, "", "", null, null, "", List.of());
-    }
-    return of(character, data.get());
+    return data.map(weaponData -> of(character, weaponData))
+        .orElseGet(() -> create(character, weapon.displayName(), null, null, 0, "", "", null, null, "", List.of()));
   }
 
   /** The attack with a catalog weapon, e.g. the Unarmed Strike every character has (CRB p. 111). */

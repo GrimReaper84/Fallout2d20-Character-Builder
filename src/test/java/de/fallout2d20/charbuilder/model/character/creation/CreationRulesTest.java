@@ -50,9 +50,9 @@ class CreationRulesTest {
   @Test
   void nameHintOnlyForABlankName() {
     Character character = Character.createNew();
-    assertEquals("Name", CreationRules.problems(character).get(0).topic());
+    assertEquals("Name", CreationRules.problems(character).getFirst().topic());
     character.setName("  ");
-    assertEquals("Name", CreationRules.problems(character).get(0).topic());
+    assertEquals("Name", CreationRules.problems(character).getFirst().topic());
     character.setName("Nora");
     assertTrue(CreationRules.problems(character).stream().noneMatch(p -> p.topic().equals("Name")));
   }

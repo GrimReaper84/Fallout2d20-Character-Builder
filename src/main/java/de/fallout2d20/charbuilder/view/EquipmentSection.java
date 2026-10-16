@@ -203,7 +203,7 @@ final class EquipmentSection {
       if (selection.freeArms()) {
         addFreeArm(pane, character, index, arm, onEdited, onChanged);
       } else if (allowed.fixed()) {
-        pane.add(new Label(allowed.options().get(0).displayName()), "span 3");
+        pane.add(new Label(allowed.options().getFirst().displayName()), "span 3");
       } else {
         pane.add(armBox(allowed.options(), arm.attachment(), attachment -> {
           character.chooseArm(index, attachment == null ? ArmSelection.OPEN : ArmSelection.of(attachment));

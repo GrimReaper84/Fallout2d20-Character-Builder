@@ -23,9 +23,9 @@ class CharacterInventoryTest {
     character.setItemNotes(2, "Lucky charm");
 
     List<CarriedItem> items = character.getItems();
-    assertEquals("Stimpak", items.get(0).displayName());
-    assertEquals(3, items.get(0).quantity());
-    assertEquals("Heals 4 HP", items.get(0).effects());
+    assertEquals("Stimpak", items.getFirst().displayName());
+    assertEquals(3, items.getFirst().quantity());
+    assertEquals("Heals 4 HP", items.getFirst().effects());
     assertEquals("Grognak the Barbarian", items.get(1).displayName());
     assertEquals("Ignore one complication on a melee attack", items.get(1).effects());
     assertEquals("<1", items.get(1).printedWeight(), "CRB p. 172");

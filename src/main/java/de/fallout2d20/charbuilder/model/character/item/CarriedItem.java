@@ -75,10 +75,8 @@ public record CarriedItem(
       return custom.effects();
     }
     Optional<MagazineData> publication = magazine();
-    if (publication.isPresent()) {
-      return publication.get().issue(issue).map(MagazineIssue::effect).orElse(publication.get().summary());
-    }
-    return data().map(ItemData::effects).orElse("");
+    return publication.map(magazineData -> magazineData.issue(issue).map(MagazineIssue::effect).orElse(magazineData.summary()))
+        .orElseGet(() -> data().map(ItemData::effects).orElse(""));
   }
 
   public @NonNull CarriedItem withQuantity(int newQuantity) {

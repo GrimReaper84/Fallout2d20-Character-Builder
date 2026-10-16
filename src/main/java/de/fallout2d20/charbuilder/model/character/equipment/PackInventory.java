@@ -4,7 +4,6 @@ import de.fallout2d20.charbuilder.catalog.CatalogNames;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
-import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -173,12 +172,9 @@ public final class PackInventory {
           plain && exact(name, weapon.get().name()), placed));
     }
     Optional<ApparelData> worn = ApparelCatalog.byName(name);
-    if (worn.isPresent()) {
-      return Optional.of(new Match(null, worn.get(), null, quantity, rest,
-          plain && exact(name, worn.get().name()), false));
-    }
-    return ItemCatalog.byName(name).map(item -> new Match(null, null, item, quantity, rest,
-        plain && exact(name, item.name()), false));
+    return worn.map(apparelData -> new Match(null, apparelData, null, quantity, rest,
+        plain && exact(name, apparelData.name()), false)).or(() -> ItemCatalog.byName(name).map(item -> new Match(null, null, item, quantity, rest,
+        plain && exact(name, item.name()), false)));
   }
 
   /** Whether the pack names the entry like the catalog ({@link CatalogNames}). */

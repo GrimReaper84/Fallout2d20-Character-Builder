@@ -46,7 +46,7 @@ class SkillRulesTest {
   void educatedAddsAFreeTag() {
     Character educated = character("survivor", THREE_TAGS, List.of("educated"));
     assertEquals(4, SkillRules.freeTagBudget(educated));
-    assertEquals("Choose 1 more Tag skill.", messages(educated).get(0));
+    assertEquals("Choose 1 more Tag skill.", messages(educated).getFirst());
   }
 
   /** CRB p. 52 (user reading): Ghoul Survival comes in addition to the three free Tags. */

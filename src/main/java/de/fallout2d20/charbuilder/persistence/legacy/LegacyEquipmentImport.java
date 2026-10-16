@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -104,7 +105,7 @@ final class LegacyEquipmentImport {
       options.remove(NO_PINCER);
     }
     List<@Nullable String> names = attachmentNames(options);
-    boolean anyArm = names.stream().anyMatch(name -> name != null);
+    boolean anyArm = names.stream().anyMatch(Objects::nonNull);
     boolean freeArms = false;
     boolean readable = options.path(ATTACHMENTS).isArray() || !options.has(ATTACHMENTS);
     if (!origin.id().equals(MISTER_HANDY)) {

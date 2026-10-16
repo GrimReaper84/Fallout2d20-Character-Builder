@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,10 +46,12 @@ class CarryLoadTest {
   /** Every printed weight of the catalogs is readable. */
   @Test
   void everyCatalogWeightIsReadable() {
-    WeaponCatalog.all().forEach(weapon -> Weight.pounds(weapon.weight()));
-    WeaponCatalog.ammunition().forEach(ammunition -> Weight.pounds(ammunition.weight()));
-    ApparelCatalog.all().forEach(item -> Weight.pounds(item.weight()));
-    ItemCatalog.all().forEach(item -> Weight.pounds(item.weight()));
+    assertDoesNotThrow(() -> {
+      WeaponCatalog.all().forEach(weapon -> Weight.pounds(weapon.weight()));
+      WeaponCatalog.ammunition().forEach(ammunition -> Weight.pounds(ammunition.weight()));
+      ApparelCatalog.all().forEach(item -> Weight.pounds(item.weight()));
+      ItemCatalog.all().forEach(item -> Weight.pounds(item.weight()));
+    });
   }
 
   /** Sledgehammer 12, Leather Chest Piece 3, 2 × Purified Water <1, Multi-Tool 1, custom 4 × 2, junk 2 × 2, 1 material. */

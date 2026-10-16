@@ -138,7 +138,7 @@ public final class AddApparelDialog {
     String radiation = item.radiationImmune() ? "Immune" : Integer.toString(item.radiation());
     return item.name() + " – " + item.kind().displayName() + ", "
         + item.coverage().stream().map(Coverage::displayName).collect(Collectors.joining(", "))
-        + ", " + item.physical() + "/" + item.energy() + "/" + radiation + ", " + item.sources().get(0);
+        + ", " + item.physical() + "/" + item.energy() + "/" + radiation + ", " + item.sources().getFirst();
   }
 
   private static @NonNull TextField numberField() {

@@ -68,7 +68,7 @@ class GmModeTest {
     assertTrue(PerkRules.canAdd(character, PerkCatalog.byId("adamantium-skeleton").orElseThrow()),
         "requirements are hints in GM mode");
     character.addPerkRank(CatalogRef.of("adamantium-skeleton"), null, null);
-    PerkSelection perk = character.getPerks().get(character.getPerks().size() - 1);
+    PerkSelection perk = character.getPerks().getLast();
     assertEquals(0, perk.stagedRanks());
     assertTrue(PerkRules.canRemove(character, "adamantium-skeleton"));
     character.removePerkRank("adamantium-skeleton");

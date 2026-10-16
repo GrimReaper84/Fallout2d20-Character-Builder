@@ -102,7 +102,7 @@ final class ApparelSection {
     });
     table.add(worn);
     Label name = new Label(item.displayName());
-    name.setTooltip(new Tooltip(data.map(entry -> entry.sources().get(0)
+    name.setTooltip(new Tooltip(data.map(entry -> entry.sources().getFirst()
         + (entry.perk() == null ? "" : ", needs " + entry.perk())).orElse("Custom item")));
     Optional<ApparelValues> values = item.values();
     List<Node> cells = List.of(name, new Label(values.map(entry -> entry.kind().displayName()).orElse("–")),

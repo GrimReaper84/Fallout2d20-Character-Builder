@@ -17,12 +17,12 @@ class PerkCatalogTest {
   void loadsAllCorePerks() {
     List<PerkDefinition> perks = PerkCatalog.all();
     assertEquals(94, perks.size());
-    assertEquals("action-boy-girl", perks.get(0).id());
+    assertEquals("action-boy-girl", perks.getFirst().id());
     assertEquals("toughness", perks.get(93).id());
     for (PerkDefinition perk : perks) {
       assertEquals(1, perk.sources().size(), perk.id());
-      assertEquals(Book.CRB, perk.sources().get(0).book(), perk.id());
-      int page = perk.sources().get(0).page();
+      assertEquals(Book.CRB, perk.sources().getFirst().book(), perk.id());
+      int page = perk.sources().getFirst().page();
       assertTrue(page >= 59 && page <= 73, perk.id());
     }
     assertEquals(94, PerkCatalog.available(EnumSet.of(Book.CRB)).size());

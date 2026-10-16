@@ -57,8 +57,13 @@ public final class CharacterSheetPdf {
   static @NonNull PdfCanvas newPage(@NonNull PDDocument document, @NonNull String characterName) throws IOException {
     PdfCanvas canvas = PdfCanvas.newPage(document);
     String name = characterName.isBlank() ? "" : characterName + " · ";
-    canvas.text(MARGIN, SheetLayout.FOOTER_Y, SheetLayout.CONTENT_WIDTH, 10f,
-        name + "Page " + document.getNumberOfPages() + " · " + AppInfo.NAME, PdfCanvas.REGULAR, LABEL_SIZE, true);
+    try {
+      canvas.text(MARGIN, SheetLayout.FOOTER_Y, SheetLayout.CONTENT_WIDTH, 10f,
+          name + "Page " + document.getNumberOfPages() + " · " + AppInfo.NAME, PdfCanvas.REGULAR, LABEL_SIZE, true);
+    } catch (IOException | RuntimeException e) {
+      canvas.close();
+      throw e;
+    }
     return canvas;
   }
 

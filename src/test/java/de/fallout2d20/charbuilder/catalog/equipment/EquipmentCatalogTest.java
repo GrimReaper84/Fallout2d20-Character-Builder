@@ -95,7 +95,7 @@ class EquipmentCatalogTest {
   @Test
   void packChoicesFollowTheBook() {
     assertEquals(List.of("Switchblade", "Pipe wrench", "Rolling pin", "Knuckles"),
-        pack("settler").choices().get(0).options());
+        pack("settler").choices().getFirst().options());
     assertEquals(3, pack("mercenary").choices().size());
     assertEquals(3, pack("raider").choices().size());
     assertEquals(List.of(), pack("vault-tec-security").choices());
@@ -154,9 +154,9 @@ class EquipmentCatalogTest {
     assertFalse(new TagSkillItemData(Skill.BARTER, null, 2, CRB).isChoice());
     assertTrue(new TagSkillItemData(Skill.MELEE_WEAPONS, List.of("Machete", "Baseball bat"), 0, CRB)
         .isChoice());
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(0, "Medal", CRB.get(0)));
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(21, "Medal", CRB.get(0)));
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(5, " ", CRB.get(0)));
+    assertThrows(IllegalArgumentException.class, () -> new TrinketData(0, "Medal", CRB.getFirst()));
+    assertThrows(IllegalArgumentException.class, () -> new TrinketData(21, "Medal", CRB.getFirst()));
+    assertThrows(IllegalArgumentException.class, () -> new TrinketData(5, " ", CRB.getFirst()));
   }
 
   private static List<String> packIds(String originId) {

@@ -55,7 +55,7 @@ final class WeaponSection {
       table.add(label);
     }
     WeaponCatalog.byId(UNARMED_STRIKE).ifPresent(strike -> {
-      addAttack(table, character, WeaponAttack.of(character, strike), strike.sources().get(0).toString(), null);
+      addAttack(table, character, WeaponAttack.of(character, strike), strike.sources().getFirst().toString(), null);
       table.add(new Label(""), "span 3");
     });
     List<CarriedWeapon> weapons = character.getWeapons();
@@ -80,7 +80,7 @@ final class WeaponSection {
 
   private static void addWeapon(@NonNull MigPane table, @NonNull Character character, @NonNull CarriedWeapon weapon,
       int index, @NonNull Runnable onEdited, @NonNull Runnable onChanged) {
-    String source = weapon.data().map(data -> data.sources().get(0).toString()).orElse("Custom weapon");
+    String source = weapon.data().map(data -> data.sources().getFirst().toString()).orElse("Custom weapon");
     CustomWeapon custom = weapon.custom();
     Node skillChoice = custom != null && custom.skill() == null ? skillChoice(character, index, onChanged) : null;
     addAttack(table, character, WeaponAttack.of(character, weapon), source, skillChoice);
@@ -156,7 +156,7 @@ final class WeaponSection {
     for (String id : shown) {
       Label name = new Label(ammunitionName(id));
       WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip("Found: "
-          + orDash(data.quantityFound()) + ", rarity " + orDash(data.rarity()) + " (" + data.sources().get(0) + ")")));
+          + orDash(data.quantityFound()) + ", rarity " + orDash(data.rarity()) + " (" + data.sources().getFirst() + ")")));
       rows.add(name);
       rows.add(NumberField.of(character.ammunition(id), 0, shots -> {
         character.setAmmunition(id, shots);

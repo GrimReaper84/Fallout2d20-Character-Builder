@@ -111,7 +111,7 @@ public final class StartingEquipmentItems {
     }
     String prefix = skill.displayName() + ": ";
     if (!items.isChoice()) {
-      return Optional.of(prefix + items.options().get(0));
+      return Optional.of(prefix + items.options().getFirst());
     }
     String picked = selection.tagSkillItems().get(skill);
     return Optional.of(prefix + (picked != null ? picked

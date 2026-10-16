@@ -123,7 +123,7 @@ public record StartingEquipment(
     for (int slot = 0; slot < pack.arms().size(); slot++) {
       ArmSlot allowed = pack.arms().get(slot);
       if (allowed.fixed()) {
-        arms.add(ArmSelection.of(allowed.options().get(0)));
+        arms.add(ArmSelection.of(allowed.options().getFirst()));
       } else {
         ArmSelection kept = slot < current.size() ? current.get(slot) : ArmSelection.OPEN;
         arms.add(allowed.allows(kept.attachment()) ? kept : ArmSelection.OPEN);

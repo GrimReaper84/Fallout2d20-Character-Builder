@@ -124,7 +124,7 @@ class ArmorResistancesTest {
         Set.of(HitLocation.HEAD), 3, 2, 1, false, 0)));
     assertEquals(Resistance.of(3), at(survivor, HitLocation.HEAD).physical());
     survivor.setApparelNotes(0, "Ballistic weave");
-    assertEquals("Ballistic weave", survivor.getApparel().get(0).notes());
+    assertEquals("Ballistic weave", survivor.getApparel().getFirst().notes());
     survivor.removeApparel(0);
     assertTrue(survivor.getApparel().isEmpty());
   }

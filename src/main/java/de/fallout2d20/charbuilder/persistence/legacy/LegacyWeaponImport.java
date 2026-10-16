@@ -38,7 +38,7 @@ final class LegacyWeaponImport {
   /** Every character has it (CRB p. 111), so it is never a carried weapon. */
   private static final @NonNull String UNARMED_STRIKE = "unarmed-strike";
 
-  private final @NonNull List<CarriedWeapon> weapons = new ArrayList<>();
+  private final @NonNull List<CarriedWeapon> imported = new ArrayList<>();
   private final @NonNull Map<String, Integer> ammunition = new LinkedHashMap<>();
   private final @NonNull List<ImportWarning> warnings;
 
@@ -70,7 +70,7 @@ final class LegacyWeaponImport {
   }
 
   @NonNull List<CarriedWeapon> weapons() {
-    return weapons;
+    return imported;
   }
 
   @NonNull Map<String, Integer> ammunition() {
@@ -105,15 +105,15 @@ final class LegacyWeaponImport {
         warnings.add(new ImportWarning(WarningSeverity.WARNING, WEAPONS,
             name + ": ammunition type unknown; " + shots + " shots kept in the weapon's note."));
       } else {
-        ammunition.merge(weaponAmmunition.get(0), shots, Integer::sum);
+        ammunition.merge(weaponAmmunition.getFirst(), shots, Integer::sum);
         if (weaponAmmunition.size() > 1) {
-          info(name + ": " + shots + " shots counted as " + ammunitionName(weaponAmmunition.get(0))
+          info(name + ": " + shots + " shots counted as " + ammunitionName(weaponAmmunition.getFirst())
               + "; the weapon can also use " + weaponAmmunition.subList(1, weaponAmmunition.size()).stream()
                   .map(LegacyWeaponImport::ammunitionName).collect(Collectors.joining(", ")) + ".");
         }
       }
     }
-    weapons.add(weapon);
+    imported.add(weapon);
   }
 
   /** Damage, effects, fire rate and range of the legacy entry that differ from the catalog. */

@@ -53,7 +53,7 @@ public record CatalogRef(@NonNull String id, @Nullable String legacyName) {
         .replace("&", " and ")
         .replaceAll("['’.!]", "")
         .replaceAll("[^a-z0-9]+", "-")
-        .replaceAll("^-|-$", "");
+        .replaceAll("(^-)|(-$)", "");
   }
 
   /** Text to show while no catalog entry is resolved: the legacy name if present, else the id. */

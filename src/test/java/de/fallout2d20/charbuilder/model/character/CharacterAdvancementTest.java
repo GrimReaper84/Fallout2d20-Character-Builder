@@ -191,7 +191,7 @@ class CharacterAdvancementTest {
     assertTrue(AdvancementRules.problems(character).isEmpty(), "imported ranks may lack their choices");
     character.removePerkRank("intense-training");
     assertEquals(new PerkSelection(CatalogRef.of("intense-training"), 2, 2, List.of(), List.of()),
-        character.getPerks().get(0));
+        character.getPerks().getFirst());
     assertEquals(5, character.attributeValue(Attribute.STRENGTH));
   }
 
@@ -228,7 +228,7 @@ class CharacterAdvancementTest {
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
     character.applyAdvancement();
     assertEquals(new SkillState(false, 0, 1, 0), character.skillState(Skill.SNEAK));
-    assertEquals(0, character.getPerks().get(0).stagedRanks());
+    assertEquals(0, character.getPerks().getFirst().stagedRanks());
     assertEquals(new Progression(1, 1), character.getProgression());
     assertFalse(character.hasStagedAdvancement());
     character.removePerkRank("jury-rigging");

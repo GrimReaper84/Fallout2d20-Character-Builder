@@ -72,7 +72,7 @@ class ItemCatalogTest {
     assertEquals(85, magazines.stream().mapToInt(magazine -> magazine.issues().size()).sum());
     MagazineData grognak = ItemCatalog.magazineById("grognak-the-barbarian").orElseThrow();
     assertEquals(10, grognak.issues().size());
-    assertEquals("1-2", grognak.issues().get(0).roll());
+    assertEquals("1-2", grognak.issues().getFirst().roll());
     assertEquals("The Lair of the Virgin Eaters", grognak.issue("The Lair of the Virgin Eaters").orElseThrow().title());
     assertEquals(5, ItemCatalog.magazineById("tumblers-today").orElseThrow().issues().size());
     assertTrue(ItemCatalog.magazineById("la-fantoma").orElseThrow().issues().isEmpty());

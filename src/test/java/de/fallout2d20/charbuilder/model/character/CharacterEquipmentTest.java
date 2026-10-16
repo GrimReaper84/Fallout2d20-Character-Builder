@@ -112,7 +112,7 @@ class CharacterEquipmentTest {
     handy.chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
     handy.setFreeArms(true);
     assertTrue(handy.getStartingEquipment().freeArms());
-    assertEquals(ArmSelection.of(ArmAttachment.PINCER), handy.getStartingEquipment().arms().get(0));
+    assertEquals(ArmSelection.of(ArmAttachment.PINCER), handy.getStartingEquipment().arms().getFirst());
     handy.chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
     handy.chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
 

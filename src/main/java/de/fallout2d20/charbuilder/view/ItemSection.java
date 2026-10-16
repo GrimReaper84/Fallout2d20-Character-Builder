@@ -114,8 +114,8 @@ final class ItemSection {
     Label name = new Label(item.displayName());
     Optional<ItemData> data = item.data();
     Optional<MagazineData> magazine = item.magazine();
-    name.setTooltip(new Tooltip(data.map(entry -> entry.sources().get(0).toString())
-        .or(() -> magazine.map(entry -> entry.sources().get(0).toString())).orElse("Custom item")));
+    name.setTooltip(new Tooltip(data.map(entry -> entry.sources().getFirst().toString())
+        .or(() -> magazine.map(entry -> entry.sources().getFirst().toString())).orElse("Custom item")));
     table.add(name);
     table.add(new Label(data.map(ItemSection::type).or(() -> magazine.map(entry -> MagazineData.CATEGORY)).orElse("–")));
     table.add(effect(character, item, magazine, index, onChanged));

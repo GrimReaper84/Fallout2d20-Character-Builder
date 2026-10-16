@@ -300,7 +300,7 @@ class CharacterTest {
     assertEquals(7, character.attributeValue(Attribute.AGILITY));
     character.removePerkRank("intense-training");
     assertEquals(6, character.attributeValue(Attribute.AGILITY));
-    assertEquals(List.of(Attribute.AGILITY), character.getPerks().get(0).attributeChoices());
+    assertEquals(List.of(Attribute.AGILITY), character.getPerks().getFirst().attributeChoices());
 
     Character imported = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 4, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
@@ -336,7 +336,7 @@ class CharacterTest {
   void addAndRemovePerkRanksOnlyInCreation() {
     Character character = Character.createNew();
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
-    assertEquals(1, character.getPerks().get(0).rank());
+    assertEquals(1, character.getPerks().getFirst().rank());
     character.removePerkRank("jury-rigging");
     assertTrue(character.getPerks().isEmpty());
     character.removePerkRank("jury-rigging");
@@ -346,11 +346,11 @@ class CharacterTest {
         List.of(new PerkSelection(CatalogRef.of("jury-rigging"), 1, 1, List.of(), List.of())),
         Progression.NONE, Vitals.FULL, null, null);
     withImported.removePerkRank("jury-rigging");
-    assertEquals(1, withImported.getPerks().get(0).rank());
+    assertEquals(1, withImported.getPerks().getFirst().rank());
 
     Character complete = create(Map.of(), Map.of(), baseline(6));
     complete.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
-    assertEquals(1, complete.getPerks().get(0).stagedRanks(), "after creation a perk rank is staged");
+    assertEquals(1, complete.getPerks().getFirst().stagedRanks(), "after creation a perk rank is staged");
     complete.removePerkRank("jury-rigging");
     assertTrue(complete.getPerks().isEmpty());
   }
@@ -387,7 +387,7 @@ class CharacterTest {
     character.setStartingLevel(6);
     assertEquals(3, character.skillRank(Skill.SNEAK));
     assertEquals(1, character.getPerks().size());
-    assertEquals(1, character.getPerks().get(0).rank());
+    assertEquals(1, character.getPerks().getFirst().rank());
   }
 
   @Test

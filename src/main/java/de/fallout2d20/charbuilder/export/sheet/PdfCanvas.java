@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -32,6 +33,9 @@ final class PdfCanvas implements AutoCloseable {
   private static final float PADDING = 2f;
   private static final float SIZE_STEP = 0.5f;
   private static final @NonNull String ELLIPSIS = "…";
+  private static final @NonNull Pattern LINE_BREAK = Pattern.compile("\n");
+  private static final @NonNull Pattern SPACES = Pattern.compile(" +");
+  private static final @NonNull Pattern WHITESPACE = Pattern.compile("[ \n]+");
   private static final @NonNull Map<Integer, String> REPLACEMENTS = Map.of(
       0x2212, "-", 0x2011, "-", 0x2009, " ", 0x202F, " ", 0x2264, "<=", 0x2265, ">=", 0x2192, "->", 0x25CF, "•");
 
@@ -189,9 +193,9 @@ final class PdfCanvas implements AutoCloseable {
   private static @NonNull List<String> wrap(@NonNull String text, @NonNull PDFont font, float size, float width)
       throws IOException {
     List<String> lines = new ArrayList<>();
-    for (String paragraph : text.split("\n", -1)) {
+    for (String paragraph : LINE_BREAK.split(text, -1)) {
       StringBuilder line = new StringBuilder();
-      for (String word : paragraph.strip().split(" +", -1)) {
+      for (String word : SPACES.split(paragraph.strip(), -1)) {
         String candidate = line.isEmpty() ? word : line + " " + word;
         if (width(candidate, font, size) <= width) {
           line.setLength(0);
@@ -221,7 +225,7 @@ final class PdfCanvas implements AutoCloseable {
   /** Width of the widest word, so text shrinks before a word has to be split. */
   private static float longestWord(@NonNull String text, @NonNull PDFont font, float size) throws IOException {
     float widest = 0;
-    for (String word : text.split("[ \n]+", -1)) {
+    for (String word : WHITESPACE.split(text, -1)) {
       widest = Math.max(widest, width(word, font, size));
     }
     return widest;

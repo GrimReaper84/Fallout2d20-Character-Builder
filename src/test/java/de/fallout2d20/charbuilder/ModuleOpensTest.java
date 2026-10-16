@@ -46,7 +46,7 @@ class ModuleOpensTest {
       Pattern.compile("opens\\s+([\\w.]+)\\s+to\\s+com\\.fasterxml\\.jackson\\.databind\\s*;");
 
   @Test
-  void everyPackageReadByJacksonIsOpenedToIt() throws IOException {
+  void everyPackageReadByJacksonIsOpenedToIt() {
     Set<String> needed = new TreeSet<>();
     Set<Class<?>> visited = new HashSet<>();
     for (Class<?> root : JACKSON_ROOTS) {
