@@ -32,7 +32,7 @@ public final class EquipmentRules {
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
     CatalogRef origin = character.getOrigin();
-    if (character.isCreationComplete() || origin == null) {
+    if (!CreationRules.isChecked(character) || origin == null) {
       return problems;
     }
     StartingEquipment selection = character.getStartingEquipment();

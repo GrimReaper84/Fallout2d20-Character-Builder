@@ -52,7 +52,7 @@ final class CharacterMapper {
     for (Skill skill : Skill.values()) {
       SkillState state = character.skillState(skill);
       skills.put(skill.id(), new SkillData(state.tagged(), state.creationRanks(), state.advancementRanks(),
-          state.stagedRanks()));
+          state.stagedRanks(), state.gmRanks()));
     }
     List<TraitData> traits = character.getTraits().stream()
         .map(t -> new TraitData(toData(t.trait()), t.imported(), attributeIds(t.attributeChoices())))
@@ -112,7 +112,7 @@ final class CharacterMapper {
       Skill skill = skill(entry.getKey());
       SkillData skillData = entry.getValue();
       skills.put(skill, new SkillState(skillData.tagged(), skillData.creationRanks(), skillData.advancementRanks(),
-          skillData.stagedRanks()));
+          skillData.stagedRanks(), skillData.gmRanks()));
     }
     List<TraitSelection> traits = new ArrayList<>();
     for (TraitData trait : orEmpty(data.traits())) {

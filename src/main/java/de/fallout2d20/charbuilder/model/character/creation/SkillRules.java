@@ -74,14 +74,43 @@ public final class SkillRules {
     return skillPointBudget(character) - spent;
   }
 
-  /** Whether one more rank may be bought: points left and below the rank cap. */
+  /** Whether one more rank may be bought: points left (not in GM mode, D2) and below the rank cap. */
   public static boolean canRaise(@NonNull Character character, @NonNull Skill skill) {
-    return skillPointsLeft(character) > 0 && character.skillRank(skill) < character.skillRankCap();
+    if (gmCorrects(character)) {
+      return character.skillRank(skill) < character.skillRankCap() && character.gmStepChangesRank(skill, 1);
+    }
+    return (character.isGmMode() || skillPointsLeft(character) > 0)
+        && character.skillRank(skill) < character.skillRankCap();
   }
 
-  /** Whether a bought rank can be taken back. */
+  /**
+   * Whether a rank can be taken back: a bought one during creation; for a complete character in GM mode a
+   * step that really lowers the shown rank (a Tag! bonus can hide it).
+   */
   public static boolean canLower(@NonNull Character character, @NonNull Skill skill) {
-    return character.skillState(skill).creationRanks() > 0;
+    return gmCorrects(character) ? character.gmStepChangesRank(skill, -1)
+        : character.skillState(skill).creationRanks() > 0;
+  }
+
+  /**
+   * Raises (+1) or lowers (−1) a rank if allowed: bought ranks during creation, a GM correction for a
+   * complete character in GM mode (D2: counted at once).
+   */
+  public static void step(@NonNull Character character, @NonNull Skill skill, int delta) {
+    boolean allowed = delta > 0 ? canRaise(character, skill) : canLower(character, skill);
+    if (!allowed) {
+      return;
+    }
+    if (gmCorrects(character)) {
+      character.adjustSkillRankAsGm(skill, delta);
+    } else {
+      character.setCreationRanks(skill, character.skillState(skill).creationRanks() + delta);
+    }
+  }
+
+  /** After creation the GM corrects ranks directly; during creation ranks are bought. */
+  private static boolean gmCorrects(@NonNull Character character) {
+    return character.isGmMode() && character.isCreationComplete();
   }
 
   /**
@@ -95,13 +124,17 @@ public final class SkillRules {
     }
     return !character.isTaggedByOrigin(skill) && !character.isTaggedByPerk(skill)
         && character.tagForbiddenBy(skill).isEmpty()
-        && freeTagsLeft(character) > 0;
+        && (character.isGmMode() || freeTagsLeft(character) > 0);
   }
 
   /** All Tag and skill point problems of a character in creation; empty for complete characters. */
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
-    if (character.isCreationComplete()) {
+    if (!CreationRules.isChecked(character)) {
+      return problems;
+    }
+    if (character.isGmMode()) {
+      checkRankCap(character, problems);
       return problems;
     }
     int tagsLeft = freeTagsLeft(character);

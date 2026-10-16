@@ -21,7 +21,7 @@ public final class CreationRules {
   /** All creation problems of a character in creation; empty for complete characters. */
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
-    if (character.isCreationComplete()) {
+    if (!isChecked(character)) {
       return problems;
     }
     if (character.getName().isBlank()) {
@@ -34,5 +34,13 @@ public final class CreationRules {
     problems.addAll(PerkRules.problems(character));
     problems.addAll(EquipmentRules.problems(character));
     return problems;
+  }
+
+  /**
+   * Whether the creation rules look at the character: during creation, and in GM mode also afterwards
+   * (D2: content hints such as requirements and open choices; budget hints are left out in GM mode).
+   */
+  public static boolean isChecked(@NonNull Character character) {
+    return !character.isCreationComplete() || character.isGmMode();
   }
 }

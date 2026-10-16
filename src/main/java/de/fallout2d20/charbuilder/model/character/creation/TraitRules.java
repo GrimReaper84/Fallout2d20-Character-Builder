@@ -33,7 +33,7 @@ public final class TraitRules {
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
     Optional<OriginData> origin = character.getOriginData();
-    if (character.isCreationComplete() || origin.isEmpty()) {
+    if (!CreationRules.isChecked(character) || origin.isEmpty()) {
       return problems;
     }
     List<TraitSelection> traits = character.getTraits();

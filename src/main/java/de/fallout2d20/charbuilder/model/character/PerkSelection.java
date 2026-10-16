@@ -36,6 +36,11 @@ public record PerkSelection(
     skillChoices = List.copyOf(skillChoices);
   }
 
+  /** Whether the rank given back next (the last one) is imported from a legacy save. */
+  public boolean lastRankImported() {
+    return stagedRanks == 0 && rank <= importedRanks;
+  }
+
   /** A perk selection without staged ranks. */
   public PerkSelection(@NonNull CatalogRef perk, int rank, int importedRanks,
       @NonNull List<Attribute> attributeChoices, @NonNull List<Skill> skillChoices) {

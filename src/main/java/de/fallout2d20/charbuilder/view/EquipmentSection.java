@@ -64,7 +64,7 @@ final class EquipmentSection {
    */
   static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onEdited,
       @NonNull Runnable onChanged) {
-    if (character.isCreationComplete()) {
+    if (character.isCreationComplete() && !character.isGmMode()) {
       addPackName(pane, character);
     } else {
       addCreationControls(pane, character, onEdited, onChanged);

@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
+import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,11 +18,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javafx.scene.Node;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 import org.jspecify.annotations.NonNull;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -71,12 +74,12 @@ final class PerkCard {
     }
     card.getChildren().add(new Label(perk.sources().stream().map(Source::toString)
         .collect(Collectors.joining(", "))));
-    boolean canAdd = PerkRules.perksLeft(character) > 0 && blockers.isEmpty();
+    boolean canAdd = PerkRules.canAdd(character, perk);
     boolean canRemove = PerkRules.canRemove(character, perk.id());
     card.getChildren().add(StepButtons.of(
         StepButtons.minus(canRemove ? "Give back a rank of " + perk.name() : "No rank to give back.",
             canRemove, () -> {
-              if (PerkRules.canRemove(character, perk.id())) {
+              if (PerkRules.canRemove(character, perk.id()) && confirmImportedRemoval(character, perk, card)) {
                 character.removePerkRank(perk.id());
               }
               onChanged.run();
@@ -177,5 +180,22 @@ final class PerkCard {
     dialog.setTitle("Perk choice");
     dialog.setHeaderText(header);
     return dialog.showAndWait().map(byName::get);
+  }
+
+  /**
+   * Asks before the GM removes an imported rank (D2): its effect may already be part of the imported
+   * attribute and skill values, which are not recalculated.
+   */
+  private static boolean confirmImportedRemoval(@NonNull Character character, @NonNull PerkDefinition perk,
+      @NonNull Node owner) {
+    boolean imported = character.getPerks().stream()
+        .anyMatch(selection -> selection.perk().id().equals(perk.id()) && selection.lastRankImported());
+    if (!imported) {
+      return true;
+    }
+    Window window = owner.getScene() == null ? null : owner.getScene().getWindow();
+    return ConfirmDialog.confirm(window, "Remove imported perk rank", "Remove a rank of " + perk.name() + "?",
+        "This rank came from the old save. Its effect may already be part of the imported attribute and skill "
+            + "values, which are not recalculated.", "Remove");
   }
 }

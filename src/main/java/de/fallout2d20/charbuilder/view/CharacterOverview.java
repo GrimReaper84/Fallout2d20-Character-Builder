@@ -64,6 +64,14 @@ final class CharacterOverview {
   static @NonNull Node build(@NonNull Character character, @NonNull Runnable onEdited,
       @NonNull Runnable onChanged, @NonNull Runnable onComplete) {
     MigPane pane = new MigPane("insets 16, gap 8 4, wrap 4", "[right][grow,fill][right][grow,fill]");
+    // Creation sections stay editable during creation and, for the GM, afterwards (D2).
+    boolean locked = character.isCreationComplete() && !character.isGmMode();
+    if (character.isGmMode()) {
+      Label banner = new Label("GM mode: budgets and level-up points do not apply; every change counts at once.");
+      banner.setStyle(HINT_STYLE + " -fx-font-weight: bold;");
+      banner.setWrapText(true);
+      pane.add(banner, "span 4");
+    }
 
     TextField name = new TextField(character.getName());
     name.setPromptText("Name");
@@ -73,7 +81,7 @@ final class CharacterOverview {
     });
     pane.add(new Label("Name"));
     pane.add(name, "span 3");
-    if (character.isCreationComplete()) {
+    if (locked) {
       pane.add(new Label("Origin"));
       CatalogRef origin = character.getOrigin();
       pane.add(origin == null ? new Label("Not chosen") : origin(origin), "span 3");
@@ -83,8 +91,10 @@ final class CharacterOverview {
       TraitSection.addTo(pane, character, onChanged);
       addHints(pane, CreationRules.problems(character));
     }
-    if (character.isCreationComplete()) {
+    if (locked) {
       AdvancementSection.addTo(pane, character, onChanged);
+    } else if (character.isCreationComplete()) {
+      GmLevelSection.addTo(pane, character, onChanged);
     } else {
       LevelSection.addTo(pane, character, onChanged);
     }
@@ -93,7 +103,7 @@ final class CharacterOverview {
         .collect(Collectors.joining(", "))), "span 3");
 
     heading(pane, "S.P.E.C.I.A.L.");
-    if (character.isCreationComplete()) {
+    if (locked) {
       for (Attribute attribute : Attribute.values()) {
         pane.add(new Label(attribute.displayName()));
         pane.add(baselineMarked(Integer.toString(character.attributeValue(attribute)), character.isLegacyImport()),
@@ -123,9 +133,9 @@ final class CharacterOverview {
     resistance(pane, "Poison DR", derived.poison(), RESISTANCE_TOOLTIP);
 
     heading(pane, "Skills");
-    if (AdvancementRules.choosesSkills(character)) {
+    if (locked && AdvancementRules.choosesSkills(character)) {
       AdvancementSkillSection.addTo(pane, character, onChanged);
-    } else if (character.isCreationComplete()) {
+    } else if (locked) {
       for (Skill skill : Skill.values()) {
         boolean tagged = character.isTagged(skill);
         pane.add(new Label((tagged ? "● " : "") + skill.displayName()));
@@ -147,7 +157,7 @@ final class CharacterOverview {
     }
 
     heading(pane, "Perks");
-    if (character.isCreationComplete() && !AdvancementRules.choosesPerks(character)) {
+    if (locked && !AdvancementRules.choosesPerks(character)) {
       addPerkList(pane, character);
     } else {
       PerkSection.addTo(pane, character, onChanged);

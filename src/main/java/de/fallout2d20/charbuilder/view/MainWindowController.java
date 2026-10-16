@@ -7,6 +7,7 @@ import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
 import de.fallout2d20.charbuilder.persistence.legacy.ImportReport;
+import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import de.fallout2d20.charbuilder.view.dialog.CreateCharacterDialog;
 import de.fallout2d20.charbuilder.view.dialog.ImportReportDialog;
 import java.io.File;
@@ -19,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -41,6 +43,7 @@ public class MainWindowController {
 
   @FXML private ScrollPane overviewPane;
   @FXML private MenuItem createCharacterItem;
+  @FXML private CheckMenuItem gmModeItem;
 
   private @Nullable Stage stage;
   private @Nullable Character character;
@@ -119,6 +122,28 @@ public class MainWindowController {
   @FXML
   private void onCreateCharacter() {
     completeCreation();
+  }
+
+  /**
+   * Switches GM free edit (D2) on after a confirmation, or off; never saved (user decision 2026-10-16).
+   */
+  @FXML
+  private void onGmMode() {
+    if (character == null) {
+      return;
+    }
+    boolean on = gmModeItem.isSelected();
+    if (on && !ConfirmDialog.confirm(stage, "GM mode", "Switch on GM mode?",
+        "Budgets and level-up points no longer limit changes, perk requirements are only hints, and every "
+            + "change counts at once – also for a complete character (origin, traits, S.P.E.C.I.A.L., Tags, "
+            + "skills, perks, pack, level and XP). For an imported character the imported values are not "
+            + "recalculated; a new pack adds no inventory items once the old pack's items were added. GM mode is "
+            + "not saved.", "Switch on")) {
+      gmModeItem.setSelected(false);
+      return;
+    }
+    character.setGmMode(on);
+    showOverview();
   }
 
   /**
@@ -202,6 +227,8 @@ public class MainWindowController {
       return;
     }
     createCharacterItem.setDisable(character.isCreationComplete());
+    gmModeItem.setDisable(false);
+    gmModeItem.setSelected(character.isGmMode());
     overviewPane.setContent(CharacterOverview.build(character, this::onEdited, this::onChanged,
         this::completeCreation));
   }

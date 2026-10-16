@@ -28,7 +28,7 @@ public final class OriginRules {
   /** All origin rule problems of a character in creation; empty for complete characters. */
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
-    if (character.isCreationComplete()) {
+    if (!CreationRules.isChecked(character)) {
       return problems;
     }
     CatalogRef origin = character.getOrigin();

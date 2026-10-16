@@ -22,6 +22,9 @@ public final class AttributeRules {
   /** Lowest allocation: one rank below the starting value. */
   public static final int MIN_ALLOCATION = -1;
 
+  /** Lowest attribute value in GM mode (D2): a technical floor, the book sets none for corrections. */
+  public static final int GM_MINIMUM_VALUE = 1;
+
   private static final String TOPIC = "S.P.E.C.I.A.L.";
 
   private AttributeRules() {}
@@ -41,20 +44,28 @@ public final class AttributeRules {
         .orElse(OriginData.DEFAULT_ATTRIBUTE_MAXIMUM);
   }
 
-  /** Whether one more point may go into the attribute: points left and below its maximum. */
+  /**
+   * Whether one more point may go into the attribute: points left (not in GM mode, D2) and below its
+   * maximum.
+   */
   public static boolean canRaise(@NonNull Character character, @NonNull Attribute attribute) {
-    return pointsLeft(character) > 0 && character.attributeValue(attribute) < maximum(character, attribute);
+    return (character.isGmMode() || pointsLeft(character) > 0)
+        && character.attributeValue(attribute) < maximum(character, attribute);
   }
 
-  /** Whether the attribute may lose one point: not yet lowered below its starting value. */
+  /**
+   * Whether the attribute may lose one point: not yet lowered below its starting value; in GM mode down to
+   * {@link #GM_MINIMUM_VALUE}.
+   */
   public static boolean canLower(@NonNull Character character, @NonNull Attribute attribute) {
-    return character.attributeAllocation(attribute) > MIN_ALLOCATION;
+    return character.isGmMode() ? character.attributeValue(attribute) > GM_MINIMUM_VALUE
+        : character.attributeAllocation(attribute) > MIN_ALLOCATION;
   }
 
-  /** All allocation problems of a character in creation; empty for complete characters. */
+  /** All allocation problems of a character in creation; empty for complete characters and in GM mode (D2). */
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
-    if (character.isCreationComplete()) {
+    if (character.isCreationComplete() || character.isGmMode()) {
       return problems;
     }
     int left = pointsLeft(character);

@@ -57,6 +57,25 @@ class CharacterStoreTest {
 
   @TempDir Path dir;
 
+  /** A GM skill correction (D2) survives a save and is written only when not 0; GM mode itself is not saved. */
+  @Test
+  void roundTripsGmSkillCorrections() throws Exception {
+    Character character = Character.createNew();
+    character.completeCreation();
+    character.setGmMode(true);
+    character.adjustSkillRankAsGm(Skill.REPAIR, 2);
+    Path file = dir.resolve("gm.json");
+    store.save(character, file);
+
+    Character loaded = store.load(file).character();
+    assertEquals(2, loaded.skillState(Skill.REPAIR).gmRanks());
+    assertEquals(2, loaded.skillRank(Skill.REPAIR));
+    assertFalse(loaded.isGmMode());
+    JsonNode skills = JSON.readTree(file.toFile()).get("skills");
+    assertEquals(2, skills.get(Skill.REPAIR.id()).get("gmRanks").asInt());
+    assertNull(skills.get(Skill.SCIENCE.id()).get("gmRanks"));
+  }
+
   /** Items (catalog, magazine issue, custom), caps and materials survive a save; empty parts are not written. */
   @Test
   void roundTripsTheInventory() throws Exception {

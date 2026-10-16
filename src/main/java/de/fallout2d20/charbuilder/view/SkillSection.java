@@ -30,6 +30,12 @@ final class SkillSection {
   /** Adds the skill rows to a four-column overview grid. */
   static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onChanged) {
     int pointsLeft = SkillRules.skillPointsLeft(character);
+    // D2: for a complete character the GM corrects ranks; budgets and bought ranks do not matter there.
+    boolean gmCorrects = character.isGmMode() && character.isCreationComplete();
+    if (gmCorrects) {
+      addGmRows(pane, character, onChanged);
+      return;
+    }
     pane.add(new Label("Tags left"));
     pane.add(new Label(Integer.toString(SkillRules.freeTagsLeft(character))));
     pane.add(new Label("Points left"));
@@ -47,6 +53,24 @@ final class SkillSection {
               canLower, () -> step(character, skill, -1, onChanged)),
           StepButtons.plus(canRaise ? "Buy a rank of " + skill.displayName()
                   : pointsLeft <= 0 ? "No skill points left."
+                  : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
+              canRaise, () -> step(character, skill, 1, onChanged))));
+    }
+  }
+
+  /** GM corrections (D2): −/+ change the rank directly, up to the rank cap. */
+  private static void addGmRows(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onChanged) {
+    for (Skill skill : Skill.values()) {
+      pane.add(tagBox(character, skill, onChanged));
+      pane.add(new Label("(" + skill.governingAttribute().abbreviation() + ")"));
+      pane.add(new Label(Integer.toString(character.skillRank(skill))));
+      boolean canLower = SkillRules.canLower(character, skill);
+      boolean canRaise = SkillRules.canRaise(character, skill);
+      pane.add(StepButtons.of(
+          StepButtons.minus(canLower ? "Lower " + skill.displayName() + " by one rank (GM correction)"
+                  : skill.displayName() + " cannot go lower (a Tag! bonus or rank 0).",
+              canLower, () -> step(character, skill, -1, onChanged)),
+          StepButtons.plus(canRaise ? "Raise " + skill.displayName() + " by one rank (GM correction)"
                   : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
               canRaise, () -> step(character, skill, 1, onChanged))));
     }
@@ -90,10 +114,7 @@ final class SkillSection {
    */
   private static void step(@NonNull Character character, @NonNull Skill skill, int delta,
       @NonNull Runnable onChanged) {
-    boolean allowed = delta > 0 ? SkillRules.canRaise(character, skill) : SkillRules.canLower(character, skill);
-    if (allowed) {
-      character.setCreationRanks(skill, character.skillState(skill).creationRanks() + delta);
-    }
+    SkillRules.step(character, skill, delta);
     onChanged.run();
   }
 }

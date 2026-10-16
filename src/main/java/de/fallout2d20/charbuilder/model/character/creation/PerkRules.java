@@ -68,18 +68,26 @@ public final class PerkRules {
         .mapToInt(PerkSelection::rank).sum();
   }
 
-  /** Whether the next rank of the perk can be taken: perk ranks left and nothing blocks it. */
+  /**
+   * Whether the next rank of the perk can be taken: perk ranks left and nothing blocks it. In GM mode
+   * (D2) no budget applies and unmet requirements are only hints; the maximum rank and a choice perk
+   * without options still block.
+   */
   public static boolean canAdd(@NonNull Character character, @NonNull PerkDefinition perk) {
+    if (character.isGmMode()) {
+      return structuralBlockers(character, perk).isEmpty();
+    }
     return perksLeft(character) > 0 && blockers(character, perk).isEmpty();
   }
 
   /**
    * Whether a rank of the perk can be given back: in creation a rank taken in this creation, after
-   * creation a staged rank.
+   * creation a staged rank; in GM mode any rank, imported ones too (D2).
    */
   public static boolean canRemove(@NonNull Character character, @NonNull String perkId) {
     return character.getPerks().stream().anyMatch(perk -> perk.perk().id().equals(perkId)
-        && (character.isCreationComplete() ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks()));
+        && (character.isGmMode()
+            || (character.isCreationComplete() ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks())));
   }
 
   /**
@@ -92,6 +100,20 @@ public final class PerkRules {
       return List.of("Maximum rank reached.");
     }
     List<String> blockers = new ArrayList<>(unmetRequirements(character, perk, next));
+    blockers.addAll(structuralBlockers(character, perk));
+    return blockers;
+  }
+
+  /**
+   * What blocks the next rank even in GM mode (D2): the maximum rank, or nothing left to choose for a
+   * choice perk. Requirements are not part of it.
+   */
+  private static @NonNull List<String> structuralBlockers(@NonNull Character character,
+      @NonNull PerkDefinition perk) {
+    if (rank(character, perk.id()) + 1 > perk.ranks()) {
+      return List.of("Maximum rank reached.");
+    }
+    List<String> blockers = new ArrayList<>();
     if (perk.choice() == PerkChoice.ATTRIBUTE && attributeOptions(character).isEmpty()) {
       blockers.add("No attribute below " + INTENSE_TRAINING_MAXIMUM + " left.");
     }
@@ -159,13 +181,16 @@ public final class PerkRules {
     return rank == 0 ? List.of() : unmetRequirements(character, perk, Math.min(rank, perk.ranks()));
   }
 
-  /** All perk problems of a character in creation; empty for complete characters. */
+  /**
+   * All perk problems of a character in creation (or in GM mode, without the budget); empty for complete
+   * characters.
+   */
   public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
     List<CreationProblem> problems = new ArrayList<>();
-    if (character.isCreationComplete()) {
+    if (!CreationRules.isChecked(character)) {
       return problems;
     }
-    int left = perksLeft(character);
+    int left = character.isGmMode() ? 0 : perksLeft(character);
     if (left > 0) {
       problems.add(new CreationProblem(TOPIC, "Choose " + left + " more perk" + (left == 1 ? "." : "s.")));
     } else if (left < 0) {

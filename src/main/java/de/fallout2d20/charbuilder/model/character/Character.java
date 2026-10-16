@@ -15,10 +15,11 @@ import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
+import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
-import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
 import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Inventory;
@@ -104,6 +105,8 @@ public class Character {
   private long caps;
   private @NonNull Materials materials;
   private boolean packItemsAdded;
+  /** GM free edit (D2): creation edits allowed after completion, no budgets; not saved (user decision). */
+  private boolean gmMode;
 
   /**
    * Creates a character from stored parts without starting equipment and inventory notes – a test
@@ -315,12 +318,21 @@ public class Character {
    * (CRB p. 73: +2 ranks, to a maximum of 6), also for an imported character that takes Tag! later.
    */
   public int skillRank(@NonNull Skill skill) {
+    return skillRank(skill, skillState(skill));
+  }
+
+  /** Whether a GM correction by {@code delta} changes the effective rank (D2; a Tag! bonus or 0 can hide it). */
+  public boolean gmStepChangesRank(@NonNull Skill skill, int delta) {
     SkillState state = skillState(skill);
+    return skillRank(skill, state.withGmRanks(state.gmRanks() + delta)) != skillRank(skill, state);
+  }
+
+  private int skillRank(@NonNull Skill skill, @NonNull SkillState state) {
     boolean perkTagOnly = isTaggedByPerk(skill) && !state.tagged() && !isTaggedByOrigin(skill);
     int start = legacyBaseline != null
         ? legacyBaseline.skillRank(skill)
         : (isTagged(skill) && !perkTagOnly ? TAG_SKILL_BONUS : 0) + state.creationRanks();
-    int rank = start + state.advancementRanks() + state.stagedRanks();
+    int rank = Math.max(0, start + state.advancementRanks() + state.stagedRanks() + state.gmRanks());
     return perkTagOnly ? Math.max(rank, Math.min(rank + TAG_SKILL_BONUS, skillRankCap())) : rank;
   }
 
@@ -444,8 +456,7 @@ public class Character {
     for (Skill skill : Skill.values()) {
       SkillState state = skillState(skill);
       boolean tagged = state.tagged() && !hasFixedTag(skill) && tagForbiddenBy(skill).isEmpty();
-      skills.put(skill, new SkillState(tagged, ranksWithinCap(skill, tagged), state.advancementRanks(),
-          state.stagedRanks()));
+      skills.put(skill, state.withCreation(tagged, ranksWithinCap(skill, tagged)));
     }
   }
 
@@ -453,7 +464,8 @@ public class Character {
   private int ranksWithinCap(@NonNull Skill skill, boolean freeTag) {
     SkillState state = skillState(skill);
     int tagBonus = freeTag || hasFixedTag(skill) ? TAG_SKILL_BONUS : 0;
-    int room = skillRankCap() - tagBonus - state.advancementRanks() - state.stagedRanks();
+    int room = skillRankCap() - tagBonus - state.advancementRanks() - state.stagedRanks()
+        - Math.max(0, state.gmRanks());
     return Math.max(0, Math.min(state.creationRanks(), room));
   }
 
@@ -483,14 +495,14 @@ public class Character {
     }
     SkillState state = skillState(skill);
     int creationRanks = tagged ? ranksWithinCap(skill, true) : state.creationRanks();
-    skills.put(skill, new SkillState(tagged, creationRanks, state.advancementRanks(), state.stagedRanks()));
+    skills.put(skill, state.withCreation(tagged, creationRanks));
   }
 
   /** Sets the ranks bought with skill points during creation; budget and cap are checked by the rules. */
   public void setCreationRanks(@NonNull Skill skill, int creationRanks) {
     requireCreation();
     SkillState state = skillState(skill);
-    skills.put(skill, new SkillState(state.tagged(), creationRanks, state.advancementRanks(), state.stagedRanks()));
+    skills.put(skill, state.withCreation(state.tagged(), creationRanks));
   }
 
   /**
@@ -504,7 +516,7 @@ public class Character {
    *     that its XP no longer fits into a number – a technical limit, not a rule
    */
   public void setStartingLevel(int startingLevel) {
-    requireCreation();
+    requireStrictCreation();
     if (startingLevel < 1) {
       throw new IllegalArgumentException("Level must be at least 1");
     }
@@ -549,7 +561,7 @@ public class Character {
    * level, see {@link #applyAdvancement()}).
    */
   public void addPerkRank(@NonNull CatalogRef perk, @Nullable Attribute attribute, @Nullable Skill skill) {
-    int staged = creationComplete ? 1 : 0;
+    int staged = creationComplete && !gmMode ? 1 : 0;
     int index = perkIndex(perk.id());
     PerkSelection current = index < 0 ? null : perks.get(index);
     List<Attribute> attributes = new ArrayList<>(current == null ? List.of() : current.attributeChoices());
@@ -573,8 +585,8 @@ public class Character {
 
   /**
    * Gives back the last rank of a perk, with its choice: during creation any rank but the imported
-   * ones, after creation only a staged rank (applied ranks are a GM matter, D2). The perk is removed
-   * when no rank is left.
+   * ones, after creation only a staged rank; in GM mode any rank, imported ones too (D2). The perk is
+   * removed when no rank is left.
    */
   public void removePerkRank(@NonNull String perkId) {
     int index = perkIndex(perkId);
@@ -582,7 +594,7 @@ public class Character {
       return;
     }
     PerkSelection perk = perks.get(index);
-    boolean removable = creationComplete ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks();
+    boolean removable = gmMode || (creationComplete ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks());
     if (!removable) {
       return;
     }
@@ -590,7 +602,7 @@ public class Character {
       perks.remove(index);
       return;
     }
-    perks.set(index, new PerkSelection(perk.perk(), perk.rank() - 1, perk.importedRanks(),
+    perks.set(index, new PerkSelection(perk.perk(), perk.rank() - 1, Math.min(perk.importedRanks(), perk.rank() - 1),
         dropLast(perk.attributeChoices(), perk), dropLast(perk.skillChoices(), perk),
         Math.max(0, perk.stagedRanks() - 1)));
   }
@@ -949,7 +961,7 @@ public class Character {
    * @throws IllegalStateException if creation is already complete
    */
   public void completeCreation() {
-    requireCreation();
+    requireStrictCreation();
     if (caps == 0) {
       caps = StartingEquipmentItems.caps(this).fixedTotal();
     }
@@ -1055,8 +1067,7 @@ public class Character {
   public void stageSkillRank(@NonNull Skill skill, int delta) {
     requireComplete();
     SkillState state = skillState(skill);
-    skills.put(skill, new SkillState(state.tagged(), state.creationRanks(), state.advancementRanks(),
-        state.stagedRanks() + delta));
+    skills.put(skill, state.withAdvancement(state.advancementRanks(), state.stagedRanks() + delta));
   }
 
   /**
@@ -1101,8 +1112,7 @@ public class Character {
     }
     for (Skill skill : Skill.values()) {
       SkillState state = skillState(skill);
-      skills.put(skill, new SkillState(state.tagged(), state.creationRanks(),
-          state.advancementRanks() + state.stagedRanks()));
+      skills.put(skill, state.withAdvancement(state.advancementRanks() + state.stagedRanks(), 0));
     }
     perks.replaceAll(perk -> new PerkSelection(perk.perk(), perk.rank(), perk.importedRanks(),
         perk.attributeChoices(), perk.skillChoices()));
@@ -1134,8 +1144,77 @@ public class Character {
   }
 
   private void requireCreation() {
-    if (creationComplete) {
+    if (creationComplete && !gmMode) {
       throw new IllegalStateException("This can only be changed during character creation");
+    }
+  }
+
+  /** Whether GM free edit is on (D2): creation edits work after completion and budgets do not apply. */
+  public boolean isGmMode() {
+    return gmMode;
+  }
+
+  /** Switches GM free edit on or off; never saved (user decision 2026-10-16). */
+  public void setGmMode(boolean on) {
+    gmMode = on;
+  }
+
+  /**
+   * GM correction of a skill rank by {@code delta} (D2), counted at once; works for imported characters
+   * too, whose legacy rank is kept as baseline. The rank cap is checked by the rules.
+   *
+   * @throws IllegalStateException outside GM mode
+   */
+  public void adjustSkillRankAsGm(@NonNull Skill skill, int delta) {
+    requireGmMode();
+    SkillState state = skillState(skill);
+    skills.put(skill, state.withGmRanks(state.gmRanks() + delta));
+  }
+
+  /**
+   * Sets level and XP freely (D2), also downwards. Lowering the level lowers a stored starting level above
+   * it, takes back staged advancement, cuts the pending level-up points by the levels lost and caps the
+   * current HP at the new maximum; raising grants no points (user decision 2026-10-16).
+   *
+   * @throws IllegalStateException outside GM mode
+   * @throws IllegalArgumentException for a level below 1 or negative XP
+   */
+  public void setLevelAsGm(int newLevel, long newXp) {
+    requireGmMode();
+    if (newLevel < 1 || newXp < 0) {
+      throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
+    }
+    int lost = level - newLevel;
+    level = newLevel;
+    xp = newXp;
+    Integer starting = completedStartingLevel;
+    if (starting != null && starting > newLevel) {
+      completedStartingLevel = newLevel;
+    }
+    if (lost > 0) {
+      if (creationComplete) {
+        discardAdvancement();
+      }
+      progression = new Progression(Math.max(0, progression.pendingSkillRanks() - lost),
+          Math.max(0, progression.pendingPerks() - lost));
+      Integer currentHp = vitals.currentHp();
+      int maxHp = DerivedStats.of(this).maxHp();
+      if (currentHp != null && currentHp > maxHp) {
+        vitals = new Vitals(maxHp, vitals.rads(), vitals.radiationPoints());
+      }
+    }
+  }
+
+  /** For what only belongs to creation itself (ending it, the starting level); not even the GM redoes it. */
+  private void requireStrictCreation() {
+    if (creationComplete) {
+      throw new IllegalStateException("Character creation is already complete");
+    }
+  }
+
+  private void requireGmMode() {
+    if (!gmMode) {
+      throw new IllegalStateException("Only the GM can change this (GM mode)");
     }
   }
 
