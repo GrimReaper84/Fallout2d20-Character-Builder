@@ -38,6 +38,9 @@ import org.jspecify.annotations.Nullable;
  * characters without a legacy baseline: an imported baseline already contains them. Origin, origin
  * choices, traits, attribute allocation, free Tags, bought skill ranks and the starting equipment can
  * only be changed while creation is not complete; the inventory notes can always be edited.
+ *
+ * <p>After creation the character advances (CRB p. 49): XP and levels grant skill ranks and perks,
+ * which are first staged (they count everywhere but can be taken back) and then applied.
  */
 public class Character {
 
@@ -67,14 +70,16 @@ public class Character {
   private final Map<Skill, SkillState> skills;
   private final List<TraitSelection> traits;
   private final List<PerkSelection> perks;
-  private final Progression progression;
-  private final Vitals vitals;
+  private @NonNull Progression progression;
+  private @NonNull Vitals vitals;
   private final @Nullable LegacyBaseline legacyBaseline;
   private final @Nullable LegacyImport legacyImport;
   private @NonNull StartingEquipment startingEquipment;
   private @NonNull String inventoryNotes;
   /** Level at completion; null while in creation (then the current level) or when unknown (imports). */
   private @Nullable Integer completedStartingLevel;
+  /** Tag skills at completion (CRB p. 81 Tag skill items); null while in creation or when not stored. */
+  private @Nullable Set<Skill> completedTagSkills;
 
   /**
    * Creates a character from stored parts without starting equipment and inventory notes – a test
@@ -99,7 +104,7 @@ public class Character {
       @Nullable LegacyImport legacyImport) {
     this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
         skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
-        null);
+        null, null);
   }
 
   /**
@@ -109,6 +114,9 @@ public class Character {
    *
    * @param startingLevel the level a complete character started at, {@code null} if unknown (imported
    *     characters); always {@code null} for a character in creation (see {@link #getStartingLevel()})
+   * @param startingTagSkills the Tag skills of a complete character at the end of creation, {@code null}
+   *     if not stored (then its current Tag skills count); always {@code null} for a character in creation
+   *     (see {@link #getStartingTagSkills()})
    */
   public Character(
       @NonNull String name,
@@ -128,12 +136,13 @@ public class Character {
       @Nullable LegacyImport legacyImport,
       @NonNull StartingEquipment startingEquipment,
       @NonNull String inventoryNotes,
-      @Nullable Integer startingLevel) {
+      @Nullable Integer startingLevel,
+      @Nullable Set<Skill> startingTagSkills) {
     if (level < 1 || xp < 0) {
       throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
     }
-    if (startingLevel != null && !creationComplete) {
-      throw new IllegalArgumentException("Only a complete character has a stored starting level");
+    if ((startingLevel != null || startingTagSkills != null) && !creationComplete) {
+      throw new IllegalArgumentException("Only a complete character has a stored starting level or Tag skills");
     }
     if (startingLevel != null && (startingLevel < 1 || startingLevel > level)) {
       throw new IllegalArgumentException("Starting level " + startingLevel + " must lie between 1 and the level "
@@ -164,6 +173,7 @@ public class Character {
     this.startingEquipment = startingEquipment.fittedToCatalog(creationComplete);
     this.inventoryNotes = inventoryNotes;
     this.completedStartingLevel = startingLevel;
+    this.completedTagSkills = startingTagSkills == null ? null : Set.copyOf(startingTagSkills);
   }
 
   /** A new, empty character at the start of character creation. */
@@ -189,13 +199,17 @@ public class Character {
         + perkBonus(attribute);
   }
 
-  /** +1 per new (not imported) rank of an attribute-choice perk that chose the attribute. */
+  /**
+   * +1 per new (not imported) rank of an attribute-choice perk that chose the attribute. The new ranks
+   * are the last ones, and their choices the last ones of the list (imported ranks may lack choices).
+   */
   private int perkBonus(@NonNull Attribute attribute) {
     int bonus = 0;
     for (PerkSelection perk : perks) {
       if (choiceOf(perk) == PerkChoice.ATTRIBUTE) {
         List<Attribute> choices = perk.attributeChoices();
-        bonus += (int) choices.subList(Math.min(perk.importedRanks(), choices.size()), choices.size())
+        int newRanks = perk.rank() - perk.importedRanks();
+        bonus += (int) choices.subList(Math.max(0, choices.size() - newRanks), choices.size())
             .stream().filter(choice -> choice == attribute).count();
       }
     }
@@ -248,15 +262,19 @@ public class Character {
 
   /**
    * Effective skill rank: Tag bonus plus creation ranks (or the legacy baseline rank for an
-   * imported character, which already includes the Tag bonus) plus advancement ranks. Rank caps
-   * are validated by creation and advancement, not here.
+   * imported character, which already includes the Tag bonus of its imported Tags) plus applied and
+   * staged advancement ranks. Rank caps are validated by creation and advancement, not here – except
+   * for a skill tagged only by Tag!: its bonus raises the rank at most to {@link #skillRankCap()}
+   * (CRB p. 73: +2 ranks, to a maximum of 6), also for an imported character that takes Tag! later.
    */
   public int skillRank(@NonNull Skill skill) {
     SkillState state = skillState(skill);
+    boolean perkTagOnly = isTaggedByPerk(skill) && !state.tagged() && !isTaggedByOrigin(skill);
     int start = legacyBaseline != null
         ? legacyBaseline.skillRank(skill)
-        : (isTagged(skill) ? TAG_SKILL_BONUS : 0) + state.creationRanks();
-    return start + state.advancementRanks();
+        : (isTagged(skill) && !perkTagOnly ? TAG_SKILL_BONUS : 0) + state.creationRanks();
+    int rank = start + state.advancementRanks() + state.stagedRanks();
+    return perkTagOnly ? Math.max(rank, Math.min(rank + TAG_SKILL_BONUS, skillRankCap())) : rank;
   }
 
   /**
@@ -379,7 +397,8 @@ public class Character {
     for (Skill skill : Skill.values()) {
       SkillState state = skillState(skill);
       boolean tagged = state.tagged() && !hasFixedTag(skill) && tagForbiddenBy(skill).isEmpty();
-      skills.put(skill, new SkillState(tagged, ranksWithinCap(skill, tagged), state.advancementRanks()));
+      skills.put(skill, new SkillState(tagged, ranksWithinCap(skill, tagged), state.advancementRanks(),
+          state.stagedRanks()));
     }
   }
 
@@ -387,7 +406,7 @@ public class Character {
   private int ranksWithinCap(@NonNull Skill skill, boolean freeTag) {
     SkillState state = skillState(skill);
     int tagBonus = freeTag || hasFixedTag(skill) ? TAG_SKILL_BONUS : 0;
-    int room = skillRankCap() - tagBonus - state.advancementRanks();
+    int room = skillRankCap() - tagBonus - state.advancementRanks() - state.stagedRanks();
     return Math.max(0, Math.min(state.creationRanks(), room));
   }
 
@@ -417,14 +436,14 @@ public class Character {
     }
     SkillState state = skillState(skill);
     int creationRanks = tagged ? ranksWithinCap(skill, true) : state.creationRanks();
-    skills.put(skill, new SkillState(tagged, creationRanks, state.advancementRanks()));
+    skills.put(skill, new SkillState(tagged, creationRanks, state.advancementRanks(), state.stagedRanks()));
   }
 
   /** Sets the ranks bought with skill points during creation; budget and cap are checked by the rules. */
   public void setCreationRanks(@NonNull Skill skill, int creationRanks) {
     requireCreation();
     SkillState state = skillState(skill);
-    skills.put(skill, new SkillState(state.tagged(), creationRanks, state.advancementRanks()));
+    skills.put(skill, new SkillState(state.tagged(), creationRanks, state.advancementRanks(), state.stagedRanks()));
   }
 
   /**
@@ -476,12 +495,14 @@ public class Character {
   }
 
   /**
-   * Takes one more rank of a perk during creation, with the attribute or skill chosen for it (Intense
-   * Training, Tag!). Requirements and budget are checked by the creation rules, not here. A Tag! skill
-   * loses a free Tag and keeps its bought ranks within the cap (see {@link #adjustSkillsToRules()}).
+   * Takes one more rank of a perk, with the attribute or skill chosen for it (Intense Training, Tag!).
+   * Requirements and budget are checked by the creation or advancement rules, not here. During creation
+   * a Tag! skill loses a free Tag and keeps its bought ranks within the cap (see
+   * {@link #adjustSkillsToRules()}); after creation the rank is staged (CRB p. 49: one perk per new
+   * level, see {@link #applyAdvancement()}).
    */
   public void addPerkRank(@NonNull CatalogRef perk, @Nullable Attribute attribute, @Nullable Skill skill) {
-    requireCreation();
+    int staged = creationComplete ? 1 : 0;
     int index = perkIndex(perk.id());
     PerkSelection current = index < 0 ? null : perks.get(index);
     List<Attribute> attributes = new ArrayList<>(current == null ? List.of() : current.attributeChoices());
@@ -493,36 +514,48 @@ public class Character {
       chosenSkills.add(skill);
     }
     if (current == null) {
-      perks.add(new PerkSelection(perk, 1, 0, attributes, chosenSkills));
+      perks.add(new PerkSelection(perk, 1, 0, attributes, chosenSkills, staged));
     } else {
       perks.set(index, new PerkSelection(current.perk(), current.rank() + 1, current.importedRanks(),
-          attributes, chosenSkills));
+          attributes, chosenSkills, current.stagedRanks() + staged));
     }
-    adjustSkillsToRules();
+    if (!creationComplete) {
+      adjustSkillsToRules();
+    }
   }
 
   /**
-   * Gives back the last rank of a perk during creation, with its choice; imported ranks stay. The perk
-   * is removed when no rank is left.
+   * Gives back the last rank of a perk, with its choice: during creation any rank but the imported
+   * ones, after creation only a staged rank (applied ranks are a GM matter, D2). The perk is removed
+   * when no rank is left.
    */
   public void removePerkRank(@NonNull String perkId) {
-    requireCreation();
     int index = perkIndex(perkId);
-    if (index < 0 || perks.get(index).rank() <= perks.get(index).importedRanks()) {
+    if (index < 0) {
       return;
     }
     PerkSelection perk = perks.get(index);
+    boolean removable = creationComplete ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks();
+    if (!removable) {
+      return;
+    }
     if (perk.rank() == 1) {
       perks.remove(index);
       return;
     }
     perks.set(index, new PerkSelection(perk.perk(), perk.rank() - 1, perk.importedRanks(),
-        dropLast(perk.attributeChoices(), perk.rank()), dropLast(perk.skillChoices(), perk.rank())));
+        dropLast(perk.attributeChoices(), perk), dropLast(perk.skillChoices(), perk),
+        Math.max(0, perk.stagedRanks() - 1)));
   }
 
-  /** The choices without the one of the given (last) rank, if that rank has one. */
-  private static <T> @NonNull List<T> dropLast(@NonNull List<T> choices, int rank) {
-    return choices.size() >= rank ? choices.subList(0, choices.size() - 1) : choices;
+  /**
+   * The choices without the one of the last rank, if that rank has one: a staged rank always has its
+   * choice as the last entry (imported ranks before it may lack theirs); otherwise the last rank has one
+   * if every rank has.
+   */
+  private static <T> @NonNull List<T> dropLast(@NonNull List<T> choices, @NonNull PerkSelection perk) {
+    boolean lastHasChoice = perk.stagedRanks() > 0 ? !choices.isEmpty() : choices.size() >= perk.rank();
+    return lastHasChoice ? choices.subList(0, choices.size() - 1) : choices;
   }
 
   private int perkIndex(@NonNull String perkId) {
@@ -653,14 +686,179 @@ public class Character {
    * equipment); one-way by user decision, corrections are a GM matter (D2). The creation rules are not
    * checked here – the caller confirms open hints with the player. Afterwards creation edits are refused,
    * the creation rank cap of 3 no longer applies (CRB p. 58; see {@link #skillRankCap()}), and the
-   * starting level is kept for the starting caps (CRB p. 81).
+   * starting level and the Tag skills are kept for the starting equipment (CRB p. 81).
    *
    * @throws IllegalStateException if creation is already complete
    */
   public void completeCreation() {
     requireCreation();
+    completedTagSkills = Set.copyOf(currentTagSkills());
     creationComplete = true;
     completedStartingLevel = level;
+  }
+
+  /**
+   * The Tag skills that grant starting equipment (CRB p. 81: the Tags chosen in creation): during
+   * creation the current Tag skills, after completion those of that moment, so a Tag! taken later
+   * grants no items. For a complete character without stored Tags, the current ones.
+   */
+  public @NonNull Set<Skill> getStartingTagSkills() {
+    if (!creationComplete || completedTagSkills == null) {
+      return currentTagSkills();
+    }
+    return completedTagSkills;
+  }
+
+  private @NonNull Set<Skill> currentTagSkills() {
+    Set<Skill> tagged = EnumSet.noneOf(Skill.class);
+    for (Skill skill : Skill.values()) {
+      if (isTagged(skill)) {
+        tagged.add(skill);
+      }
+    }
+    return Collections.unmodifiableSet(tagged);
+  }
+
+  /**
+   * Adds XP awarded by the GM (CRB p. 49) and gains every level whose threshold the new total crosses
+   * (see {@link #gainLevels(int)}). Deliberate deviation from the legacy app, which set the total.
+   *
+   * @return the levels gained
+   * @throws IllegalArgumentException if the amount is not positive or the total gets too high to compute
+   * @throws IllegalStateException during creation (the starting level sets the XP there)
+   */
+  public int addXp(long amount) {
+    int gained = levelsGainedBy(amount);
+    xp += amount;
+    gainLevels(gained);
+    return gained;
+  }
+
+  /**
+   * Levels the character would gain by adding the XP, without changing it (for a confirmation).
+   *
+   * @throws IllegalArgumentException if the amount is not positive or the total gets too high to compute
+   * @throws IllegalStateException during creation
+   */
+  public int levelsGainedBy(long amount) {
+    requireComplete();
+    if (amount < 1) {
+      throw new IllegalArgumentException("XP to add must be positive");
+    }
+    try {
+      return Math.max(0, ExperienceTable.levelForXp(Math.addExact(xp, amount)) - level);
+    } catch (ArithmeticException e) {
+      throw new IllegalArgumentException("XP total too high to compute", e);
+    }
+  }
+
+  /**
+   * Milestone progression (CRB p. 49): the GM grants a level instead of XP. The XP are raised to the
+   * threshold of the new level if below, so XP and level stay consistent (legacy behavior).
+   *
+   * @throws IllegalArgumentException if the new level is too high to compute its XP (a technical limit)
+   * @throws IllegalStateException during creation
+   */
+  public void gainMilestoneLevel() {
+    requireComplete();
+    try {
+      xp = Math.max(xp, ExperienceTable.xpForLevel(Math.addExact(level, 1)));
+    } catch (ArithmeticException e) {
+      throw new IllegalArgumentException("Level too high to compute its XP", e);
+    }
+    gainLevels(1);
+  }
+
+  /**
+   * CRB p. 49: every new level grants one skill rank and one perk to spend and +1 maximum HP (computed
+   * from the level). The current HP rise by the same amount, so damage taken stays (user decision, no
+   * book rule); "at maximum" stays at maximum.
+   */
+  private void gainLevels(int levels) {
+    if (levels <= 0) {
+      return;
+    }
+    level += levels;
+    progression = new Progression(progression.pendingSkillRanks() + levels, progression.pendingPerks() + levels);
+    Integer currentHp = vitals.currentHp();
+    vitals = new Vitals(currentHp == null ? null : currentHp + levels, vitals.rads(), vitals.radiationPoints());
+  }
+
+  /**
+   * Stages one advancement rank of the skill more ({@code +1}) or less ({@code -1}). Budget and rank
+   * cap are checked by the advancement rules, not here.
+   *
+   * @throws IllegalArgumentException if fewer than zero staged ranks would remain
+   * @throws IllegalStateException during creation
+   */
+  public void stageSkillRank(@NonNull Skill skill, int delta) {
+    requireComplete();
+    SkillState state = skillState(skill);
+    skills.put(skill, new SkillState(state.tagged(), state.creationRanks(), state.advancementRanks(),
+        state.stagedRanks() + delta));
+  }
+
+  /**
+   * Skill ranks still to stage: the pending ranks plus those of staged Skilled ranks (CRB p. 71: two
+   * per rank) minus the staged skill ranks; negative if too many are staged.
+   */
+  public int advancementSkillRanksLeft() {
+    int fromPerks = 0;
+    for (PerkSelection perk : perks) {
+      if (perk.stagedRanks() > 0) {
+        fromPerks += PerkCatalog.byId(perk.perk().id()).map(PerkDefinition::skillPointsPerRank).orElse(0)
+            * perk.stagedRanks();
+      }
+    }
+    int staged = skills.values().stream().mapToInt(SkillState::stagedRanks).sum();
+    return progression.pendingSkillRanks() + fromPerks - staged;
+  }
+
+  /** Perk ranks still to stage: the pending perks minus the staged ranks; negative if too many. */
+  public int advancementPerksLeft() {
+    return progression.pendingPerks() - perks.stream().mapToInt(PerkSelection::stagedRanks).sum();
+  }
+
+  /** Whether any skill or perk rank is staged. */
+  public boolean hasStagedAdvancement() {
+    return skills.values().stream().anyMatch(state -> state.stagedRanks() > 0)
+        || perks.stream().anyMatch(perk -> perk.stagedRanks() > 0);
+  }
+
+  /**
+   * Makes the staged skill and perk ranks permanent (one-way, user decision; corrections are a GM matter,
+   * D2); points left stay pending. Further problems are checked by the caller with the advancement rules.
+   *
+   * @throws IllegalStateException during creation or if more ranks or perks are staged than available
+   */
+  public void applyAdvancement() {
+    requireComplete();
+    int skillRanksLeft = advancementSkillRanksLeft();
+    int perksLeft = advancementPerksLeft();
+    if (skillRanksLeft < 0 || perksLeft < 0) {
+      throw new IllegalStateException("More skill ranks or perks staged than available");
+    }
+    for (Skill skill : Skill.values()) {
+      SkillState state = skillState(skill);
+      skills.put(skill, new SkillState(state.tagged(), state.creationRanks(),
+          state.advancementRanks() + state.stagedRanks()));
+    }
+    perks.replaceAll(perk -> new PerkSelection(perk.perk(), perk.rank(), perk.importedRanks(),
+        perk.attributeChoices(), perk.skillChoices()));
+    progression = new Progression(skillRanksLeft, perksLeft);
+  }
+
+  /** Takes back all staged skill and perk ranks with their choices. */
+  public void discardAdvancement() {
+    requireComplete();
+    for (Skill skill : Skill.values()) {
+      stageSkillRank(skill, -skillState(skill).stagedRanks());
+    }
+    for (PerkSelection perk : List.copyOf(perks)) {
+      for (int i = 0; i < perk.stagedRanks(); i++) {
+        removePerkRank(perk.perk().id());
+      }
+    }
   }
 
   /**
@@ -677,6 +875,12 @@ public class Character {
   private void requireCreation() {
     if (creationComplete) {
       throw new IllegalStateException("This can only be changed during character creation");
+    }
+  }
+
+  private void requireComplete() {
+    if (!creationComplete) {
+      throw new IllegalStateException("This can only be changed after character creation");
     }
   }
 
@@ -716,11 +920,11 @@ public class Character {
     return List.copyOf(perks);
   }
 
-  public Progression getProgression() {
+  public @NonNull Progression getProgression() {
     return progression;
   }
 
-  public Vitals getVitals() {
+  public @NonNull Vitals getVitals() {
     return vitals;
   }
 

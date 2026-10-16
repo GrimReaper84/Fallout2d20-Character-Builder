@@ -66,7 +66,7 @@ class EquipmentRulesTest {
         List.of(), Map.of(), null, false, List.of());
     Character synth = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, false,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, unknown, "", null);
+        null, null, unknown, "", null, null);
     assertEquals(List.of("\"Synth Infiltrator\" is not an equipment pack of the supported books."),
         messages(synth));
   }

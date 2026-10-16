@@ -97,12 +97,19 @@ final class LegacyImportRun {
     StartingEquipment startingEquipment = equipment.startingEquipment(origin);
     String inventoryNotes = equipment.inventoryNotes();
     reportKeptFields(kept);
-    // Legacy saves know no book selection: all supported books are enabled.
+    // Legacy saves know no book selection: all supported books are enabled. The imported Tags count as
+    // the starting Tag skills (a legacy Tag! taken after creation cannot be told apart).
+    Set<Skill> startingTags = EnumSet.noneOf(Skill.class);
+    skillStates.forEach((skill, state) -> {
+      if (state.tagged()) {
+        startingTags.add(skill);
+      }
+    });
     Character character = new Character(name, origin, OriginChoices.NONE, level, xp, true,
         EnumSet.allOf(Book.class), Map.of(), skillStates, traits, perks, progression, vitals,
         new LegacyBaseline(attributes, skillRanks),
         new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload),
-        startingEquipment, inventoryNotes, null);
+        startingEquipment, inventoryNotes, null, startingTags);
     compareDerived(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
   }
@@ -313,15 +320,20 @@ final class LegacyImportRun {
     return new Progression(intField(node, "pendingSkillRanks", 0, 0), intField(node, "pendingPerks", 0, 0));
   }
 
+  /**
+   * Session state. Current HP equal to the stored legacy maximum (or missing) become "at maximum"
+   * ({@code null}, user decision), so they follow later level-ups and maximum changes.
+   */
   private Vitals vitals() {
     JsonNode node = root.get(VITALS);
     if (node == null || !node.isObject()) {
       return Vitals.FULL;
     }
     Integer currentHp = parseNonNegative(node.get("currentHP"));
-    if (currentHp == null) {
-      JsonNode derived = root.get(DERIVED);
-      currentHp = derived == null ? null : parseNonNegative(derived.get("hp"));
+    JsonNode derived = root.get(DERIVED);
+    Integer legacyMaxHp = derived == null ? null : parseNonNegative(derived.get("hp"));
+    if (currentHp != null && currentHp.equals(legacyMaxHp)) {
+      currentHp = null;
     }
     int radiationPoints = intField(node, "radiationPoints", 0, 0);
     if (radiationPoints > MAX_RADIATION_POINTS) {

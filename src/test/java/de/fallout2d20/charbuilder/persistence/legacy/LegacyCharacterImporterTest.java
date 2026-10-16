@@ -56,7 +56,7 @@ class LegacyCharacterImporterTest {
       assertEquals(value, character.attributeValue(attribute), attribute.id());
       assertEquals(0, character.attributeAllocation(attribute));
     });
-    assertEquals(11, character.getVitals().currentHp());
+    assertNull(character.getVitals().currentHp(), "current HP 11 = legacy maximum 11: at maximum");
     assertEquals(EnumSet.allOf(Book.class), character.getEnabledBooks(), "legacy saves know no books");
   }
 
@@ -116,6 +116,25 @@ class LegacyCharacterImporterTest {
     assertTrue(hasInfo(result, "skills"));
     assertNull(character.getVitals().currentHp(), "no vitals in the file: health at maximum");
     assertEquals(0, character.getProgression().pendingPerks());
+  }
+
+  /** Current HP below the stored legacy maximum are kept (damage taken). */
+  @Test
+  void keepsCurrentHpBelowTheLegacyMaximum() throws Exception {
+    ObjectNode root = fixture("test-survivor-v2.json");
+    ((ObjectNode) root.get("vitals")).put("currentHP", 7);
+    Character character = importer.importCharacter(root).character();
+    assertEquals(7, character.getVitals().currentHp());
+  }
+
+  /** The imported Tags are the starting Tag skills (CRB p. 81 Tag skill items). */
+  @Test
+  void importedTagsAreTheStartingTagSkills() throws Exception {
+    Character character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
+    for (Skill skill : Skill.values()) {
+      assertEquals(character.skillState(skill).tagged(), character.getStartingTagSkills().contains(skill),
+          skill.id());
+    }
   }
 
   /** test-v1.json stores only HP 15; the rules give 6 + 6 + 2 + 2 × 6 (Life Giver 2) = 26. */

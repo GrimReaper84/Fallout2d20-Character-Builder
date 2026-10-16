@@ -43,14 +43,16 @@ final class CharacterMapper {
     Map<String, SkillData> skills = new LinkedHashMap<>();
     for (Skill skill : Skill.values()) {
       SkillState state = character.skillState(skill);
-      skills.put(skill.id(), new SkillData(state.tagged(), state.creationRanks(), state.advancementRanks()));
+      skills.put(skill.id(), new SkillData(state.tagged(), state.creationRanks(), state.advancementRanks(),
+          state.stagedRanks()));
     }
     List<TraitData> traits = character.getTraits().stream()
         .map(t -> new TraitData(toData(t.trait()), t.imported(), attributeIds(t.attributeChoices())))
         .toList();
     List<PerkData> perks = character.getPerks().stream()
         .map(p -> new PerkData(toData(p.perk()), p.rank(), p.importedRanks(),
-            attributeIds(p.attributeChoices()), p.skillChoices().stream().map(Skill::id).toList()))
+            attributeIds(p.attributeChoices()), p.skillChoices().stream().map(Skill::id).toList(),
+            p.stagedRanks()))
         .toList();
     CatalogRef origin = character.getOrigin();
     Vitals vitals = character.getVitals();
@@ -64,6 +66,8 @@ final class CharacterMapper {
         character.getXp(),
         character.isCreationComplete(),
         startingLevel(character),
+        character.isCreationComplete()
+            ? character.getStartingTagSkills().stream().sorted().map(Skill::id).toList() : null,
         character.getEnabledBooks().stream().map(Book::name).toList(),
         allocation,
         skills,
@@ -92,7 +96,8 @@ final class CharacterMapper {
     for (Map.Entry<String, SkillData> entry : data.skills().entrySet()) {
       Skill skill = skill(entry.getKey());
       SkillData skillData = entry.getValue();
-      skills.put(skill, new SkillState(skillData.tagged(), skillData.creationRanks(), skillData.advancementRanks()));
+      skills.put(skill, new SkillState(skillData.tagged(), skillData.creationRanks(), skillData.advancementRanks(),
+          skillData.stagedRanks()));
     }
     List<TraitSelection> traits = new ArrayList<>();
     for (TraitData trait : orEmpty(data.traits())) {
@@ -105,7 +110,7 @@ final class CharacterMapper {
         skillChoices.add(skill(id));
       }
       perks.add(new PerkSelection(toModel(perk.ref()), perk.rank(), perk.importedRanks(),
-          attributes(perk.attributeChoices()), skillChoices));
+          attributes(perk.attributeChoices()), skillChoices, perk.stagedRanks()));
     }
     ProgressionData progression = data.progression();
     VitalsData vitals = data.vitals();
@@ -136,7 +141,8 @@ final class CharacterMapper {
               legacyImport.importedOn(), legacyImport.payload()),
           startingEquipment,
           inventoryNotes == null ? "" : inventoryNotes,
-          data.startingLevel());
+          data.startingLevel(),
+          startingTagSkills(data.startingTagSkills()));
     } catch (IllegalArgumentException e) {
       throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
     }
@@ -146,6 +152,18 @@ final class CharacterMapper {
   private static @Nullable Integer startingLevel(@NonNull Character character) {
     OptionalInt level = character.getStartingLevel();
     return character.isCreationComplete() && level.isPresent() ? level.getAsInt() : null;
+  }
+
+  /** Stored Tag skills of a complete character; {@code null} if the file has none. */
+  private static @Nullable Set<Skill> startingTagSkills(@Nullable List<String> ids) throws SaveFormatException {
+    if (ids == null) {
+      return null;
+    }
+    Set<Skill> skills = EnumSet.noneOf(Skill.class);
+    for (String id : ids) {
+      skills.add(skill(id));
+    }
+    return skills;
   }
 
   /** Enabled books; a file without the field (written before it existed) enables all books. */

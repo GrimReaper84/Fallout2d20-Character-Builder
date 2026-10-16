@@ -13,10 +13,10 @@ import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
-import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
+import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
@@ -36,6 +36,7 @@ import org.tbee.javafx.scene.layout.MigPane;
 /**
  * Overview of a character. Only the name, the inventory notes and, during creation, origin, traits,
  * starting level, S.P.E.C.I.A.L. allocation, skills, perks and starting equipment can be edited; after
+ * creation XP and levels, and while points are left or choices staged, skill ranks and perks. After
  * every change the overview is rebuilt by the caller, so all values stay current.
  */
 final class CharacterOverview {
@@ -82,10 +83,7 @@ final class CharacterOverview {
       addHints(pane, CreationRules.problems(character));
     }
     if (character.isCreationComplete()) {
-      pane.add(new Label("Level"));
-      pane.add(new Label(Integer.toString(character.getLevel())));
-      pane.add(new Label("XP"));
-      pane.add(new Label(Long.toString(character.getXp())));
+      AdvancementSection.addTo(pane, character, onChanged);
     } else {
       LevelSection.addTo(pane, character, onChanged);
     }
@@ -124,7 +122,9 @@ final class CharacterOverview {
     resistance(pane, "Poison DR", derived.poison(), RESISTANCE_TOOLTIP);
 
     heading(pane, "Skills");
-    if (character.isCreationComplete()) {
+    if (AdvancementRules.choosesSkills(character)) {
+      AdvancementSkillSection.addTo(pane, character, onChanged);
+    } else if (character.isCreationComplete()) {
       for (Skill skill : Skill.values()) {
         boolean tagged = character.isTagged(skill);
         pane.add(new Label((tagged ? "● " : "") + skill.displayName()));
@@ -146,7 +146,7 @@ final class CharacterOverview {
     }
 
     heading(pane, "Perks");
-    if (character.isCreationComplete()) {
+    if (character.isCreationComplete() && !AdvancementRules.choosesPerks(character)) {
       addPerkList(pane, character);
     } else {
       PerkSection.addTo(pane, character, onChanged);
@@ -158,13 +158,8 @@ final class CharacterOverview {
       addCreateButton(pane, onComplete);
     }
 
-    heading(pane, "Advancement and session");
-    Progression progression = character.getProgression();
+    heading(pane, "Session");
     Vitals vitals = character.getVitals();
-    pane.add(new Label("Unspent skill ranks"));
-    pane.add(new Label(Integer.toString(progression.pendingSkillRanks())));
-    pane.add(new Label("Unspent perks"));
-    pane.add(new Label(Integer.toString(progression.pendingPerks())));
     pane.add(new Label("Current HP"));
     int currentHp = vitals.currentHp() == null ? derived.maxHp() : vitals.currentHp();
     pane.add(new Label(currentHp + " / " + derived.maxHp()));

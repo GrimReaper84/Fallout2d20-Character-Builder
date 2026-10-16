@@ -14,8 +14,8 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Perk choice of a character in creation as a grid of {@link PerkCard}s (user concept): chosen and
- * available perks first, then the perks whose next rank cannot be taken, greyed out with the reason
+ * Perk choice as a grid of {@link PerkCard}s (user concept), in creation and after a level-up (staged
+ * ranks, the budget is then the pending perks): chosen and available perks first, then the perks whose next rank cannot be taken, greyed out with the reason
  * as tooltip. Every change goes to the model and then to {@code onChanged}, which rebuilds the
  * overview.
  */

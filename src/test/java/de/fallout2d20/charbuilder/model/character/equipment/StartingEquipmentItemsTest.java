@@ -16,9 +16,26 @@ import de.fallout2d20.charbuilder.model.character.Vitals;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class StartingEquipmentItemsTest {
+
+  /** CRB p. 81: only the Tags of creation grant items; a Tag! taken after a level-up does not. */
+  @Test
+  void tagPerkAfterCreationGrantsNoItems() {
+    Character settler = character("survivor");
+    settler.chooseEquipmentPack(CatalogRef.of("settler"));
+    settler.setFreeTag(Skill.LOCKPICK, true);
+    settler.completeCreation();
+    settler.addXp(1_000);
+    settler.addPerkRank(CatalogRef.of("tag"), null, Skill.SCIENCE);
+    settler.applyAdvancement();
+    assertTrue(settler.isTagged(Skill.SCIENCE));
+    assertEquals(Set.of(Skill.LOCKPICK), settler.getStartingTagSkills());
+    assertEquals(List.of(Skill.LOCKPICK),
+        StartingEquipmentItems.taggedSkillItems(settler).map(items -> items.skill()).toList());
+  }
 
   /** Like the legacy save JC.json: Survivor with the Settler pack (CRB p. 79) and three Tags (CRB p. 81). */
   @Test
@@ -126,7 +143,7 @@ class StartingEquipmentItemsTest {
         false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 5, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(Skill.BARTER, new SkillState(true, 0, 0)), List.of(),
-        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null);
+        List.of(), Progression.NONE, Vitals.FULL, null, null, wanderer, "", null, null);
     assertEquals(new StartingCaps(30, 0, 2), StartingEquipmentItems.caps(complete));
     assertTrue(StartingEquipmentItems.lines(complete).contains("Melee weapon: not chosen yet"));
   }

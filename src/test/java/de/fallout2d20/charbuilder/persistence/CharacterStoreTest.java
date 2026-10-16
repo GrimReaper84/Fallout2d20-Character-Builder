@@ -33,6 +33,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -248,14 +249,49 @@ class CharacterStoreTest {
         ArmSelection.of(ArmAttachment.LASER_EMITTER)), loaded.arms(), "the pack's arms");
   }
 
-  /** A complete character cannot pick again, so stale picks keep their text. */
+  /** Pending points, staged ranks, starting Tags and current HP survive saving (D1). */
+  @Test
+  void roundTripsAdvancement() throws Exception {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    character.setFreeTag(Skill.SNEAK, true);
+    character.completeCreation();
+    character.addXp(1_000);
+    character.stageSkillRank(Skill.REPAIR, 1);
+    character.addPerkRank(CatalogRef.of("tag"), null, Skill.SCIENCE);
+    Path file = dir.resolve("advanced.json");
+    store.save(character, file);
+
+    Character loaded = store.load(file).character();
+    assertEquals(5, loaded.getLevel());
+    assertEquals(new Progression(4, 4), loaded.getProgression());
+    assertEquals(1, loaded.skillState(Skill.REPAIR).stagedRanks());
+    assertEquals(1, loaded.getPerks().get(0).stagedRanks());
+    assertEquals(List.of(Skill.SCIENCE), loaded.getPerks().get(0).skillChoices());
+    assertEquals(Set.of(Skill.SNEAK), loaded.getStartingTagSkills());
+    assertEquals(3, loaded.advancementSkillRanksLeft());
+    assertEquals(3, loaded.advancementPerksLeft());
+    JsonNode written = JSON.readTree(file.toFile());
+    assertEquals(List.of("sneak"), List.of(written.get("startingTagSkills").get(0).asText()));
+  }
+
+  @Test
+  void characterInCreationWritesNoStartingTagSkills() throws Exception {
+    Character character = Character.createNew();
+    character.setFreeTag(Skill.SNEAK, true);
+    Path file = dir.resolve("creation.json");
+    store.save(character, file);
+    assertFalse(JSON.readTree(file.toFile()).has("startingTagSkills"));
+  }
+
+  /** A complete character cannot pick again, so stale picks keep their text.
   @Test
   void completeCharactersKeepStalePicks() throws Exception {
     StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), List.of("Spoon"), Map.of(),
         null, false, List.of());
     Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
         EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "", null);
+        null, null, settler, "", null, null);
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());

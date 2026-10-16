@@ -63,6 +63,12 @@ final class PerkCard {
     if (!choices.isEmpty()) {
       card.getChildren().add(new Label("Chosen: " + choices));
     }
+    int staged = stagedRanks(character, perk.id());
+    if (staged > 0) {
+      Label stagedLabel = new Label(staged + " rank" + (staged == 1 ? "" : "s") + " staged, not applied yet");
+      stagedLabel.setStyle("-fx-font-style: italic;");
+      card.getChildren().add(stagedLabel);
+    }
     card.getChildren().add(new Label(perk.sources().stream().map(Source::toString)
         .collect(Collectors.joining(", "))));
     boolean canAdd = PerkRules.perksLeft(character) > 0 && blockers.isEmpty();
@@ -107,6 +113,12 @@ final class PerkCard {
     }
     Set<String> parts = PerkRules.requirementStatus(character, perk, rank + 1).keySet();
     return parts.isEmpty() ? "No requirements" : "Requires " + String.join(", ", parts);
+  }
+
+  /** Ranks of the perk taken after a level-up but not applied yet. */
+  private static int stagedRanks(@NonNull Character character, @NonNull String perkId) {
+    return character.getPerks().stream().filter(perk -> perk.perk().id().equals(perkId))
+        .mapToInt(PerkSelection::stagedRanks).sum();
   }
 
   /** The attributes or skills chosen for the perk's ranks, e.g. "AGI, STR". */

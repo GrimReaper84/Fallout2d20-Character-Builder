@@ -27,9 +27,9 @@ import org.jspecify.annotations.NonNull;
  * Tag skill (CRB p. 81; all Tag sources count – free, origin and Tag! – user decision). Caps are not a
  * line, see {@link #caps(Character)}.
  *
- * <p>The book grants Tag skill items only for Tags chosen during creation. As long as perks can only be
- * taken during creation (and imported Tag! ranks carry no skill), every current Tag qualifies; once
- * level-up perks exist (D1), a Tag! taken later must not count here.
+ * <p>The book grants Tag skill items only for Tags chosen during creation, so a complete character uses
+ * the Tag skills frozen at completion ({@link Character#getStartingTagSkills()}); a Tag! taken after a
+ * level-up does not count.
  */
 public final class StartingEquipmentItems {
 
@@ -76,11 +76,12 @@ public final class StartingEquipmentItems {
   }
 
   /**
-   * The Tag skill items rows of every skill that grants starting equipment: all Tag skills (see the
-   * class comment); the one place deciding which Tags count.
+   * The Tag skill items rows of every skill that grants starting equipment: the starting Tag skills (see
+   * the class comment); the one place deciding which Tags count.
    */
   public static @NonNull Stream<TagSkillItemData> taggedSkillItems(@NonNull Character character) {
-    return Arrays.stream(Skill.values()).filter(character::isTagged).map(EquipmentCatalog::tagSkillItems);
+    return Arrays.stream(Skill.values()).filter(character.getStartingTagSkills()::contains)
+        .map(EquipmentCatalog::tagSkillItems);
   }
 
   /** E.g. {@code 10mm Auto Pistol, with 20 shots of 10mm}; {@code not chosen yet} for an open arm. */

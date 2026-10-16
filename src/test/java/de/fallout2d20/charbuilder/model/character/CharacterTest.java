@@ -348,9 +348,10 @@ class CharacterTest {
     assertEquals(1, withImported.getPerks().get(0).rank());
 
     Character complete = create(Map.of(), Map.of(), baseline(6));
-    assertThrows(IllegalStateException.class,
-        () -> complete.addPerkRank(CatalogRef.of("jury-rigging"), null, null));
-    assertThrows(IllegalStateException.class, () -> complete.removePerkRank("jury-rigging"));
+    complete.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
+    assertEquals(1, complete.getPerks().get(0).stagedRanks(), "after creation a perk rank is staged");
+    complete.removePerkRank("jury-rigging");
+    assertTrue(complete.getPerks().isEmpty());
   }
 
   /** CRB p. 49: XP becomes the minimum of the starting level (user decision); no upper limit. */
@@ -412,7 +413,6 @@ class CharacterTest {
     assertThrows(IllegalStateException.class, character::completeCreation);
     assertThrows(IllegalStateException.class, () -> character.chooseOrigin(CatalogRef.of("ghoul")));
     assertThrows(IllegalStateException.class, () -> character.setFreeTag(Skill.SNEAK, true));
-    assertThrows(IllegalStateException.class, () -> character.addPerkRank(CatalogRef.of("gun-nut"), null, null));
     assertThrows(IllegalStateException.class, () -> character.chooseEquipmentPack(CatalogRef.of("settler")));
     assertThrows(IllegalStateException.class, () -> character.setStartingLevel(4));
   }
@@ -444,7 +444,7 @@ class CharacterTest {
   private static Character withStartingLevel(boolean complete, int startingLevel) {
     return new Character("Test", null, OriginChoices.NONE, 2, 100, complete, EnumSet.allOf(Book.class), Map.of(),
         Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        startingLevel);
+        startingLevel, null);
   }
 
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */

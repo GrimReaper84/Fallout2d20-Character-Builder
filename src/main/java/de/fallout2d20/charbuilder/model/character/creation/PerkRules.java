@@ -29,6 +29,10 @@ import org.jspecify.annotations.NonNull;
  * none, plus the level step per rank taken, CRB p. 59); no robot where excluded; no perk it excludes
  * (CRB p. 62); not above its ranks. Perks that become invalid later stay and get a hint (user
  * decision). Soft checks only, for characters in creation.
+ *
+ * <p>After creation the perk grid and these checks are reused for advancement (CRB p. 49: one perk
+ * per new level): the budget is then the pending perks, and only staged ranks can be given back. The
+ * advancement problems are collected by {@code advancement.AdvancementRules}.
  */
 public final class PerkRules {
 
@@ -39,13 +43,22 @@ public final class PerkRules {
 
   private PerkRules() {}
 
-  /** Perk ranks to choose: one per level plus the extra perks of origin and traits. */
+  /**
+   * Perk ranks to choose: in creation one per level plus the extra perks of origin and traits; after
+   * creation the pending perks of level-ups.
+   */
   public static int budget(@NonNull Character character) {
+    if (character.isCreationComplete()) {
+      return character.getProgression().pendingPerks();
+    }
     return character.getLevel() + OriginRules.extraPerks(character);
   }
 
-  /** Perk ranks still to choose; negative if too many are chosen. */
+  /** Perk ranks still to choose (after creation: to stage); negative if too many are chosen. */
   public static int perksLeft(@NonNull Character character) {
+    if (character.isCreationComplete()) {
+      return character.advancementPerksLeft();
+    }
     return budget(character) - character.getPerks().stream().mapToInt(PerkSelection::rank).sum();
   }
 
@@ -60,10 +73,13 @@ public final class PerkRules {
     return perksLeft(character) > 0 && blockers(character, perk).isEmpty();
   }
 
-  /** Whether a rank of the perk can be given back: it has a rank taken in this creation. */
+  /**
+   * Whether a rank of the perk can be given back: in creation a rank taken in this creation, after
+   * creation a staged rank.
+   */
   public static boolean canRemove(@NonNull Character character, @NonNull String perkId) {
     return character.getPerks().stream().anyMatch(perk -> perk.perk().id().equals(perkId)
-        && perk.rank() > perk.importedRanks());
+        && (character.isCreationComplete() ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks()));
   }
 
   /**
@@ -162,14 +178,19 @@ public final class PerkRules {
             "\"" + selection.perk().displayName() + "\" is not a perk of the supported books."));
         continue;
       }
-      checkSelection(character, selection, perk.get(), problems);
+      problems.addAll(selectionProblems(character, selection, perk.get()));
     }
     return problems;
   }
 
-  /** Requirements of the highest rank taken, maximum rank and the choices of choice perks. */
-  private static void checkSelection(@NonNull Character character, @NonNull PerkSelection selection,
-      @NonNull PerkDefinition perk, @NonNull List<CreationProblem> problems) {
+  /**
+   * Problems of one perk selection: requirements of the highest rank taken, maximum rank and the choices
+   * of choice perks. Used for creation and for staged perks after creation; imported ranks may lack
+   * their choices.
+   */
+  public static @NonNull List<CreationProblem> selectionProblems(@NonNull Character character,
+      @NonNull PerkSelection selection, @NonNull PerkDefinition perk) {
+    List<CreationProblem> problems = new ArrayList<>();
     String name = perk.name();
     if (selection.rank() > perk.ranks()) {
       problems.add(new CreationProblem(name, name + " has at most " + perk.ranks() + " rank(s)."));
@@ -178,7 +199,7 @@ public final class PerkRules {
       problems.add(new CreationProblem(name, name + ": " + unmet));
     }
     if (perk.choice() == PerkChoice.ATTRIBUTE) {
-      if (selection.attributeChoices().size() != selection.rank()) {
+      if (!choicesComplete(selection, selection.attributeChoices())) {
         problems.add(new CreationProblem(name, "Choose an attribute for every rank of " + name + "."));
       }
       Set<Attribute> chosen = EnumSet.noneOf(Attribute.class);
@@ -191,11 +212,17 @@ public final class PerkRules {
       }
     }
     if (perk.choice() == PerkChoice.SKILL) {
-      if (selection.skillChoices().size() != selection.rank()) {
+      if (!choicesComplete(selection, selection.skillChoices())) {
         problems.add(new CreationProblem(name, "Choose a skill for every rank of " + name + "."));
       }
       checkTaggedSkills(character, selection, name, problems);
     }
+    return problems;
+  }
+
+  /** One choice per rank; imported ranks may lack theirs. */
+  private static boolean choicesComplete(@NonNull PerkSelection selection, @NonNull List<?> choices) {
+    return choices.size() >= selection.rank() - selection.importedRanks() && choices.size() <= selection.rank();
   }
 
   /**

@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character;
 
 import java.util.List;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A perk taken by a character.
@@ -8,27 +9,36 @@ import java.util.List;
  * <p>CRB p. 49: perks can have several ranks; each rank increases the effect.
  *
  * @param perk the perk
- * @param rank number of ranks taken (at least 1)
+ * @param rank number of ranks taken (at least 1), staged ranks included
  * @param importedRanks ranks taken over from a legacy save; their effects on attributes and skills
  *     are already part of the {@link LegacyBaseline} and must not be applied again
  * @param attributeChoices one attribute per rank for perks such as Intense Training
  * @param skillChoices chosen skills for perks such as Tag! (empty for imported ranks)
+ * @param stagedRanks the last ranks, taken after a level-up but not applied yet (see
+ *     {@link Character#applyAdvancement()}); they count like other ranks but can be taken back
  */
 public record PerkSelection(
-    CatalogRef perk,
+    @NonNull CatalogRef perk,
     int rank,
     int importedRanks,
-    List<Attribute> attributeChoices,
-    List<Skill> skillChoices) {
+    @NonNull List<Attribute> attributeChoices,
+    @NonNull List<Skill> skillChoices,
+    int stagedRanks) {
 
   public PerkSelection {
     if (rank < 1) {
       throw new IllegalArgumentException("Perk rank must be at least 1");
     }
-    if (importedRanks < 0 || importedRanks > rank) {
-      throw new IllegalArgumentException("Imported ranks must lie between 0 and the rank");
+    if (importedRanks < 0 || stagedRanks < 0 || importedRanks + stagedRanks > rank) {
+      throw new IllegalArgumentException("Imported and staged ranks must lie between 0 and the rank");
     }
     attributeChoices = List.copyOf(attributeChoices);
     skillChoices = List.copyOf(skillChoices);
+  }
+
+  /** A perk selection without staged ranks. */
+  public PerkSelection(@NonNull CatalogRef perk, int rank, int importedRanks,
+      @NonNull List<Attribute> attributeChoices, @NonNull List<Skill> skillChoices) {
+    this(perk, rank, importedRanks, attributeChoices, skillChoices, 0);
   }
 }
