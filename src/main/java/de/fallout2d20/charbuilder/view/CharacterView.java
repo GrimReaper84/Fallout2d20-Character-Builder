@@ -18,7 +18,7 @@ import javafx.scene.layout.BorderPane;
 import org.jspecify.annotations.NonNull;
 
 /**
- * The view of one character: the header bar above six tabs (Stats, Status, Perks, Weapons, Armor, Gear).
+ * The view of one character: the header bar above the tabs (Stats, Status, Perks, Weapons, Armor, Gear, Notes).
  * Empty until the first {@link #refresh()}, which rebuilds the header and every tab's content after a change but keeps the tab pane, so
  * the selected tab and each tab's scroll position stay. A tab with rule hints shows a warning icon, with
  * the hints as tooltip.
@@ -40,6 +40,8 @@ final class CharacterView {
     for (CharacterTab kind : CharacterTab.values()) {
       ScrollPane scrollPane = new ScrollPane();
       scrollPane.setFitToWidth(true);
+      // The notes field fills its whole tab and scrolls itself.
+      scrollPane.setFitToHeight(kind == CharacterTab.NOTES);
       Tab tab = new Tab(kind.title(), scrollPane);
       tabs.add(tab);
       scrollPanes.add(scrollPane);
@@ -76,6 +78,7 @@ final class CharacterView {
       case WEAPONS -> WeaponsTab.build(character, callbacks);
       case ARMOR -> ArmorTab.build(character, callbacks);
       case GEAR -> GearTab.build(character, tabHints, callbacks);
+      case NOTES -> NotesTab.build(character, callbacks);
     };
   }
 

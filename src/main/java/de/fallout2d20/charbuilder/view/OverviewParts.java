@@ -53,6 +53,18 @@ final class OverviewParts {
     return new MigPane("insets 0, gap 0 4, wrap 1", "[grow, fill]");
   }
 
+  /**
+   * Two {@link #half()}s side by side with the same width, sharing the window width. Never squeezed below
+   * its natural width (that cut row names to "…"); a too narrow window scrolls.
+   */
+  static @NonNull MigPane halves(@NonNull MigPane left, @NonNull MigPane right) {
+    MigPane pane = new MigPane("insets 16, gap 32 0", "[sg half, grow, fill][sg half, grow, fill]");
+    pane.setMinWidth(Region.USE_PREF_SIZE);
+    pane.add(left, "top");
+    pane.add(right, "top");
+    return pane;
+  }
+
   /** A bold heading with a separator below it over the whole width of a {@link #half()}. */
   static void sectionHeading(@NonNull MigPane half, @NonNull String text) {
     Label label = new Label(text);

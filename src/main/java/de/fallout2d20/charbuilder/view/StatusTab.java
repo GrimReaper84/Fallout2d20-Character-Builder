@@ -10,8 +10,8 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Status tab: the derived statistics with the innate Damage Resistances and, once creation is complete,
- * the play-session values (D5).
+ * Status tab in two halves of equal width: the play-session values (D5, once creation is complete) on the
+ * left, the derived statistics with the innate Damage Resistances on the right.
  */
 final class StatusTab {
 
@@ -23,26 +23,30 @@ final class StatusTab {
   private StatusTab() {}
 
   static @NonNull Node build(@NonNull Character character, @NonNull ViewCallbacks callbacks) {
-    MigPane pane = OverviewParts.grid();
+    MigPane left = OverviewParts.half();
+    OverviewParts.sectionHeading(left, "Session");
     if (character.isCreationComplete()) {
-      OverviewParts.heading(pane, "Session");
-      SessionSection.addTo(pane, character, callbacks.onEdited(), callbacks.onChanged());
+      left.add(SessionSection.build(character, callbacks.onChanged()));
+    } else {
+      left.add(new Label("Tracked once the character is created."));
     }
 
+    MigPane right = OverviewParts.half();
+    OverviewParts.sectionHeading(right, "Derived statistics");
+    right.add(derivedStatistics(character));
+    return OverviewParts.halves(left, right);
+  }
+
+  /** Name and value per row, one below the other. */
+  private static @NonNull MigPane derivedStatistics(@NonNull Character character) {
     DerivedStats derived = DerivedStats.of(character);
-    OverviewParts.heading(pane, "Derived statistics");
-    pane.add(new Label("Max HP"));
-    pane.add(new Label(Integer.toString(derived.maxHp())));
-    pane.add(new Label("Initiative"));
-    pane.add(new Label(Integer.toString(derived.initiative())));
-    pane.add(new Label("Defense"));
-    pane.add(new Label(Integer.toString(derived.defense())));
-    pane.add(new Label("Carry weight"));
-    pane.add(new Label(derived.carryWeight() + " lbs."));
-    pane.add(new Label("Melee damage"));
-    pane.add(new Label(derived.meleeDamageText()));
-    pane.add(new Label("Max Luck points"));
-    pane.add(new Label(Integer.toString(derived.maxLuckPoints())));
+    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][left]");
+    row(pane, new Label("Max HP"), Integer.toString(derived.maxHp()));
+    row(pane, new Label("Initiative"), Integer.toString(derived.initiative()));
+    row(pane, new Label("Defense"), Integer.toString(derived.defense()));
+    row(pane, new Label("Carry weight"), derived.carryWeight() + " lbs.");
+    row(pane, new Label("Melee damage"), derived.meleeDamageText());
+    row(pane, new Label("Max Luck points"), Integer.toString(derived.maxLuckPoints()));
     resistance(pane, "Physical DR", derived.physical(), PHYSICAL_RESISTANCE_TOOLTIP);
     resistance(pane, "Energy DR", derived.energy(), RESISTANCE_TOOLTIP);
     resistance(pane, "Radiation DR", derived.radiation(), RESISTANCE_TOOLTIP);
@@ -54,7 +58,11 @@ final class StatusTab {
       @NonNull Resistance resistance, @NonNull String tooltip) {
     Label label = new Label(text);
     label.setTooltip(new Tooltip(tooltip));
-    pane.add(label);
-    pane.add(new Label(resistance.toString()));
+    row(pane, label, resistance.toString());
+  }
+
+  private static void row(@NonNull MigPane pane, @NonNull Label name, @NonNull String value) {
+    pane.add(name);
+    pane.add(new Label(value));
   }
 }

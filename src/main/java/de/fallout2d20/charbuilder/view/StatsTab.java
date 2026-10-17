@@ -5,7 +5,6 @@ import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
 import javafx.scene.Node;
-import javafx.scene.layout.Region;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
@@ -43,11 +42,6 @@ final class StatsTab {
       right.add(SkillSection.build(character, locked, onChanged));
     }
 
-    MigPane pane = new MigPane("insets 16, gap 32 0", "[sg half, grow, fill][sg half, grow, fill]");
-    // Never squeezed below its natural width (that cut the row names to "…"); a too narrow window scrolls.
-    pane.setMinWidth(Region.USE_PREF_SIZE);
-    pane.add(left, "top");
-    pane.add(right, "top");
-    return pane;
+    return OverviewParts.halves(left, right);
   }
 }

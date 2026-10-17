@@ -11,7 +11,8 @@ enum CharacterTab {
   PERKS("Perks", HintArea.PERKS),
   WEAPONS("Weapons", null),
   ARMOR("Armor", HintArea.ARMOR),
-  GEAR("Gear", HintArea.GEAR);
+  GEAR("Gear", HintArea.GEAR),
+  NOTES("Notes", null);
 
   private final @NonNull String title;
   private final @Nullable HintArea area;

@@ -7,10 +7,9 @@ import java.util.function.IntConsumer;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -18,17 +17,16 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * Play-session values of a complete character (D5): current HP and rads (CRB p. 31), Rad Sponge Radiation
- * Points (WOA p. 25), Luck points (CRB p. 21), injuries per hit location (CRB p. 32) and session notes.
- * Each row: name, value, −/+ and an optional quick button. Clicks rebuild the overview; typed notes only
- * mark the document edited.
+ * Points (WOA p. 25), Luck points (CRB p. 21) and injuries per hit location (CRB p. 32), one below the
+ * other in a two-column grid. Each row: name, value, −/+ and an optional quick button. Clicks rebuild the
+ * view. The session notes have their own tab ({@link NotesTab}).
  */
 final class SessionSection {
 
   private SessionSection() {}
 
-  /** Adds the session rows to a four-column overview grid. */
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onEdited,
-      @NonNull Runnable onChanged) {
+  static @NonNull MigPane build(@NonNull Character character, @NonNull Runnable onChanged) {
+    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][left]");
     SessionValues values = SessionValues.of(character);
 
     Label hp = new Label(values.currentHp() + " / " + values.effectiveMaxHp());
@@ -59,7 +57,7 @@ final class SessionSection {
         quick("fas-redo", "Refresh", "Refill all Luck points (GM: milestone or new quest, CRB p. 21)",
             values.luckPoints() < values.maxLuckPoints(), character::refreshLuck, onChanged));
 
-    FlowPane injuries = new FlowPane(12, 4);
+    VBox injuries = new VBox(4);
     for (HitLocation location : character.hitLocations()) {
       CheckBox box = new CheckBox(location.displayName());
       box.setSelected(values.injuries().contains(location));
@@ -70,19 +68,9 @@ final class SessionSection {
       });
       injuries.getChildren().add(box);
     }
-    pane.add(new Label("Injuries"), "top");
-    pane.add(injuries, "span 3");
-
-    TextArea notes = new TextArea(character.getVitals().notes());
-    notes.setPromptText("Conditions, chems and their duration, addictions, …");
-    notes.setWrapText(true);
-    notes.setPrefRowCount(3);
-    notes.textProperty().addListener((obs, old, text) -> {
-      character.setSessionNotes(text);
-      onEdited.run();
-    });
-    pane.add(new Label("Session notes"), "top");
-    pane.add(OverviewParts.notesArea(notes), "span 3");
+    pane.add(new Label("Injuries"), "top, gaptop 8");
+    pane.add(injuries, "gaptop 8");
+    return pane;
   }
 
   private static void row(@NonNull MigPane pane, @NonNull String name, @NonNull Label value, int current,
@@ -97,7 +85,7 @@ final class SessionSection {
     if (quick != null) {
       stepper.getChildren().add(quick);
     }
-    pane.add(stepper, "span 3");
+    pane.add(stepper);
   }
 
   private static void step(@NonNull IntConsumer set, int value, @NonNull Runnable onChanged) {
