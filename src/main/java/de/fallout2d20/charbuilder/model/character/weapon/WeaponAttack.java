@@ -1,6 +1,5 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
-import de.fallout2d20.charbuilder.catalog.weapon.DamageType;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -8,10 +7,8 @@ import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -23,10 +20,11 @@ import org.jspecify.annotations.Nullable;
  * STR + Unarmed), so the target number is attribute + skill rank; a catalog weapon may name another
  * attribute (WOA p. 22: Self-Destruct, END + Explosives). CRB p. 13: with a Tag skill every d20
  * up to the skill rank is a critical success, otherwise only a 1. CRB p. 88: melee and unarmed attacks
- * add the melee bonus (CRB p. 48) to the damage. Perk damage bonuses and mods are not included (user
- * decision).
+ * add the melee bonus (CRB p. 48) to the damage. Installed mods are applied ({@link ModdedWeapon}); perk
+ * damage bonuses are not included (user decision).
  *
  * @param name weapon name
+ * @param moddedName weapon name with the mods' prefixes; equals {@code name} without mods
  * @param skill the attack skill; {@code null} if unknown (custom weapon without skill, unknown id)
  * @param attribute the attribute rolled with the skill; {@code null} without skill
  * @param targetNumber attribute + skill rank; {@code null} without skill
@@ -42,6 +40,7 @@ import org.jspecify.annotations.Nullable;
  */
 public record WeaponAttack(
     @NonNull String name,
+    @NonNull String moddedName,
     @Nullable Skill skill,
     @Nullable Attribute attribute,
     @Nullable Integer targetNumber,
@@ -81,34 +80,22 @@ public record WeaponAttack(
     return damage + " CD" + (meleeBonus > 0 ? " + " + meleeBonus + " CD" : "");
   }
 
-  /** The attack with a carried weapon (catalog or custom). */
+  /** The attack with a carried weapon (catalog or custom) and its mods. */
   public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull CarriedWeapon weapon) {
-    CustomWeapon custom = weapon.custom();
-    if (custom != null) {
-      String ammunition = custom.ammunition();
-      Skill skill = custom.skill();
-      return create(character, custom.name(), skill, skill == null ? null : skill.governingAttribute(),
-          custom.damage(), custom.effects(),
-          custom.damageType(), custom.fireRate(), custom.range(), custom.qualities(),
-          ammunition == null ? List.of() : List.of(ammunition));
-    }
-    Optional<WeaponData> data = weapon.data();
-    return data.map(weaponData -> of(character, weaponData))
-        .orElseGet(() -> create(character, weapon.displayName(), null, null, 0, "", "", null, null, "", List.of()));
+    Skill skill = weapon.skill().orElse(null);
+    Attribute attribute = weapon.data().map(WeaponData::attackAttribute)
+        .orElse(skill == null ? null : skill.governingAttribute());
+    return create(character, ModdedWeapon.of(weapon).orElseGet(() -> ModdedWeapon.unknown(weapon.displayName())),
+        skill, attribute);
   }
 
   /** The attack with a catalog weapon, e.g. the Unarmed Strike every character has (CRB p. 111). */
   public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull WeaponData weapon) {
-    return create(character, weapon.name(), weapon.skill(), weapon.attackAttribute(), weapon.damage(),
-        String.join(", ", weapon.damageEffects()),
-        weapon.damageTypes().stream().map(DamageType::displayName).collect(Collectors.joining("/")),
-        weapon.fireRate(), weapon.range(), String.join(", ", weapon.qualities()), weapon.ammunition());
+    return create(character, ModdedWeapon.of(weapon), weapon.skill(), weapon.attackAttribute());
   }
 
-  private static @NonNull WeaponAttack create(@NonNull Character character, @NonNull String name,
-      @Nullable Skill skill, @Nullable Attribute attribute, int damage, @NonNull String effects, @NonNull String damageType,
-      @Nullable Integer fireRate, @Nullable WeaponRange range, @NonNull String qualities,
-      @NonNull List<String> ammunition) {
+  private static @NonNull WeaponAttack create(@NonNull Character character, @NonNull ModdedWeapon weapon,
+      @Nullable Skill skill, @Nullable Attribute attribute) {
     Integer targetNumber = null;
     Integer criticalRange = null;
     int meleeBonus = 0;
@@ -120,7 +107,8 @@ public record WeaponAttack(
         meleeBonus = DerivedStats.of(character).meleeBonusDice();
       }
     }
-    return new WeaponAttack(name, skill, attribute, targetNumber, criticalRange, damage, meleeBonus, effects, damageType,
-        fireRate, range, qualities, ammunition);
+    return new WeaponAttack(weapon.name(), weapon.moddedName(), skill, attribute, targetNumber, criticalRange,
+        weapon.damage(), meleeBonus, String.join(", ", weapon.damageEffects()), weapon.damageType(), weapon.fireRate(),
+        weapon.range(), String.join(", ", weapon.qualities()), weapon.ammunition());
   }
 }

@@ -46,7 +46,7 @@ final class WeaponTree {
       for (WeaponEntry entry : group.getValue()) {
         TreeItem<WeaponTreeNode> item = new TreeItem<>(entry);
         groupItem.getChildren().add(item);
-        if (entry == current) {
+        if (current != null && entry.index() == current.index()) {
           selected = item;
         }
       }

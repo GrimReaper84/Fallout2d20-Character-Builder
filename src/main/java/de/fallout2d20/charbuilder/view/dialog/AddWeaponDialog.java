@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.function.Function;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -39,7 +40,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * Picks a weapon to add: a catalog weapon of the enabled books (searchable by name) or a custom weapon
- * (homebrew, books not catalogued yet) with free-text effects, damage type and qualities.
+ * (homebrew, books not catalogued yet) with free-text effects, damage type and qualities and the mod slots
+ * the player gives it.
  */
 public final class AddWeaponDialog {
 
@@ -83,6 +85,9 @@ public final class AddWeaponDialog {
     addRow(form, "Range", range);
     addRow(form, "Qualities", qualities);
     addRow(form, "Ammunition", ammunition);
+    ModSlotCheckBoxes modSlots = new ModSlotCheckBoxes(Set.of());
+    form.add(new Label("Mod slots"), "top");
+    form.add(modSlots.node());
     Tab custom = new Tab("Custom weapon", form);
 
     TabPane tabs = new TabPane(catalog, custom);
@@ -112,7 +117,7 @@ public final class AddWeaponDialog {
       AmmunitionData ammo = ammunition.getValue();
       return CarriedWeapon.of(new CustomWeapon(name.getText(), skill.getValue(), rating == null ? 0 : rating,
           effects.getText(), type == null ? "" : type.displayName(), number(fireRate.getText()), range.getValue(),
-          qualities.getText(), ammo == null ? null : ammo.id()));
+          qualities.getText(), ammo == null ? null : ammo.id(), modSlots.selected()));
     });
     return dialog.showAndWait();
   }

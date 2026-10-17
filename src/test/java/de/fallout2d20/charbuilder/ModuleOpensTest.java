@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.persistence.CharacterData;
 import java.io.IOException;
 import java.lang.reflect.GenericArrayType;
@@ -39,7 +40,7 @@ class ModuleOpensTest {
   /** Types Jackson deserializes directly: the save format and the catalog entries. */
   private static final Set<Class<?>> JACKSON_ROOTS = Set.of(CharacterData.class, OriginData.class,
       TraitDefinition.class, PerkDefinition.class, EquipmentPackData.class, TagSkillItemData.class,
-      TrinketData.class, WeaponData.class, AmmunitionData.class, ApparelData.class, ItemData.class,
+      TrinketData.class, WeaponData.class, WeaponModData.class, AmmunitionData.class, ApparelData.class, ItemData.class,
       MagazineData.class);
 
   private static final Pattern OPENS_TO_JACKSON =

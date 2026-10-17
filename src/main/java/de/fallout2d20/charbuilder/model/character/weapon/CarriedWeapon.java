@@ -1,10 +1,15 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -13,14 +18,17 @@ import org.jspecify.annotations.Nullable;
  * it (grenades, mines, thrown weapons; 1 for everything else) and a free note, e.g. installed mods
  * (user decision: mods as a note until they are modelled), and whether it is built into the character (a
  * robot's integrated weapon, e.g. the laser guns in a Protectron's claws, WOA p. 22): built-in weapons
- * weigh nothing against the carry weight (user decision 2026-10-16).
+ * weigh nothing against the carry weight (user decision 2026-10-16), and the mods installed per slot (CRB
+ * p. 87: one per slot; values via {@link ModdedWeapon}, which mods fit via {@link WeaponMods}). A mod id the
+ * catalog no longer knows is kept and has no effect.
  */
 public record CarriedWeapon(
     @Nullable CatalogRef weapon,
     @Nullable CustomWeapon custom,
     int quantity,
     @NonNull String notes,
-    boolean builtIn) {
+    boolean builtIn,
+    @NonNull Map<ModSlot, CatalogRef> mods) {
 
   public CarriedWeapon {
     if ((weapon == null) == (custom == null)) {
@@ -29,6 +37,13 @@ public record CarriedWeapon(
     if (quantity < 1) {
       throw new IllegalArgumentException("Quantity must be at least 1");
     }
+    mods = mods.isEmpty() ? Map.of() : Collections.unmodifiableMap(new EnumMap<>(mods));
+  }
+
+  /** A weapon without mods. */
+  public CarriedWeapon(@Nullable CatalogRef weapon, @Nullable CustomWeapon custom, int quantity, @NonNull String notes,
+      boolean builtIn) {
+    this(weapon, custom, quantity, notes, builtIn, Map.of());
   }
 
   /** One catalog weapon without a note. */
@@ -67,7 +82,7 @@ public record CarriedWeapon(
   }
 
   public @NonNull CarriedWeapon withNotes(@Nullable String newNotes) {
-    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn);
+    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn, mods);
   }
 
   /**
@@ -79,15 +94,48 @@ public record CarriedWeapon(
     if (custom == null) {
       throw new IllegalStateException("Only a custom weapon has a choosable skill");
     }
-    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn);
+    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn, mods);
   }
 
   public @NonNull CarriedWeapon withQuantity(int newQuantity) {
-    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn);
+    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn, mods);
   }
 
   public @NonNull CarriedWeapon withBuiltIn(boolean newBuiltIn) {
-    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn);
+    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn, mods);
+  }
+
+  /**
+   * The weapon with {@code mod} in {@code slot}, replacing the mod there; {@code null} removes it. The fitting
+   * rules are applied by {@link WeaponMods#install}.
+   */
+  public @NonNull CarriedWeapon withMod(@NonNull ModSlot slot, @Nullable CatalogRef mod) {
+    Map<ModSlot, CatalogRef> newMods = new EnumMap<>(ModSlot.class);
+    newMods.putAll(mods);
+    if (mod == null) {
+      newMods.remove(slot);
+    } else {
+      newMods.put(slot, mod);
+    }
+    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, newMods);
+  }
+
+  /**
+   * The custom weapon with other mod slots; mods of slots no longer chosen are removed.
+   *
+   * @throws IllegalStateException for a catalog weapon, whose slots are fixed by the book
+   */
+  public @NonNull CarriedWeapon withCustomModSlots(@NonNull Set<ModSlot> slots) {
+    if (custom == null) {
+      throw new IllegalStateException("Only a custom weapon has choosable mod slots");
+    }
+    Map<ModSlot, CatalogRef> kept = new EnumMap<>(ModSlot.class);
+    mods.forEach((slot, mod) -> {
+      if (slots.contains(slot)) {
+        kept.put(slot, mod);
+      }
+    });
+    return new CarriedWeapon(null, custom.withModSlots(slots), quantity, notes, builtIn, kept);
   }
 
   /**

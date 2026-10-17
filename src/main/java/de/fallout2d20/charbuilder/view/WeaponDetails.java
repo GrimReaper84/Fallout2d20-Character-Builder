@@ -7,8 +7,10 @@ import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -24,7 +26,8 @@ import org.tbee.javafx.scene.layout.MigPane;
  * The right side of the Weapons tab: every value of the selected weapon ({@link WeaponAttack}: target
  * number, critical range, damage with the melee bonus, effects, type, fire rate, effective range,
  * qualities, ammunition left), the catalog's weight, cost and rarity, a quantity for explosives and thrown
- * weapons and the note (e.g. mods). A custom weapon imported without skill gets a skill choice instead of
+ * weapons, the note and the mods ({@link WeaponModSection}); values the mods changed are bold with the value
+ * without mods as tooltip. A custom weapon imported without skill gets a skill choice instead of
  * the attack value. Typed notes go to {@code onEdited}; everything else to the model and then to
  * {@code onChanged}.
  */
@@ -46,28 +49,41 @@ final class WeaponDetails {
     // From the model, not the entry: typed notes change the weapon without a rebuild of the tree's entries.
     CarriedWeapon weapon = entry.weapon() == null ? null : character.getWeapons().get(entry.index());
     Optional<WeaponData> data = weapon == null ? WeaponCatalog.byId(WeaponsTab.UNARMED_STRIKE_ID) : weapon.data();
+    ModdedWeapon values = weapon == null ? data.map(ModdedWeapon::of).orElse(null) : ModdedWeapon.of(weapon).orElse(null);
+    ModdedWeapon base = weapon == null ? values : ModdedWeapon.unmodded(weapon).orElse(null);
     OverviewParts.sectionHeading(pane, attack.name());
 
     MigPane rows = new MigPane("insets 0, gap 16 6, wrap 2", "[left][grow, fill]");
     row(rows, "Source", new Label(data.map(weaponData -> weaponData.sources().getFirst().toString())
         .orElse("Custom weapon")));
+    if (!attack.moddedName().equals(attack.name())) {
+      row(rows, "Modded name", text(attack.moddedName()));
+    }
     row(rows, "Attack", entry.needsSkill() ? skillChoice(character, entry.index(), callbacks.onChanged())
         : attackLabel(character, attack));
-    row(rows, "Damage", new Label(attack.damageText()));
-    row(rows, "Effects", text(attack.effects()));
-    row(rows, "Damage type", text(attack.damageType()));
-    row(rows, "Fire rate", new Label(attack.fireRate() == null ? "–" : attack.fireRate().toString()));
-    row(rows, "Range", new Label(rangeText(attack)));
-    row(rows, "Qualities", text(attack.qualities()));
-    row(rows, "Ammunition", new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
-        .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.ammunition(id)).collect(Collectors.joining(", "))));
-    data.ifPresent(weaponData -> {
+    row(rows, "Damage", withBase(new Label(attack.damageText()), base, values, modded -> modded.damage() + " CD"));
+    row(rows, "Effects", withBase(text(attack.effects()), base, values,
+        modded -> String.join(", ", modded.damageEffects())));
+    row(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
+    row(rows, "Fire rate", withBase(new Label(attack.fireRate() == null ? "–" : attack.fireRate().toString()), base,
+        values, modded -> OverviewParts.orDash(modded.fireRate())));
+    row(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
+        modded -> modded.range() == null ? "–" : modded.range().displayName()));
+    row(rows, "Qualities", withBase(text(attack.qualities()), base, values,
+        modded -> String.join(", ", modded.qualities())));
+    row(rows, "Ammunition", withBase(new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
+        .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.ammunition(id))
+        .collect(Collectors.joining(", "))), base, values, modded -> String.join(", ", modded.ammunition())));
+    if (values != null && (data.isPresent() || values.weight() != null)) {
       boolean integrated = weapon != null && weapon.isIntegrated();
-      row(rows, "Weight", new Label(integrated ? "– (built in)"
-          : weaponData.weight() == null ? "–" : weaponData.weight() + " lbs."));
-      row(rows, "Cost", new Label(OverviewParts.orDash(weaponData.cost())));
-      row(rows, "Rarity", new Label(OverviewParts.orDash(weaponData.rarity())));
-    });
+      Label weight = new Label(values.weight() == null ? "–" : values.weight() + " lbs.");
+      // A built-in weapon weighs nothing, with or without mods.
+      row(rows, "Weight", integrated ? new Label("– (built in)")
+          : withBase(weight, base, values, modded -> OverviewParts.orDash(modded.weight())));
+      row(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values,
+          modded -> OverviewParts.orDash(modded.cost())));
+    }
+    data.ifPresent(weaponData -> row(rows, "Rarity", new Label(OverviewParts.orDash(weaponData.rarity()))));
     if (weapon != null) {
       int index = entry.index();
       if (weapon.isCounted()) {
@@ -77,7 +93,6 @@ final class WeaponDetails {
         }));
       }
       TextArea notes = new TextArea(weapon.notes());
-      notes.setPromptText("Notes, e.g. mods");
       notes.setWrapText(true);
       notes.setPrefRowCount(NOTES_ROWS);
       notes.textProperty().addListener((obs, old, text) -> {
@@ -88,7 +103,23 @@ final class WeaponDetails {
       rows.add(notes);
     }
     pane.add(rows);
+    if (weapon != null && values != null) {
+      WeaponModSection.addTo(pane, character, entry.index(), weapon, values, callbacks.onChanged());
+    }
     return pane;
+  }
+
+  /**
+   * Marks a value the mods changed: bold, with the value without mods as tooltip. {@code text} renders both
+   * sides alike, so the comparison ignores the melee bonus and ammunition counts of the shown text.
+   */
+  private static @NonNull Label withBase(@NonNull Label label, @Nullable ModdedWeapon base,
+      @Nullable ModdedWeapon values, @NonNull Function<ModdedWeapon, String> text) {
+    if (base != null && values != null && !text.apply(base).equals(text.apply(values))) {
+      label.setStyle("-fx-font-weight: bold;");
+      label.setTooltip(new Tooltip("Without mods: " + text.apply(base)));
+    }
+    return label;
   }
 
   private static void row(@NonNull MigPane rows, @NonNull String name, @NonNull Node value) {

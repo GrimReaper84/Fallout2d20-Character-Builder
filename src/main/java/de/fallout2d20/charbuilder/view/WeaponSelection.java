@@ -3,8 +3,8 @@ package de.fallout2d20.charbuilder.view;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The weapon selected in the Weapons tab. Held by the character view, so the selection survives the
- * rebuild after every change; never saved. Starts on the Unarmed Strike.
+ * The weapon selected in the Weapons tab and the scroll positions of its two sides. Held by the character
+ * view, so they survive the rebuild after every change; never saved. Starts on the Unarmed Strike.
  */
 final class WeaponSelection {
 
@@ -12,6 +12,8 @@ final class WeaponSelection {
   static final int UNARMED_STRIKE_INDEX = -1;
 
   private @Nullable Integer index = UNARMED_STRIKE_INDEX;
+  private double listScroll;
+  private double detailsScroll;
 
   /** Selects the carried weapon with this index, or {@link #UNARMED_STRIKE_INDEX}. */
   void select(int newIndex) {
@@ -28,5 +30,23 @@ final class WeaponSelection {
    */
   @Nullable Integer current(int weaponCount) {
     return index == null || index >= weaponCount ? null : index;
+  }
+
+  /** Scroll position (0–1) of the left side with the weapon tree. */
+  double listScroll() {
+    return listScroll;
+  }
+
+  void setListScroll(double position) {
+    listScroll = position;
+  }
+
+  /** Scroll position (0–1) of the right side with the selected weapon's values and mods. */
+  double detailsScroll() {
+    return detailsScroll;
+  }
+
+  void setDetailsScroll(double position) {
+    detailsScroll = position;
   }
 }

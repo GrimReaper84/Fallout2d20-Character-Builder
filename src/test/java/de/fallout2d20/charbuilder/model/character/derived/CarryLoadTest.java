@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -92,5 +93,14 @@ class CarryLoadTest {
     handy.addItem(CarriedItem.of(CatalogRef.of("diagnosis-mod")));
     handy.addItem(CarriedItem.of(CatalogRef.of("backpack-large")));
     assertEquals(150 - 15, DerivedStats.of(handy).carryWeight());
+  }
+
+  /** D4: a mod's weight counts (10mm Pistol 4 + Powerful receiver +1). */
+  @Test
+  void modsAddWeight() {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
+    assertEquals(5, CarryLoad.of(character).carried());
   }
 }

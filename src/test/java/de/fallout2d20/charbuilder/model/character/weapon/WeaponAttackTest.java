@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -149,5 +150,18 @@ class WeaponAttackTest {
 
   private static WeaponRange range(Character character, String id) {
     return WeaponAttack.of(character, CarriedWeapon.of(CatalogRef.of(id))).effectiveRange();
+  }
+
+  /** D4: the attack uses the modded values (Hardened +1 CD) and carries the modded name. */
+  @Test
+  void attackWithMods() {
+    Character character = character();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
+    WeaponAttack attack = WeaponAttack.of(character, character.getWeapons().getFirst());
+    assertEquals(5, attack.damage());
+    assertEquals("10mm Pistol", attack.name());
+    assertEquals("Hardened 10mm Pistol", attack.moddedName());
+    assertEquals(9, attack.targetNumber());
   }
 }

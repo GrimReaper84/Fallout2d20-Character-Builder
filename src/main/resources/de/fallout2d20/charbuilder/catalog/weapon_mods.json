@@ -1,0 +1,4566 @@
+[
+  {
+    "id": "small-guns-hardened",
+    "name": "Hardened",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Hardened",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      }
+    ],
+    "cost": 20
+  },
+  {
+    "id": "small-guns-powerful",
+    "name": "Powerful",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Powerful",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-advanced",
+    "name": "Advanced",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Advanced",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-calibrated",
+    "name": "Calibrated",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Calibrated",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "cost": 25
+  },
+  {
+    "id": "small-guns-automatic",
+    "name": "Automatic",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Auto",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Burst"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-hair-trigger",
+    "name": "Hair Trigger",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Hair Trigger",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-38-receiver",
+    "name": ".38 Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": ".38",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 4
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "38"
+      }
+    ],
+    "weight": 3,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-308-receiver",
+    "name": ".308 Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": ".308",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 7
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "308"
+      }
+    ],
+    "weight": 4,
+    "cost": 40,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-45-receiver",
+    "name": ".45 Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": ".45",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 4
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "45"
+      }
+    ],
+    "weight": 2,
+    "cost": 19,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-50-receiver",
+    "name": ".50 Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": ".50",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 8
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "50"
+      }
+    ],
+    "weight": 4,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-automatic-piston",
+    "name": "Automatic Piston",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Automatic",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "RANGE",
+        "value": -1
+      }
+    ],
+    "weight": 2,
+    "cost": 75,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-snubnose",
+    "name": "Snubnose",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Snub-noses",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": -1
+  },
+  {
+    "id": "small-guns-bull-barrel",
+    "name": "Bull Barrel",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Bull Barrel",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Reliable"
+      }
+    ],
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "small-guns-long",
+    "name": "Long",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Long",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-ported",
+    "name": "Ported",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Ported",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-vented",
+    "name": "Vented",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Vented",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Reliable"
+      }
+    ],
+    "weight": 1,
+    "cost": 36,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-sawed-off",
+    "name": "Sawed-Off",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Sawed Off",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Close Quarters"
+      }
+    ],
+    "weight": -2,
+    "cost": 3
+  },
+  {
+    "id": "small-guns-finned",
+    "name": "Finned",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Finned",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-comfort-grip",
+    "name": "Comfort Grip",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "GRIP",
+    "skill": "REPAIR",
+    "namePrefix": "Comfort",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "cost": 6
+  },
+  {
+    "id": "small-guns-sharpshooters-grip",
+    "name": "Sharpshooter’s Grip",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "GRIP",
+    "skill": "REPAIR",
+    "namePrefix": "Sharpshooter’s",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-full-stock",
+    "name": "Full Stock",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 10
+  },
+  {
+    "id": "small-guns-marksmans-stock",
+    "name": "Marksman’s Stock",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 100
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "REPAIR",
+    "namePrefix": "Marksman’s",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 2,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-recoil-compensating-stock",
+    "name": "Recoil Compensating Stock",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "REPAIR",
+    "namePrefix": "Recoil Compensated",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 3,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "small-guns-reflex-sight",
+    "name": "Reflex Sight",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Tactical",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "May re-roll the hit location die"
+      }
+    ],
+    "cost": 14
+  },
+  {
+    "id": "small-guns-short-scope",
+    "name": "Short Scope",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Scoped",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 11
+  },
+  {
+    "id": "small-guns-long-scope",
+    "name": "Long Scope",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Scoped",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 29,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-short-night-vision-scope",
+    "name": "Short Night Vision Scope",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Night Vision",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Night Vision"
+      }
+    ],
+    "weight": 1,
+    "cost": 38,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-long-night-vision-scope",
+    "name": "Long Night Vision Scope",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Night Vision",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Night Vision"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "small-guns-recon-scope",
+    "name": "Recon Scope",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Recon",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Recon"
+      }
+    ],
+    "weight": 1,
+    "cost": 59,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "small-guns-bayonet",
+    "name": "Bayonet",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Bayoneted",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "Can be used as a melee weapon: 4 CD, Piercing 1, Physical"
+      }
+    ],
+    "weight": 2,
+    "cost": 10
+  },
+  {
+    "id": "small-guns-compensator",
+    "name": "Compensator",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Compensated",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-muzzle-break",
+    "name": "Muzzle Break",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Muzzled",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-suppressor",
+    "name": "Suppressor",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 101
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Suppressed",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Suppressed"
+      }
+    ],
+    "weight": 2,
+    "cost": 45,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "laser-musket-three-crank-capacitor",
+    "name": "Three-crank capacitor",
+    "table": "laser-musket",
+    "tableName": "Unique Laser Musket capacitor mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 103
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Three-crank",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 3 shots per attack"
+      }
+    ],
+    "cost": 4
+  },
+  {
+    "id": "laser-musket-four-crank-capacitor",
+    "name": "Four-crank capacitor",
+    "table": "laser-musket",
+    "tableName": "Unique Laser Musket capacitor mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 103
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Four-crank",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 4 shots per attack"
+      }
+    ],
+    "weight": 1,
+    "cost": 8,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "laser-musket-five-crank-capacitor",
+    "name": "Five-crank capacitor",
+    "table": "laser-musket",
+    "tableName": "Unique Laser Musket capacitor mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 103
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Five-crank",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 5 shots per attack"
+      }
+    ],
+    "weight": 1,
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "laser-musket-six-crank-capacitor",
+    "name": "Six-crank capacitor",
+    "table": "laser-musket",
+    "tableName": "Unique Laser Musket capacitor mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 103
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Six-crank",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 4
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 6 shots per attack"
+      }
+    ],
+    "weight": 2,
+    "cost": 16,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gamma-gun-deep-dish",
+    "name": "Deep Dish",
+    "table": "gamma-gun",
+    "tableName": "Unique Gamma Gun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "DISH",
+    "skill": "SCIENCE",
+    "namePrefix": "Long",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 72,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gamma-gun-electric-signal-carrier-antennae",
+    "name": "Electric Signal Carrier Antennae",
+    "table": "gamma-gun",
+    "tableName": "Unique Gamma Gun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Electrified",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 7
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Radioactive"
+      }
+    ],
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gamma-gun-signal-repeater",
+    "name": "Signal Repeater",
+    "table": "gamma-gun",
+    "tableName": "Unique Gamma Gun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Automatic",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Burst"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Blast"
+      }
+    ],
+    "cost": 60,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-beta-wave-tuner",
+    "name": "Beta Wave Tuner",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Incendiary",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 30
+  },
+  {
+    "id": "energy-weapons-boosted-capacitor",
+    "name": "Boosted Capacitor",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Boosted",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -1
+      }
+    ],
+    "cost": 35
+  },
+  {
+    "id": "energy-weapons-photon-exciter",
+    "name": "Photon Exciter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Excited",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-photon-agitator",
+    "name": "Photon Agitator",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Agitated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 1,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-bracketed-short-barrel",
+    "name": "Bracketed Short Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "effects": [
+      {
+        "type": "ALLOWS_SLOT",
+        "text": "MUZZLE"
+      }
+    ],
+    "cost": 6
+  },
+  {
+    "id": "energy-weapons-long-barrel",
+    "name": "Long Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Long",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 20
+  },
+  {
+    "id": "energy-weapons-splitter",
+    "name": "Splitter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 104
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Scattergun",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 31
+  },
+  {
+    "id": "energy-weapons-automatic-barrel",
+    "name": "Automatic Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Automatic",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 24,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-bracketed-long-barrel",
+    "name": "Bracketed Long Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "ALLOWS_SLOT",
+        "text": "MUZZLE"
+      }
+    ],
+    "weight": 2,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-improved-barrel",
+    "name": "Improved Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 26,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-sniper-barrel",
+    "name": "Sniper Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Sniper",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -1
+      }
+    ],
+    "weight": 2,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-flamer-barrel",
+    "name": "Flamer Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Thrower",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -2
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Burst"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      },
+      {
+        "type": "RANGE",
+        "value": -1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-sharpshooters-grip",
+    "name": "Sharpshooter’s Grip",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "GRIP",
+    "skill": "SCIENCE",
+    "namePrefix": "Sharpshooter’s",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-standard-stock",
+    "name": "Standard Stock",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "SCIENCE",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      }
+    ],
+    "weight": 1,
+    "cost": 10
+  },
+  {
+    "id": "energy-weapons-full-stock",
+    "name": "Full Stock",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "SCIENCE",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      }
+    ],
+    "weight": 1,
+    "cost": 15
+  },
+  {
+    "id": "energy-weapons-marksmans-stock",
+    "name": "Marksman’s Stock",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "SCIENCE",
+    "namePrefix": "Marksman’s",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      }
+    ],
+    "weight": 2,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-recoil-compensating-stock",
+    "name": "Recoil Compensating Stock",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "SCIENCE",
+    "namePrefix": "Recoil Compensated",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Two-Handed"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      }
+    ],
+    "weight": 2,
+    "cost": 3,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-reflex-sight",
+    "name": "Reflex Sight",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Tactical",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "May re-roll the hit location die"
+      }
+    ],
+    "cost": 14
+  },
+  {
+    "id": "energy-weapons-short-scope",
+    "name": "Short Scope",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Scoped",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 11
+  },
+  {
+    "id": "energy-weapons-long-scope",
+    "name": "Long Scope",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Scoped",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 29,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-short-night-vision-scope",
+    "name": "Short Night Vision Scope",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Night Vision",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Night Vision"
+      }
+    ],
+    "weight": 1,
+    "cost": 38,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-long-night-vision-scope",
+    "name": "Long Night Vision Scope",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Night Vision",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Night Vision"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-recon-scope",
+    "name": "Recon Scope",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Recon",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Recon"
+      }
+    ],
+    "weight": 1,
+    "cost": 59,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-beam-splitter",
+    "name": "Beam Splitter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Scattered",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "RANGE",
+        "value": -1
+      }
+    ],
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-beam-focuser",
+    "name": "Beam Focuser",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Focused",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-gyro-compensating-lens",
+    "name": "Gyro Compensating Lens",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 105
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Targeting",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "flamer-napalm",
+    "name": "Napalm",
+    "table": "flamer",
+    "tableName": "Unique Flamer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 107
+      }
+    ],
+    "slot": "FUEL",
+    "skill": "REPAIR",
+    "namePrefix": "Napalmer",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      }
+    ],
+    "weight": 7,
+    "cost": 59
+  },
+  {
+    "id": "flamer-long-barrel",
+    "name": "Long Barrel",
+    "table": "flamer",
+    "tableName": "Unique Flamer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 107
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Long",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 2,
+    "cost": 28
+  },
+  {
+    "id": "flamer-large-tank",
+    "name": "Large Tank",
+    "table": "flamer",
+    "tableName": "Unique Flamer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 107
+      }
+    ],
+    "slot": "TANK",
+    "skill": "REPAIR",
+    "namePrefix": "High Capacity",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 3,
+    "cost": 28
+  },
+  {
+    "id": "flamer-huge-tank",
+    "name": "Huge Tank",
+    "table": "flamer",
+    "tableName": "Unique Flamer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 107
+      }
+    ],
+    "slot": "TANK",
+    "skill": "REPAIR",
+    "namePrefix": "Max. Capacity",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      }
+    ],
+    "weight": 6,
+    "cost": 34
+  },
+  {
+    "id": "flamer-compression-nozzle",
+    "name": "Compression Nozzle",
+    "table": "flamer",
+    "tableName": "Unique Flamer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 107
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Compressed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      }
+    ],
+    "cost": 22
+  },
+  {
+    "id": "flamer-vaporization-nozzle",
+    "name": "Vaporization Nozzle",
+    "table": "flamer",
+    "tableName": "Unique Flamer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 107
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Vaporizing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "cost": 47
+  },
+  {
+    "id": "gatling-laser-photon-exciter",
+    "name": "Photon Exciter",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Excited",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 1,
+    "cost": 19,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-beta-wave-tuner",
+    "name": "Beta Wave Tuner",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Incendiary",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 1,
+    "cost": 57
+  },
+  {
+    "id": "gatling-laser-boosted-capacitor",
+    "name": "Boosted Capacitor",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Boosted",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 94
+  },
+  {
+    "id": "gatling-laser-photon-agitator",
+    "name": "Photon Agitator",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Agitated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 3,
+    "cost": 132,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-charging-barrels",
+    "name": "Charging barrels",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Charging",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 4
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -3
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 10,
+    "cost": 357,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-reflex-sight",
+    "name": "Reflex Sight",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Tactical",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 169,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-beam-focuser",
+    "name": "Beam Focuser",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 108
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Focused",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "cost": 22
+  },
+  {
+    "id": "junk-jet-long-barrel",
+    "name": "Long Barrel",
+    "table": "junk-jet",
+    "tableName": "Unique Junk Jet mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Long",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "junk-jet-recoil-compensating-stock",
+    "name": "Recoil Compensating Stock",
+    "table": "junk-jet",
+    "tableName": "Unique Junk Jet mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "STOCK",
+    "skill": "REPAIR",
+    "namePrefix": "Recoil Compensated",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 40
+  },
+  {
+    "id": "junk-jet-gunner-sight",
+    "name": "Gunner Sight",
+    "table": "junk-jet",
+    "tableName": "Unique Junk Jet mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Tactical",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "May re-roll the hit location die"
+      }
+    ],
+    "weight": 1,
+    "cost": 5
+  },
+  {
+    "id": "junk-jet-electrification-module",
+    "name": "Electrification Module",
+    "table": "junk-jet",
+    "tableName": "Unique Junk Jet mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Electrified",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "weight": 1,
+    "cost": 70,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "junk-jet-ignition-module",
+    "name": "Ignition Module",
+    "table": "junk-jet",
+    "tableName": "Unique Junk Jet mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Flaming",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent (Energy)"
+      }
+    ],
+    "weight": 1,
+    "cost": 130,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "minigun-accelerated-barrel",
+    "name": "Accelerated Barrel",
+    "table": "minigun",
+    "tableName": "Unique Minigun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "High-Speed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "RANGE",
+        "value": -1
+      }
+    ],
+    "weight": 5,
+    "cost": 45,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "minigun-tri-barrel",
+    "name": "Tri-Barrel",
+    "table": "minigun",
+    "tableName": "Unique Minigun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "High-Powered",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -2
+      }
+    ],
+    "weight": 3,
+    "cost": 75,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "minigun-gunner-sight",
+    "name": "Gunner Sight",
+    "table": "minigun",
+    "tableName": "Unique Minigun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Tactical",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 68
+  },
+  {
+    "id": "minigun-shredder",
+    "name": "Shredder",
+    "table": "minigun",
+    "tableName": "Unique Minigun mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 109
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Bayoneted Shredding",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "Can be used as a melee weapon: CD equal to the fire rate, Physical"
+      }
+    ],
+    "weight": 5,
+    "cost": 5,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "missile-launcher-triple-barrel",
+    "name": "Triple Barrel",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Triple Barrel",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 16,
+    "cost": 143,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "missile-launcher-quad-barrel",
+    "name": "Quad Barrel",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Quad Barrel",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      }
+    ],
+    "weight": 20,
+    "cost": 218,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "missile-launcher-scope",
+    "name": "Scope",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Scoped",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 6,
+    "cost": 143,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "missile-launcher-night-vision-scope",
+    "name": "Night Vision Scope",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Night-vision",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Night Vision"
+      }
+    ],
+    "weight": 6,
+    "cost": 248,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "missile-launcher-targeting-computer",
+    "name": "Targeting Computer",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Targeting",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "When aiming, the target gets no cover benefit and the aim bonus carries over to later turns of the scene"
+      }
+    ],
+    "weight": 7,
+    "cost": 293,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "missile-launcher-bayonet",
+    "name": "Bayonet",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Bayoneted Shredding",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "Can be used as a melee weapon: 4 CD, Piercing 1, Physical"
+      }
+    ],
+    "weight": 1,
+    "cost": 30
+  },
+  {
+    "id": "missile-launcher-stabilizer",
+    "name": "Stabilizer",
+    "table": "missile-launcher",
+    "tableName": "Unique Missile Launcher mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 110
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Muzzled",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 2,
+    "cost": 60,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "sword-serrated-blade",
+    "name": "Serrated Blade",
+    "table": "sword",
+    "tableName": "Unique Sword mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 112
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Serrated",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "sword-electrified-blade",
+    "name": "Electrified Blade",
+    "table": "sword",
+    "tableName": "Unique Sword mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 112
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Electrified",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "sword-electrified-serrated-blade",
+    "name": "Electrified Serrated Blade",
+    "table": "sword",
+    "tableName": "Unique Sword mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 112
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Electrified Serrated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent (Physical)"
+      }
+    ],
+    "cost": 75,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "sword-stun-pack",
+    "name": "Stun Pack",
+    "table": "sword",
+    "tableName": "Unique Sword mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 112
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Stunning",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Stun"
+      }
+    ],
+    "cost": 100,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "combat-knife-serrated-blade",
+    "name": "Serrated Blade",
+    "table": "combat-knife",
+    "tableName": "Unique Combat Knife mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 112
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Serrated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "combat-knife-stealth-blade",
+    "name": "Stealth Blade",
+    "table": "combat-knife",
+    "tableName": "Unique Combat Knife mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 112
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Stealth",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      },
+      {
+        "type": "SPECIAL",
+        "text": "+2 CD on sneak attacks"
+      }
+    ],
+    "cost": 18,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "machete-serrated-blade",
+    "name": "Serrated Blade",
+    "table": "machete",
+    "tableName": "Unique Machete mod",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 113
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Serrated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "ripper-curved-blade",
+    "name": "Curved Blade",
+    "table": "ripper",
+    "tableName": "Unique Ripper mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 113
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Curved",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SPECIAL",
+        "text": "On a hit, 2 AP disarm the target of one held weapon"
+      }
+    ],
+    "weight": 1,
+    "cost": 15
+  },
+  {
+    "id": "ripper-extended-blade",
+    "name": "Extended Blade",
+    "table": "ripper",
+    "tableName": "Unique Ripper mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 113
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Extended",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 3,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "shishkebab-extra-flame-jets",
+    "name": "Extra Flame Jets",
+    "table": "shishkebab",
+    "tableName": "Unique Shishkebab mod",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 113
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Searing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 1,
+    "cost": 100,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "switchblade-serrated-blade",
+    "name": "Serrated Blade",
+    "table": "switchblade",
+    "tableName": "Unique Switchblade mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Serrated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "baseball-bat-barbed",
+    "name": "Barbed",
+    "table": "baseball-bat",
+    "tableName": "Unique Baseball Bat mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Barbed",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 5
+  },
+  {
+    "id": "baseball-bat-spiked",
+    "name": "Spiked",
+    "table": "baseball-bat",
+    "tableName": "Unique Baseball Bat mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Spiked",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 1,
+    "cost": 7
+  },
+  {
+    "id": "baseball-bat-sharp",
+    "name": "Sharp",
+    "table": "baseball-bat",
+    "tableName": "Unique Baseball Bat mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Sharp",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 1,
+    "cost": 7
+  },
+  {
+    "id": "baseball-bat-chain-wrapped",
+    "name": "Chain-Wrapped",
+    "table": "baseball-bat",
+    "tableName": "Unique Baseball Bat mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Chain-Wrapped",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "baseball-bat-bladed",
+    "name": "Bladed",
+    "table": "baseball-bat",
+    "tableName": "Unique Baseball Bat mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Bladed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 2,
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "board-spiked",
+    "name": "Spiked",
+    "table": "board",
+    "tableName": "Unique Board mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Spiked",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 1,
+    "cost": 6
+  },
+  {
+    "id": "board-puncturing",
+    "name": "Puncturing",
+    "table": "board",
+    "tableName": "Unique Board mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Puncturing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 9,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "board-bladed",
+    "name": "Bladed",
+    "table": "board",
+    "tableName": "Unique Board mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 114
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Bladed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 2,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "lead-pipe-spiked",
+    "name": "Spiked",
+    "table": "lead-pipe",
+    "tableName": "Unique Lead Pipe mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Spiked",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 1,
+    "cost": 4
+  },
+  {
+    "id": "lead-pipe-heavy",
+    "name": "Heavy",
+    "table": "lead-pipe",
+    "tableName": "Unique Lead Pipe mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Heavy",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 2,
+    "cost": 11,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "pipe-wrench-hooked",
+    "name": "Hooked",
+    "table": "pipe-wrench",
+    "tableName": "Unique Pipe Wrench mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Hooked",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SPECIAL",
+        "text": "On a hit, 2 AP disarm the target of one held weapon"
+      }
+    ],
+    "cost": 9
+  },
+  {
+    "id": "pipe-wrench-heavy",
+    "name": "Heavy",
+    "table": "pipe-wrench",
+    "tableName": "Unique Pipe Wrench mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Weighted",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 7,
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "pipe-wrench-puncturing",
+    "name": "Puncturing",
+    "table": "pipe-wrench",
+    "tableName": "Unique Pipe Wrench mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Puncturing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 1,
+    "cost": 13,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "pipe-wrench-extra-heavy",
+    "name": "Extra Heavy",
+    "table": "pipe-wrench",
+    "tableName": "Unique Pipe Wrench mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Heavy",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      }
+    ],
+    "weight": 2,
+    "cost": 22,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "pool-cue-barbed",
+    "name": "Barbed",
+    "table": "pool-cue",
+    "tableName": "Unique Pool Cue mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Barbed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 2
+  },
+  {
+    "id": "pool-cue-sharp",
+    "name": "Sharp",
+    "table": "pool-cue",
+    "tableName": "Unique Pool Cue mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 115
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Sharp",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "rolling-pin-spiked",
+    "name": "Spiked",
+    "table": "rolling-pin",
+    "tableName": "Unique Rolling Pin mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 116
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Barbed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "rolling-pin-sharp",
+    "name": "Sharp",
+    "table": "rolling-pin",
+    "tableName": "Unique Rolling Pin mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 116
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Sharp",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "baton-electrified",
+    "name": "Electrified",
+    "table": "baton",
+    "tableName": "Unique Baton mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 116
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Shock",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "baton-stun-pack",
+    "name": "Stun Pack",
+    "table": "baton",
+    "tableName": "Unique Baton mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 116
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Stun",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Stun"
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "sledgehammer-puncturing",
+    "name": "Puncturing",
+    "table": "sledgehammer",
+    "tableName": "Unique Sledgehammer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 116
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Puncturing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 5,
+    "cost": 18,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "sledgehammer-heavy",
+    "name": "Heavy",
+    "table": "sledgehammer",
+    "tableName": "Unique Sledgehammer mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 116
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Heavy",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 9,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "super-sledge-heating-coil",
+    "name": "Heating Coil",
+    "table": "super-sledge",
+    "tableName": "Unique Super Sledge mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 117
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Heated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 180,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "super-sledge-stun-pack",
+    "name": "Stun Pack",
+    "table": "super-sledge",
+    "tableName": "Unique Super Sledge mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 117
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Stunning",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Stun"
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 360,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "tire-iron-bladed",
+    "name": "Bladed",
+    "table": "tire-iron",
+    "tableName": "Unique Tire Iron mod",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 117
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Bladed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 1,
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "walking-cane-barbed",
+    "name": "Barbed",
+    "table": "walking-cane",
+    "tableName": "Unique Walking Cane mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 117
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Barbed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "walking-cane-spiked",
+    "name": "Spiked",
+    "table": "walking-cane",
+    "tableName": "Unique Walking Cane mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 117
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Spiked",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "boxing-glove-spiked",
+    "name": "Spiked",
+    "table": "boxing-glove",
+    "tableName": "Unique Boxing Glove mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Spiked",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "boxing-glove-puncturing",
+    "name": "Puncturing",
+    "table": "boxing-glove",
+    "tableName": "Unique Boxing Glove mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Puncturing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 4,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "boxing-glove-lead-lining",
+    "name": "Lead lining",
+    "table": "boxing-glove",
+    "tableName": "Unique Boxing Glove mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Lead-lined",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 7,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "deathclaw-gauntlet-extra-claw",
+    "name": "Extra Claw",
+    "table": "deathclaw-gauntlet",
+    "tableName": "Unique Deathclaw Gauntlet mod",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Large",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SPECIAL",
+        "text": "On a hit, 2 AP disarm the target of one held weapon"
+      }
+    ],
+    "weight": 2,
+    "cost": 22
+  },
+  {
+    "id": "knuckles-sharp",
+    "name": "Sharp",
+    "table": "knuckles",
+    "tableName": "Unique Knuckles mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Sharp",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "knuckles-spiked",
+    "name": "Spiked",
+    "table": "knuckles",
+    "tableName": "Unique Knuckles mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Spiked",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 3
+  },
+  {
+    "id": "knuckles-puncturing",
+    "name": "Puncturing",
+    "table": "knuckles",
+    "tableName": "Unique Knuckles mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Puncturing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 4,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "knuckles-bladed",
+    "name": "Bladed",
+    "table": "knuckles",
+    "tableName": "Unique Knuckles mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 118
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Bladed",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 5,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "power-fist-puncturing",
+    "name": "Puncturing",
+    "table": "power-fist",
+    "tableName": "Unique Power Fist mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 119
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Puncturing",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 1,
+    "cost": 45,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "power-fist-heating-coil",
+    "name": "Heating Coil",
+    "table": "power-fist",
+    "tableName": "Unique Power Fist mods",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 119
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Heated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 100,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "cryojet-liquid-nitrogen",
+    "name": "Liquid Nitrogen",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "FUEL",
+    "skill": "REPAIR",
+    "namePrefix": "Sub-Zero",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 8,
+    "cost": 80,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "cryojet-compressed-tubing",
+    "name": "Compressed Tubing",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Calibrated",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 28,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "cryojet-large-tank",
+    "name": "Large Tank",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "TANK",
+    "skill": "REPAIR",
+    "namePrefix": "High Capacity",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 3,
+    "cost": 28,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "cryojet-huge-tank",
+    "name": "Huge Tank",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "TANK",
+    "skill": "REPAIR",
+    "namePrefix": "Max. Capacity",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      }
+    ],
+    "weight": 6,
+    "cost": 34,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "cryojet-wide-diffusion",
+    "name": "Wide Diffusion",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Spray",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Burst"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Unreliable"
+      }
+    ],
+    "weight": 2,
+    "cost": 65,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "cryojet-aerosolizer",
+    "name": "Aerosolizer",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Vaporizing",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Unreliable"
+      }
+    ],
+    "weight": 2,
+    "cost": 65,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "cryojet-bladed-exhaust",
+    "name": "Bladed Exhaust",
+    "table": "cryojet",
+    "tableName": "Unique Cryojet mods",
+    "sources": [
+      {
+        "book": "WOA",
+        "page": 23
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Battle",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Close Quarters"
+      }
+    ],
+    "weight": 1,
+    "cost": 65,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  }
+]

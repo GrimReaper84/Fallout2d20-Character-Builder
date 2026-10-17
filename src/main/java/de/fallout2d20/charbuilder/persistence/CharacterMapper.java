@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.persistence;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -17,22 +18,25 @@ import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
+import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
 import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
-import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
-import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -199,10 +203,13 @@ final class CharacterMapper {
       Skill skill = custom.skill();
       customData = new CustomWeaponData(custom.name(), skill == null ? null : skill.id(), custom.damage(),
           blankToNull(custom.effects()), blankToNull(custom.damageType()), custom.fireRate(), custom.range(),
-          blankToNull(custom.qualities()), custom.ammunition());
+          blankToNull(custom.qualities()), custom.ammunition(),
+          custom.modSlots().isEmpty() ? null : custom.modSlots().stream().map(ModSlot::name).toList());
     }
+    Map<String, CatalogRefData> mods = new LinkedHashMap<>();
+    weapon.mods().forEach((slot, mod) -> mods.put(slot.name(), toData(mod)));
     return new WeaponEntryData(ref == null ? null : toData(ref), customData, weapon.quantity(),
-        blankToNull(weapon.notes()), weapon.builtIn() ? Boolean.TRUE : null);
+        blankToNull(weapon.notes()), weapon.builtIn() ? Boolean.TRUE : null, mods.isEmpty() ? null : mods);
   }
 
   private static @NonNull List<CarriedWeapon> weapons(@Nullable List<WeaponEntryData> entries)
@@ -212,8 +219,15 @@ final class CharacterMapper {
       CatalogRefData ref = entry.ref();
       CustomWeaponData custom = entry.custom();
       String notes = entry.notes();
+      Map<ModSlot, CatalogRef> mods = new EnumMap<>(ModSlot.class);
+      for (Map.Entry<String, CatalogRefData> mod : orEmpty(entry.mods()).entrySet()) {
+        Optional<ModSlot> slot = modSlot(mod.getKey());
+        if (slot.isPresent()) {
+          mods.put(slot.get(), toModel(mod.getValue()));
+        }
+      }
       weapons.add(new CarriedWeapon(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
-          entry.quantity(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.builtIn())));
+          entry.quantity(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.builtIn()), mods));
     }
     return weapons;
   }
@@ -222,7 +236,8 @@ final class CharacterMapper {
     String skill = data.skill();
     return new CustomWeapon(data.name(), skill == null ? null : skill(skill), data.damage(),
         nullToEmpty(data.effects()), nullToEmpty(data.damageType()), data.fireRate(), data.range(),
-        nullToEmpty(data.qualities()), data.ammunition());
+        nullToEmpty(data.qualities()), data.ammunition(), orEmpty(data.modSlots()).stream()
+        .map(CharacterMapper::modSlot).flatMap(Optional::stream).collect(Collectors.toSet()));
   }
 
   private static @NonNull CarriedItemData toData(@NonNull CarriedItem item) {
@@ -464,7 +479,16 @@ final class CharacterMapper {
     return Skill.fromId(id).orElseThrow(() -> new SaveFormatException("Unknown skill id: " + id));
   }
 
-  private static <T> List<T> orEmpty(@Nullable List<T> list) {
+  private static <T> @NonNull List<T> orEmpty(@Nullable List<T> list) {
     return list == null ? List.of() : list;
+  }
+
+  private static <K, V> @NonNull Map<K, V> orEmpty(@Nullable Map<K, V> map) {
+    return map == null ? Map.of() : map;
+  }
+
+  /** A mod slot by its saved name; empty for a name this version does not know (a newer file). */
+  private static @NonNull Optional<ModSlot> modSlot(@NonNull String name) {
+    return Arrays.stream(ModSlot.values()).filter(slot -> slot.name().equals(name)).findFirst();
   }
 }

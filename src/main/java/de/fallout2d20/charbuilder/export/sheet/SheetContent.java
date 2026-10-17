@@ -8,7 +8,6 @@ import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
-import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -26,6 +25,7 @@ import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -137,9 +137,10 @@ public record SheetContent(
     for (CarriedWeapon weapon : character.getWeapons()) {
       WeaponAttack attack = WeaponAttack.of(character, weapon);
       Skill skill = attack.skill();
-      String weight = weapon.isIntegrated() ? "–" : weapon.data().map(WeaponData::weight).orElse("");
+      String weight = weapon.isIntegrated() ? "–"
+          : ModdedWeapon.of(weapon).map(ModdedWeapon::weight).orElse("");
       rows.add(new WeaponRow(
-          withQuantity(attack.name(), weapon.quantity()),
+          withQuantity(attack.moddedName(), weapon.quantity()),
           skill == null ? "" : skill.displayName(),
           attack.targetNumber() == null ? "" : attack.targetNumber().toString(),
           skill != null && character.isTagged(skill),

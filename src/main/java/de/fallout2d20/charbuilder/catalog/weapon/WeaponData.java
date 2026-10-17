@@ -39,6 +39,11 @@ import org.jspecify.annotations.Nullable;
  *     of the skill (WOA p. 22: Self-Destruct uses END + Explosives); {@code null} for the governing one
  * @param origins ids of the origins the weapon is built into (WOA p. 22: Protectron weapons); empty if
  *     anyone can carry it
+ * @param mods ids of the mods the weapon accepts (its description, CRB pp. 96–119, WOA p. 23); the slot
+ *     comes from the mod; empty if it takes none
+ * @param stockName the weapon's name with a Stock mod where the book renames it (e.g. Laser Gun → Laser
+ *     Rifle, CRB p. 103); {@code null} otherwise
+ * @param gripOrStock whether the weapon takes a Grip or a Stock mod, not both (CRB p. 98: Pipe Bolt-Action)
  */
 public record WeaponData(
     @JsonProperty(required = true) @NonNull String id,
@@ -58,7 +63,10 @@ public record WeaponData(
     @NonNull List<String> legacyNames,
     @Nullable Attribute attribute,
     @NonNull List<String> origins,
-    @NonNull List<String> aliases) {
+    @NonNull List<String> aliases,
+    @NonNull List<String> mods,
+    @Nullable String stockName,
+    boolean gripOrStock) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;
@@ -80,6 +88,7 @@ public record WeaponData(
     legacyNames = legacyNames == null ? List.of() : List.copyOf(legacyNames);
     origins = origins == null ? List.of() : List.copyOf(origins);
     aliases = aliases == null ? List.of() : List.copyOf(aliases);
+    mods = mods == null ? List.of() : List.copyOf(mods);
   }
 
   /** The attribute the attack is rolled with: {@link #attribute()} or else the skill's governing attribute. */

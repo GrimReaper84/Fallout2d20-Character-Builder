@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
@@ -18,6 +20,7 @@ import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /** Weapon and ammunition edits of a character (CRB p. 91: shots per ammunition type). */
@@ -94,5 +97,32 @@ class CharacterWeaponsTest {
     return new Character("Test", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class), Map.of(),
         Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
         null, null, List.of(), ammunition, List.of(), Inventory.EMPTY, null);
+  }
+
+  /** D4: mods are installed, replaced and removed per slot in any mode. */
+  @Test
+  void installsReplacesAndRemovesMods() {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
+    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
+    assertEquals(Map.of(ModSlot.RECEIVER, CatalogRef.of("small-guns-powerful")), character.getWeapons().getFirst().mods());
+    character.setWeaponMod(0, ModSlot.RECEIVER, null);
+    assertEquals(Map.of(), character.getWeapons().getFirst().mods());
+    assertThrows(IllegalArgumentException.class,
+        () -> character.setWeaponMod(0, ModSlot.STOCK, WeaponCatalog.modById("small-guns-full-stock").orElseThrow()));
+  }
+
+  @Test
+  void customWeaponModSlots() {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(BLASTER));
+    character.setCustomWeaponModSlots(0, EnumSet.of(ModSlot.BARREL));
+    character.setWeaponMod(0, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());
+    character.setCustomWeaponModSlots(0, EnumSet.of(ModSlot.SIGHTS));
+    assertEquals(Set.of(ModSlot.SIGHTS), character.getWeapons().getFirst().custom().modSlots());
+    assertTrue(character.getWeapons().getFirst().mods().isEmpty());
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    assertThrows(IllegalStateException.class, () -> character.setCustomWeaponModSlots(1, Set.of()));
   }
 }

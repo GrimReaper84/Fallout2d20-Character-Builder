@@ -26,6 +26,17 @@
     "rarity": 2,
     "ammunition": [
       "44-magnum"
+    ],
+    "mods": [
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-snubnose",
+      "small-guns-bull-barrel",
+      "small-guns-comfort-grip",
+      "small-guns-short-scope",
+      "small-guns-reflex-sight",
+      "small-guns-recon-scope"
     ]
   },
   {
@@ -57,6 +68,22 @@
     "aliases": [
       "10mm automatic pistol",
       "10mm Auto Pistol"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-automatic",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-comfort-grip",
+      "small-guns-sharpshooters-grip",
+      "small-guns-reflex-sight",
+      "small-guns-recon-scope",
+      "small-guns-compensator",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -112,6 +139,28 @@
     "rarity": 2,
     "ammunition": [
       "5-56mm"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-automatic",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-vented",
+      "small-guns-full-stock",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-compensator",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -138,6 +187,31 @@
     "rarity": 2,
     "ammunition": [
       "45"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-automatic",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-38-receiver",
+      "small-guns-308-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-vented",
+      "small-guns-full-stock",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet",
+      "small-guns-compensator",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -167,6 +241,16 @@
     "rarity": 4,
     "ammunition": [
       "2mm-ec"
+    ],
+    "mods": [
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -196,6 +280,26 @@
     "rarity": 2,
     "ammunition": [
       "308"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-38-receiver",
+      "small-guns-50-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-vented",
+      "small-guns-full-stock",
+      "small-guns-marksmans-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -226,6 +330,16 @@
     "rarity": 1,
     "ammunition": [
       "45"
+    ],
+    "mods": [
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-full-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -256,6 +370,29 @@
     "rarity": 2,
     "ammunition": [
       "shotgun-shell"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-automatic",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-full-stock",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
     ]
   },
   {
@@ -287,6 +424,17 @@
     "rarity": 1,
     "ammunition": [
       "shotgun-shell"
+    ],
+    "mods": [
+      "small-guns-hardened",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-long",
+      "small-guns-sawed-off",
+      "small-guns-full-stock",
+      "small-guns-reflex-sight",
+      "small-guns-muzzle-break"
     ]
   },
   {
@@ -320,7 +468,32 @@
     "aliases": [
       "Bolt-action pipe gun",
       "Heavy bolt-action pipe rifle"
-    ]
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-38-receiver",
+      "small-guns-50-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-finned",
+      "small-guns-sharpshooters-grip",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
+    ],
+    "stockName": "Pipe Bolt-Action Rifle",
+    "gripOrStock": true
   },
   {
     "id": "pipe-gun",
@@ -350,7 +523,32 @@
     ],
     "aliases": [
       "Pipe rifle"
-    ]
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-automatic",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-45-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-finned",
+      "small-guns-sharpshooters-grip",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
+    ],
+    "stockName": "Pipe Rifle"
   },
   {
     "id": "pipe-revolver",
@@ -377,7 +575,31 @@
     "rarity": 0,
     "ammunition": [
       "45"
-    ]
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-38-receiver",
+      "small-guns-308-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-finned",
+      "small-guns-sharpshooters-grip",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
+    ],
+    "stockName": "Pipe Revolver Rifle"
   },
   {
     "id": "railway-rifle",
@@ -408,6 +630,18 @@
     "rarity": 4,
     "ammunition": [
       "railway-spike"
+    ],
+    "mods": [
+      "small-guns-automatic-piston",
+      "small-guns-long",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-bayonet"
     ]
   },
   {
@@ -434,6 +668,17 @@
     "rarity": 2,
     "ammunition": [
       "syringer-ammo"
+    ],
+    "mods": [
+      "small-guns-long",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope"
     ]
   },
   {
@@ -464,7 +709,27 @@
     "rarity": 2,
     "ammunition": [
       "fusion-cell"
-    ]
+    ],
+    "mods": [
+      "energy-weapons-photon-exciter",
+      "energy-weapons-beta-wave-tuner",
+      "energy-weapons-boosted-capacitor",
+      "energy-weapons-photon-agitator",
+      "energy-weapons-long-barrel",
+      "energy-weapons-automatic-barrel",
+      "energy-weapons-improved-barrel",
+      "energy-weapons-standard-stock",
+      "energy-weapons-reflex-sight",
+      "energy-weapons-short-scope",
+      "energy-weapons-long-scope",
+      "energy-weapons-short-night-vision-scope",
+      "energy-weapons-long-night-vision-scope",
+      "energy-weapons-recon-scope",
+      "energy-weapons-beam-splitter",
+      "energy-weapons-beam-focuser",
+      "energy-weapons-gyro-compensating-lens"
+    ],
+    "stockName": "Institute Laser Rifle"
   },
   {
     "id": "laser-musket",
@@ -493,6 +758,25 @@
     "rarity": 1,
     "ammunition": [
       "fusion-cell"
+    ],
+    "mods": [
+      "laser-musket-three-crank-capacitor",
+      "laser-musket-four-crank-capacitor",
+      "laser-musket-five-crank-capacitor",
+      "laser-musket-six-crank-capacitor",
+      "energy-weapons-long-barrel",
+      "energy-weapons-bracketed-short-barrel",
+      "energy-weapons-bracketed-long-barrel",
+      "energy-weapons-full-stock",
+      "energy-weapons-reflex-sight",
+      "energy-weapons-short-scope",
+      "energy-weapons-long-scope",
+      "energy-weapons-short-night-vision-scope",
+      "energy-weapons-long-night-vision-scope",
+      "energy-weapons-recon-scope",
+      "energy-weapons-beam-splitter",
+      "energy-weapons-beam-focuser",
+      "energy-weapons-gyro-compensating-lens"
     ]
   },
   {
@@ -525,7 +809,31 @@
     ],
     "aliases": [
       "Laser pistol"
-    ]
+    ],
+    "mods": [
+      "energy-weapons-photon-exciter",
+      "energy-weapons-beta-wave-tuner",
+      "energy-weapons-boosted-capacitor",
+      "energy-weapons-photon-agitator",
+      "energy-weapons-long-barrel",
+      "energy-weapons-automatic-barrel",
+      "energy-weapons-sniper-barrel",
+      "energy-weapons-improved-barrel",
+      "energy-weapons-sharpshooters-grip",
+      "energy-weapons-standard-stock",
+      "energy-weapons-marksmans-stock",
+      "energy-weapons-recoil-compensating-stock",
+      "energy-weapons-reflex-sight",
+      "energy-weapons-short-scope",
+      "energy-weapons-long-scope",
+      "energy-weapons-short-night-vision-scope",
+      "energy-weapons-long-night-vision-scope",
+      "energy-weapons-recon-scope",
+      "energy-weapons-beam-splitter",
+      "energy-weapons-beam-focuser",
+      "energy-weapons-gyro-compensating-lens"
+    ],
+    "stockName": "Laser Rifle"
   },
   {
     "id": "plasma-gun",
@@ -552,7 +860,28 @@
     "rarity": 3,
     "ammunition": [
       "plasma-cartridge"
-    ]
+    ],
+    "mods": [
+      "energy-weapons-photon-exciter",
+      "energy-weapons-beta-wave-tuner",
+      "energy-weapons-boosted-capacitor",
+      "energy-weapons-photon-agitator",
+      "energy-weapons-splitter",
+      "energy-weapons-automatic-barrel",
+      "energy-weapons-sniper-barrel",
+      "energy-weapons-flamer-barrel",
+      "energy-weapons-improved-barrel",
+      "energy-weapons-standard-stock",
+      "energy-weapons-marksmans-stock",
+      "energy-weapons-recoil-compensating-stock",
+      "energy-weapons-reflex-sight",
+      "energy-weapons-short-scope",
+      "energy-weapons-long-scope",
+      "energy-weapons-short-night-vision-scope",
+      "energy-weapons-long-night-vision-scope",
+      "energy-weapons-recon-scope"
+    ],
+    "stockName": "Plasma Rifle"
   },
   {
     "id": "gamma-gun",
@@ -583,6 +912,11 @@
     "rarity": 5,
     "ammunition": [
       "gamma-round"
+    ],
+    "mods": [
+      "gamma-gun-deep-dish",
+      "gamma-gun-electric-signal-carrier-antennae",
+      "gamma-gun-signal-repeater"
     ]
   },
   {
@@ -649,6 +983,14 @@
     "rarity": 3,
     "ammunition": [
       "flamer-fuel"
+    ],
+    "mods": [
+      "flamer-napalm",
+      "flamer-long-barrel",
+      "flamer-large-tank",
+      "flamer-huge-tank",
+      "flamer-compression-nozzle",
+      "flamer-vaporization-nozzle"
     ]
   },
   {
@@ -682,6 +1024,15 @@
     "ammunition": [
       "fusion-cell",
       "fusion-core"
+    ],
+    "mods": [
+      "gatling-laser-photon-exciter",
+      "gatling-laser-beta-wave-tuner",
+      "gatling-laser-boosted-capacitor",
+      "gatling-laser-photon-agitator",
+      "gatling-laser-charging-barrels",
+      "gatling-laser-reflex-sight",
+      "gatling-laser-beam-focuser"
     ]
   },
   {
@@ -737,7 +1088,14 @@
     ],
     "weight": "30",
     "cost": 285,
-    "rarity": 3
+    "rarity": 3,
+    "mods": [
+      "junk-jet-long-barrel",
+      "junk-jet-recoil-compensating-stock",
+      "junk-jet-gunner-sight",
+      "junk-jet-electrification-module",
+      "junk-jet-ignition-module"
+    ]
   },
   {
     "id": "minigun",
@@ -769,6 +1127,12 @@
     "rarity": 2,
     "ammunition": [
       "5mm"
+    ],
+    "mods": [
+      "minigun-accelerated-barrel",
+      "minigun-tri-barrel",
+      "minigun-gunner-sight",
+      "minigun-shredder"
     ]
   },
   {
@@ -796,6 +1160,15 @@
     "rarity": 4,
     "ammunition": [
       "missile"
+    ],
+    "mods": [
+      "missile-launcher-triple-barrel",
+      "missile-launcher-quad-barrel",
+      "missile-launcher-scope",
+      "missile-launcher-night-vision-scope",
+      "missile-launcher-targeting-computer",
+      "missile-launcher-bayonet",
+      "missile-launcher-stabilizer"
     ]
   },
   {
@@ -893,7 +1266,13 @@
     ],
     "weight": "3",
     "cost": 50,
-    "rarity": 2
+    "rarity": 2,
+    "mods": [
+      "sword-serrated-blade",
+      "sword-electrified-blade",
+      "sword-electrified-serrated-blade",
+      "sword-stun-pack"
+    ]
   },
   {
     "id": "combat-knife",
@@ -914,7 +1293,11 @@
     ],
     "weight": "1",
     "cost": 25,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "combat-knife-serrated-blade",
+      "combat-knife-stealth-blade"
+    ]
   },
   {
     "id": "machete",
@@ -935,7 +1318,10 @@
     ],
     "weight": "2",
     "cost": 25,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "machete-serrated-blade"
+    ]
   },
   {
     "id": "ripper",
@@ -956,7 +1342,11 @@
     ],
     "weight": "6",
     "cost": 50,
-    "rarity": 2
+    "rarity": 2,
+    "mods": [
+      "ripper-curved-blade",
+      "ripper-extended-blade"
+    ]
   },
   {
     "id": "shishkebab",
@@ -980,7 +1370,10 @@
     ],
     "weight": "3",
     "cost": 200,
-    "rarity": 3
+    "rarity": 3,
+    "mods": [
+      "shishkebab-extra-flame-jets"
+    ]
   },
   {
     "id": "switchblade",
@@ -1004,7 +1397,10 @@
     ],
     "weight": "1",
     "cost": 20,
-    "rarity": 0
+    "rarity": 0,
+    "mods": [
+      "switchblade-serrated-blade"
+    ]
   },
   {
     "id": "baseball-bat",
@@ -1025,7 +1421,14 @@
     ],
     "weight": "3",
     "cost": 25,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "baseball-bat-barbed",
+      "baseball-bat-spiked",
+      "baseball-bat-sharp",
+      "baseball-bat-chain-wrapped",
+      "baseball-bat-bladed"
+    ]
   },
   {
     "id": "aluminum-baseball-bat",
@@ -1046,7 +1449,14 @@
     ],
     "weight": "2",
     "cost": 32,
-    "rarity": 2
+    "rarity": 2,
+    "mods": [
+      "baseball-bat-barbed",
+      "baseball-bat-spiked",
+      "baseball-bat-sharp",
+      "baseball-bat-chain-wrapped",
+      "baseball-bat-bladed"
+    ]
   },
   {
     "id": "board",
@@ -1067,7 +1477,12 @@
     ],
     "weight": "3",
     "cost": 20,
-    "rarity": 0
+    "rarity": 0,
+    "mods": [
+      "board-spiked",
+      "board-puncturing",
+      "board-bladed"
+    ]
   },
   {
     "id": "lead-pipe",
@@ -1085,7 +1500,11 @@
     ],
     "weight": "3",
     "cost": 15,
-    "rarity": 0
+    "rarity": 0,
+    "mods": [
+      "lead-pipe-spiked",
+      "lead-pipe-heavy"
+    ]
   },
   {
     "id": "pipe-wrench",
@@ -1103,7 +1522,13 @@
     ],
     "weight": "2",
     "cost": 30,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "pipe-wrench-hooked",
+      "pipe-wrench-heavy",
+      "pipe-wrench-puncturing",
+      "pipe-wrench-extra-heavy"
+    ]
   },
   {
     "id": "pool-cue",
@@ -1124,7 +1549,11 @@
     ],
     "weight": "1",
     "cost": 10,
-    "rarity": 0
+    "rarity": 0,
+    "mods": [
+      "pool-cue-barbed",
+      "pool-cue-sharp"
+    ]
   },
   {
     "id": "rolling-pin",
@@ -1142,7 +1571,11 @@
     ],
     "weight": "1",
     "cost": 10,
-    "rarity": 0
+    "rarity": 0,
+    "mods": [
+      "rolling-pin-spiked",
+      "rolling-pin-sharp"
+    ]
   },
   {
     "id": "baton",
@@ -1160,7 +1593,11 @@
     ],
     "weight": "2",
     "cost": 15,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "baton-electrified",
+      "baton-stun-pack"
+    ]
   },
   {
     "id": "sledgehammer",
@@ -1178,7 +1615,11 @@
     ],
     "weight": "12",
     "cost": 40,
-    "rarity": 2
+    "rarity": 2,
+    "mods": [
+      "sledgehammer-puncturing",
+      "sledgehammer-heavy"
+    ]
   },
   {
     "id": "super-sledge",
@@ -1202,7 +1643,11 @@
     ],
     "weight": "20",
     "cost": 180,
-    "rarity": 3
+    "rarity": 3,
+    "mods": [
+      "super-sledge-heating-coil",
+      "super-sledge-stun-pack"
+    ]
   },
   {
     "id": "tire-iron",
@@ -1220,7 +1665,10 @@
     ],
     "weight": "2",
     "cost": 25,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "tire-iron-bladed"
+    ]
   },
   {
     "id": "walking-cane",
@@ -1238,7 +1686,11 @@
     ],
     "weight": "2",
     "cost": 10,
-    "rarity": 0
+    "rarity": 0,
+    "mods": [
+      "walking-cane-barbed",
+      "walking-cane-spiked"
+    ]
   },
   {
     "id": "boxing-glove",
@@ -1259,7 +1711,12 @@
     ],
     "weight": "1",
     "cost": 10,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "boxing-glove-spiked",
+      "boxing-glove-puncturing",
+      "boxing-glove-lead-lining"
+    ]
   },
   {
     "id": "deathclaw-gauntlet",
@@ -1280,7 +1737,10 @@
     ],
     "weight": "10",
     "cost": 75,
-    "rarity": 3
+    "rarity": 3,
+    "mods": [
+      "deathclaw-gauntlet-extra-claw"
+    ]
   },
   {
     "id": "knuckles",
@@ -1301,7 +1761,13 @@
     ],
     "weight": "<1",
     "cost": 10,
-    "rarity": 1
+    "rarity": 1,
+    "mods": [
+      "knuckles-sharp",
+      "knuckles-spiked",
+      "knuckles-puncturing",
+      "knuckles-bladed"
+    ]
   },
   {
     "id": "power-fist",
@@ -1322,7 +1788,11 @@
     ],
     "weight": "4",
     "cost": 100,
-    "rarity": 2
+    "rarity": 2,
+    "mods": [
+      "power-fist-puncturing",
+      "power-fist-heating-coil"
+    ]
   },
   {
     "id": "throwing-knives",
@@ -1724,6 +2194,15 @@
     ],
     "origins": [
       "protectron"
+    ],
+    "mods": [
+      "cryojet-liquid-nitrogen",
+      "cryojet-compressed-tubing",
+      "cryojet-large-tank",
+      "cryojet-huge-tank",
+      "cryojet-wide-diffusion",
+      "cryojet-aerosolizer",
+      "cryojet-bladed-exhaust"
     ]
   },
   {

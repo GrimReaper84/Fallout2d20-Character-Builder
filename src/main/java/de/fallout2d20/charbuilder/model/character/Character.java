@@ -12,6 +12,8 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
@@ -26,11 +28,12 @@ import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.session.SessionValues;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
-import java.util.LinkedHashMap;
+import de.fallout2d20.charbuilder.model.character.weapon.WeaponMods;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -785,6 +788,27 @@ public class Character {
    */
   public void setCustomWeaponSkill(int index, @Nullable Skill skill) {
     weapons.set(index, weapons.get(index).withCustomSkill(skill));
+  }
+
+  /**
+   * Installs a catalog mod in a slot of the weapon at the index, replacing the slot's mod; {@code null}
+   * removes it (any mode, like the other weapon edits). Mods of slots no longer on offer afterwards are
+   * removed ({@link WeaponMods#install}).
+   *
+   * @throws IllegalArgumentException if the mod does not fit the slot of this weapon
+   */
+  public void setWeaponMod(int index, @NonNull ModSlot slot, @Nullable WeaponModData mod) {
+    weapons.set(index, WeaponMods.install(weapons.get(index), slot, mod));
+  }
+
+  /**
+   * Chooses the mod slots of the custom weapon at the index (user decision 2026-10-17); mods of slots no
+   * longer chosen are removed.
+   *
+   * @throws IllegalStateException if the weapon at the index is a catalog weapon
+   */
+  public void setCustomWeaponModSlots(int index, @NonNull Set<ModSlot> slots) {
+    weapons.set(index, weapons.get(index).withCustomModSlots(slots));
   }
 
   public @NonNull List<CarriedWeapon> getWeapons() {

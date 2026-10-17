@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -377,6 +379,60 @@ class CharacterStoreTest {
     Character loaded = store.load(file).character();
     assertEquals(character.getWeapons(), loaded.getWeapons());
     assertEquals(Map.of("10mm", 34), loaded.getAmmunition());
+  }
+
+  /** D4: installed mods, custom mod slots and an unknown mod id survive a round trip; older files have none. */
+  @Test
+  void roundTripsWeaponMods() throws Exception {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
+    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
+        WeaponRange.MEDIUM, "", null, EnumSet.of(ModSlot.BARREL, ModSlot.SIGHTS))));
+    character.setWeaponMod(1, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withMod(ModSlot.MUZZLE, CatalogRef.of("gone")));
+    Path file = dir.resolve("mods.json");
+    store.save(character, file);
+
+    assertEquals(character.getWeapons(), store.load(file).character().getWeapons());
+    JsonNode written = JSON.readTree(file.toFile());
+    assertEquals("small-guns-hardened", written.get("weapons").get(0).get("mods").get("RECEIVER").get("id").asText());
+  }
+
+  /** D4: the new fields are optional – a weapon without mods writes neither, so older files load unchanged. */
+  @Test
+  void weaponsWithoutModsWriteNoModFields() throws Exception {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
+        WeaponRange.MEDIUM, "", null)));
+    Path file = dir.resolve("plain.json");
+    store.save(character, file);
+
+    JsonNode weapons = JSON.readTree(file.toFile()).get("weapons");
+    assertFalse(weapons.get(0).has("mods"));
+    assertFalse(weapons.get(1).has("mods"));
+    assertFalse(weapons.get(1).get("custom").has("modSlots"));
+    assertEquals(character.getWeapons(), store.load(file).character().getWeapons());
+  }
+
+  /** Slot names this version does not know (a newer file) are skipped instead of failing the load. */
+  @Test
+  void unknownModSlotNamesAreSkipped() throws Exception {
+    Character character = Character.createNew();
+    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
+        WeaponRange.MEDIUM, "", null, EnumSet.of(ModSlot.BARREL))));
+    Path file = dir.resolve("future.json");
+    store.save(character, file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    ((ObjectNode) node.get("weapons").get(0)).putObject("mods").putObject("MAGAZINE").put("id", "small-guns-drum");
+    ((ObjectNode) node.get("weapons").get(1).get("custom")).putArray("modSlots").add("MAGAZINE").add("BARREL");
+    JSON.writeValue(file.toFile(), node);
+
+    List<CarriedWeapon> loaded = store.load(file).character().getWeapons();
+    assertTrue(loaded.getFirst().mods().isEmpty());
+    assertEquals(Set.of(ModSlot.BARREL), loaded.get(1).custom().modSlots());
   }
 
   /** Catalog item with chosen limb and note, and a custom item (C2). */
