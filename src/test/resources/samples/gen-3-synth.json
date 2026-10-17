@@ -1,0 +1,226 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Ada Sterling",
+  "origin" : {
+    "id" : "generation-3-synth"
+  },
+  "originChoices" : {
+    "tagSkill" : "speech"
+  },
+  "level" : 1,
+  "xp" : 0,
+  "creationComplete" : true,
+  "startingLevel" : 1,
+  "startingTagSkills" : [ "science", "small-guns", "sneak", "speech" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 0,
+    "per" : 1,
+    "end" : 0,
+    "cha" : 1,
+    "int" : 1,
+    "agi" : 1,
+    "lck" : 1
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "comprehension"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "synth-infiltrator"
+    },
+    "choices" : [ "Baseball bat", "Pipe gun with 10 + 5 CD rounds of .38 ammunition" ],
+    "trinket" : "A dented harmonica",
+    "freeArms" : false
+  },
+  "weapons" : [ {
+    "ref" : {
+      "id" : "baseball-bat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "pipe-gun"
+    },
+    "quantity" : 1
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "tough-clothing"
+    }
+  }, {
+    "ref" : {
+      "id" : "lab-coat"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "formal-hat"
+    }
+  }, {
+    "ref" : {
+      "id" : "formal-clothing"
+    },
+    "carried" : true
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "2 rolls on the Chems, Food or Beverages loot tables (CRB p. 200)",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "10 + 5 CD rounds of .38 ammunition",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "A dented harmonica",
+      "weight" : 0
+    },
+    "quantity" : 1,
+    "notes" : "Personal trinket"
+  }, {
+    "ref" : {
+      "id" : "mentats"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "calmex"
+    },
+    "quantity" : 1
+  } ],
+  "packItemsAdded" : true
+}

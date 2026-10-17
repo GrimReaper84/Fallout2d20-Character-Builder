@@ -124,3 +124,18 @@ jlink {
         }
     }
 }
+
+// Beta menu with the test characters (E9): only for development runs. Deliberately not in
+// applicationDefaultJvmArgs, which would end up in the start scripts and the installers.
+tasks.named<JavaExec>("run") {
+    systemProperty("charbuilder.beta", layout.projectDirectory.dir("src/test/resources").asFile.absolutePath)
+}
+
+// Recreates the generated test characters in src/test/resources/samples (E9); run by hand, not by build.
+val generateSamples by tasks.registering(JavaExec::class) {
+    group = "development"
+    description = "Writes the generated sample characters for the Beta menu."
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass.set("de.fallout2d20.charbuilder.samples.GenerateSamples")
+    args(layout.projectDirectory.dir("src/test/resources/samples").asFile.absolutePath)
+}

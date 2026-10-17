@@ -56,6 +56,12 @@ Requires JDK 21.
 ./gradlew jlinkZip   # portable zip for the current OS (build/portable)
 ```
 
+Development runs (`./gradlew run`) show an extra **Beta** menu that opens test characters from
+`src/test/resources/samples` (and the legacy fixtures from `src/test/resources/legacy`) as unsaved copies.
+Release builds never show it. To get it in an IDE run configuration, add
+`-Dcharbuilder.beta=src/test/resources`. `./gradlew generateSamples` recreates the generated samples
+after a save format change; other `.json` files in the folder are left alone.
+
 ## Releasing
 
 1. Set the version in `gradle.properties` (e.g. `version=1.1.0`) and commit. Use plain numbers

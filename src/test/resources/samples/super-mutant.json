@@ -1,0 +1,219 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Grak",
+  "origin" : {
+    "id" : "super-mutant"
+  },
+  "level" : 1,
+  "xp" : 0,
+  "creationComplete" : true,
+  "startingLevel" : 1,
+  "startingTagSkills" : [ "athletics", "big-guns", "melee-weapons" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 1,
+    "per" : 1,
+    "end" : 1,
+    "cha" : -1,
+    "int" : -1,
+    "agi" : 2,
+    "lck" : 2
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 3,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "toughness"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "brute"
+    },
+    "choices" : [ "Raider armor head", "Baseball bat" ],
+    "tagSkillItems" : {
+      "melee-weapons" : "Machete"
+    },
+    "trinket" : "A dented harmonica",
+    "freeArms" : false
+  },
+  "weapons" : [ {
+    "ref" : {
+      "id" : "pipe-gun"
+    },
+    "quantity" : 1,
+    "notes" : "Pack: Pipe rifle"
+  }, {
+    "ref" : {
+      "id" : "baseball-bat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "machete"
+    },
+    "quantity" : 1
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "raider-chest-piece"
+    },
+    "notes" : "Pack: Raider armor torso"
+  }, {
+    "ref" : {
+      "id" : "casual-clothing"
+    }
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "6 + 3 CD rounds of .38 ammunition",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "Raider armor head",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "A dented harmonica",
+      "weight" : 0
+    },
+    "quantity" : 1,
+    "notes" : "Personal trinket"
+  }, {
+    "ref" : {
+      "id" : "buffout"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "4 + 2 CD shots of flamer fuel",
+      "weight" : 0
+    },
+    "quantity" : 1
+  } ],
+  "caps" : 5,
+  "packItemsAdded" : true
+}

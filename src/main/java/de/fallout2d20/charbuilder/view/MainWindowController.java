@@ -27,6 +27,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
@@ -46,6 +47,7 @@ public class MainWindowController {
 
   private final CharacterStore store = new CharacterStore();
 
+  @FXML private MenuBar menuBar;
   @FXML private StackPane contentPane;
   @FXML private MenuItem createCharacterItem;
   @FXML private MenuItem exportSheetItem;
@@ -57,6 +59,8 @@ public class MainWindowController {
   private @Nullable Path file;
   private @Nullable Path suggestedDirectory;
   private boolean dirty;
+  /** Whether the character was opened from the Beta menu and has not been saved yet (E9). */
+  private boolean betaSample;
 
   @FXML
   private void initialize() {
@@ -67,6 +71,8 @@ public class MainWindowController {
   public void attach(Stage stage) {
     this.stage = stage;
     stage.setOnCloseRequest(this::onCloseRequest);
+    BetaMenu.folder().ifPresent(folder -> menuBar.getMenus().add(
+        BetaMenu.create(folder, sample -> openFromBeta(sample, true), legacy -> openFromBeta(legacy, false))));
     updateTitle();
   }
 
@@ -87,7 +93,22 @@ public class MainWindowController {
     if (chosen == null) {
       return;
     }
-    Path path = chosen.toPath();
+    open(chosen.toPath(), false, false);
+  }
+
+  /** Opens a file from the Beta menu (E9); a sample opens as an unsaved copy, a legacy file as usual. */
+  private void openFromBeta(Path path, boolean asCopy) {
+    if (confirmDiscard()) {
+      open(path, true, asCopy);
+    }
+  }
+
+  /**
+   * Loads a character file and shows it. A legacy file opens unsaved with its import report. With
+   * {@code fromBeta} the folder is never proposed for later saves (it holds the test fixtures), and a sample
+   * opens as a copy without a file path, so saving asks for a target and the sample is never overwritten.
+   */
+  private void open(Path path, boolean fromBeta, boolean asCopy) {
     CharacterFile loaded;
     try {
       loaded = store.load(path);
@@ -95,7 +116,9 @@ public class MainWindowController {
       showError("The file could not be opened.", e.getMessage());
       return;
     }
-    suggestedDirectory = path.getParent();
+    if (!fromBeta) {
+      suggestedDirectory = path.getParent();
+    }
     ImportReport report = loaded.importReport();
     if (report != null) {
       show(loaded.character(), null);
@@ -105,7 +128,9 @@ public class MainWindowController {
         ImportReportDialog.show(stage, path, report);
       }
     } else {
-      show(loaded.character(), path);
+      show(loaded.character(), asCopy ? null : path);
+      betaSample = asCopy;
+      updateTitle();
     }
   }
 
@@ -235,6 +260,7 @@ public class MainWindowController {
     file = target;
     suggestedDirectory = target.getParent();
     dirty = false;
+    betaSample = false;
     updateTitle();
     return true;
   }
@@ -261,6 +287,7 @@ public class MainWindowController {
     character = newCharacter;
     file = newFile;
     dirty = false;
+    betaSample = false;
     CharacterView newView = new CharacterView(newCharacter,
         new ViewCallbacks(this::onEdited, this::onChanged, this::completeCreation));
     view = newView;
@@ -310,7 +337,7 @@ public class MainWindowController {
       return;
     }
     String name = character.getName().isBlank() ? "Unnamed" : character.getName();
-    stage.setTitle(APP_TITLE + " – " + name + (dirty ? " *" : ""));
+    stage.setTitle(APP_TITLE + " – " + name + (betaSample ? " (beta sample)" : "") + (dirty ? " *" : ""));
   }
 
   /**

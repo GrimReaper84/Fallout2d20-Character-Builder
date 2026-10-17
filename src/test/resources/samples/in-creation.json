@@ -1,0 +1,143 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Half Done",
+  "origin" : {
+    "id" : "survivor"
+  },
+  "level" : 1,
+  "xp" : 0,
+  "creationComplete" : false,
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 1,
+    "per" : 1,
+    "end" : 0,
+    "cha" : 1,
+    "int" : 0,
+    "agi" : 0,
+    "lck" : 0
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : true,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : true,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ {
+    "ref" : {
+      "id" : "educated"
+    },
+    "imported" : false,
+    "attributeChoices" : [ ]
+  } ],
+  "perks" : [ ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Brother Kael",
+  "origin" : {
+    "id" : "child-of-atom"
+  },
+  "level" : 1,
+  "xp" : 0,
+  "creationComplete" : true,
+  "startingLevel" : 1,
+  "startingTagSkills" : [ "melee-weapons", "speech", "survival" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 1,
+    "per" : 1,
+    "end" : 1,
+    "cha" : 0,
+    "int" : 1,
+    "agi" : 0,
+    "lck" : 1
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 3,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "hunter"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "can-do"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "missionary"
+    },
+    "choices" : [ ],
+    "tagSkillItems" : {
+      "melee-weapons" : "Machete"
+    },
+    "freeArms" : false
+  },
+  "weapons" : [ {
+    "ref" : {
+      "id" : "walking-cane"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "gamma-gun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "machete"
+    },
+    "quantity" : 1
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "tough-clothing"
+    }
+  }, {
+    "ref" : {
+      "id" : "formal-hat"
+    }
+  }, {
+    "ref" : {
+      "id" : "formal-clothing"
+    },
+    "carried" : true
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "4 + 2 CD gamma rounds",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "stimpak"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "1 roll on the random food table (CRB p. 202)",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "purified-water"
+    },
+    "quantity" : 2
+  }, {
+    "ref" : {
+      "id" : "iguana-on-a-stick"
+    },
+    "quantity" : 1
+  } ],
+  "caps" : 10,
+  "packItemsAdded" : true
+}

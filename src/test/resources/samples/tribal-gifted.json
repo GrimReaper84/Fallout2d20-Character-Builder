@@ -1,0 +1,160 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Runs-With-Storms",
+  "origin" : {
+    "id" : "tribal"
+  },
+  "level" : 1,
+  "xp" : 0,
+  "creationComplete" : true,
+  "startingLevel" : 1,
+  "startingTagSkills" : [ "melee-weapons", "survival", "throwing" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 1,
+    "per" : 0,
+    "end" : 1,
+    "cha" : 1,
+    "int" : 0,
+    "agi" : 1,
+    "lck" : 1
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 3,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ {
+    "ref" : {
+      "id" : "gifted"
+    },
+    "imported" : false,
+    "attributeChoices" : [ "agi", "per" ]
+  }, {
+    "ref" : {
+      "id" : "heavy-handed"
+    },
+    "imported" : false,
+    "attributeChoices" : [ ]
+  } ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "black-widow-lady-killer"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  }
+}

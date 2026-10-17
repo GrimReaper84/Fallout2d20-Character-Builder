@@ -12,7 +12,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
   fx:controller="de.fallout2d20.charbuilder.view.MainWindowController">
   <top>
-    <MenuBar>
+    <MenuBar fx:id="menuBar">
       <Menu text="File">
         <MenuItem text="New" onAction="#onNew">
           <accelerator><KeyCodeCombination code="N" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>

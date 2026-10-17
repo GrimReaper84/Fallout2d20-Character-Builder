@@ -1,0 +1,605 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Old Jeb Harrow",
+  "origin" : {
+    "id" : "survivor"
+  },
+  "level" : 12,
+  "xp" : 6600,
+  "creationComplete" : true,
+  "startingLevel" : 12,
+  "startingTagSkills" : [ "lockpick", "repair", "small-guns", "sneak" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 1,
+    "per" : 1,
+    "end" : 1,
+    "cha" : 0,
+    "int" : 1,
+    "agi" : 1,
+    "lck" : 0
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 5,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 5,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ {
+    "ref" : {
+      "id" : "educated"
+    },
+    "imported" : false,
+    "attributeChoices" : [ ]
+  }, {
+    "ref" : {
+      "id" : "fast-shot"
+    },
+    "imported" : false,
+    "attributeChoices" : [ ]
+  } ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "dodger"
+    },
+    "rank" : 2,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "moving-target"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "fast-metabolism"
+    },
+    "rank" : 3,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "hunter"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "strong-back"
+    },
+    "rank" : 3,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "cap-collector"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "fortune-finder"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "mercenary"
+    },
+    "choices" : [ "Leather armor chest piece", "Machete", "10mm automatic pistol" ],
+    "freeArms" : false
+  },
+  "weapons" : [ {
+    "ref" : {
+      "id" : "machete"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "10mm-pistol"
+    },
+    "quantity" : 1,
+    "notes" : "Pack: 10mm automatic pistol"
+  }, {
+    "ref" : {
+      "id" : "44-pistol"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "10mm-pistol"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "flare-gun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "assault-rifle"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "combat-rifle"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "gauss-rifle"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "hunting-rifle"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "submachine-gun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "combat-shotgun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "double-barrel-shotgun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "pipe-bolt-action"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "pipe-gun"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "pipe-revolver"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "railway-rifle"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "syringer"
+    },
+    "quantity" : 1
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "tough-clothing"
+    }
+  }, {
+    "ref" : {
+      "id" : "leather-chest-piece"
+    },
+    "notes" : "Pack: Leather armor chest piece"
+  }, {
+    "ref" : {
+      "id" : "brotherhood-of-steel-uniform"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "casual-clothing"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "harness"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "military-fatigues"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "road-leathers"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "tough-clothing"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "vault-jumpsuit"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "brotherhood-of-steel-fatigues"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "brotherhood-scribes-armor"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "cage-armor"
+    },
+    "carried" : true
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "10 + 5 CD rounds of ammunition for the chosen ranged weapon",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "Note advertising a job in a nearby settlement that pays 50 caps",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "4 + 2 CD bobby pins",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "multi-tool"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "calmex"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "baked-bloatfly"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "blamco-brand-mac-and-cheese"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "bloatfly-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "bloodbug-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "bloodbug-steak"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "brahmin-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "brain-fungus"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "canned-dog-food"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "carrot"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "cooked-softshell-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "corn"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "cram"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "crispy-squirrel-bits"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "dandy-boy-apples"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "deathclaw-egg"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "deathclaw-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "deathclaw-omelette"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "deathclaw-steak"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "fancy-lads-snack-cakes"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "food-paste"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "gourd"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "grilled-radroach"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "grilled-radstag"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "gum-drops"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "iguana-bits"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "iguana-on-a-stick"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "iguana-soup"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "instamash"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "institute-food-packet"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "melon"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mirelurk-cake"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mirelurk-egg"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mirelurk-egg-omelette"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mirelurk-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mirelurk-queen-steak"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mole-rat-chunks"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mole-rat-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mongrel-dog-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mutant-hound-chops"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mutant-hound-meat"
+    },
+    "quantity" : 1
+  } ],
+  "caps" : 3865,
+  "packItemsAdded" : true
+}

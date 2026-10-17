@@ -1,0 +1,252 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Mara Quill",
+  "origin" : {
+    "id" : "vault-dweller"
+  },
+  "originChoices" : {
+    "tagSkill" : "science"
+  },
+  "level" : 5,
+  "xp" : 1000,
+  "creationComplete" : true,
+  "startingLevel" : 3,
+  "startingTagSkills" : [ "medicine", "science", "small-guns", "speech" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 0,
+    "per" : 1,
+    "end" : 1,
+    "cha" : 1,
+    "int" : 1,
+    "agi" : 1,
+    "lck" : 0
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : true,
+      "creationRanks" : 4,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "can-do"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "smooth-talker"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  }, {
+    "ref" : {
+      "id" : "moving-target"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 2,
+    "pendingPerks" : 2
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "vault-tec-resident"
+    },
+    "choices" : [ ],
+    "freeArms" : false
+  },
+  "weapons" : [ {
+    "ref" : {
+      "id" : "switchblade"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "10mm-pistol"
+    },
+    "quantity" : 1
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "vault-jumpsuit"
+    }
+  }, {
+    "ref" : {
+      "id" : "lab-coat"
+    },
+    "carried" : true
+  }, {
+    "ref" : {
+      "id" : "formal-hat"
+    }
+  }, {
+    "ref" : {
+      "id" : "formal-clothing"
+    },
+    "carried" : true
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "Vault-Tec canteen with 1 purified water",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "pip-boy"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "6 + 3 CD rounds of 10mm ammunition",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "stimpak"
+    },
+    "quantity" : 2
+  }, {
+    "ref" : {
+      "id" : "first-aid-kit"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "stimpak"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "mentats"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
+      "weight" : 0
+    },
+    "quantity" : 1
+  } ],
+  "caps" : 260,
+  "packItemsAdded" : true
+}

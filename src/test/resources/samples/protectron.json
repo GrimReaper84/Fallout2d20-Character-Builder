@@ -1,0 +1,216 @@
+{
+  "format" : "fallout2d20-character-builder",
+  "formatVersion" : 1,
+  "createdWith" : "samples",
+  "savedWith" : "samples",
+  "name" : "Unit PT-7",
+  "origin" : {
+    "id" : "protectron"
+  },
+  "originChoices" : {
+    "purpose" : "Fire Brigadier"
+  },
+  "level" : 1,
+  "xp" : 0,
+  "creationComplete" : true,
+  "startingLevel" : 1,
+  "startingTagSkills" : [ "energy-weapons", "repair", "unarmed" ],
+  "books" : [ "CRB", "WOA", "WG" ],
+  "attributeAllocation" : {
+    "str" : 1,
+    "per" : 1,
+    "end" : 1,
+    "cha" : 1,
+    "int" : 0,
+    "agi" : 0,
+    "lck" : 1
+  },
+  "skills" : {
+    "athletics" : {
+      "tagged" : false,
+      "creationRanks" : 3,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "barter" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "big-guns" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "energy-weapons" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "explosives" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "lockpick" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "medicine" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "melee-weapons" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "pilot" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "repair" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "science" : {
+      "tagged" : false,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "small-guns" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "sneak" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "speech" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "survival" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "throwing" : {
+      "tagged" : false,
+      "creationRanks" : 0,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    },
+    "unarmed" : {
+      "tagged" : true,
+      "creationRanks" : 1,
+      "advancementRanks" : 0,
+      "stagedRanks" : 0
+    }
+  },
+  "traits" : [ ],
+  "perks" : [ {
+    "ref" : {
+      "id" : "dogmeat"
+    },
+    "rank" : 1,
+    "importedRanks" : 0,
+    "attributeChoices" : [ ],
+    "skillChoices" : [ ],
+    "stagedRanks" : 0
+  } ],
+  "progression" : {
+    "pendingSkillRanks" : 0,
+    "pendingPerks" : 0
+  },
+  "vitals" : {
+    "rads" : 0,
+    "radiationPoints" : 0
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "protectron"
+    },
+    "choices" : [ ],
+    "freeArms" : false
+  },
+  "weapons" : [ {
+    "ref" : {
+      "id" : "protectron-claws"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "laser-gun"
+    },
+    "quantity" : 2,
+    "notes" : "Pack: Two laser guns built into the claws",
+    "builtIn" : true
+  }, {
+    "ref" : {
+      "id" : "knuckles"
+    },
+    "quantity" : 1
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "standard-plating"
+    }
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "Fusion cell with 14 + 7 CD shots",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "recon-sensors"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "hazard-detection-mod"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "robot-repair-kit"
+    },
+    "quantity" : 1
+  }, {
+    "custom" : {
+      "name" : "Fusion cell with 6 + 3 CD shots",
+      "weight" : 0
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "multi-tool"
+    },
+    "quantity" : 1
+  } ],
+  "caps" : 20,
+  "packItemsAdded" : true
+}
