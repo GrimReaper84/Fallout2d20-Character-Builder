@@ -11,6 +11,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /** Attack values per weapon (CRB p. 27, 13, 48). */
@@ -121,5 +122,32 @@ class WeaponAttackTest {
     assertEquals(8, attack.targetNumber());
     assertEquals(3, attack.damage());
     assertEquals(1, attack.meleeBonus());
+  }
+
+  /** CRB p. 90: the table range wins; range-less thrown weapons and grenades use their Thrown quality. */
+  @Test
+  void effectiveRangeFallsBackToTheThrownQuality() {
+    Character character = character();
+    assertEquals(WeaponRange.CLOSE, range(character, "10mm-pistol"));
+    assertEquals(WeaponRange.CLOSE, range(character, "throwing-knives"));
+    assertEquals(WeaponRange.MEDIUM, range(character, "frag-grenade"));
+    assertNull(range(character, "bottlecap-mine"));
+    assertNull(range(character, "combat-knife"));
+  }
+
+  @Test
+  void effectiveRangeOfACustomWeaponReadsItsQualityText() {
+    CustomWeapon spear = new CustomWeapon("Spear", Skill.THROWING, 3, "", "Physical", null, null, "Thrown (M)", null);
+    assertEquals(WeaponRange.MEDIUM, WeaponAttack.of(character(), CarriedWeapon.of(spear)).effectiveRange());
+  }
+
+  @Test
+  void rangeByCode() {
+    assertEquals(Optional.of(WeaponRange.EXTREME), WeaponRange.byCode("X"));
+    assertEquals(Optional.empty(), WeaponRange.byCode("Z"));
+  }
+
+  private static WeaponRange range(Character character, String id) {
+    return WeaponAttack.of(character, CarriedWeapon.of(CatalogRef.of(id))).effectiveRange();
   }
 }

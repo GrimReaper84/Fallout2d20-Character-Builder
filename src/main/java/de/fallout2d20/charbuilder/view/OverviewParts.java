@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /** Small building blocks shared by the header bar and the tabs of the character view. */
@@ -101,6 +102,11 @@ final class OverviewParts {
     area.setPrefWidth(TEXT_WIDTH);
     area.setMinWidth(0);
     return area;
+  }
+
+  /** The value as text, or a dash for none or blank. */
+  static @NonNull String orDash(@Nullable Object value) {
+    return value == null || value.toString().isBlank() ? "–" : value.toString();
   }
 
   static void heading(@NonNull MigPane pane, @NonNull String text) {

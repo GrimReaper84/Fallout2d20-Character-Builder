@@ -9,6 +9,8 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -53,8 +55,25 @@ public record WeaponAttack(
     @NonNull String qualities,
     @NonNull List<String> ammunition) {
 
+  /** The Thrown quality with its range letter, e.g. {@code Thrown (M)} (CRB p. 90). */
+  private static final @NonNull Pattern THROWN = Pattern.compile("\\bThrown \\(([CMLX])\\)");
+
   public WeaponAttack {
     ammunition = List.copyOf(ammunition);
+  }
+
+  /**
+   * The range the weapon is used at: its table range, else the range of its Thrown quality (CRB p. 90: a
+   * {@code Thrown (C)} weapon can be thrown as a ranged attack with ideal range Close), as the thrown
+   * weapons and grenades of the tables have no range of their own; {@code null} for neither (melee weapons,
+   * mines that are only placed).
+   */
+  public @Nullable WeaponRange effectiveRange() {
+    if (range != null) {
+      return range;
+    }
+    Matcher thrown = THROWN.matcher(qualities);
+    return thrown.find() ? WeaponRange.byCode(thrown.group(1)).orElse(null) : null;
   }
 
   /** Damage as shown in the app and on the sheet, e.g. "4 CD" or "4 CD + 1 CD" with the melee bonus. */
