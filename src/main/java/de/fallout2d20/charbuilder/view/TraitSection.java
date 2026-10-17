@@ -22,53 +22,129 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Trait choice of a character in creation, for origins with trait lists (Survivor CRB p. 56,
- * Tribal WG p. 15): one checkbox per trait, grouped by list, and the attribute choosers of Gifted.
- * Every change goes to the model and then to {@code onChanged}, which rebuilds the overview.
+ * Traits of a character as a two-column grid: the origin trait with the origin's options (extra Tag
+ * skill, purpose) below it, then the chosen traits. Each trait shows its name and below it a short
+ * description with the source. During creation and in GM mode, origins with trait lists (Survivor
+ * CRB p. 56, Tribal WG p. 15) offer one checkbox per trait, grouped by list, with benefit and penalty
+ * below each, and the attribute choosers of Gifted below Gifted; the checkboxes show the choice, so the
+ * chosen traits are not listed again. Every change goes to the model and then to {@code onChanged}, which
+ * rebuilds the view.
  */
 final class TraitSection {
 
   private static final String FULL_TOOLTIP = "Two traits are already chosen; uncheck one first.";
+  /** Indent of a checkbox's description, so it lines up with the checkbox text. */
+  private static final String UNDER_CHECKBOX = "gapleft 24";
 
   private TraitSection() {}
 
-  /** Adds the trait rows to a four-column overview grid; nothing for origins without trait lists. */
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onChanged) {
+  /**
+   * @param locked whether the character is complete and not in GM mode (read-only)
+   * @param onEdited called after an edit that needs no rebuild (typed purpose)
+   * @param onChanged called after an edit that changes other values; rebuilds the view
+   */
+  static @NonNull MigPane build(@NonNull Character character, boolean locked, @NonNull Runnable onEdited,
+      @NonNull Runnable onChanged) {
+    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][grow, left]");
     Optional<OriginData> origin = character.getOriginData();
-    if (origin.isEmpty() || origin.get().traitLists().isEmpty()) {
-      return;
-    }
-    Set<String> chosen = character.getTraits().stream().map(trait -> trait.trait().id())
-        .collect(Collectors.toSet());
-    for (String list : origin.get().traitLists()) {
-      pane.add(new Label(listTitle(list)), "top");
-      List<TraitDefinition> traits = TraitCatalog.inList(list);
-      for (int i = 0; i < traits.size(); i++) {
-        if (i > 0) {
-          pane.add(new Label());
-        }
-        pane.add(checkBox(character, traits.get(i), chosen, onChanged), "span 3");
+    if (origin.isPresent()) {
+      addOriginTrait(pane, origin.get(), locked);
+      if (locked) {
+        OriginSection.addChoices(pane, character.getOriginChoices());
+      } else {
+        OriginSection.addOptions(pane, character, onEdited, onChanged);
       }
     }
-    for (TraitSelection selection : character.getTraits()) {
-      addAttributeChoosers(pane, character, selection, onChanged);
+    for (TraitSelection trait : character.getTraits()) {
+      // In creation the checkboxes show the traits of the origin's lists (imported ones marked there too);
+      // others are listed as entries.
+      if (locked || !offeredByOrigin(trait, origin)) {
+        addSelection(pane, trait);
+        if (!locked) {
+          addAttributeChoosers(pane, character, trait, onChanged);
+        }
+      }
+    }
+    if (!locked && origin.isPresent()) {
+      addChoice(pane, character, origin.get(), onChanged);
+    }
+    if (pane.getChildren().isEmpty()) {
+      pane.add(new Label("None"), "span 2");
+    }
+    return pane;
+  }
+
+  /**
+   * The origin's own trait, e.g. "The Chain that Binds (Origin Trait)" with its summary. Origins with
+   * trait lists have none; during creation their summary ("Pick two …") introduces the choice instead.
+   */
+  private static void addOriginTrait(@NonNull MigPane pane, @NonNull OriginData origin, boolean locked) {
+    String traitName = origin.traitName();
+    if (traitName != null) {
+      addEntry(pane, new Label(traitName + " (Origin Trait)"), origin.traitSummary(), origin.sources());
+    } else if (!locked) {
+      pane.add(descriptionLabel(origin.traitSummary(), origin.sources()), "span 2, growx");
+    }
+  }
+
+  /** A chosen trait: resolved from the catalog (name with Gifted choices, description), else the reference. */
+  private static void addSelection(@NonNull MigPane pane, @NonNull TraitSelection selection) {
+    Optional<TraitDefinition> trait = TraitCatalog.byId(selection.trait().id());
+    if (trait.isEmpty()) {
+      pane.add(OverviewParts.importMarked(OverviewParts.reference(selection.trait()), selection.imported()),
+          "span 2" + gapTop(pane));
+      return;
+    }
+    String choices = selection.attributeChoices().isEmpty() ? ""
+        : " (" + selection.attributeChoices().stream().map(Attribute::abbreviation)
+            .collect(Collectors.joining(", ")) + ")";
+    addEntry(pane, OverviewParts.importMarked(new Label(trait.get().name() + choices), selection.imported()),
+        description(trait.get()), trait.get().sources());
+  }
+
+  /** Name in bold, below it the description with the sources, wrapping at the width of the half. */
+  private static void addEntry(@NonNull MigPane pane, @NonNull Label name, @NonNull String description,
+      @NonNull List<Source> sources) {
+    name.setStyle("-fx-font-weight: bold;");
+    pane.add(name, "span 2" + gapTop(pane));
+    pane.add(descriptionLabel(description, sources), "span 2, growx");
+  }
+
+  /** The trait lists of the origin, one checkbox per trait with its benefit and penalty below. */
+  private static void addChoice(@NonNull MigPane pane, @NonNull Character character, @NonNull OriginData origin,
+      @NonNull Runnable onChanged) {
+    Set<String> chosen = character.getTraits().stream().map(trait -> trait.trait().id())
+        .collect(Collectors.toSet());
+    Set<String> imported = character.getTraits().stream().filter(TraitSelection::imported)
+        .map(trait -> trait.trait().id()).collect(Collectors.toSet());
+    for (String list : origin.traitLists()) {
+      Label title = new Label(listTitle(list));
+      title.setStyle("-fx-font-weight: bold;");
+      pane.add(title, "span 2" + gapTop(pane));
+      for (TraitDefinition trait : TraitCatalog.inList(list)) {
+        pane.add(checkBox(character, trait, chosen, imported.contains(trait.id()), onChanged), "span 2, gaptop 6");
+        pane.add(descriptionLabel(description(trait), trait.sources()), "span 2, growx, " + UNDER_CHECKBOX);
+        character.getTraits().stream().filter(selection -> selection.trait().id().equals(trait.id()))
+            .findFirst().ifPresent(selection -> addAttributeChoosers(pane, character, selection, onChanged));
+      }
     }
     if (TraitRules.takesExtraPerkInsteadOfTrait(character)) {
-      pane.add(new Label());
-      pane.add(new Label("One trait chosen: you get an extra perk."), "span 3");
+      pane.add(new Label("One trait chosen: you get an extra perk."), "span 2, gaptop 8");
     }
   }
 
   /**
-   * A checkbox per trait. Once two traits are chosen, the others stay visible but disabled; the
-   * tooltip sits on a wrapper because disabled controls show no tooltip.
+   * A checkbox per trait, marked if the trait was imported from a legacy file. Once two traits are chosen,
+   * the others stay visible but disabled with the reason as tooltip; it sits on a wrapper because disabled
+   * controls show no tooltip.
    */
   private static @NonNull HBox checkBox(@NonNull Character character, @NonNull TraitDefinition trait,
-      @NonNull Set<String> chosen, @NonNull Runnable onChanged) {
-    CheckBox box = new CheckBox(trait.name());
+      @NonNull Set<String> chosen, boolean imported, @NonNull Runnable onChanged) {
+    CheckBox box = OverviewParts.importMarked(new CheckBox(trait.name()), imported);
     boolean selected = chosen.contains(trait.id());
     box.setSelected(selected);
     boolean full = !selected && chosen.size() >= TraitRules.MAX_TRAITS;
@@ -82,7 +158,9 @@ final class TraitSection {
       onChanged.run();
     });
     HBox wrapper = new HBox(box);
-    Tooltip.install(wrapper, new Tooltip(full ? FULL_TOOLTIP + "\n" + describe(trait) : describe(trait)));
+    if (full) {
+      Tooltip.install(wrapper, new Tooltip(FULL_TOOLTIP));
+    }
     return wrapper;
   }
 
@@ -108,8 +186,8 @@ final class TraitSection {
       }
       chooser.setDisable(i > selection.attributeChoices().size());
       choosers.add(chooser);
-      pane.add(new Label(trait.get().name() + " attribute " + (i + 1)));
-      pane.add(chooser, "span 3");
+      pane.add(new Label("Attribute " + (i + 1)), UNDER_CHECKBOX);
+      pane.add(chooser);
     }
     for (ComboBox<Attribute> chooser : choosers) {
       chooser.valueProperty().addListener((obs, old, value) -> {
@@ -121,10 +199,33 @@ final class TraitSection {
     }
   }
 
-  /** Source, benefit and penalty of a trait for tooltips. */
-  static @NonNull String describe(@NonNull TraitDefinition trait) {
-    return trait.sources().stream().map(Source::toString).collect(Collectors.joining(", "))
-        + "\nBenefit: " + trait.benefit() + "\nPenalty: " + trait.penalty();
+  /**
+   * Whether the trait has a checkbox: a catalogued trait of one of the origin's trait lists. Other traits
+   * (imported, unresolved, left over after an origin change) are listed as entries.
+   */
+  private static boolean offeredByOrigin(@NonNull TraitSelection selection, @NonNull Optional<OriginData> origin) {
+    return origin.isPresent() && origin.get().traitLists().stream().anyMatch(list -> TraitCatalog.inList(list)
+        .stream().anyMatch(trait -> trait.id().equals(selection.trait().id())));
+  }
+
+  /** A description with the sources on a line of their own, wrapping at the width of the half. */
+  private static @NonNull Label descriptionLabel(@NonNull String description, @NonNull List<Source> sources) {
+    return OverviewParts.wrappingInCell(new Label(description + "\n" + sources(sources)));
+  }
+
+  /** Benefit and penalty of a trait, one per line. */
+  private static @NonNull String description(@NonNull TraitDefinition trait) {
+    return "Benefit: " + trait.benefit() + "\nPenalty: " + trait.penalty();
+  }
+
+  /** Sources in brackets, e.g. {@code [CRB p. 56]}; always on a line of their own, so a wrap never splits them. */
+  private static @NonNull String sources(@NonNull List<Source> sources) {
+    return sources.stream().map(Source::toString).collect(Collectors.joining(", ", "[", "]"));
+  }
+
+  /** Space above an entry that is not the first one of the grid. */
+  private static @NonNull String gapTop(@NonNull MigPane pane) {
+    return pane.getChildren().isEmpty() ? "" : ", gaptop 8";
   }
 
   private static @NonNull String listTitle(@NonNull String list) {

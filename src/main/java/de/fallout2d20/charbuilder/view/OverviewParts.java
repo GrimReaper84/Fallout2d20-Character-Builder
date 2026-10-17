@@ -5,6 +5,8 @@ import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
@@ -43,6 +45,37 @@ final class OverviewParts {
     return new MigPane("insets 16, gap 8 4, wrap 4", "[right][grow,fill][right][grow,fill]");
   }
 
+  /**
+   * One half of a tab split into two halves of equal width (Stats tab): a single column that fills the
+   * half, holding section headings and the sections' own grids.
+   */
+  static @NonNull MigPane half() {
+    return new MigPane("insets 0, gap 0 4, wrap 1", "[grow, fill]");
+  }
+
+  /** A bold heading with a separator below it over the whole width of a {@link #half()}. */
+  static void sectionHeading(@NonNull MigPane half, @NonNull String text) {
+    Label label = new Label(text);
+    label.setStyle("-fx-font-weight: bold; -fx-font-size: 1.15em;");
+    half.add(label, half.getChildren().isEmpty() ? "" : "gaptop 16");
+    half.add(new Separator(), "growx");
+  }
+
+  /** Preferred width of a label that wraps at its cell; small, so the text never decides the column width. */
+  private static final double WRAPPING_PREF_WIDTH = 200;
+
+  /**
+   * Makes a long label wrap at the width of its cell (added with {@code growx}). Its small preferred width
+   * keeps the text from widening the column; the cell then gives it the width the layout has.
+   */
+  static @NonNull Label wrappingInCell(@NonNull Label label) {
+    label.setWrapText(true);
+    label.setMinWidth(0);
+    label.setPrefWidth(WRAPPING_PREF_WIDTH);
+    label.setMaxWidth(Double.MAX_VALUE);
+    return label;
+  }
+
   /** Makes a long label wrap at {@link #TEXT_WIDTH} instead of widening the grid to its whole line. */
   static @NonNull Label wrapping(@NonNull Label label) {
     label.setWrapText(true);
@@ -70,13 +103,14 @@ final class OverviewParts {
       return;
     }
     pane.add(new Label("Rule hints"), "top");
-    pane.add(hintLabel(problems), "span 3");
+    pane.add(wrapping(hintLabel(problems)), "span 3");
   }
 
+  /** The hints one per line in the hint style; the caller decides how the label wraps. */
   static @NonNull Label hintLabel(@NonNull List<CreationProblem> problems) {
     Label hints = new Label(problems.stream().map(CreationProblem::message).collect(Collectors.joining("\n")));
     hints.setStyle(HINT_STYLE);
-    return wrapping(hints);
+    return hints;
   }
 
   /** A catalog reference that could not be resolved, with a hint for unresolved legacy names. */
@@ -97,8 +131,8 @@ final class OverviewParts {
     return label;
   }
 
-  /** Marks a trait or perk imported from a legacy file. */
-  static @NonNull Label importMarked(@NonNull Label label, boolean imported) {
+  /** Marks a trait or perk (label or checkbox) imported from a legacy file. */
+  static <T extends Labeled> @NonNull T importMarked(@NonNull T label, boolean imported) {
     if (imported) {
       label.setText(label.getText() + "  (imported)");
       label.setTooltip(new Tooltip(IMPORTED_TOOLTIP));

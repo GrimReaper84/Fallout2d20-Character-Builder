@@ -85,7 +85,7 @@ final class CharacterHeader {
     }
     List<CreationProblem> headerHints = hints.stream().filter(hint -> hint.area() == HintArea.HEADER).toList();
     if (!headerHints.isEmpty()) {
-      actions.getChildren().add(OverviewParts.hintLabel(headerHints));
+      actions.getChildren().add(OverviewParts.wrapping(OverviewParts.hintLabel(headerHints)));
     }
     if (!actions.getChildren().isEmpty()) {
       pane.add(actions, "span 8, growx");

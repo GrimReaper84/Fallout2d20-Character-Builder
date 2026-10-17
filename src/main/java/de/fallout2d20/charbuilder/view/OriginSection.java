@@ -18,8 +18,8 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Origin of a character in creation: the origin choice (header bar) and the origin's own options (Stats
- * tab). Every change goes to the model and then to {@code onChanged}, which rebuilds the view.
+ * Origin of a character: the origin choice (header bar) and the origin's own options below the origin
+ * trait (Stats tab). Every change goes to the model and then to {@code onChanged}, which rebuilds the view.
  */
 final class OriginSection {
 
@@ -46,8 +46,9 @@ final class OriginSection {
   }
 
   /**
-   * Adds the options of the chosen origin (origin trait, fixed or extra Tag skill, purpose) to a
-   * four-column grid; nothing while no catalogued origin is chosen.
+   * Adds the options of the chosen origin (extra Tag skill, purpose) as label + control rows to a
+   * two-column grid; nothing while no catalogued origin is chosen. A fixed Tag skill (Ghoul) needs no
+   * row: the origin trait's summary names it, and its Tag checkbox is checked and disabled.
    *
    * @param onEdited called after an edit that needs no rebuild (typed text)
    * @param onChanged called after an edit that changes other values; rebuilds the view
@@ -59,16 +60,7 @@ final class OriginSection {
       return;
     }
     OriginData origin = selected.get();
-    pane.add(new Label("Origin trait"));
-    Label trait = new Label(origin.traitName() == null ? "Trait list" : origin.traitName());
-    trait.setTooltip(new Tooltip(describe(origin)));
-    pane.add(trait, "span 3");
     OriginChoices choices = character.getOriginChoices();
-    Skill fixedTag = origin.fixedTagSkill();
-    if (fixedTag != null) {
-      pane.add(new Label("Fixed Tag skill"));
-      pane.add(new Label(fixedTag.displayName() + " (in addition to the three free Tag skills)"), "span 3");
-    }
     ExtraTagSkill extraTag = origin.extraTagSkill();
     if (extraTag != null) {
       ComboBox<Skill> tagSkill = new ComboBox<>();
@@ -82,7 +74,7 @@ final class OriginSection {
         onChanged.run();
       });
       pane.add(new Label("Extra Tag skill"));
-      pane.add(tagSkill, "span 3");
+      pane.add(tagSkill);
     }
     if (!origin.purposeSuggestions().isEmpty()) {
       ComboBox<String> purpose = new ComboBox<>();
@@ -102,7 +94,21 @@ final class OriginSection {
         }
       });
       pane.add(new Label("Purpose"));
-      pane.add(purpose, "span 3");
+      pane.add(purpose);
+    }
+  }
+
+  /** The origin choices of a complete character as label + text rows of a two-column grid. */
+  static void addChoices(@NonNull MigPane pane, @NonNull OriginChoices choices) {
+    Skill tagSkill = choices.tagSkill();
+    if (tagSkill != null) {
+      pane.add(new Label("Extra Tag skill"));
+      pane.add(new Label(tagSkill.displayName()));
+    }
+    String purpose = choices.purpose();
+    if (purpose != null) {
+      pane.add(new Label("Purpose"));
+      pane.add(new Label(purpose));
     }
   }
 
