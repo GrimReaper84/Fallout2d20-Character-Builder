@@ -1,5 +1,7 @@
 package de.fallout2d20.charbuilder.view;
 
+import static de.fallout2d20.charbuilder.view.OverviewParts.detailRow;
+
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
@@ -15,9 +17,7 @@ import java.util.stream.Collectors;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Region;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.tbee.javafx.scene.layout.MigPane;
@@ -33,8 +33,6 @@ import org.tbee.javafx.scene.layout.MigPane;
  */
 final class WeaponDetails {
 
-  private static final int NOTES_ROWS = 4;
-
   private WeaponDetails() {}
 
   /** The panel of {@code entry}, or a prompt to select a weapon if it is {@code null}. */
@@ -49,58 +47,55 @@ final class WeaponDetails {
     // From the model, not the entry: typed notes change the weapon without a rebuild of the tree's entries.
     CarriedWeapon weapon = entry.weapon() == null ? null : character.getWeapons().get(entry.index());
     Optional<WeaponData> data = weapon == null ? WeaponCatalog.byId(WeaponsTab.UNARMED_STRIKE_ID) : weapon.data();
-    ModdedWeapon values = weapon == null ? data.map(ModdedWeapon::of).orElse(null) : ModdedWeapon.of(weapon).orElse(null);
+    ModdedWeapon values = weapon == null ? data.map(ModdedWeapon::of).orElse(null)
+        : ModdedWeapon.of(weapon).orElse(null);
     ModdedWeapon base = weapon == null ? values : ModdedWeapon.unmodded(weapon).orElse(null);
     OverviewParts.sectionHeading(pane, attack.name());
 
     MigPane rows = new MigPane("insets 0, gap 16 6, wrap 2", "[left][grow, fill]");
-    row(rows, "Source", new Label(data.map(weaponData -> weaponData.sources().getFirst().toString())
+    detailRow(rows, "Source", new Label(data.map(weaponData -> weaponData.sources().getFirst().toString())
         .orElse("Custom weapon")));
     if (!attack.moddedName().equals(attack.name())) {
-      row(rows, "Modded name", text(attack.moddedName()));
+      detailRow(rows, "Modded name", text(attack.moddedName()));
     }
-    row(rows, "Attack", entry.needsSkill() ? skillChoice(character, entry.index(), callbacks.onChanged())
+    detailRow(rows, "Attack", entry.needsSkill() ? skillChoice(character, entry.index(), callbacks.onChanged())
         : attackLabel(character, attack));
-    row(rows, "Damage", withBase(new Label(attack.damageText()), base, values, modded -> modded.damage() + " CD"));
-    row(rows, "Effects", withBase(text(attack.effects()), base, values,
+    detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values,
+        modded -> modded.damage() + " CD"));
+    detailRow(rows, "Effects", withBase(text(attack.effects()), base, values,
         modded -> String.join(", ", modded.damageEffects())));
-    row(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
-    row(rows, "Fire rate", withBase(new Label(attack.fireRate() == null ? "–" : attack.fireRate().toString()), base,
-        values, modded -> OverviewParts.orDash(modded.fireRate())));
-    row(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
+    detailRow(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
+    detailRow(rows, "Fire rate", withBase(new Label(attack.fireRate() == null ? "–" : attack.fireRate().toString()),
+        base, values, modded -> OverviewParts.orDash(modded.fireRate())));
+    detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
         modded -> modded.range() == null ? "–" : modded.range().displayName()));
-    row(rows, "Qualities", withBase(text(attack.qualities()), base, values,
+    detailRow(rows, "Qualities", withBase(text(attack.qualities()), base, values,
         modded -> String.join(", ", modded.qualities())));
-    row(rows, "Ammunition", withBase(new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
+    detailRow(rows, "Ammunition", withBase(new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
         .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.ammunition(id))
         .collect(Collectors.joining(", "))), base, values, modded -> String.join(", ", modded.ammunition())));
     if (values != null && (data.isPresent() || values.weight() != null)) {
       boolean integrated = weapon != null && weapon.isIntegrated();
       Label weight = new Label(values.weight() == null ? "–" : values.weight() + " lbs.");
       // A built-in weapon weighs nothing, with or without mods.
-      row(rows, "Weight", integrated ? new Label("– (built in)")
+      detailRow(rows, "Weight", integrated ? new Label("– (built in)")
           : withBase(weight, base, values, modded -> OverviewParts.orDash(modded.weight())));
-      row(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values,
+      detailRow(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values,
           modded -> OverviewParts.orDash(modded.cost())));
     }
-    data.ifPresent(weaponData -> row(rows, "Rarity", new Label(OverviewParts.orDash(weaponData.rarity()))));
+    data.ifPresent(weaponData -> detailRow(rows, "Rarity", new Label(OverviewParts.orDash(weaponData.rarity()))));
     if (weapon != null) {
       int index = entry.index();
       if (weapon.isCounted()) {
-        row(rows, "Quantity", NumberField.of(weapon.quantity(), 1, quantity -> {
+        detailRow(rows, "Quantity", NumberField.of(weapon.quantity(), 1, quantity -> {
           character.setWeaponQuantity(index, quantity);
           callbacks.onChanged().run();
         }));
       }
-      TextArea notes = new TextArea(weapon.notes());
-      notes.setWrapText(true);
-      notes.setPrefRowCount(NOTES_ROWS);
-      notes.textProperty().addListener((obs, old, text) -> {
+      OverviewParts.notesRow(rows, weapon.notes(), text -> {
         character.setWeaponNotes(index, text);
         callbacks.onEdited().run();
       });
-      rows.add(rowName("Notes"), "top");
-      rows.add(notes);
     }
     pane.add(rows);
     if (weapon != null && values != null) {
@@ -119,18 +114,6 @@ final class WeaponDetails {
       label.setStyle("-fx-font-weight: bold;");
       label.setTooltip(new Tooltip("Without mods: " + text.apply(base)));
     }
-    return label;
-  }
-
-  private static void row(@NonNull MigPane rows, @NonNull String name, @NonNull Node value) {
-    rows.add(rowName(name));
-    rows.add(value);
-  }
-
-  /** A row name that never shrinks below its text (it was cut to "…" while the values took the width). */
-  private static @NonNull Label rowName(@NonNull String name) {
-    Label label = new Label(name);
-    label.setMinWidth(Region.USE_PREF_SIZE);
     return label;
   }
 

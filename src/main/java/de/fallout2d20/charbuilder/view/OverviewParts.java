@@ -3,7 +3,9 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Separator;
@@ -102,6 +104,33 @@ final class OverviewParts {
     area.setPrefWidth(TEXT_WIDTH);
     area.setMinWidth(0);
     return area;
+  }
+
+  /** Rows of the notes field in a details panel. */
+  private static final int NOTES_ROWS = 4;
+
+  /** A name/value row of a details panel (a two-column grid). */
+  static void detailRow(@NonNull MigPane rows, @NonNull String name, @NonNull Node value) {
+    rows.add(rowName(name));
+    rows.add(value);
+  }
+
+  /** The note row of a details panel; every typed change goes to {@code onText}. */
+  static void notesRow(@NonNull MigPane rows, @NonNull String text, @NonNull Consumer<String> onText) {
+    TextArea notes = new TextArea(text);
+    notes.setPromptText("Notes, e.g. mods");
+    notes.setWrapText(true);
+    notes.setPrefRowCount(NOTES_ROWS);
+    notes.textProperty().addListener((obs, old, typed) -> onText.accept(typed));
+    rows.add(rowName("Notes"), "top");
+    rows.add(notes);
+  }
+
+  /** A row name that never shrinks below its text (it was cut to "…" while the values took the width). */
+  static @NonNull Label rowName(@NonNull String name) {
+    Label label = new Label(name);
+    label.setMinWidth(Region.USE_PREF_SIZE);
+    return label;
   }
 
   /** The value as text, or a dash for none or blank. */

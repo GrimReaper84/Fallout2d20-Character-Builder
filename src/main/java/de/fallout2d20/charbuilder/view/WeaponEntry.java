@@ -7,7 +7,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * One weapon of the weapon tree: a carried weapon with its list index, or the Unarmed Strike every
- * character has (CRB p. 111; index {@link WeaponSelection#UNARMED_STRIKE_INDEX}, no carried weapon).
+ * character has (CRB p. 111; index {@link WeaponsTab#UNARMED_STRIKE_INDEX}, no carried weapon).
  */
 record WeaponEntry(int index, @NonNull WeaponAttack attack, @Nullable CarriedWeapon weapon) implements WeaponTreeNode {
 

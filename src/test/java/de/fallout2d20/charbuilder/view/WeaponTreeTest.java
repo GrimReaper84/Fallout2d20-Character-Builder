@@ -43,7 +43,7 @@ class WeaponTreeTest {
   }
 
   private WeaponEntry strike() {
-    return new WeaponEntry(WeaponSelection.UNARMED_STRIKE_INDEX,
+    return new WeaponEntry(WeaponsTab.UNARMED_STRIKE_INDEX,
         WeaponAttack.of(character, WeaponCatalog.byId("unarmed-strike").orElseThrow()), null);
   }
 

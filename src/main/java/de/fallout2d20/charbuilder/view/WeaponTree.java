@@ -6,7 +6,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -33,35 +32,13 @@ final class WeaponTree {
   }
 
   /**
-   * The tree with {@code current} selected and scrolled into view (none if {@code null}); {@code onSelect}
-   * gets every newly selected weapon, or {@code null} when a group or nothing is selected.
+   * The tree with {@code current} selected and scrolled into view (none if {@code null}); {@code onSelect} gets
+   * every newly selected weapon, or {@code null} when a group or nothing is selected.
    */
   static @NonNull TreeView<WeaponTreeNode> build(@NonNull List<WeaponEntry> entries, @Nullable WeaponEntry current,
       @NonNull Consumer<@Nullable WeaponEntry> onSelect) {
-    TreeItem<WeaponTreeNode> root = new TreeItem<>();
-    TreeItem<WeaponTreeNode> selected = null;
-    for (Map.Entry<RangeGroup, List<WeaponEntry>> group : grouped(entries).entrySet()) {
-      TreeItem<WeaponTreeNode> groupItem = new TreeItem<>(group.getKey());
-      groupItem.setExpanded(true);
-      for (WeaponEntry entry : group.getValue()) {
-        TreeItem<WeaponTreeNode> item = new TreeItem<>(entry);
-        groupItem.getChildren().add(item);
-        if (current != null && entry.index() == current.index()) {
-          selected = item;
-        }
-      }
-      root.getChildren().add(groupItem);
-    }
-    TreeView<WeaponTreeNode> tree = new TreeView<>(root);
-    tree.setShowRoot(false);
-    tree.setCellFactory(view -> new WeaponTreeCell());
-    if (selected != null) {
-      tree.getSelectionModel().select(selected);
-      // The tree is rebuilt after every change; keep the selected weapon in view.
-      tree.scrollTo(tree.getRow(selected));
-    }
-    tree.getSelectionModel().selectedItemProperty().addListener((obs, old, item) ->
-        onSelect.accept(item != null && item.getValue() instanceof WeaponEntry entry ? entry : null));
-    return tree;
+    return GroupedTree.<WeaponTreeNode, RangeGroup, WeaponEntry>build(grouped(entries),
+        entry -> current != null && entry.index() == current.index(), WeaponEntry.class, WeaponTreeCell::new,
+        onSelect);
   }
 }
