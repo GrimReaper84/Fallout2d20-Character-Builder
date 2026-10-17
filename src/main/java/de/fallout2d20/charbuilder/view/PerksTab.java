@@ -1,23 +1,16 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
-import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.model.character.Character;
-import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Perks tab: the perk grid during creation, after a level-up and in GM mode; otherwise the perks as a
- * read-only list.
+ * Perks tab: the perk grid in every mode. Perks can be changed during creation, in GM mode and while
+ * level-up perks are pending; otherwise the grid is read-only.
  */
 final class PerksTab {
 
@@ -29,37 +22,9 @@ final class PerksTab {
     // The perk cards flow over the whole width (user: Fallout 4 style grid).
     MigPane pane = OverviewParts.fillingGrid();
     OverviewParts.addHints(pane, hints);
-    boolean locked = character.isCreationComplete() && !character.isGmMode();
-    if (locked && !AdvancementRules.choosesPerks(character)) {
-      addPerkList(pane, character);
-    } else {
-      PerkSection.addTo(pane, character, callbacks.onChanged());
-    }
+    boolean editable = !character.isCreationComplete() || character.isGmMode()
+        || AdvancementRules.choosesPerks(character);
+    PerkSection.addTo(pane, character, editable, callbacks.onChanged());
     return pane;
-  }
-
-  /** Perks of a complete character, read-only: name, rank and choices. */
-  private static void addPerkList(@NonNull MigPane pane, @NonNull Character character) {
-    if (character.getPerks().isEmpty()) {
-      pane.add(new Label("None"), "span 4");
-    }
-    for (PerkSelection perk : character.getPerks()) {
-      String chosen = perk.choiceText();
-      String choices = chosen.isEmpty() ? "" : " (" + chosen + ")";
-      pane.add(OverviewParts.importMarked(perk(perk), perk.importedRanks() > 0));
-      pane.add(new Label("Rank " + perk.rank() + choices), "span 3");
-    }
-  }
-
-  /** Perk resolved from the catalog (name, tooltip with summary and source), else the plain reference. */
-  private static @NonNull Label perk(@NonNull PerkSelection selection) {
-    Optional<PerkDefinition> perk = PerkCatalog.byId(selection.perk().id());
-    if (perk.isEmpty()) {
-      return OverviewParts.reference(selection.perk());
-    }
-    Label label = new Label(perk.get().name());
-    label.setTooltip(new Tooltip(perk.get().summary() + "\n" + perk.get().sources().stream()
-        .map(Object::toString).collect(Collectors.joining(", "))));
-    return label;
   }
 }

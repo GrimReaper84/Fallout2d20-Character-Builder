@@ -1,6 +1,7 @@
 module de.fallout2d20.charbuilder {
   requires javafx.controls;
   requires javafx.fxml;
+  requires java.prefs;
   requires org.controlsfx.controls;
   requires com.fasterxml.jackson.databind;
   requires com.miglayout.javafx;

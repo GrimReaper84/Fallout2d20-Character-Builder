@@ -10,7 +10,6 @@ import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +22,18 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 import org.jspecify.annotations.NonNull;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 /**
- * One perk in the perk grid (user concept, Fallout 4 style): name, rank as filled and empty stars,
- * the requirements of the next rank, the choices made, the source and −/+ buttons. The tooltip shows
- * the summary and, if the next rank cannot be taken, why.
+ * One perk in the perk grid (user concept, Fallout 4 style): name with an info button, rank as filled and
+ * empty stars, the requirements of the next rank, the choices made and, while perks can be changed, −/+
+ * buttons. The info button shows the summary, the source and, if the next rank cannot be taken, why.
  */
 final class PerkCard {
 
@@ -45,38 +47,101 @@ final class PerkCard {
 
   /**
    * @param blockers why the next rank cannot be taken ({@link PerkRules#blockers}), computed once by the grid
-   * @param available whether the card sits in the "chosen and available" area; otherwise it is greyed
+   * @param editable whether perks can be changed now (creation, GM mode, pending level-up perks)
    */
   static @NonNull VBox of(@NonNull Character character, @NonNull PerkDefinition perk,
-      @NonNull List<String> blockers, boolean available, @NonNull Runnable onChanged) {
+      @NonNull List<String> blockers, boolean editable, @NonNull Runnable onChanged) {
+    Optional<PerkSelection> selection = character.getPerks().stream()
+        .filter(taken -> taken.perk().id().equals(perk.id())).findFirst();
     int rank = PerkRules.rank(character, perk.id());
     List<String> invalid = PerkRules.unmetForTakenRank(character, perk);
 
-    Label name = new Label(perk.name());
-    name.setStyle("-fx-font-weight: bold;");
-    HBox title = new HBox(4, name);
+    boolean imported = selection.map(taken -> taken.importedRanks() > 0).orElse(false);
+    StackPane info = PerkInfo.button();
+    HBox title = title(OverviewParts.importMarked(new Label(perk.name()), imported), info);
     if (!invalid.isEmpty()) {
       FontIcon warning = new FontIcon("fas-exclamation-triangle");
       Tooltip.install(warning, new Tooltip(String.join("\n", invalid)));
-      title.getChildren().add(warning);
+      title.getChildren().add(1, warning);
     }
 
     VBox card = new VBox(title, stars(rank, perk.ranks()), new Label(requirementLine(character, perk, rank)));
-    String choices = choices(character, perk.id());
+    String choices = selection.map(PerkSelection::choiceText).orElse("");
     if (!choices.isEmpty()) {
       card.getChildren().add(new Label("Chosen: " + choices));
     }
-    int staged = stagedRanks(character, perk.id());
+    int staged = selection.map(PerkSelection::stagedRanks).orElse(0);
     if (staged > 0) {
       Label stagedLabel = new Label(staged + " rank" + (staged == 1 ? "" : "s") + " staged, not applied yet");
       stagedLabel.setStyle("-fx-font-style: italic;");
       card.getChildren().add(stagedLabel);
     }
-    card.getChildren().add(new Label(perk.sources().stream().map(Source::toString)
-        .collect(Collectors.joining(", "))));
+    if (editable) {
+      card.getChildren().add(buttons(character, perk, blockers, card, onChanged));
+    }
+    style(card);
+    PerkInfo.attach(info, card, infoText(perk, blockers, rank > 0));
+    // Not available: not taken and the next rank is blocked.
+    if (rank == 0 && !blockers.isEmpty()) {
+      card.setOpacity(UNAVAILABLE_OPACITY);
+    }
+    return card;
+  }
+
+  /**
+   * A perk taken from a legacy file that is not in the catalog: name and rank only, shown in the chosen
+   * group so it is not lost from sight.
+   */
+  static @NonNull VBox unresolved(@NonNull PerkSelection selection) {
+    VBox card = new VBox(title(OverviewParts.importMarked(OverviewParts.reference(selection.perk()),
+        selection.importedRanks() > 0)), new Label("Rank " + selection.rank()));
+    String choices = selection.choiceText();
+    if (!choices.isEmpty()) {
+      card.getChildren().add(new Label("Chosen: " + choices));
+    }
+    style(card);
+    return card;
+  }
+
+  /** The bold name, then the given nodes (the info button goes to the right edge). */
+  private static @NonNull HBox title(@NonNull Label name, @NonNull Node... after) {
+    name.setStyle("-fx-font-weight: bold;");
+    HBox title = new HBox(4, name);
+    if (after.length > 0) {
+      Region spacer = new Region();
+      HBox.setHgrow(spacer, Priority.ALWAYS);
+      title.getChildren().add(spacer);
+      title.getChildren().addAll(after);
+    }
+    return title;
+  }
+
+  private static void style(@NonNull VBox card) {
+    card.setStyle(CARD_STYLE);
+    card.setPrefWidth(CARD_WIDTH);
+  }
+
+  /**
+   * Summary, sources and, if the next rank cannot be taken, the reasons: "Not available" for a perk not
+   * taken yet, "Next rank" for a taken one (e.g. at its maximum rank).
+   */
+  private static @NonNull String infoText(@NonNull PerkDefinition perk, @NonNull List<String> blockers,
+      boolean taken) {
+    StringBuilder text = new StringBuilder(perk.summary()).append("\n[")
+        .append(perk.sources().stream().map(Source::toString).collect(Collectors.joining(", "))).append("]");
+    if (!blockers.isEmpty()) {
+      text.append("\n\n").append(taken ? "Next rank:" : "Not available:").append("\n")
+          .append(String.join("\n", blockers));
+    }
+    return text.toString();
+  }
+
+  /** The −/+ buttons; their tooltips name the reason when a button is disabled. */
+  private static @NonNull HBox buttons(@NonNull Character character, @NonNull PerkDefinition perk,
+      @NonNull List<String> blockers, @NonNull Node card, @NonNull Runnable onChanged) {
     boolean canAdd = PerkRules.canAdd(character, perk);
     boolean canRemove = PerkRules.canRemove(character, perk.id());
-    card.getChildren().add(StepButtons.of(
+    return StepButtons.of(
         StepButtons.minus(canRemove ? "Give back a rank of " + perk.name() : "No rank to give back.",
             canRemove, () -> {
               if (PerkRules.canRemove(character, perk.id()) && confirmImportedRemoval(character, perk, card)) {
@@ -85,16 +150,7 @@ final class PerkCard {
               onChanged.run();
             }),
         StepButtons.plus(canAdd ? "Take a rank of " + perk.name() : addBlocked(character, blockers),
-            canAdd, () -> add(character, perk, onChanged))));
-    card.setStyle(CARD_STYLE);
-    card.setPrefWidth(CARD_WIDTH);
-    if (!available) {
-      card.setOpacity(UNAVAILABLE_OPACITY);
-    }
-    List<String> tooltip = new ArrayList<>(List.of(perk.summary()));
-    tooltip.addAll(blockers);
-    Tooltip.install(card, new Tooltip(String.join("\n", tooltip)));
-    return card;
+            canAdd, () -> add(character, perk, onChanged)));
   }
 
   /** Filled stars for the ranks taken, empty ones for the rest. */
@@ -116,18 +172,6 @@ final class PerkCard {
     }
     Set<String> parts = PerkRules.requirementStatus(character, perk, rank + 1).keySet();
     return parts.isEmpty() ? "No requirements" : "Requires " + String.join(", ", parts);
-  }
-
-  /** Ranks of the perk taken after a level-up but not applied yet. */
-  private static int stagedRanks(@NonNull Character character, @NonNull String perkId) {
-    return character.getPerks().stream().filter(perk -> perk.perk().id().equals(perkId))
-        .mapToInt(PerkSelection::stagedRanks).sum();
-  }
-
-  /** The attributes or skills chosen for the perk's ranks, e.g. "AGI, STR". */
-  private static @NonNull String choices(@NonNull Character character, @NonNull String perkId) {
-    return character.getPerks().stream().filter(perk -> perk.perk().id().equals(perkId)).findFirst()
-        .map(PerkSelection::choiceText).orElse("");
   }
 
   private static @NonNull String addBlocked(@NonNull Character character, @NonNull List<String> blockers) {

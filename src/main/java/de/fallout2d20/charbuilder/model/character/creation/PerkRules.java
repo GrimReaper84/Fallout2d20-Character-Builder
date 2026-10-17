@@ -92,7 +92,8 @@ public final class PerkRules {
 
   /**
    * Why the next rank of the perk cannot be taken (budget aside): maximum rank, unmet requirements for
-   * that rank, or nothing left to choose for a choice perk. Empty if it can be taken.
+   * that rank, a book that is not enabled, or nothing left to choose for a choice perk. Empty if it can be
+   * taken.
    */
   public static @NonNull List<String> blockers(@NonNull Character character, @NonNull PerkDefinition perk) {
     int next = rank(character, perk.id()) + 1;
@@ -105,8 +106,9 @@ public final class PerkRules {
   }
 
   /**
-   * What blocks the next rank even in GM mode (D2): the maximum rank, or nothing left to choose for a
-   * choice perk. Requirements are not part of it.
+   * What blocks the next rank even in GM mode (D2): the maximum rank, a perk whose book is not enabled for
+   * the character (the GM keeps the book limits), or nothing left to choose for a choice perk.
+   * Requirements are not part of it.
    */
   private static @NonNull List<String> structuralBlockers(@NonNull Character character,
       @NonNull PerkDefinition perk) {
@@ -114,6 +116,9 @@ public final class PerkRules {
       return List.of("Maximum rank reached.");
     }
     List<String> blockers = new ArrayList<>();
+    if (!perk.isAvailableWith(character.getEnabledBooks())) {
+      blockers.add("Needs a book that is not enabled.");
+    }
     if (perk.choice() == PerkChoice.ATTRIBUTE && attributeOptions(character).isEmpty()) {
       blockers.add("No attribute below " + INTENSE_TRAINING_MAXIMUM + " left.");
     }

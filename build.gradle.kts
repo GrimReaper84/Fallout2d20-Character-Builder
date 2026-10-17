@@ -67,6 +67,9 @@ tasks.named<JavaCompile>("compileTestJava") {
 
 tasks.test {
     useJUnitPlatform()
+    // Java preferences written by tests (view state) go to the build folder, not the user's real ones
+    // (honoured by the file-based backend on Linux and macOS).
+    systemProperty("java.util.prefs.userRoot", layout.buildDirectory.dir("test-prefs").get().asFile.absolutePath)
 }
 
 // Version for the About dialog, read by AppInfo.

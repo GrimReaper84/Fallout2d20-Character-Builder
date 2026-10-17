@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.Source;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -185,6 +186,23 @@ class PerkRulesTest {
     Character character = character("vault-dweller", 1, Map.of(),
         List.of(new PerkSelection(new CatalogRef("thief", "Thief"), 1, 0, List.of(), List.of())), List.of());
     assertEquals(List.of("\"Thief\" is not a perk of the supported books."), messages(character));
+  }
+
+  @Test
+  void perkOfABookThatIsNotEnabledIsBlockedEvenInGmMode() {
+    PerkDefinition base = def("action-boy-girl");
+    PerkDefinition fromWg = new PerkDefinition(base.id(), base.name(), List.of(new Source(Book.WG, 50)),
+        base.ranks(), base.requirements(), base.choice(), base.summary(), base.legacyNames(),
+        base.carryWeightPerRank(), base.physicalDrPerRank(), base.energyDrPerRank(), base.radiationDrPerRank(),
+        base.poisonDrPerRank(), base.maxHpPerEndurance(), base.physicalDrByStrength(), base.skillPointsPerRank());
+    Character crbOnly = new Character("Test", CatalogRef.of("vault-dweller"), OriginChoices.NONE, 1, 0, false,
+        EnumSet.of(Book.CRB), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
+        null, null);
+
+    assertEquals(List.of("Needs a book that is not enabled."), PerkRules.blockers(crbOnly, fromWg));
+    crbOnly.setGmMode(true);
+    assertFalse(PerkRules.canAdd(crbOnly, fromWg));
+    assertTrue(PerkRules.canAdd(crbOnly, base));
   }
 
   @Test
