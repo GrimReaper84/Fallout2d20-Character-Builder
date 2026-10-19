@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.Coverage;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +18,15 @@ import org.jspecify.annotations.Nullable;
  * the two arms of a Protectron), and a
  * free note, e.g. installed mods (mods as a note until they are modelled), and whether it is only carried
  * instead of worn (user decision 2026-10-16: only worn pieces protect; all count toward the load).
+ * {@code startingSource} marks a piece of the starting equipment ({@code null}: added by hand).
  */
 public record WornApparel(
     @Nullable CatalogRef apparel,
     @Nullable CustomApparel custom,
     @Nullable HitLocation location,
     @NonNull String notes,
-    boolean carried) {
+    boolean carried,
+    @Nullable StartingSource startingSource) {
 
   public WornApparel {
     if ((apparel == null) == (custom == null)) {
@@ -31,14 +34,20 @@ public record WornApparel(
     }
   }
 
+  /** An item added by hand. */
+  public WornApparel(@Nullable CatalogRef apparel, @Nullable CustomApparel custom, @Nullable HitLocation location,
+      @NonNull String notes, boolean carried) {
+    this(apparel, custom, location, notes, carried, null);
+  }
+
   /** A catalog item without chosen limb and note. */
   public static @NonNull WornApparel of(@NonNull CatalogRef apparel) {
-    return new WornApparel(apparel, null, null, "", false);
+    return new WornApparel(apparel, null, null, "", false, null);
   }
 
   /** A custom item without note. */
   public static @NonNull WornApparel of(@NonNull CustomApparel custom) {
-    return new WornApparel(null, custom, null, "", false);
+    return new WornApparel(null, custom, null, "", false, null);
   }
 
   /** The catalog entry; empty for a custom item or an id outside the catalog. */
@@ -93,14 +102,19 @@ public record WornApparel(
   }
 
   public @NonNull WornApparel withLocation(@Nullable HitLocation newLocation) {
-    return new WornApparel(apparel, custom, newLocation, notes, carried);
+    return new WornApparel(apparel, custom, newLocation, notes, carried, startingSource);
   }
 
   public @NonNull WornApparel withNotes(@Nullable String newNotes) {
-    return new WornApparel(apparel, custom, location, newNotes == null ? "" : newNotes, carried);
+    return new WornApparel(apparel, custom, location, newNotes == null ? "" : newNotes, carried, startingSource);
   }
 
   public @NonNull WornApparel withCarried(boolean newCarried) {
-    return new WornApparel(apparel, custom, location, notes, newCarried);
+    return new WornApparel(apparel, custom, location, notes, newCarried, startingSource);
+  }
+
+  /** The item marked as part of the starting equipment; {@code null} for one added by hand. */
+  public @NonNull WornApparel withStartingSource(@Nullable StartingSource source) {
+    return new WornApparel(apparel, custom, location, notes, carried, source);
   }
 }

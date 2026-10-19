@@ -69,6 +69,22 @@ public final class PerkRules {
   }
 
   /**
+   * Whether the perk is impossible for the character whatever its attributes or level (user requests
+   * 2026-10-19: own "Not possible" group in the perk grid): the origin is a robot and the perk excludes robots,
+   * or a chosen perk excludes it (Cautious Nature and Daring Nature, CRB p. 62), in either direction.
+   */
+  public static boolean isImpossible(@NonNull Character character, @NonNull PerkDefinition perk) {
+    if (perk.requirements().notRobot() && character.getOriginData().map(OriginData::robot).orElse(false)) {
+      return true;
+    }
+    if (perk.requirements().excludedPerks().stream().anyMatch(excluded -> rank(character, excluded) > 0)) {
+      return true;
+    }
+    return character.getPerks().stream().map(selection -> PerkCatalog.byId(selection.perk().id()))
+        .flatMap(Optional::stream).anyMatch(chosen -> chosen.requirements().excludedPerks().contains(perk.id()));
+  }
+
+  /**
    * Whether the next rank of the perk can be taken: perk ranks left and nothing blocks it. In GM mode
    * (D2) no budget applies and unmet requirements are only hints; the maximum rank and a choice perk
    * without options still block.

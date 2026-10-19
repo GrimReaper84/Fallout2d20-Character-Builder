@@ -31,6 +31,7 @@ import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
+import de.fallout2d20.charbuilder.model.character.item.Holotape;
 import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -129,6 +130,71 @@ class CharacterStoreTest {
     assertNull(written.get("items"));
     assertNull(written.get("caps"));
     assertNull(written.get("materials"));
+  }
+
+  /**
+   * Holotapes and the starting-equipment marker survive a save (added 2026-10-19, format 1); a file without them
+   * loads with entries added by hand, and an unknown marker counts as added by hand.
+   */
+  @Test
+  void roundTripsHolotapesAndStartingSources() throws Exception {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    character.chooseEquipmentPack(CatalogRef.of("settler"));
+    character.chooseEquipmentOption(0, "Pipe wrench");
+    character.applyStartingEquipment(character.getStartingEquipment());
+    character.addItem(CarriedItem.of(new Holotape("Vault 81 code", "4-8-15")));
+    Path file = dir.resolve("starting.json");
+    store.save(character, file);
+
+    Character loaded = store.load(file).character();
+    assertEquals(character.getWeapons(), loaded.getWeapons());
+    assertEquals(character.getApparel(), loaded.getApparel());
+    assertEquals(character.getItems(), loaded.getItems());
+    JsonNode written = JSON.readTree(file.toFile());
+    assertEquals("PACK", written.get("weapons").get(0).get("startingSource").asText());
+    assertEquals("4-8-15", written.get("items").get(1).get("holotape").get("label").asText());
+
+    ObjectNode edited = (ObjectNode) written;
+    ((ObjectNode) edited.get("weapons").get(0)).put("startingSource", "FROM_THE_FUTURE");
+    ((ObjectNode) edited.get("weapons").get(1)).remove("startingSource");
+    JSON.writeValue(file.toFile(), edited);
+    List<CarriedWeapon> weapons = store.load(file).character().getWeapons();
+    assertNull(weapons.get(0).startingSource());
+    assertNull(weapons.get(1).startingSource());
+  }
+
+  /** A holotape without a name is a broken file, reported like any other format error. */
+  @Test
+  void rejectsAHolotapeWithoutName() throws Exception {
+    Character character = Character.createNew();
+    character.addItem(CarriedItem.of(new Holotape("Code", "")));
+    Path file = dir.resolve("holotape.json");
+    store.save(character, file);
+    ObjectNode written = (ObjectNode) JSON.readTree(file.toFile());
+    ((ObjectNode) written.get("items").get(0).get("holotape")).put("name", " ");
+    JSON.writeValue(file.toFile(), written);
+    assertThrows(SaveFormatException.class, () -> store.load(file));
+  }
+
+  /** A character whose pack items an earlier version added by button is never synced, so nothing doubles. */
+  @Test
+  void earlierAddedPackItemsAreNotSynced() throws Exception {
+    Character character = Character.createNew();
+    character.chooseOrigin(CatalogRef.of("survivor"));
+    character.chooseEquipmentPack(CatalogRef.of("settler"));
+    Path file = dir.resolve("added.json");
+    store.save(character, file);
+    ObjectNode written = (ObjectNode) JSON.readTree(file.toFile());
+    written.put("packItemsAdded", true);
+    JSON.writeValue(file.toFile(), written);
+
+    Character loaded = store.load(file).character();
+    assertTrue(loaded.isPackItemsAdded());
+    assertFalse(loaded.canApplyStartingEquipment());
+    loaded.setFreeTag(Skill.LOCKPICK, true);
+    assertEquals("", loaded.getInventoryNotes(), "no Tag skill roll line");
+    assertTrue(loaded.getItems().isEmpty());
   }
 
   @Test

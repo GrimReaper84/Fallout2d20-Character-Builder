@@ -87,6 +87,21 @@ class PerkRulesTest {
         "Daring Nature: Requirement not met: not with Cautious Nature."), messages(both));
   }
 
+  /** User requests 2026-10-19: perks excluded by a chosen perk or for a robot are "not possible". */
+  @Test
+  void excludedByChosenPerk() {
+    Character cautious = character("vault-dweller", 1, Map.of(), List.of(perk("cautious-nature", 1)), List.of());
+    assertTrue(PerkRules.isImpossible(cautious, def("daring-nature")), "even with requirements unmet");
+    assertFalse(PerkRules.isImpossible(cautious, def("action-boy-girl")));
+    Character none = character("vault-dweller", 1, Map.of(), List.of(), List.of());
+    assertFalse(PerkRules.isImpossible(none, def("daring-nature")));
+    Character robot = character("mister-handy", 1, Map.of(), List.of(), List.of());
+    PerkDefinition notForRobots = PerkCatalog.all().stream().filter(perk -> perk.requirements().notRobot())
+        .findFirst().orElseThrow();
+    assertTrue(PerkRules.isImpossible(robot, notForRobots), "robot origin");
+    assertFalse(PerkRules.isImpossible(none, notForRobots));
+  }
+
   @Test
   void maxRank() {
     Character character = character("vault-dweller", 1, Map.of(), List.of(perk("action-boy-girl", 1)), List.of());

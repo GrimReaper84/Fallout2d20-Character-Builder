@@ -155,62 +155,58 @@
     "choices" : [ ],
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: Fusion cell with 14 + 7 CD shots\n[Tag skill] Roll: Fusion cell with 6 + 3 CD shots",
   "weapons" : [ {
     "ref" : {
       "id" : "protectron-claws"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "laser-gun"
     },
     "quantity" : 2,
     "notes" : "Pack: Two laser guns built into the claws",
-    "builtIn" : true
+    "builtIn" : true,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "knuckles"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
   "apparel" : [ {
     "ref" : {
       "id" : "standard-plating"
-    }
+    },
+    "startingSource" : "PACK"
   } ],
   "items" : [ {
-    "custom" : {
-      "name" : "Fusion cell with 14 + 7 CD shots",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
     "ref" : {
       "id" : "recon-sensors"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "hazard-detection-mod"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "robot-repair-kit"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "Fusion cell with 6 + 3 CD shots",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "multi-tool"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
-  "caps" : 20,
-  "packItemsAdded" : true
+  "caps" : 20
 }

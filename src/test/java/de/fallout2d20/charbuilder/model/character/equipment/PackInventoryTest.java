@@ -2,7 +2,6 @@ package de.fallout2d20.charbuilder.model.character.equipment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -18,42 +17,67 @@ import org.junit.jupiter.api.Test;
 /** Equipment pack text into inventory entries (user decision 2026-10-16). */
 class PackInventoryTest {
 
-  /** CRB p. 79 Settler with pipe wrench, a trinket and the Lockpick Tag items (CRB p. 81). */
+  /**
+   * CRB p. 79 Settler with pipe wrench, a trinket and the Lockpick Tag items (CRB p. 81): amounts to roll become
+   * roll lines, not custom items (user decision 2026-10-19); entries are marked with their source.
+   */
   @Test
   void settler() {
     Character settler = character("survivor", "settler");
     settler.chooseEquipmentOption(0, "Pipe wrench");
     settler.setTrinket("Medal");
     settler.setFreeTag(Skill.LOCKPICK, true);
-    assertTrue(settler.canAddPackItems());
 
-    PackItems added = settler.addPackItemsToInventory();
-    assertEquals(List.of("pipe-gun", "pipe-wrench"), weaponIds(added));
-    assertEquals(List.of("tough-clothing"), apparelIds(added));
-    assertEquals(List.of("6 + 3 CD rounds of .38 ammunition", "2 rolls on the random food table (CRB p. 202)",
-        "Medal", "4 + 2 CD bobby pins"), added.customNames());
-    assertEquals(2, settler.getWeapons().size());
-    assertFalse(settler.canAddPackItems(), "only once");
-    assertThrows(IllegalStateException.class, settler::addPackItemsToInventory);
+    PackItems pack = PackInventory.resolve(settler, StartingSource.PACK);
+    assertEquals(List.of("pipe-gun", "pipe-wrench"), weaponIds(pack));
+    assertEquals(List.of("tough-clothing"), apparelIds(pack));
+    assertEquals(List.of("Medal"), customNames(pack));
+    assertEquals(List.of("6 + 3 CD rounds of .38 ammunition", "2 rolls on the random food table (CRB p. 202)"),
+        pack.rolls());
+    assertTrue(pack.weapons().stream().allMatch(weapon -> weapon.startingSource() == StartingSource.PACK));
+    assertTrue(pack.items().stream().allMatch(item -> item.startingSource() == StartingSource.PACK));
+
+    PackItems tagSkills = PackInventory.resolve(settler, StartingSource.TAG_SKILL);
+    assertEquals(List.of("4 + 2 CD bobby pins"), tagSkills.rolls());
+    assertTrue(tagSkills.items().isEmpty());
+  }
+
+  /** CRB p. 81: the d20 caps of Barter are an amount to roll. */
+  @Test
+  void barterCapsAreARoll() {
+    Character settler = character("survivor", "settler");
+    settler.setFreeTag(Skill.BARTER, true);
+    assertEquals(List.of("2d20 caps"), PackInventory.resolve(settler, StartingSource.TAG_SKILL).rolls());
+  }
+
+  @Test
+  void recognizesRolls() {
+    assertTrue(PackInventory.isRoll("10 + 5 CD rounds of 10mm ammunition"));
+    assertTrue(PackInventory.isRoll("Wares: 3 rolls each on the ammunition, aid and junk loot tables"));
+    assertTrue(PackInventory.isRoll("1 roll on the Oddities and Valuables loot table"));
+    assertTrue(PackInventory.isRoll("2d20 caps"));
+    assertFalse(PackInventory.isRoll("Rolling pin"));
+    assertFalse(PackInventory.isRoll("Vault-Tec canteen with 1 purified water"));
   }
 
   /** CRB p. 78: "2 stimpaks" becomes Stimpak × 2; "with" splits weapon and ammunition text. */
   @Test
   void countsAndWith() {
     Character resident = character("vault-dweller", "vault-tec-resident");
-    PackItems added = resident.addPackItemsToInventory();
+    PackItems added = PackInventory.resolve(resident, StartingSource.PACK);
     CarriedItem stimpaks = added.items().stream().filter(item -> item.displayName().equals("Stimpak")).findFirst()
         .orElseThrow();
     assertEquals(2, stimpaks.quantity());
     assertTrue(weaponIds(added).containsAll(List.of("switchblade", "10mm-pistol")));
-    assertTrue(added.customNames().contains("Vault-Tec canteen with 1 purified water"));
+    assertTrue(customNames(added).contains("Vault-Tec canteen with 1 purified water"));
   }
 
   /** WOA p. 22: built-in weapons; "Two laser guns" counts 2; a pack wording differing from the catalog is kept as note. */
   @Test
   void protectronAndAliases() {
     Character protectron = character("protectron", "protectron");
-    PackItems added = protectron.addPackItemsToInventory();
+    protectron.applyStartingEquipment(protectron.getStartingEquipment());
+    PackItems added = PackInventory.resolve(protectron, StartingSource.PACK);
     assertEquals(List.of("protectron-claws", "laser-gun"), weaponIds(added));
     assertEquals(2, added.weapons().get(1).quantity());
     assertEquals("Pack: Two laser guns built into the claws", added.weapons().get(1).notes());
@@ -68,7 +92,7 @@ class PackInventoryTest {
   void keepsRulingsInParentheses() {
     Character utility = character("protectron", "utility-protectron");
     utility.chooseEquipmentOption(0, "Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)");
-    PackItems added = utility.addPackItemsToInventory();
+    PackItems added = PackInventory.resolve(utility, StartingSource.PACK);
     assertEquals("Pack: Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)", added.weapons().stream()
         .filter(weapon -> weapon.displayName().equals("Railway Rifle")).findFirst().orElseThrow().notes());
   }
@@ -79,7 +103,7 @@ class PackInventoryTest {
     assertTrue(PackInventory.match("Lab coat").isPresent());
     Character mercenary = character("survivor", "mercenary");
     mercenary.chooseEquipmentOption(0, "Leather armor arm and leather armor leg (choose sides)");
-    PackItems added = mercenary.addPackItemsToInventory();
+    PackItems added = PackInventory.resolve(mercenary, StartingSource.PACK);
     assertEquals(List.of("tough-clothing", "leather-arm", "leather-leg"), apparelIds(added));
   }
 
@@ -88,6 +112,10 @@ class PackInventoryTest {
     character.chooseOrigin(CatalogRef.of(origin));
     character.chooseEquipmentPack(CatalogRef.of(pack));
     return character;
+  }
+
+  private static List<String> customNames(PackItems added) {
+    return added.items().stream().filter(item -> item.custom() != null).map(CarriedItem::displayName).toList();
   }
 
   private static List<String> weaponIds(PackItems added) {

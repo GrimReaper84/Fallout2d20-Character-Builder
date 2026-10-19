@@ -20,8 +20,10 @@ import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
+import de.fallout2d20.charbuilder.model.character.item.Holotape;
 import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -209,7 +211,8 @@ final class CharacterMapper {
     Map<String, CatalogRefData> mods = new LinkedHashMap<>();
     weapon.mods().forEach((slot, mod) -> mods.put(slot.name(), toData(mod)));
     return new WeaponEntryData(ref == null ? null : toData(ref), customData, weapon.quantity(),
-        blankToNull(weapon.notes()), weapon.builtIn() ? Boolean.TRUE : null, mods.isEmpty() ? null : mods);
+        blankToNull(weapon.notes()), weapon.builtIn() ? Boolean.TRUE : null, mods.isEmpty() ? null : mods,
+        toData(weapon.startingSource()));
   }
 
   private static @NonNull List<CarriedWeapon> weapons(@Nullable List<WeaponEntryData> entries)
@@ -227,7 +230,8 @@ final class CharacterMapper {
         }
       }
       weapons.add(new CarriedWeapon(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
-          entry.quantity(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.builtIn()), mods));
+          entry.quantity(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.builtIn()), mods,
+          startingSource(entry.startingSource())));
     }
     return weapons;
   }
@@ -245,8 +249,11 @@ final class CharacterMapper {
     CustomItem custom = item.custom();
     CustomItemData customData = custom == null ? null
         : new CustomItemData(custom.name(), custom.weight(), blankToNull(custom.effects()));
-    return new CarriedItemData(ref == null ? null : toData(ref), customData, item.issue(), item.quantity(),
-        blankToNull(item.notes()));
+    Holotape holotape = item.holotape();
+    HolotapeData holotapeData = holotape == null ? null
+        : new HolotapeData(holotape.name(), blankToNull(holotape.label()));
+    return new CarriedItemData(ref == null ? null : toData(ref), customData, holotapeData, item.issue(),
+        item.quantity(), blankToNull(item.notes()), toData(item.startingSource()));
   }
 
   private static @Nullable MaterialsData toData(@NonNull Materials materials) {
@@ -259,9 +266,11 @@ final class CharacterMapper {
     for (CarriedItemData entry : orEmpty(data.items())) {
       CatalogRefData ref = entry.ref();
       CustomItemData custom = entry.custom();
+      HolotapeData holotape = entry.holotape();
       items.add(new CarriedItem(ref == null ? null : toModel(ref), custom == null ? null
-          : new CustomItem(custom.name(), custom.weight(), nullToEmpty(custom.effects())), entry.issue(),
-          entry.quantity(), nullToEmpty(entry.notes())));
+          : new CustomItem(custom.name(), custom.weight(), nullToEmpty(custom.effects())),
+          holotape == null ? null : new Holotape(holotape.name(), nullToEmpty(holotape.label())), entry.issue(),
+          entry.quantity(), nullToEmpty(entry.notes()), startingSource(entry.startingSource())));
     }
     MaterialsData materials = data.materials();
     Long caps = data.caps();
@@ -277,7 +286,7 @@ final class CharacterMapper {
         custom.locations().stream().sorted().toList(), custom.physical(), custom.energy(), custom.radiation(),
         custom.radiationImmune(), custom.carryWeight());
     return new WornApparelData(ref == null ? null : toData(ref), customData, item.location(), blankToNull(item.notes()),
-        item.carried() ? Boolean.TRUE : null);
+        item.carried() ? Boolean.TRUE : null, toData(item.startingSource()));
   }
 
   private static @NonNull List<WornApparel> apparel(@Nullable List<WornApparelData> entries) throws SaveFormatException {
@@ -287,7 +296,8 @@ final class CharacterMapper {
       CustomApparelData custom = entry.custom();
       String notes = entry.notes();
       apparel.add(new WornApparel(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
-          entry.location(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.carried())));
+          entry.location(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.carried()),
+          startingSource(entry.startingSource())));
     }
     return apparel;
   }
@@ -295,6 +305,19 @@ final class CharacterMapper {
   private static @NonNull CustomApparel toModel(@NonNull CustomApparelData data) {
     return new CustomApparel(data.name(), data.kind(), Set.copyOf(data.locations()), data.physical(), data.energy(),
         data.radiation(), data.radiationImmune(), data.carryWeight());
+  }
+
+  private static @Nullable String toData(@Nullable StartingSource source) {
+    return source == null ? null : source.name();
+  }
+
+  /** The starting-equipment marker; an unknown value (a newer version's) counts as added by hand. */
+  private static @Nullable StartingSource startingSource(@Nullable String name) {
+    if (name == null) {
+      return null;
+    }
+    return Arrays.stream(StartingSource.values()).filter(source -> source.name().equals(name)).findFirst()
+        .orElse(null);
   }
 
   private static @Nullable String blankToNull(@NonNull String text) {

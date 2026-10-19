@@ -156,64 +156,60 @@
     "trinket" : "A dented harmonica",
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: 6 + 3 CD rounds of .38 ammunition\n[Tag skill] Roll: 4 + 2 CD shots of flamer fuel",
   "weapons" : [ {
     "ref" : {
       "id" : "pipe-gun"
     },
     "quantity" : 1,
-    "notes" : "Pack: Pipe rifle"
+    "notes" : "Pack: Pipe rifle",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "baseball-bat"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "machete"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
   "apparel" : [ {
     "ref" : {
       "id" : "raider-chest-piece"
     },
-    "notes" : "Pack: Raider armor torso"
+    "notes" : "Pack: Raider armor torso",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "casual-clothing"
-    }
+    },
+    "startingSource" : "TAG_SKILL"
   } ],
   "items" : [ {
-    "custom" : {
-      "name" : "6 + 3 CD rounds of .38 ammunition",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
     "custom" : {
       "name" : "Raider armor head",
       "weight" : 0
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "custom" : {
       "name" : "A dented harmonica",
       "weight" : 0
     },
     "quantity" : 1,
-    "notes" : "Personal trinket"
+    "notes" : "Personal trinket",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "buffout"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "4 + 2 CD shots of flamer fuel",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
-  "caps" : 5,
-  "packItemsAdded" : true
+  "caps" : 5
 }

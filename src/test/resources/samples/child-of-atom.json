@@ -164,64 +164,61 @@
     },
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: 4 + 2 CD gamma rounds\n[Pack] Roll: 1 roll on the random food table (CRB p. 202)",
   "weapons" : [ {
     "ref" : {
       "id" : "walking-cane"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "gamma-gun"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "machete"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
   "apparel" : [ {
     "ref" : {
       "id" : "tough-clothing"
-    }
+    },
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "formal-hat"
-    }
+    },
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "formal-clothing"
     },
-    "carried" : true
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
   } ],
   "items" : [ {
-    "custom" : {
-      "name" : "4 + 2 CD gamma rounds",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
     "ref" : {
       "id" : "stimpak"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "1 roll on the random food table (CRB p. 202)",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "purified-water"
     },
-    "quantity" : 2
+    "quantity" : 2,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "iguana-on-a-stick"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
-  "caps" : 10,
-  "packItemsAdded" : true
+  "caps" : 10
 }

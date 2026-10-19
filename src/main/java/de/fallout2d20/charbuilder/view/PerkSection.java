@@ -16,9 +16,10 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * The perk grid of {@link PerkCard}s (user concept) in three groups: chosen perks, available perks (the next
- * rank could be taken) and perks that are not available (greyed, the reasons in the card's info panel).
- * Available and not available can be collapsed; the state is kept in the {@link ViewPreferences}. While perks
+ * The perk grid of {@link PerkCard}s (user concept) in four groups: chosen perks, available perks (the next
+ * rank could be taken), perks that are not available (greyed, the reasons in the card's info panel) and perks
+ * that are not possible for a robot or because a chosen perk excludes them ({@link PerkRules#isImpossible}; user
+ * requests 2026-10-19). The last three can be collapsed; the state is kept in the {@link ViewPreferences}. While perks
  * can be changed (creation, GM mode, pending level-up perks) the cards have −/+ buttons and the perks left
  * are shown; every change goes to the model and then to {@code onChanged}, which rebuilds the view.
  */
@@ -27,6 +28,7 @@ final class PerkSection {
   private static final double GAP = 8;
   private static final @NonNull String AVAILABLE_EXPANDED = "perks.available.expanded";
   private static final @NonNull String UNAVAILABLE_EXPANDED = "perks.unavailable.expanded";
+  private static final @NonNull String EXCLUDED_EXPANDED = "perks.excluded.expanded";
 
   private PerkSection() {}
 
@@ -47,12 +49,15 @@ final class PerkSection {
     }
     List<Node> available = new ArrayList<>();
     List<Node> unavailable = new ArrayList<>();
+    List<Node> excluded = new ArrayList<>();
     for (PerkDefinition perk : PerkCatalog.available(character.getEnabledBooks())) {
       if (PerkRules.rank(character, perk.id()) > 0) {
         continue;
       }
       List<String> blockers = PerkRules.blockers(character, perk);
-      (blockers.isEmpty() ? available : unavailable).add(PerkCard.of(character, perk, blockers, editable, onChanged));
+      List<Node> group = PerkRules.isImpossible(character, perk) ? excluded
+          : blockers.isEmpty() ? available : unavailable;
+      group.add(PerkCard.of(character, perk, blockers, editable, onChanged));
     }
 
     Label heading = new Label("Chosen");
@@ -65,6 +70,7 @@ final class PerkSection {
     }
     addGroup(pane, "Available", available, AVAILABLE_EXPANDED, true);
     addGroup(pane, "Not available", unavailable, UNAVAILABLE_EXPANDED, false);
+    addGroup(pane, "Not possible", excluded, EXCLUDED_EXPANDED, false);
   }
 
   /** A collapsible group titled with its count; nothing if it is empty. */

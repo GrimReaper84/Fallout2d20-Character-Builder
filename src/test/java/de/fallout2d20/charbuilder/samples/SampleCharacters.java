@@ -23,6 +23,7 @@ import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.item.Holotape;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -164,7 +165,7 @@ final class SampleCharacters {
     return character;
   }
 
-  /** A level 12 Survivor with many perks and a full inventory, for long tables and PDF continuation pages. */
+  /** A level 12 Survivor with many perks and a full inventory incl. a holotape, for long tables and PDF continuation pages. */
   static Character veteranOverflow() {
     Character character = start("Old Jeb Harrow", "survivor");
     character.chooseTrait(CatalogRef.of("educated"));
@@ -186,6 +187,8 @@ final class SampleCharacters {
     }
     ItemCatalog.all().stream().limit(40)
         .forEach(item -> character.addItem(CarriedItem.of(CatalogRef.of(item.id()))));
+    character.addItem(CarriedItem.of(new Holotape("Vault 81 entry code", "Door code 4-8-15, recorded by the "
+        + "overseer.")));
     return character;
   }
 
@@ -275,21 +278,21 @@ final class SampleCharacters {
   }
 
   /**
-   * Ends creation after checking that the sample follows the rules, then adds the pack items to the
-   * inventory, as a player would with the button in the Gear tab.
+   * Enters the starting equipment into the inventory, as a player would with OK in the equipment pack dialog,
+   * then ends creation after checking that the sample follows the rules.
    *
    * @throws IllegalStateException with the open hints if the sample does not follow the rules
    */
   private static Character complete(Character character) {
+    if (character.getEquipmentPack().isPresent() && character.canApplyStartingEquipment()) {
+      character.applyStartingEquipment(character.getStartingEquipment());
+    }
     List<CreationProblem> problems = CreationRules.problems(character);
     if (!problems.isEmpty()) {
       throw new IllegalStateException("Sample " + character.getName() + " has open hints: "
           + problems.stream().map(CreationProblem::message).collect(Collectors.joining("; ")));
     }
     character.completeCreation();
-    if (character.canAddPackItems()) {
-      character.addPackItemsToInventory();
-    }
     return character;
   }
 

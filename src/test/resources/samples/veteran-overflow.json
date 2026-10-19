@@ -218,17 +218,20 @@
     "choices" : [ "Leather armor chest piece", "Machete", "10mm automatic pistol" ],
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: 10 + 5 CD rounds of ammunition for the chosen ranged weapon\n[Tag skill] Roll: 4 + 2 CD bobby pins\n[Tag skill] Roll: 6 + 3 CD extra shots of an ammunition type you already own",
   "weapons" : [ {
     "ref" : {
       "id" : "machete"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "10mm-pistol"
     },
     "quantity" : 1,
-    "notes" : "Pack: 10mm automatic pistol"
+    "notes" : "Pack: 10mm automatic pistol",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "44-pistol"
@@ -308,12 +311,14 @@
   "apparel" : [ {
     "ref" : {
       "id" : "tough-clothing"
-    }
+    },
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "leather-chest-piece"
     },
-    "notes" : "Pack: Leather armor chest piece"
+    "notes" : "Pack: Leather armor chest piece",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "brotherhood-of-steel-uniform"
@@ -367,38 +372,23 @@
   } ],
   "items" : [ {
     "custom" : {
-      "name" : "10 + 5 CD rounds of ammunition for the chosen ranged weapon",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
-    "custom" : {
       "name" : "Note advertising a job in a nearby settlement that pays 50 caps",
       "weight" : 0
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "4 + 2 CD bobby pins",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "multi-tool"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "calmex"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "baked-bloatfly"
@@ -599,7 +589,12 @@
       "id" : "mutant-hound-meat"
     },
     "quantity" : 1
+  }, {
+    "holotape" : {
+      "name" : "Vault 81 entry code",
+      "label" : "Door code 4-8-15, recorded by the overseer."
+    },
+    "quantity" : 1
   } ],
-  "caps" : 3865,
-  "packItemsAdded" : true
+  "caps" : 3865
 }

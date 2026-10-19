@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -20,7 +21,8 @@ import org.jspecify.annotations.Nullable;
  * robot's integrated weapon, e.g. the laser guns in a Protectron's claws, WOA p. 22): built-in weapons
  * weigh nothing against the carry weight (user decision 2026-10-16), and the mods installed per slot (CRB
  * p. 87: one per slot; values via {@link ModdedWeapon}, which mods fit via {@link WeaponMods}). A mod id the
- * catalog no longer knows is kept and has no effect.
+ * catalog no longer knows is kept and has no effect. {@code startingSource} marks a weapon of the starting
+ * equipment ({@code null}: added by hand).
  */
 public record CarriedWeapon(
     @Nullable CatalogRef weapon,
@@ -28,7 +30,8 @@ public record CarriedWeapon(
     int quantity,
     @NonNull String notes,
     boolean builtIn,
-    @NonNull Map<ModSlot, CatalogRef> mods) {
+    @NonNull Map<ModSlot, CatalogRef> mods,
+    @Nullable StartingSource startingSource) {
 
   public CarriedWeapon {
     if ((weapon == null) == (custom == null)) {
@@ -40,10 +43,16 @@ public record CarriedWeapon(
     mods = mods.isEmpty() ? Map.of() : Collections.unmodifiableMap(new EnumMap<>(mods));
   }
 
-  /** A weapon without mods. */
+  /** A weapon added by hand. */
+  public CarriedWeapon(@Nullable CatalogRef weapon, @Nullable CustomWeapon custom, int quantity, @NonNull String notes,
+      boolean builtIn, @NonNull Map<ModSlot, CatalogRef> mods) {
+    this(weapon, custom, quantity, notes, builtIn, mods, null);
+  }
+
+  /** A weapon added by hand, without mods. */
   public CarriedWeapon(@Nullable CatalogRef weapon, @Nullable CustomWeapon custom, int quantity, @NonNull String notes,
       boolean builtIn) {
-    this(weapon, custom, quantity, notes, builtIn, Map.of());
+    this(weapon, custom, quantity, notes, builtIn, Map.of(), null);
   }
 
   /** One catalog weapon without a note. */
@@ -82,7 +91,7 @@ public record CarriedWeapon(
   }
 
   public @NonNull CarriedWeapon withNotes(@Nullable String newNotes) {
-    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn, mods);
+    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn, mods, startingSource);
   }
 
   /**
@@ -94,15 +103,20 @@ public record CarriedWeapon(
     if (custom == null) {
       throw new IllegalStateException("Only a custom weapon has a choosable skill");
     }
-    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn, mods);
+    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn, mods, startingSource);
   }
 
   public @NonNull CarriedWeapon withQuantity(int newQuantity) {
-    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn, mods);
+    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn, mods, startingSource);
+  }
+
+  /** The weapon marked as part of the starting equipment; {@code null} for one added by hand. */
+  public @NonNull CarriedWeapon withStartingSource(@Nullable StartingSource source) {
+    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, mods, source);
   }
 
   public @NonNull CarriedWeapon withBuiltIn(boolean newBuiltIn) {
-    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn, mods);
+    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn, mods, startingSource);
   }
 
   /**
@@ -117,7 +131,7 @@ public record CarriedWeapon(
     } else {
       newMods.put(slot, mod);
     }
-    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, newMods);
+    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, newMods, startingSource);
   }
 
   /**
@@ -135,7 +149,7 @@ public record CarriedWeapon(
         kept.put(slot, mod);
       }
     });
-    return new CarriedWeapon(null, custom.withModSlots(slots), quantity, notes, builtIn, kept);
+    return new CarriedWeapon(null, custom.withModSlots(slots), quantity, notes, builtIn, kept, startingSource);
   }
 
   /**

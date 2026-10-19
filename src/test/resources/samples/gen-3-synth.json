@@ -156,71 +156,62 @@
     "trinket" : "A dented harmonica",
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: 2 rolls on the Chems, Food or Beverages loot tables (CRB p. 200)\n[Pack] Roll: 10 + 5 CD rounds of .38 ammunition\n[Tag skill] Roll: 6 + 3 CD extra shots of an ammunition type you already own",
   "weapons" : [ {
     "ref" : {
       "id" : "baseball-bat"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "pipe-gun"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   } ],
   "apparel" : [ {
     "ref" : {
       "id" : "tough-clothing"
-    }
+    },
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "lab-coat"
     },
-    "carried" : true
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "formal-hat"
-    }
+    },
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "formal-clothing"
     },
-    "carried" : true
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
   } ],
   "items" : [ {
-    "custom" : {
-      "name" : "2 rolls on the Chems, Food or Beverages loot tables (CRB p. 200)",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "10 + 5 CD rounds of .38 ammunition",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
     "custom" : {
       "name" : "A dented harmonica",
       "weight" : 0
     },
     "quantity" : 1,
-    "notes" : "Personal trinket"
+    "notes" : "Personal trinket",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "mentats"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "calmex"
     },
-    "quantity" : 1
-  } ],
-  "packItemsAdded" : true
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
+  } ]
 }

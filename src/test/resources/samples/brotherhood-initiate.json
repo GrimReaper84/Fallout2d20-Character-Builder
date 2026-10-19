@@ -155,72 +155,70 @@
     "choices" : [ "Laser pistol with a fusion cell of 10 + 5 CD shots" ],
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: a fusion cell of 10 + 5 CD shots\n[Tag skill] Roll: Fusion cell with 6 + 3 CD shots",
   "weapons" : [ {
     "ref" : {
       "id" : "combat-knife"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "laser-gun"
     },
     "quantity" : 1,
-    "notes" : "Pack: Laser pistol with a fusion cell of 10 + 5 CD shots"
+    "notes" : "Pack: Laser pistol with a fusion cell of 10 + 5 CD shots",
+    "startingSource" : "PACK"
   } ],
   "apparel" : [ {
     "ref" : {
       "id" : "brotherhood-of-steel-fatigues"
     },
-    "notes" : "Pack: Brotherhood fatigues"
+    "notes" : "Pack: Brotherhood fatigues",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "brotherhood-of-steel-hood"
     },
-    "notes" : "Pack: Brotherhood hood"
+    "notes" : "Pack: Brotherhood hood",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "lab-coat"
     },
-    "carried" : true
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
   } ],
   "items" : [ {
     "ref" : {
       "id" : "holotags"
     },
     "quantity" : 1,
-    "notes" : "Pack: Brotherhood holotags"
-  }, {
-    "custom" : {
-      "name" : "a fusion cell of 10 + 5 CD shots",
-      "weight" : 0
-    },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "Fusion cell with 6 + 3 CD shots",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "notes" : "Pack: Brotherhood holotags",
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "first-aid-kit"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "stimpak"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "multi-tool"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "mentats"
     },
-    "quantity" : 1
-  } ],
-  "packItemsAdded" : true
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
+  } ]
 }

@@ -46,8 +46,19 @@ public final class StartingEquipmentItems {
   private StartingEquipmentItems() {}
 
   public static @NonNull List<String> lines(@NonNull Character character) {
+    List<String> lines = new ArrayList<>(lines(character, StartingSource.PACK));
+    lines.addAll(lines(character, StartingSource.TAG_SKILL));
+    return lines;
+  }
+
+  /** The lines of one part of the starting equipment: the pack's (items, choices, arms, trinket) or the Tag skills'. */
+  public static @NonNull List<String> lines(@NonNull Character character, @NonNull StartingSource source) {
     StartingEquipment selection = character.getStartingEquipment();
     List<String> lines = new ArrayList<>();
+    if (source == StartingSource.TAG_SKILL) {
+      taggedSkillItems(character).forEach(items -> tagSkillItems(items, selection).ifPresent(lines::add));
+      return lines;
+    }
     Optional<EquipmentPackData> pack = character.getEquipmentPack();
     if (pack.isPresent()) {
       lines.addAll(pack.get().items());
@@ -65,7 +76,6 @@ public final class StartingEquipmentItems {
         lines.add(TRINKET + (trinket != null ? trinket : NOT_DESCRIBED));
       }
     }
-    taggedSkillItems(character).forEach(items -> tagSkillItems(items, selection).ifPresent(lines::add));
     return lines;
   }
 

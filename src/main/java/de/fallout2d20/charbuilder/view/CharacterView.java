@@ -21,7 +21,8 @@ import org.jspecify.annotations.NonNull;
  * The view of one character: the header bar above the tabs (Stats, Status, Perks, Weapons, Armor, Gear,
  * Notes). Empty until the first {@link #refresh()}, which rebuilds the header and every tab's content after a
  * change but keeps the tab pane, so the selected tab, each tab's scroll position and the selection of the
- * Weapons and Armor tabs ({@link MasterDetailState}) stay. A tab with rule hints shows a warning icon, with
+ * Weapons, Armor and Gear tabs ({@link MasterDetailState}) stay – except after the starting equipment was
+ * synced into the inventory, which moves entries. A tab with rule hints shows a warning icon, with
  * the hints as tooltip.
  */
 final class CharacterView {
@@ -34,6 +35,9 @@ final class CharacterView {
   private final @NonNull List<ScrollPane> scrollPanes = new ArrayList<>();
   private final @NonNull MasterDetailState weaponSelection = new MasterDetailState(WeaponsTab.UNARMED_STRIKE_INDEX);
   private final @NonNull MasterDetailState apparelSelection = new MasterDetailState(null);
+  private final @NonNull MasterDetailState itemSelection = new MasterDetailState(null);
+  /** The character's sync count at the last refresh: a sync moves entries, so the selections no longer fit. */
+  private int startingEquipmentSyncs;
 
   CharacterView(@NonNull Character character, @NonNull ViewCallbacks callbacks) {
     this.character = character;
@@ -43,9 +47,9 @@ final class CharacterView {
     for (CharacterTab kind : CharacterTab.values()) {
       ScrollPane scrollPane = new ScrollPane();
       scrollPane.setFitToWidth(true);
-      // The notes field and the weapon and apparel trees fill their whole tab and scroll themselves.
+      // The notes field and the weapon, apparel and item trees fill their whole tab and scroll themselves.
       scrollPane.setFitToHeight(kind == CharacterTab.NOTES || kind == CharacterTab.WEAPONS
-          || kind == CharacterTab.ARMOR);
+          || kind == CharacterTab.ARMOR || kind == CharacterTab.GEAR);
       Tab tab = new Tab(kind.title(), scrollPane);
       tabs.add(tab);
       scrollPanes.add(scrollPane);
@@ -60,6 +64,12 @@ final class CharacterView {
 
   /** Rebuilds header and tab contents from the character; keeps the selected tab and scroll positions. */
   void refresh() {
+    if (character.startingEquipmentSyncs() != startingEquipmentSyncs) {
+      startingEquipmentSyncs = character.startingEquipmentSyncs();
+      weaponSelection.select(WeaponsTab.UNARMED_STRIKE_INDEX);
+      apparelSelection.clear();
+      itemSelection.clear();
+    }
     List<CreationProblem> hints = hints(character);
     root.setTop(CharacterHeader.build(character, hints, callbacks));
     CharacterTab[] kinds = CharacterTab.values();
@@ -81,7 +91,7 @@ final class CharacterView {
       case PERKS -> PerksTab.build(character, tabHints, callbacks);
       case WEAPONS -> WeaponsTab.build(character, weaponSelection, callbacks);
       case ARMOR -> ArmorTab.build(character, tabHints, apparelSelection, callbacks);
-      case GEAR -> GearTab.build(character, tabHints, callbacks);
+      case GEAR -> GearTab.build(character, tabHints, itemSelection, callbacks);
       case NOTES -> NotesTab.build(character, callbacks);
     };
   }

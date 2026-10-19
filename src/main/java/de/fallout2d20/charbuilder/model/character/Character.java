@@ -23,7 +23,10 @@ import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
 import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingNotes;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.item.Holotape;
 import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.session.SessionValues;
@@ -111,6 +114,7 @@ public class Character {
   private long caps;
   private @NonNull Materials materials;
   private boolean packItemsAdded;
+  private int startingEquipmentSyncs;
   /** GM free edit (D2): creation edits allowed after completion, no budgets; not saved (user decision). */
   private boolean gmMode;
 
@@ -434,14 +438,16 @@ public class Character {
    */
   public void chooseOrigin(@NonNull CatalogRef newOrigin) {
     requireCreation();
-    origin = newOrigin;
-    originChoices = OriginChoices.NONE;
-    traits.clear();
-    if (getEquipmentPack().filter(pack -> pack.isOfferedTo(newOrigin.id())).isEmpty()) {
-      startingEquipment = StartingEquipment.NONE;
-    }
-    adjustAttributesToOrigin();
-    adjustSkillsToRules();
+    syncingStartingEquipment(() -> {
+      origin = newOrigin;
+      originChoices = OriginChoices.NONE;
+      traits.clear();
+      if (getEquipmentPack().filter(pack -> pack.isOfferedTo(newOrigin.id())).isEmpty()) {
+        startingEquipment = StartingEquipment.NONE;
+      }
+      adjustAttributesToOrigin();
+      adjustSkillsToRules();
+    });
   }
 
   /**
@@ -465,8 +471,10 @@ public class Character {
    */
   public void chooseOriginTagSkill(@Nullable Skill skill) {
     requireCreation();
-    originChoices = originChoices.withTagSkill(skill);
-    adjustSkillsToRules();
+    syncingStartingEquipment(() -> {
+      originChoices = originChoices.withTagSkill(skill);
+      adjustSkillsToRules();
+    });
   }
 
   /**
@@ -513,12 +521,14 @@ public class Character {
    */
   public void setFreeTag(@NonNull Skill skill, boolean tagged) {
     requireCreation();
-    if (tagged && (hasFixedTag(skill) || tagForbiddenBy(skill).isPresent())) {
-      throw new IllegalArgumentException(skill.displayName() + " cannot get a free Tag");
-    }
-    SkillState state = skillState(skill);
-    int creationRanks = tagged ? ranksWithinCap(skill, true) : state.creationRanks();
-    skills.put(skill, state.withCreation(tagged, creationRanks));
+    syncingStartingEquipment(() -> {
+      if (tagged && (hasFixedTag(skill) || tagForbiddenBy(skill).isPresent())) {
+        throw new IllegalArgumentException(skill.displayName() + " cannot get a free Tag");
+      }
+      SkillState state = skillState(skill);
+      int creationRanks = tagged ? ranksWithinCap(skill, true) : state.creationRanks();
+      skills.put(skill, state.withCreation(tagged, creationRanks));
+    });
   }
 
   /** Sets the ranks bought with skill points during creation; budget and cap are checked by the rules. */
@@ -550,6 +560,9 @@ public class Character {
     }
     level = startingLevel;
     adjustSkillsToRules();
+    if (startingEquipment.pack() != null) {
+      setStartingCaps();
+    }
   }
 
   /** Purpose of a Protectron (WOA p. 21); blank means not chosen. */
@@ -564,16 +577,20 @@ public class Character {
    */
   public void chooseTrait(@NonNull CatalogRef trait) {
     requireCreation();
-    if (traits.stream().noneMatch(selection -> selection.trait().id().equals(trait.id()))) {
-      traits.add(new TraitSelection(trait, false, List.of()));
-    }
-    adjustSkillsToRules();
+    syncingStartingEquipment(() -> {
+      if (traits.stream().noneMatch(selection -> selection.trait().id().equals(trait.id()))) {
+        traits.add(new TraitSelection(trait, false, List.of()));
+      }
+      adjustSkillsToRules();
+    });
   }
 
   /** Removes a trait (and its attribute choices) during creation. */
   public void removeTrait(@NonNull String traitId) {
     requireCreation();
-    traits.removeIf(selection -> selection.trait().id().equals(traitId));
+    syncingStartingEquipment(() -> {
+      traits.removeIf(selection -> selection.trait().id().equals(traitId));
+    });
   }
 
   /**
@@ -584,26 +601,28 @@ public class Character {
    * level, see {@link #applyAdvancement()}).
    */
   public void addPerkRank(@NonNull CatalogRef perk, @Nullable Attribute attribute, @Nullable Skill skill) {
-    int staged = creationComplete && !gmMode ? 1 : 0;
-    int index = perkIndex(perk.id());
-    PerkSelection current = index < 0 ? null : perks.get(index);
-    List<Attribute> attributes = new ArrayList<>(current == null ? List.of() : current.attributeChoices());
-    List<Skill> chosenSkills = new ArrayList<>(current == null ? List.of() : current.skillChoices());
-    if (attribute != null) {
-      attributes.add(attribute);
-    }
-    if (skill != null) {
-      chosenSkills.add(skill);
-    }
-    if (current == null) {
-      perks.add(new PerkSelection(perk, 1, 0, attributes, chosenSkills, staged));
-    } else {
-      perks.set(index, new PerkSelection(current.perk(), current.rank() + 1, current.importedRanks(),
-          attributes, chosenSkills, current.stagedRanks() + staged));
-    }
-    if (!creationComplete) {
-      adjustSkillsToRules();
-    }
+    syncingStartingEquipment(() -> {
+      int staged = creationComplete && !gmMode ? 1 : 0;
+      int index = perkIndex(perk.id());
+      PerkSelection current = index < 0 ? null : perks.get(index);
+      List<Attribute> attributes = new ArrayList<>(current == null ? List.of() : current.attributeChoices());
+      List<Skill> chosenSkills = new ArrayList<>(current == null ? List.of() : current.skillChoices());
+      if (attribute != null) {
+        attributes.add(attribute);
+      }
+      if (skill != null) {
+        chosenSkills.add(skill);
+      }
+      if (current == null) {
+        perks.add(new PerkSelection(perk, 1, 0, attributes, chosenSkills, staged));
+      } else {
+        perks.set(index, new PerkSelection(current.perk(), current.rank() + 1, current.importedRanks(),
+            attributes, chosenSkills, current.stagedRanks() + staged));
+      }
+      if (!creationComplete) {
+        adjustSkillsToRules();
+      }
+    });
   }
 
   /**
@@ -612,22 +631,24 @@ public class Character {
    * removed when no rank is left.
    */
   public void removePerkRank(@NonNull String perkId) {
-    int index = perkIndex(perkId);
-    if (index < 0) {
-      return;
-    }
-    PerkSelection perk = perks.get(index);
-    boolean removable = gmMode || (creationComplete ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks());
-    if (!removable) {
-      return;
-    }
-    if (perk.rank() == 1) {
-      perks.remove(index);
-      return;
-    }
-    perks.set(index, new PerkSelection(perk.perk(), perk.rank() - 1, Math.min(perk.importedRanks(), perk.rank() - 1),
-        dropLast(perk.attributeChoices(), perk), dropLast(perk.skillChoices(), perk),
-        Math.max(0, perk.stagedRanks() - 1)));
+    syncingStartingEquipment(() -> {
+      int index = perkIndex(perkId);
+      if (index < 0) {
+        return;
+      }
+      PerkSelection perk = perks.get(index);
+      boolean removable = gmMode || (creationComplete ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks());
+      if (!removable) {
+        return;
+      }
+      if (perk.rank() == 1) {
+        perks.remove(index);
+        return;
+      }
+      perks.set(index, new PerkSelection(perk.perk(), perk.rank() - 1, Math.min(perk.importedRanks(), perk.rank() - 1),
+          dropLast(perk.attributeChoices(), perk), dropLast(perk.skillChoices(), perk),
+          Math.max(0, perk.stagedRanks() - 1)));
+    });
   }
 
   /**
@@ -748,7 +769,7 @@ public class Character {
     startingEquipment = startingEquipment.withArm(slot, arm);
   }
 
-  /** Free-text inventory notes; editable in every mode (until phase 7 brings a real inventory). */
+  /** Free-text gear notes, e.g. amounts still to roll ({@link StartingNotes}); editable in every mode. */
   public void setInventoryNotes(@Nullable String notes) {
     inventoryNotes = notes == null ? "" : notes;
   }
@@ -926,6 +947,15 @@ public class Character {
     items.set(index, items.get(index).withNotes(notes));
   }
 
+  /**
+   * Renames or relabels the holotape at the index.
+   *
+   * @throws IllegalStateException if the item there is no holotape
+   */
+  public void setItemHolotape(int index, @NonNull Holotape holotape) {
+    items.set(index, items.get(index).withHolotape(holotape));
+  }
+
   public @NonNull List<CarriedItem> getItems() {
     return List.copyOf(items);
   }
@@ -954,33 +984,130 @@ public class Character {
     this.materials = materials;
   }
 
-  /** Whether the equipment pack was already turned into inventory entries ({@link #addPackItemsToInventory()}). */
+  /**
+   * Whether an earlier version added the pack items once by a button: those entries are not marked, so the
+   * starting equipment is no longer synced into the inventory (nothing is doubled).
+   */
   public boolean isPackItemsAdded() {
     return packItemsAdded;
   }
 
-  /** Whether the pack items can be added: a pack is chosen and its items were not added yet. */
-  public boolean canAddPackItems() {
-    return !packItemsAdded && getEquipmentPack().isPresent();
+  /**
+   * Whether the starting equipment can be (re-)entered into the inventory: during creation, after it in GM
+   * mode, never for a character whose pack items an earlier version already added.
+   */
+  public boolean canApplyStartingEquipment() {
+    return !packItemsAdded && (!creationComplete || gmMode);
   }
 
   /**
-   * Adds the starting equipment (pack, choices, trinket, Tag skill items) as weapons, worn apparel and items,
-   * once (user decision; see {@link PackInventory}).
+   * Enters the starting equipment (pack, choices, trinket, Tag skill items; CRB p. 50, pp. 76–81) into the
+   * inventory (user decision 2026-10-19): the entries of an earlier pick are replaced, entries added by hand
+   * stay. Weapons, worn apparel and items are marked with their {@link StartingSource}; amounts still to roll
+   * become lines in the gear notes, replacing the untouched lines of {@code previous} ({@link StartingNotes});
+   * during creation the caps become the fixed starting caps (pack and starting level, CRB p. 81). Without a
+   * pack nothing is entered and earlier entries are removed.
    *
-   * @return what was added
-   * @throws IllegalStateException if no pack is chosen or its items were already added
+   * @param previous the selection the current entries were made from (the pack dialog's snapshot); the current
+   *     selection on the first entry
+   * @throws IllegalStateException if {@link #canApplyStartingEquipment()} is false
    */
-  public @NonNull PackItems addPackItemsToInventory() {
-    if (!canAddPackItems()) {
-      throw new IllegalStateException("No equipment pack or its items were already added");
+  public void applyStartingEquipment(@NonNull StartingEquipment previous) {
+    if (!canApplyStartingEquipment()) {
+      throw new IllegalStateException("The starting equipment cannot be entered into the inventory");
     }
-    PackItems added = PackInventory.resolve(this);
-    weapons.addAll(added.weapons());
-    added.apparel().forEach(this::addApparel);
-    items.addAll(added.items());
-    packItemsAdded = true;
-    return added;
+    StartingEquipment current = startingEquipment;
+    startingEquipment = previous;
+    Map<StartingSource, PackItems> before = startingEntries();
+    startingEquipment = current;
+    for (StartingSource source : StartingSource.values()) {
+      sync(source, before.getOrDefault(source, PackItems.NONE), startingEntries(source));
+    }
+    setStartingCaps();
+  }
+
+  /**
+   * Restores a snapshot of the starting equipment selection (a cancelled pack dialog); the inventory is not
+   * touched.
+   */
+  public void restoreStartingEquipment(@NonNull StartingEquipment snapshot) {
+    requireCreation();
+    startingEquipment = snapshot;
+  }
+
+  /** Names of the weapons, apparel and items marked as starting equipment, which a re-sync replaces. */
+  public @NonNull List<String> startingEntryNames() {
+    List<String> names = new ArrayList<>();
+    weapons.stream().filter(weapon -> weapon.startingSource() != null).map(CarriedWeapon::displayName)
+        .forEach(names::add);
+    apparel.stream().filter(item -> item.startingSource() != null).map(WornApparel::displayName).forEach(names::add);
+    items.stream().filter(item -> item.startingSource() != null).map(CarriedItem::displayName).forEach(names::add);
+    return names;
+  }
+
+  /**
+   * How often the starting equipment was synced into the inventory in this session (not saved): a sync moves
+   * entries, so a view holding a selected list index clears it when this changes.
+   */
+  public int startingEquipmentSyncs() {
+    return startingEquipmentSyncs;
+  }
+
+  /** The entries of every part of the starting equipment for the current selection. */
+  private @NonNull Map<StartingSource, PackItems> startingEntries() {
+    Map<StartingSource, PackItems> entries = new EnumMap<>(StartingSource.class);
+    for (StartingSource source : StartingSource.values()) {
+      entries.put(source, startingEntries(source));
+    }
+    return entries;
+  }
+
+  /** The entries of one part; none before a pack is chosen (the starting equipment step has not begun). */
+  private @NonNull PackItems startingEntries(@NonNull StartingSource source) {
+    return startingEquipment.pack() == null ? PackItems.NONE : PackInventory.resolve(this, source);
+  }
+
+  /** Replaces the marked entries of one part of the starting equipment with {@code after}, and its roll lines. */
+  private void sync(@NonNull StartingSource source, @NonNull PackItems before, @NonNull PackItems after) {
+    weapons.removeIf(weapon -> weapon.startingSource() == source);
+    apparel.removeIf(item -> item.startingSource() == source);
+    items.removeIf(item -> item.startingSource() == source);
+    weapons.addAll(after.weapons());
+    after.apparel().forEach(this::addApparel);
+    items.addAll(after.items());
+    inventoryNotes = StartingNotes.rewrite(inventoryNotes, source, before.rolls(), after.rolls());
+    startingEquipmentSyncs++;
+  }
+
+  /**
+   * Runs a creation edit that may change the Tag skills (CRB p. 81: their items, Barter's d20 caps) or drop the
+   * pack (another origin), then re-syncs each part of the starting equipment whose entries changed (user
+   * decision 2026-10-19), so edits of unchanged entries survive. A dropped pack also resets the caps.
+   */
+  private void syncingStartingEquipment(@NonNull Runnable edit) {
+    if (creationComplete || packItemsAdded) {
+      edit.run();
+      return;
+    }
+    Map<StartingSource, PackItems> before = startingEntries();
+    edit.run();
+    for (StartingSource source : StartingSource.values()) {
+      PackItems earlier = before.getOrDefault(source, PackItems.NONE);
+      PackItems after = startingEntries(source);
+      if (!after.equals(earlier)) {
+        sync(source, earlier, after);
+        if (source == StartingSource.PACK) {
+          setStartingCaps();
+        }
+      }
+    }
+  }
+
+  /** During creation: the caps become the fixed starting caps (pack and starting level, CRB p. 81). */
+  private void setStartingCaps() {
+    if (!creationComplete && !packItemsAdded) {
+      caps = StartingEquipmentItems.caps(this).fixedTotal();
+    }
   }
 
   /** The catalog entry of the chosen equipment pack; empty without pack or for an unknown one. */

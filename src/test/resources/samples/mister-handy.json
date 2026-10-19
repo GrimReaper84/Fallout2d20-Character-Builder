@@ -162,43 +162,50 @@
   "apparel" : [ {
     "ref" : {
       "id" : "standard-plating"
-    }
+    },
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "lab-coat"
-    }
+    },
+    "startingSource" : "TAG_SKILL"
   } ],
   "items" : [ {
     "ref" : {
       "id" : "behavioral-analysis-mod"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "hazard-detection-mod"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "first-aid-kit"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "stimpak"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "multi-tool"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "mentats"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
-  "caps" : 10,
-  "packItemsAdded" : true
+  "caps" : 10
 }

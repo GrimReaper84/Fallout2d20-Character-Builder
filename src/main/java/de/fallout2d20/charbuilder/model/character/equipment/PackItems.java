@@ -12,20 +12,22 @@ import org.jspecify.annotations.NonNull;
  * @param weapons recognized catalog weapons
  * @param apparel recognized catalog apparel, worn
  * @param items recognized catalog items and custom items for every line that was not recognized
+ * @param rolls amounts still to roll (Combat Dice formulas, loot table rolls, d20 caps), for the gear notes
  */
 public record PackItems(
     @NonNull List<CarriedWeapon> weapons,
     @NonNull List<WornApparel> apparel,
-    @NonNull List<CarriedItem> items) {
+    @NonNull List<CarriedItem> items,
+    @NonNull List<String> rolls) {
+
+  /** No entries: no pack chosen yet. */
+  public static final @NonNull PackItems NONE = new PackItems(List.of(), List.of(), List.of(), List.of());
 
   public PackItems {
     weapons = List.copyOf(weapons);
     apparel = List.copyOf(apparel);
     items = List.copyOf(items);
+    rolls = List.copyOf(rolls);
   }
 
-  /** Names of the entries that became custom items (rolls, ammunition formulas, unknown things). */
-  public @NonNull List<String> customNames() {
-    return items.stream().filter(item -> item.custom() != null).map(CarriedItem::displayName).toList();
-  }
 }

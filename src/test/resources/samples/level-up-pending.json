@@ -173,80 +173,80 @@
     "choices" : [ ],
     "freeArms" : false
   },
+  "inventoryNotes" : "[Pack] Roll: 6 + 3 CD rounds of 10mm ammunition\n[Tag skill] Roll: 6 + 3 CD extra shots of an ammunition type you already own",
   "weapons" : [ {
     "ref" : {
       "id" : "switchblade"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "10mm-pistol"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   } ],
   "apparel" : [ {
     "ref" : {
       "id" : "vault-jumpsuit"
-    }
+    },
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "lab-coat"
     },
-    "carried" : true
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "formal-hat"
-    }
+    },
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "formal-clothing"
     },
-    "carried" : true
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
   } ],
   "items" : [ {
     "custom" : {
       "name" : "Vault-Tec canteen with 1 purified water",
       "weight" : 0
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "pip-boy"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "6 + 3 CD rounds of 10mm ammunition",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "stimpak"
     },
-    "quantity" : 2
+    "quantity" : 2,
+    "startingSource" : "PACK"
   }, {
     "ref" : {
       "id" : "first-aid-kit"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "stimpak"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   }, {
     "ref" : {
       "id" : "mentats"
     },
-    "quantity" : 1
-  }, {
-    "custom" : {
-      "name" : "6 + 3 CD extra shots of an ammunition type you already own",
-      "weight" : 0
-    },
-    "quantity" : 1
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
   } ],
-  "caps" : 260,
-  "packItemsAdded" : true
+  "caps" : 260
 }
