@@ -33,7 +33,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,8 +174,7 @@ final class LegacyImportRun {
       attributes.put(attribute, parsed);
     }
     ObjectNode unknown = JsonNodeFactory.instance.objectNode();
-    for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
-      Map.Entry<String, JsonNode> entry = it.next();
+    for (Map.Entry<String, JsonNode> entry : node.properties()) {
       if (Attribute.fromId(entry.getKey()).isEmpty()) {
         unknown.set(entry.getKey(), entry.getValue());
       }
@@ -193,8 +191,8 @@ final class LegacyImportRun {
     JsonNode node = root.get(SKILLS);
     ObjectNode unknown = JsonNodeFactory.instance.objectNode();
     if (node != null && node.isObject()) {
-      for (Iterator<Map.Entry<String, JsonNode>> it = node.fields(); it.hasNext(); ) {
-        readSkill(it.next(), ranks, states, unknown);
+      for (Map.Entry<String, JsonNode> entry : node.properties()) {
+        readSkill(entry, ranks, states, unknown);
       }
     }
     if (!unknown.isEmpty()) {
@@ -433,8 +431,7 @@ final class LegacyImportRun {
   /** Copies all fields no feature has taken over into the payload; returns their names. */
   private @NonNull List<String> keepRemainingFields() {
     List<String> kept = new ArrayList<>();
-    for (Iterator<Map.Entry<String, JsonNode>> it = root.fields(); it.hasNext(); ) {
-      Map.Entry<String, JsonNode> entry = it.next();
+    for (Map.Entry<String, JsonNode> entry : root.properties()) {
       if (!CONSUMED_FIELDS.contains(entry.getKey())) {
         payload.set(entry.getKey(), entry.getValue().deepCopy());
         kept.add(entry.getKey());

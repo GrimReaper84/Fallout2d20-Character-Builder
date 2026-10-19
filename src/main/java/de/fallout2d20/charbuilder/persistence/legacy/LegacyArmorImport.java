@@ -9,7 +9,6 @@ import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,8 +41,7 @@ final class LegacyArmorImport {
     }
     payload.remove(ARMOR);
     ObjectNode unknown = JsonNodeFactory.instance.objectNode();
-    for (Iterator<Map.Entry<String, JsonNode>> it = map.fields(); it.hasNext();) {
-      Map.Entry<String, JsonNode> entry = it.next();
+    for (Map.Entry<String, JsonNode> entry : map.properties()) {
       Optional<HitLocation> location = Arrays.stream(HitLocation.values())
           .filter(candidate -> candidate.displayName().equalsIgnoreCase(entry.getKey().strip())).findFirst();
       if (location.isEmpty()) {
