@@ -215,6 +215,8 @@ public record ModdedWeapon(
     return LIGHT.equals(printed) ? LIGHT : "0";
   }
 
+  /** The declaration order of {@link WeaponRange} is the order of the range steps (CRB p. 90). */
+  @SuppressWarnings("EnumOrdinal")
   private static @NonNull WeaponRange step(@NonNull WeaponRange range, int steps) {
     WeaponRange[] ranges = WeaponRange.values();
     return ranges[Math.clamp(range.ordinal() + steps, 0, ranges.length - 1)];

@@ -132,8 +132,8 @@ class CharacterAdvancementTest {
     character.addPerkRank(SKILLED, null, null);
     assertEquals(4, character.advancementSkillRanksLeft());
     assertEquals(1, character.advancementPerksLeft());
-    for (int i = 0; i < 4; i++) {
-      character.stageSkillRank(Skill.values()[i], 1);
+    for (Skill skill : List.of(Skill.values()).subList(0, 4)) {
+      character.stageSkillRank(skill, 1);
     }
     assertEquals(0, character.advancementSkillRanksLeft());
     character.removePerkRank(SKILLED.id());

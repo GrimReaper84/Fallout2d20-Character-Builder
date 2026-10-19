@@ -22,6 +22,8 @@ public enum Coverage {
   ALL("All", HitLocation.misterHandy());
 
   private final @NonNull String displayName;
+  /** Always an immutable list ({@code List.of}), so the enum stays immutable. */
+  @SuppressWarnings("ImmutableEnumChecker")
   private final @NonNull List<HitLocation> locations;
 
   Coverage(@NonNull String displayName, @NonNull List<HitLocation> locations) {

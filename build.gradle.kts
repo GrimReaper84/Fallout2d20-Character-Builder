@@ -52,9 +52,13 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+    // The module name keeps the digits of "fallout2d20" (user decision 2026-10-17).
+    options.compilerArgs.add("-Xlint:-module")
     options.errorprone {
         option("NullAway:AnnotatedPackages", "de.fallout2d20")
         option("NullAway:ExcludedFieldAnnotations", "javafx.fxml.FXML")
+        // FXML handlers are called by the FXMLLoader through reflection.
+        option("UnusedMethod:ExemptingMethodAnnotations", "javafx.fxml.FXML")
         error("NullAway")
     }
 }
@@ -73,7 +77,7 @@ tasks.test {
 }
 
 // Version for the About dialog, read by AppInfo.
-val generateVersionResource by tasks.registering {
+val generateVersionResource = tasks.register("generateVersionResource") {
     val appVersion = project.version.toString()
     val output = layout.buildDirectory.dir("generated/version")
     inputs.property("version", appVersion)
@@ -135,7 +139,7 @@ tasks.named<JavaExec>("run") {
 }
 
 // Recreates the generated test characters in src/test/resources/samples (E9); run by hand, not by build.
-val generateSamples by tasks.registering(JavaExec::class) {
+tasks.register<JavaExec>("generateSamples") {
     group = "development"
     description = "Writes the generated sample characters for the Beta menu."
     classpath = sourceSets.test.get().runtimeClasspath

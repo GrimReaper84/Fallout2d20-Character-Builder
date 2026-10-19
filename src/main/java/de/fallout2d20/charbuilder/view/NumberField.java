@@ -26,7 +26,7 @@ final class NumberField {
       OptionalInt typed = WholeNumber.parse(field.getText());
       if (typed.isPresent() && typed.getAsInt() >= minimum) {
         if (typed.getAsInt() != value) {
-          field.setUserData(Boolean.TRUE);
+          field.setUserData(true);
           commit.accept(typed.getAsInt());
         }
       } else {

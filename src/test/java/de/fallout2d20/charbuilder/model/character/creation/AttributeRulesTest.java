@@ -85,8 +85,9 @@ class AttributeRulesTest {
   /** Allocation in S.P.E.C.I.A.L. order. */
   private static Character character(String origin, int... allocation) {
     Map<Attribute, Integer> map = new EnumMap<>(Attribute.class);
-    for (Attribute attribute : Attribute.values()) {
-      map.put(attribute, allocation[attribute.ordinal()]);
+    Attribute[] attributes = Attribute.values();
+    for (int i = 0; i < attributes.length; i++) {
+      map.put(attributes[i], allocation[i]);
     }
     return new Character("Test", CatalogRef.of(origin), OriginChoices.NONE, 1, 0, false,
         EnumSet.allOf(Book.class), map, Map.of(), List.of(), List.of(), Progression.NONE,
