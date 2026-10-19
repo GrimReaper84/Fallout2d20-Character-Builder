@@ -11,12 +11,14 @@ at the table.
 - **Books:** Core Rulebook, Winter of Atom, and the Wanderer's Guide origins (more Wanderer's Guide content
   is planned).
 - **Character creation** step by step: origin and origin options, traits, S.P.E.C.I.A.L., Tag skills and
-  skill ranks, perks (perk grid with requirements), starting level, equipment packs. Budgets and rules are
+  skill ranks, perks (perk grid with requirements), starting level, equipment packs (entered into the
+  inventory automatically). Budgets and rules are
   checked as soft hints – nothing blocks you.
 - **Advancement:** add XP or milestone levels, spend skill ranks and perks, then apply them.
 - **GM mode** for free corrections after creation.
-- **Gear:** weapons with target numbers and damage, ammunition, apparel and armor with Damage Resistance
-  per hit location (also for Mister Handy and Protectron), items, caps, materials and carry weight.
+- **Gear:** weapons with target numbers, damage and weapon mods, ammunition, apparel and armor with Damage
+  Resistance per hit location (also for Mister Handy and Protectron), items and holotapes, caps, materials
+  and carry weight.
 - **Session values:** current HP (rads lower the maximum), Luck points, Rad Sponge points, injuries,
   notes.
 - **Character sheet** export as PDF for printing.
