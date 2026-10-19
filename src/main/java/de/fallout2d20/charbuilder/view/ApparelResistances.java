@@ -21,7 +21,7 @@ final class ApparelResistances {
 
   static void addTo(@NonNull MigPane pane, @NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints) {
     OverviewParts.sectionHeading(pane, "Damage resistance");
-    MigPane table = new MigPane("insets 0, gap 16 2, wrap 5");
+    MigPane table = Layouts.wideTable(5);
     for (String header : List.of("Location", "Physical", "Energy", "Radiation", "Poison")) {
       table.add(bold(header));
     }
@@ -35,7 +35,7 @@ final class ApparelResistances {
     Tooltip.install(table, new Tooltip("Worn apparel plus innate resistances from origin and perks."));
     pane.add(table);
     if (!hints.isEmpty()) {
-      pane.add(OverviewParts.wrappingInCell(OverviewParts.hintLabel(hints)), "growx, gaptop 8");
+      pane.add(OverviewParts.wrappingInCell(OverviewParts.hintLabel(hints)), Layouts.spaced(Layouts.cell().growX()));
     }
   }
 

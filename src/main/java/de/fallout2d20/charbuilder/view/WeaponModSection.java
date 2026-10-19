@@ -46,7 +46,7 @@ final class WeaponModSection {
       return;
     }
     OverviewParts.sectionHeading(pane, "Mods");
-    MigPane rows = new MigPane("insets 0, gap 16 6, wrap 3", "[left][grow, fill][]");
+    MigPane rows = Layouts.details(1);
     boolean gripOrStock = weapon.data().map(WeaponData::gripOrStock).orElse(false);
     for (ModSlot slot : slots) {
       Label name = new Label(slot.displayName());
@@ -60,7 +60,7 @@ final class WeaponModSection {
     }
     if (custom != null) {
       if (slots.isEmpty()) {
-        rows.add(new Label("No mod slots chosen."), "span 2");
+        rows.add(new Label("No mod slots chosen."), Layouts.span(2));
       }
       Button editSlots = new Button("Edit slots");
       editSlots.setGraphic(new FontIcon("fas-sliders-h"));
@@ -71,13 +71,13 @@ final class WeaponModSection {
               onChanged.run();
             }
           }));
-      rows.add(editSlots, slots.isEmpty() ? "" : "span 3");
+      rows.add(editSlots, slots.isEmpty() ? Layouts.cell() : Layouts.span(3));
     }
     pane.add(rows);
     if (!values.specials().isEmpty()) {
-      MigPane specials = new MigPane("insets 0, gap 16 4, wrap 1", "[grow, fill]");
+      MigPane specials = Layouts.column();
       for (String special : values.specials()) {
-        specials.add(OverviewParts.wrappingInCell(new Label(special)), "growx");
+        specials.add(OverviewParts.wrappingInCell(new Label(special)), Layouts.cell().growX());
       }
       OverviewParts.sectionHeading(pane, "Mod effects");
       pane.add(specials);

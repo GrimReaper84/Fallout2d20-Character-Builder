@@ -37,7 +37,7 @@ final class PerkSection {
       @NonNull Runnable onChanged) {
     // D2: GM changes to a complete character have no budget.
     if (editable && !(character.isGmMode() && character.isCreationComplete())) {
-      pane.add(new Label("[Perks left: " + PerkRules.perksLeft(character) + "]"), "span 4, left");
+      pane.add(new Label("[Perks left: " + PerkRules.perksLeft(character) + "]"), Layouts.span(4).alignX("left"));
     }
 
     FlowPane chosen = grid();
@@ -67,11 +67,11 @@ final class PerkSection {
 
     Label heading = new Label("Chosen");
     heading.setStyle("-fx-font-weight: bold;");
-    pane.add(heading, "span 4, gaptop 6, left");
+    pane.add(heading, Layouts.spaced(Layouts.span(4).alignX("left")));
     if (chosen.getChildren().isEmpty()) {
-      pane.add(new Label("None"), "span 4, left");
+      pane.add(new Label("None"), Layouts.span(4).alignX("left"));
     } else {
-      pane.add(chosen, "span 4, growx, wmin 0");
+      pane.add(chosen, Layouts.span(4).growX().minWidth("0"));
     }
     addGroup(pane, "Available", available, AVAILABLE_EXPANDED, true);
     addGroup(pane, "Not available", unavailable, UNAVAILABLE_EXPANDED, false);
@@ -91,7 +91,7 @@ final class PerkSection {
     group.setAnimated(false);
     group.setExpanded(ViewPreferences.user().getBoolean(key, expandedByDefault));
     group.expandedProperty().addListener((obs, old, expanded) -> ViewPreferences.user().putBoolean(key, expanded));
-    pane.add(group, "span 4, growx, wmin 0, gaptop 6");
+    pane.add(group, Layouts.spaced(Layouts.span(4).growX().minWidth("0")));
   }
 
   private static @NonNull FlowPane grid() {

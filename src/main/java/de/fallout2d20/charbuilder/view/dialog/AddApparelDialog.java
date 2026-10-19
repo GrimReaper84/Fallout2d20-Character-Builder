@@ -8,6 +8,7 @@ import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.view.DisplayConverter;
+import de.fallout2d20.charbuilder.view.Layouts;
 import de.fallout2d20.charbuilder.view.WholeNumber;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -86,7 +87,7 @@ public final class AddApparelDialog {
     TextField radiation = numberField();
     CheckBox immune = new CheckBox("Immune to radiation");
     TextField carryWeight = new TextField("0");
-    MigPane form = new MigPane("wrap 2, insets 8", "[right][grow,fill]");
+    MigPane form = Layouts.dialogForm();
     addRow(form, "Name", name);
     addRow(form, "Kind", kind);
     addRow(form, "Locations", locationBoxes);

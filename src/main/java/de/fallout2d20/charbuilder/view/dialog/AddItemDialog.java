@@ -7,6 +7,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
 import de.fallout2d20.charbuilder.view.DisplayConverter;
+import de.fallout2d20.charbuilder.view.Layouts;
 import de.fallout2d20.charbuilder.view.WholeNumber;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +76,7 @@ public final class AddItemDialog {
     TextField name = new TextField();
     TextField weight = new TextField("0");
     TextField effects = new TextField();
-    MigPane form = new MigPane("wrap 2, insets 8", "[right][grow,fill]");
+    MigPane form = Layouts.dialogForm();
     form.add(new Label("Name"));
     form.add(name);
     form.add(new Label("Weight (lbs., 0 for <1)"));

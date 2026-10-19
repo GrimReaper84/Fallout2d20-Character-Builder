@@ -39,10 +39,10 @@ final class ArmorTab {
     ApparelEntry current = selected == null ? null : entries.get(selected);
 
     // Resistances and hints stay; selecting another piece only replaces the details below them.
-    MigPane right = OverviewParts.half();
+    MigPane right = Layouts.column();
     ApparelResistances.addTo(right, character, tabHints);
     BorderPane details = new BorderPane(ApparelDetails.build(character, current, callbacks));
-    right.add(details, "gaptop 16");
+    right.add(details, Layouts.sectionStart());
     ScrollPane rightScroll = MasterDetail.right(right, selection);
     RemoveButton remove = new RemoveButton(() -> {
       Integer index = selection.current(character.gear().getApparel().size());
@@ -68,13 +68,13 @@ final class ArmorTab {
       details.setCenter(ApparelDetails.build(character, entry, callbacks));
     });
 
-    MigPane left = new MigPane("insets 0, gap 0 4, wrap 1", "[grow, fill]");
+    MigPane left = Layouts.column();
     OverviewParts.sectionHeading(left, "Apparel");
-    MigPane buttons = new MigPane("insets 0, gap 8 0");
+    MigPane buttons = Layouts.row();
     buttons.add(addButton(character, selection, callbacks.onChanged()));
     buttons.add(remove.node());
     left.add(buttons);
-    left.add(tree, "grow, push");
+    left.add(tree, Layouts.filling());
     return MasterDetail.layout(MasterDetail.left(left, selection), rightScroll);
   }
 

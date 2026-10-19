@@ -20,19 +20,19 @@ final class AttributeSection {
 
   /** @param locked whether the character is complete and not in GM mode (values read-only) */
   static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onChanged) {
-    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 4", "[left][left][left][left]");
+    MigPane pane = Layouts.table(4);
     if (locked) {
       for (Attribute attribute : Attribute.values()) {
         pane.add(new Label(attribute.displayName()));
         pane.add(OverviewParts.baselineMarked(Integer.toString(character.abilities().attributeValue(attribute)),
-            character.isLegacyImport()), "span 3");
+            character.isLegacyImport()), Layouts.span(3));
       }
       return pane;
     }
     int left = AttributeRules.pointsLeft(character);
     // D2: GM corrections of a complete character have no budget.
     if (!character.isCreationComplete()) {
-      pane.add(new Label("[Points left: " + left + "]"), "span 4");
+      pane.add(new Label("[Points left: " + left + "]"), Layouts.span(4));
     }
     for (Attribute attribute : Attribute.values()) {
       pane.add(new Label(attribute.displayName()));

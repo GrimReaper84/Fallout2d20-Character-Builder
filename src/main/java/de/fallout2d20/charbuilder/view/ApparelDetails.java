@@ -34,7 +34,7 @@ final class ApparelDetails {
   /** The details of {@code entry}, or a prompt to select a piece if it is {@code null}. */
   static @NonNull Node build(@NonNull PlayerCharacter character, @Nullable ApparelEntry entry,
       @NonNull ViewCallbacks callbacks) {
-    MigPane pane = OverviewParts.half();
+    MigPane pane = Layouts.column();
     if (entry == null) {
       OverviewParts.sectionHeading(pane, "Apparel");
       pane.add(new Label("Select a piece on the left."));
@@ -47,7 +47,7 @@ final class ApparelDetails {
     Optional<ApparelValues> values = item.values();
     OverviewParts.sectionHeading(pane, item.displayName());
 
-    MigPane rows = new MigPane("insets 0, gap 16 6, wrap 2", "[left][grow, fill]");
+    MigPane rows = Layouts.details(0);
     detailRow(rows, "Source", new Label(data.map(catalog -> catalog.sources().getFirst().toString())
         .orElse("Custom item")));
     CheckBox worn = new CheckBox();

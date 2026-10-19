@@ -36,7 +36,7 @@ final class ItemDetails {
   /** The details of {@code entry}, or a prompt to select an item if it is {@code null}. */
   static @NonNull Node build(@NonNull PlayerCharacter character, @Nullable ItemEntry entry,
       @NonNull ViewCallbacks callbacks) {
-    MigPane pane = OverviewParts.half();
+    MigPane pane = Layouts.column();
     if (entry == null) {
       OverviewParts.sectionHeading(pane, "Gear");
       pane.add(new Label("Select an item on the left."));
@@ -47,7 +47,7 @@ final class ItemDetails {
     CarriedItem item = character.gear().getItems().get(index);
     OverviewParts.sectionHeading(pane, item.displayName());
 
-    MigPane rows = new MigPane("insets 0, gap 16 6, wrap 2", "[left][grow, fill]");
+    MigPane rows = Layouts.details(0);
     Holotape holotape = item.holotape();
     if (holotape != null) {
       addHolotape(rows, character, index, holotape, callbacks);
@@ -115,7 +115,7 @@ final class ItemDetails {
         callbacks.onEdited().run();
       }
     });
-    rows.add(OverviewParts.rowName("Label"), "top");
+    rows.add(OverviewParts.rowName("Label"), Layouts.top());
     rows.add(label);
     Label weight = new Label("0 lbs.");
     weight.setTooltip(new Tooltip("The book gives holotapes no weight."));

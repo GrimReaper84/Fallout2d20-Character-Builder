@@ -21,6 +21,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import net.miginfocom.layout.CC;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
@@ -36,8 +37,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 final class TraitSection {
 
   private static final String FULL_TOOLTIP = "Two traits are already chosen; uncheck one first.";
-  /** Indent of a checkbox's description, so it lines up with the checkbox text. */
-  private static final String UNDER_CHECKBOX = "gapleft 24";
+  /** Indent levels of a checkbox's description, so it lines up with the checkbox text. */
+  private static final int UNDER_CHECKBOX = 2;
 
   private TraitSection() {}
 
@@ -48,7 +49,7 @@ final class TraitSection {
    */
   static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onEdited,
       @NonNull Runnable onChanged) {
-    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][grow, left]");
+    MigPane pane = Layouts.tableWithGrowingLast(2);
     Optional<OriginData> origin = character.getOriginData();
     if (origin.isPresent()) {
       addOriginTrait(pane, origin.get(), locked);
@@ -72,7 +73,7 @@ final class TraitSection {
       addChoice(pane, character, origin.get(), onChanged);
     }
     if (pane.getChildren().isEmpty()) {
-      pane.add(new Label("None"), "span 2");
+      pane.add(new Label("None"), Layouts.span(2));
     }
     return pane;
   }
@@ -86,7 +87,7 @@ final class TraitSection {
     if (traitName != null) {
       addEntry(pane, new Label(traitName + " (Origin Trait)"), origin.traitSummary(), origin.sources());
     } else if (!locked) {
-      pane.add(descriptionLabel(origin.traitSummary(), origin.sources()), "span 2, growx");
+      pane.add(descriptionLabel(origin.traitSummary(), origin.sources()), Layouts.span(2).growX());
     }
   }
 
@@ -95,7 +96,7 @@ final class TraitSection {
     Optional<TraitDefinition> trait = TraitCatalog.byId(selection.trait().id());
     if (trait.isEmpty()) {
       pane.add(OverviewParts.importMarked(OverviewParts.reference(selection.trait()), selection.imported()),
-          "span 2" + gapTop(pane));
+          entryStart(pane));
       return;
     }
     String choices = selection.attributeChoices().isEmpty() ? ""
@@ -109,8 +110,8 @@ final class TraitSection {
   private static void addEntry(@NonNull MigPane pane, @NonNull Label name, @NonNull String description,
       @NonNull List<Source> sources) {
     name.setStyle("-fx-font-weight: bold;");
-    pane.add(name, "span 2" + gapTop(pane));
-    pane.add(descriptionLabel(description, sources), "span 2, growx");
+    pane.add(name, entryStart(pane));
+    pane.add(descriptionLabel(description, sources), Layouts.span(2).growX());
   }
 
   /** The trait lists of the origin, one checkbox per trait with its benefit and penalty below. */
@@ -123,16 +124,18 @@ final class TraitSection {
     for (String list : origin.traitLists()) {
       Label title = new Label(listTitle(list));
       title.setStyle("-fx-font-weight: bold;");
-      pane.add(title, "span 2" + gapTop(pane));
+      pane.add(title, entryStart(pane));
       for (TraitDefinition trait : TraitCatalog.inList(list)) {
-        pane.add(checkBox(character, trait, chosen, imported.contains(trait.id()), onChanged), "span 2, gaptop 6");
-        pane.add(descriptionLabel(description(trait), trait.sources()), "span 2, growx, " + UNDER_CHECKBOX);
+        pane.add(checkBox(character, trait, chosen, imported.contains(trait.id()), onChanged),
+            Layouts.spaced(Layouts.span(2)));
+        pane.add(descriptionLabel(description(trait), trait.sources()),
+            Layouts.indented(UNDER_CHECKBOX).spanX(2).growX());
         character.getTraits().stream().filter(selection -> selection.trait().id().equals(trait.id()))
             .findFirst().ifPresent(selection -> addAttributeChoosers(pane, character, selection, onChanged));
       }
     }
     if (TraitRules.takesExtraPerkInsteadOfTrait(character)) {
-      pane.add(new Label("One trait chosen: you get an extra perk."), "span 2, gaptop 8");
+      pane.add(new Label("One trait chosen: you get an extra perk."), Layouts.spaced(Layouts.span(2)));
     }
   }
 
@@ -185,7 +188,7 @@ final class TraitSection {
       }
       chooser.setDisable(i > selection.attributeChoices().size());
       choosers.add(chooser);
-      pane.add(new Label("Attribute " + (i + 1)), UNDER_CHECKBOX);
+      pane.add(new Label("Attribute " + (i + 1)), Layouts.indented(UNDER_CHECKBOX));
       pane.add(chooser);
     }
     for (ComboBox<Attribute> chooser : choosers) {
@@ -222,9 +225,9 @@ final class TraitSection {
     return sources.stream().map(Source::toString).collect(Collectors.joining(", ", "[", "]"));
   }
 
-  /** Space above an entry that is not the first one of the grid. */
-  private static @NonNull String gapTop(@NonNull MigPane pane) {
-    return pane.getChildren().isEmpty() ? "" : ", gaptop 8";
+  /** A cell over both columns, with space above unless it is the first one of the grid. */
+  private static @NonNull CC entryStart(@NonNull MigPane pane) {
+    return pane.getChildren().isEmpty() ? Layouts.span(2) : Layouts.spaced(Layouts.span(2));
   }
 
   private static @NonNull String listTitle(@NonNull String list) {

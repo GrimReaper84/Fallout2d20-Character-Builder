@@ -5,6 +5,8 @@ module de.fallout2d20.charbuilder {
   requires org.controlsfx.controls;
   requires com.fasterxml.jackson.databind;
   requires com.miglayout.javafx;
+  // Typed layout constraints (LC, AC, CC) for the standard panes in view.Layouts.
+  requires com.miglayout.core;
   requires org.kordamp.ikonli.javafx;
   requires org.kordamp.ikonli.fontawesome6;
   requires org.apache.pdfbox;

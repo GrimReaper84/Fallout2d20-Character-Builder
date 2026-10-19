@@ -34,6 +34,7 @@ final class CharacterHeader {
   /** @param hints all hints of the character, each with its area */
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull ViewCallbacks callbacks) {
+    // One-off layout of the bar above the tabs (no Layouts preset).
     MigPane pane = new MigPane("insets 12 16 8 16, gap 8 4, wrap 8",
         "[right][grow,fill][right][grow,fill][right][][right][]");
     boolean complete = character.isCreationComplete();
@@ -42,7 +43,7 @@ final class CharacterHeader {
       Label banner = new Label("GM mode: budgets and level-up points do not apply; every change counts at once.");
       banner.setStyle(OverviewParts.HINT_STYLE + " -fx-font-weight: bold;");
       banner.setWrapText(true);
-      pane.add(banner, "span 8");
+      pane.add(banner, Layouts.span(8));
     }
 
     TextField name = new TextField(character.getName());
@@ -88,7 +89,7 @@ final class CharacterHeader {
       actions.getChildren().add(OverviewParts.wrapping(OverviewParts.hintLabel(headerHints)));
     }
     if (!actions.getChildren().isEmpty()) {
-      pane.add(actions, "span 8, growx");
+      pane.add(actions, Layouts.span(8).growX());
     }
     return pane;
   }

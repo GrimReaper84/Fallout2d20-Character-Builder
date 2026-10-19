@@ -20,7 +20,7 @@ final class AdvancementSkillSection {
   static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane pane = SkillSection.grid();
     int left = character.advancement().skillRanksLeft();
-    pane.add(new Label("[Ranks left: " + left + "]"), "span 6");
+    pane.add(new Label("[Ranks left: " + left + "]"), Layouts.span(6));
     for (Skill skill : Skill.values()) {
       int staged = character.abilities().skillState(skill).stagedRanks();
       pane.add(new Label(character.abilities().isTagged(skill) ? SkillSection.TAG_MARKER : ""));
@@ -38,7 +38,7 @@ final class AdvancementSkillSection {
               : skill.displayName() + " is at its maximum rank of " + character.abilities().skillRankCap() + ".",
           canRaise, () -> step(character, skill, 1, onChanged)));
     }
-    pane.add(new Label(SkillSection.TAG_LEGEND), "span 6");
+    pane.add(new Label(SkillSection.TAG_LEGEND), Layouts.span(6));
     return pane;
   }
 

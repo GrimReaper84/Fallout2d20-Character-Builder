@@ -23,7 +23,7 @@ final class StatusTab {
   private StatusTab() {}
 
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
-    MigPane left = OverviewParts.half();
+    MigPane left = Layouts.column();
     OverviewParts.sectionHeading(left, "Session");
     if (character.isCreationComplete()) {
       left.add(SessionSection.build(character, callbacks.onChanged()));
@@ -31,16 +31,16 @@ final class StatusTab {
       left.add(new Label("Tracked once the character is created."));
     }
 
-    MigPane right = OverviewParts.half();
+    MigPane right = Layouts.column();
     OverviewParts.sectionHeading(right, "Derived statistics");
     right.add(derivedStatistics(character));
-    return OverviewParts.halves(left, right);
+    return Layouts.halves(left, right);
   }
 
   /** Name and value per row, one below the other. */
   private static @NonNull MigPane derivedStatistics(@NonNull PlayerCharacter character) {
     DerivedStats derived = DerivedStats.of(character);
-    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][left]");
+    MigPane pane = Layouts.table(2);
     row(pane, new Label("Max HP"), Integer.toString(derived.maxHp()));
     row(pane, new Label("Initiative"), Integer.toString(derived.initiative()));
     row(pane, new Label("Defense"), Integer.toString(derived.defense()));

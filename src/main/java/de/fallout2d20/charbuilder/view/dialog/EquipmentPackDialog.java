@@ -19,6 +19,7 @@ import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.view.DisplayConverter;
+import de.fallout2d20.charbuilder.view.Layouts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,7 +59,7 @@ public final class EquipmentPackDialog {
   private static final double PREVIEW_WIDTH = 520;
 
   private final @NonNull PlayerCharacter character;
-  private final @NonNull MigPane controls = new MigPane("insets 0, gap 12 6, wrap 4", "[left][grow, fill][][]");
+  private final @NonNull MigPane controls = Layouts.details(2);
   private final @NonNull Label preview = new Label();
 
   private EquipmentPackDialog(@NonNull PlayerCharacter character) {
@@ -145,13 +146,13 @@ public final class EquipmentPackDialog {
     CatalogRef origin = character.getOrigin();
     controls.add(new Label("Equipment pack"));
     if (origin == null) {
-      controls.add(new Label("Choose an origin first."), "span 3");
+      controls.add(new Label("Choose an origin first."), Layouts.span(3));
       return;
     }
     List<EquipmentPackData> packs = EquipmentCatalog.packsFor(origin.id(), character.getEnabledBooks());
     Optional<EquipmentPackData> chosen = character.startingGear().getPack();
     if (packs.isEmpty() && chosen.isEmpty()) {
-      controls.add(new Label("No equipment packs for this origin yet."), "span 3");
+      controls.add(new Label("No equipment packs for this origin yet."), Layouts.span(3));
       return;
     }
     ComboBox<EquipmentPackData> pack = new ComboBox<>();
@@ -169,7 +170,7 @@ public final class EquipmentPackDialog {
         rebuild();
       }
     });
-    controls.add(pack, "span 3");
+    controls.add(pack, Layouts.span(3));
     chosen.ifPresent(this::addPackChoices);
   }
 
@@ -182,7 +183,7 @@ public final class EquipmentPackDialog {
       controls.add(choiceBox(choices.get(i).options(), selection.choices().get(i), option -> {
         character.startingGear().chooseOption(index, option);
         rebuild();
-      }), "span 3");
+      }), Layouts.span(3));
     }
     if (!pack.arms().isEmpty()) {
       addArms(pack);
@@ -202,7 +203,7 @@ public final class EquipmentPackDialog {
       rebuild();
     });
     controls.add(new Label("Arms"));
-    controls.add(free, "span 3");
+    controls.add(free, Layouts.span(3));
     for (int slot = 0; slot < selection.arms().size(); slot++) {
       int index = slot;
       ArmSelection arm = selection.arms().get(slot);
@@ -211,13 +212,13 @@ public final class EquipmentPackDialog {
       if (selection.freeArms()) {
         addFreeArm(index, arm);
       } else if (allowed.fixed()) {
-        controls.add(new Label(allowed.options().getFirst().displayName()), "span 3");
+        controls.add(new Label(allowed.options().getFirst().displayName()), Layouts.span(3));
       } else {
         controls.add(armBox(allowed.options(), arm.attachment(), attachment -> {
           character.startingGear()
               .chooseArm(index, attachment == null ? ArmSelection.OPEN : ArmSelection.of(attachment));
           rebuild();
-        }), "span 3");
+        }), Layouts.span(3));
       }
     }
   }
@@ -243,7 +244,7 @@ public final class EquipmentPackDialog {
       updatePreview();
     });
     controls.add(attachment);
-    controls.add(weapon, "span 2");
+    controls.add(weapon, Layouts.span(2));
   }
 
   private void addTrinket() {
@@ -263,8 +264,8 @@ public final class EquipmentPackDialog {
       rebuild();
     });
     controls.add(new Label("Personal trinket"));
-    controls.add(trinket, "span 2");
-    controls.add(roll, "left");
+    controls.add(trinket, Layouts.span(2));
+    controls.add(roll, Layouts.cell().alignX("left"));
   }
 
   /** CRB p. 81: Tag skills whose items offer a choice. */
@@ -276,7 +277,7 @@ public final class EquipmentPackDialog {
           option -> {
             character.startingGear().chooseTagSkillItem(items.skill(), option);
             rebuild();
-          }), "span 3");
+          }), Layouts.span(3));
     });
   }
 

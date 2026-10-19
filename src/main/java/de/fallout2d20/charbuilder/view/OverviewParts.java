@@ -32,48 +32,12 @@ final class OverviewParts {
   /** Width at which long texts (hints, starting equipment, notes) wrap, so they do not stretch the grid. */
   static final double TEXT_WIDTH = 640;
 
-  /**
-   * A four-column grid as used by the tabs: label, value, label, value. The columns keep their natural
-   * width and the content stays on the left, so values and tables are not pulled apart in a wide window.
-   */
-  static @NonNull MigPane grid() {
-    MigPane pane = new MigPane("insets 16, gap 8 4, wrap 4", "[right][left][right][left]");
-    // Never squeezed below its natural width (that cut the row names to "…"); a too narrow window scrolls.
-    pane.setMinWidth(Region.USE_PREF_SIZE);
-    return pane;
-  }
-
-  /** Like {@link #grid()}, but the value columns share the window width (for the flowing perk cards). */
-  static @NonNull MigPane fillingGrid() {
-    return new MigPane("insets 16, gap 8 4, wrap 4", "[right][grow,fill][right][grow,fill]");
-  }
-
-  /**
-   * One half of a tab split into two halves of equal width (Stats tab): a single column that fills the
-   * half, holding section headings and the sections' own grids.
-   */
-  static @NonNull MigPane half() {
-    return new MigPane("insets 0, gap 0 4, wrap 1", "[grow, fill]");
-  }
-
-  /**
-   * Two {@link #half()}s side by side with the same width, sharing the window width. Never squeezed below
-   * its natural width (that cut row names to "…"); a too narrow window scrolls.
-   */
-  static @NonNull MigPane halves(@NonNull MigPane left, @NonNull MigPane right) {
-    MigPane pane = new MigPane("insets 16, gap 32 0", "[sg half, grow, fill][sg half, grow, fill]");
-    pane.setMinWidth(Region.USE_PREF_SIZE);
-    pane.add(left, "top");
-    pane.add(right, "top");
-    return pane;
-  }
-
-  /** A bold heading with a separator below it over the whole width of a {@link #half()}. */
+  /** A bold heading with a separator below it over the whole width of a {@link Layouts#column()}. */
   static void sectionHeading(@NonNull MigPane half, @NonNull String text) {
     Label label = new Label(text);
     label.setStyle("-fx-font-weight: bold; -fx-font-size: 1.15em;");
-    half.add(label, half.getChildren().isEmpty() ? "" : "gaptop 16");
-    half.add(new Separator(), "growx");
+    half.add(label, half.getChildren().isEmpty() ? Layouts.cell() : Layouts.sectionStart());
+    half.add(new Separator(), Layouts.cell().growX());
   }
 
   /** Preferred width of a label that wraps at its cell; small, so the text never decides the column width. */
@@ -99,7 +63,7 @@ final class OverviewParts {
     return label;
   }
 
-  /** A notes area {@link #TEXT_WIDTH} wide by preference; added with "span 3", it may get narrower. */
+  /** A notes area {@link #TEXT_WIDTH} wide by preference; spanning cells, it may get narrower. */
   static @NonNull TextArea notesArea(@NonNull TextArea area) {
     area.setPrefWidth(TEXT_WIDTH);
     area.setMinWidth(0);
@@ -122,7 +86,7 @@ final class OverviewParts {
     notes.setWrapText(true);
     notes.setPrefRowCount(NOTES_ROWS);
     notes.textProperty().addListener((obs, old, typed) -> onText.accept(typed));
-    rows.add(rowName("Notes"), "top");
+    rows.add(rowName("Notes"), Layouts.top());
     rows.add(notes);
   }
 
@@ -138,19 +102,14 @@ final class OverviewParts {
     return value == null || value.toString().isBlank() ? "–" : value.toString();
   }
 
-  static void heading(@NonNull MigPane pane, @NonNull String text) {
-    Label label = new Label(text);
-    label.setStyle("-fx-font-weight: bold; -fx-font-size: 1.15em;");
-    pane.add(label, "span 4, gaptop 12, left");
-  }
 
   /** Rule hints at the top of a tab; soft, they never block editing or saving. Nothing if there are none. */
   static void addHints(@NonNull MigPane pane, @NonNull List<CreationProblem> problems) {
     if (problems.isEmpty()) {
       return;
     }
-    pane.add(new Label("Rule hints"), "top");
-    pane.add(wrapping(hintLabel(problems)), "span 3");
+    pane.add(new Label("Rule hints"), Layouts.top());
+    pane.add(wrapping(hintLabel(problems)), Layouts.span(3));
   }
 
   /** The hints one per line in the hint style; the caller decides how the label wraps. */

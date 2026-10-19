@@ -26,7 +26,7 @@ final class SessionSection {
   private SessionSection() {}
 
   static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][left]");
+    MigPane pane = Layouts.table(2);
     SessionValues values = SessionValues.of(character);
 
     Label hp = new Label(values.currentHp() + " / " + values.effectiveMaxHp());
@@ -68,8 +68,8 @@ final class SessionSection {
       });
       injuries.getChildren().add(box);
     }
-    pane.add(new Label("Injuries"), "top, gaptop 8");
-    pane.add(injuries, "gaptop 8");
+    pane.add(new Label("Injuries"), Layouts.spaced(Layouts.top()));
+    pane.add(injuries, Layouts.spaced());
     return pane;
   }
 

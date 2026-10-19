@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.view.dialog;
 
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.view.Layouts;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
@@ -15,7 +16,7 @@ public final class ModSlotCheckBoxes {
   private static final int COLUMNS = 4;
 
   private final @NonNull Map<ModSlot, CheckBox> boxes = new EnumMap<>(ModSlot.class);
-  private final @NonNull MigPane pane = new MigPane("insets 0, gap 12 4, wrap " + COLUMNS);
+  private final @NonNull MigPane pane = Layouts.wideTable(COLUMNS);
 
   public ModSlotCheckBoxes(@NonNull Set<ModSlot> selected) {
     for (ModSlot slot : ModSlot.values()) {

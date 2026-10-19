@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
+import net.miginfocom.layout.AC;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
@@ -21,7 +22,8 @@ final class GearSummary {
   private GearSummary() {}
 
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    MigPane bar = new MigPane("insets 0, gap 6 0", "", "[top]");
+    MigPane bar = Layouts.row();
+    bar.setRowConstraints(new AC().align("top"));
     bar.add(new Label("Caps"));
     TextField caps = NumberField.of((int) Math.min(Integer.MAX_VALUE, character.gear().getCaps()), 0, value -> {
       character.gear().setCaps(value);
@@ -35,20 +37,20 @@ final class GearSummary {
     Label junk = new Label("Junk");
     junk.setTooltip(new Tooltip("CRB p. 208: a junk item weighs 2 lbs. (2 caps); a unit of material 1 lb. "
         + "(common 1, uncommon 3, rare 5 caps)."));
-    bar.add(junk, "gapleft 24");
+    bar.add(junk, Layouts.indented(2));
     bar.add(NumberField.of(materials.junk(), 0, value -> set(character,
         new Materials(value, materials.common(), materials.uncommon(), materials.rare()), onChanged)));
-    bar.add(new Label("Common"), "gapleft 12");
+    bar.add(new Label("Common"), Layouts.indented(1));
     bar.add(NumberField.of(materials.common(), 0, value -> set(character,
         new Materials(materials.junk(), value, materials.uncommon(), materials.rare()), onChanged)));
-    bar.add(new Label("Uncommon"), "gapleft 12");
+    bar.add(new Label("Uncommon"), Layouts.indented(1));
     bar.add(NumberField.of(materials.uncommon(), 0, value -> set(character,
         new Materials(materials.junk(), materials.common(), value, materials.rare()), onChanged)));
-    bar.add(new Label("Rare"), "gapleft 12");
+    bar.add(new Label("Rare"), Layouts.indented(1));
     bar.add(NumberField.of(materials.rare(), 0, value -> set(character,
         new Materials(materials.junk(), materials.common(), materials.uncommon(), value), onChanged)));
 
-    bar.add(new Label("Load"), "gapleft 24");
+    bar.add(new Label("Load"), Layouts.indented(2));
     bar.add(load(character));
     return bar;
   }

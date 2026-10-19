@@ -68,13 +68,13 @@ final class WeaponsTab {
       MasterDetail.replace(details, WeaponDetails.build(character, entry, callbacks));
     });
 
-    MigPane left = new MigPane("insets 0, gap 0 4, wrap 1", "[grow, fill]");
+    MigPane left = Layouts.column();
     OverviewParts.sectionHeading(left, "Weapons");
-    MigPane buttons = new MigPane("insets 0, gap 8 0");
+    MigPane buttons = Layouts.row();
     buttons.add(addButton(character, selection, callbacks.onChanged()));
     buttons.add(remove.node());
     left.add(buttons);
-    left.add(tree, "grow, push");
+    left.add(tree, Layouts.filling());
     OverviewParts.sectionHeading(left, "Ammunition");
     left.add(AmmunitionSection.build(character, callbacks.onChanged()));
 

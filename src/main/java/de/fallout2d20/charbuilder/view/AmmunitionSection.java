@@ -11,6 +11,7 @@ import java.util.Set;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import net.miginfocom.layout.AC;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
@@ -28,7 +29,8 @@ final class AmmunitionSection {
       shown.addAll(WeaponAttack.of(character, weapon).ammunition());
     }
     shown.addAll(character.gear().getAmmunition().keySet());
-    MigPane rows = new MigPane("insets 0, gap 10 4, wrap 2", "[grow, left][right]");
+    MigPane rows = Layouts.table(2);
+    rows.setColumnConstraints(new AC().grow(100, 0).align("left", 0).align("right", 1));
     for (String id : shown) {
       Label name = new Label(ammunitionName(id));
       WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip("Found: "
@@ -54,7 +56,7 @@ final class AmmunitionSection {
         onChanged.run();
       }
     });
-    rows.add(add, "span 2, growx");
+    rows.add(add, Layouts.span(2).growX());
     return rows;
   }
 

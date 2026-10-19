@@ -38,7 +38,7 @@ final class WeaponDetails {
   /** The panel of {@code entry}, or a prompt to select a weapon if it is {@code null}. */
   static @NonNull Node build(@NonNull PlayerCharacter character, @Nullable WeaponEntry entry,
       @NonNull ViewCallbacks callbacks) {
-    MigPane pane = OverviewParts.half();
+    MigPane pane = Layouts.column();
     if (entry == null) {
       pane.add(new Label("Select a weapon on the left."));
       return pane;
@@ -52,7 +52,7 @@ final class WeaponDetails {
     ModdedWeapon base = weapon == null ? values : ModdedWeapon.unmodded(weapon).orElse(null);
     OverviewParts.sectionHeading(pane, attack.name());
 
-    MigPane rows = new MigPane("insets 0, gap 16 6, wrap 2", "[left][grow, fill]");
+    MigPane rows = Layouts.details(0);
     detailRow(rows, "Source", new Label(data.map(weaponData -> weaponData.sources().getFirst().toString())
         .orElse("Custom weapon")));
     if (!attack.moddedName().equals(attack.name())) {

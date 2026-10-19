@@ -85,13 +85,13 @@ final class GearTab {
       MasterDetail.replace(details, ItemDetails.build(character, entry, callbacks));
     });
 
-    MigPane left = new MigPane("insets 0, gap 0 4, wrap 1", "[grow, fill]");
+    MigPane left = Layouts.column();
     OverviewParts.sectionHeading(left, "Gear");
-    MigPane buttons = new MigPane("insets 0, gap 8 0");
+    MigPane buttons = Layouts.row();
     buttons.add(addButton(character, selection, callbacks.onChanged()));
     buttons.add(remove.node());
     left.add(buttons);
-    left.add(tree, "grow, push");
+    left.add(tree, Layouts.filling());
 
     GridPane center = new GridPane();
     center.getColumnConstraints().add(fillingColumn());
@@ -129,7 +129,7 @@ final class GearTab {
 
   /** The chosen pack and, while it can still be chosen (creation or GM mode), the button to the dialog. */
   private static @NonNull Node packRow(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    MigPane row = new MigPane("insets 0, gap 8 0");
+    MigPane row = Layouts.row();
     CatalogRef pack = character.startingGear().getSelection().pack();
     row.add(new Label("Equipment pack: " + (pack == null ? "none"
         : character.startingGear().getPack().map(EquipmentPackData::name).orElse(pack.displayName()))));
@@ -142,7 +142,7 @@ final class GearTab {
           onChanged.run();
         }
       });
-      row.add(choose, "gapleft 12");
+      row.add(choose, Layouts.indented(1));
     }
     return row;
   }
@@ -157,7 +157,7 @@ final class GearTab {
       onEdited.run();
     });
     VBox.setVgrow(notes, Priority.ALWAYS);
-    MigPane heading = new MigPane("insets 0");
+    MigPane heading = Layouts.bare();
     OverviewParts.sectionHeading(heading, "Gear notes");
     VBox box = new VBox(4, heading, notes);
     box.setPadding(new Insets(0, PADDING, PADDING, PADDING));

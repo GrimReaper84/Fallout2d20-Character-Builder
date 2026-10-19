@@ -24,17 +24,17 @@ final class StatsTab {
     boolean locked = character.isCreationComplete() && !character.isGmMode();
     Runnable onChanged = callbacks.onChanged();
 
-    MigPane left = OverviewParts.half();
+    MigPane left = Layouts.column();
     if (!hints.isEmpty()) {
       OverviewParts.sectionHeading(left, "Rule hints");
-      left.add(OverviewParts.wrappingInCell(OverviewParts.hintLabel(hints)), "growx");
+      left.add(OverviewParts.wrappingInCell(OverviewParts.hintLabel(hints)), Layouts.cell().growX());
     }
     OverviewParts.sectionHeading(left, "Traits");
-    left.add(TraitSection.build(character, locked, callbacks.onEdited(), onChanged), "growx");
+    left.add(TraitSection.build(character, locked, callbacks.onEdited(), onChanged), Layouts.cell().growX());
     OverviewParts.sectionHeading(left, "S.P.E.C.I.A.L.");
     left.add(AttributeSection.build(character, locked, onChanged));
 
-    MigPane right = OverviewParts.half();
+    MigPane right = Layouts.column();
     OverviewParts.sectionHeading(right, "Skills");
     if (locked && AdvancementRules.choosesSkills(character)) {
       right.add(AdvancementSkillSection.build(character, onChanged));
@@ -42,6 +42,6 @@ final class StatsTab {
       right.add(SkillSection.build(character, locked, onChanged));
     }
 
-    return OverviewParts.halves(left, right);
+    return Layouts.halves(left, right);
   }
 }

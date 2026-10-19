@@ -10,6 +10,7 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import de.fallout2d20.charbuilder.view.DisplayConverter;
+import de.fallout2d20.charbuilder.view.Layouts;
 import de.fallout2d20.charbuilder.view.WholeNumber;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +76,7 @@ public final class AddWeaponDialog {
     ComboBox<@Nullable WeaponRange> range = combo(Arrays.asList(WeaponRange.values()), WeaponRange::displayName);
     TextField qualities = new TextField();
     ComboBox<@Nullable AmmunitionData> ammunition = combo(WeaponCatalog.ammunition(), AmmunitionData::name);
-    MigPane form = new MigPane("wrap 2, insets 8", "[right][grow,fill]");
+    MigPane form = Layouts.dialogForm();
     addRow(form, "Name", name);
     addRow(form, "Skill", skill);
     addRow(form, "Damage (CD)", damage);
@@ -86,7 +87,7 @@ public final class AddWeaponDialog {
     addRow(form, "Qualities", qualities);
     addRow(form, "Ammunition", ammunition);
     ModSlotCheckBoxes modSlots = new ModSlotCheckBoxes(Set.of());
-    form.add(new Label("Mod slots"), "top");
+    form.add(new Label("Mod slots"), Layouts.top());
     form.add(modSlots.node());
     Tab custom = new Tab("Custom weapon", form);
 

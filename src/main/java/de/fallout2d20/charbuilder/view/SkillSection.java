@@ -41,7 +41,7 @@ final class SkillSection {
     // D2: for a complete character the GM corrects ranks; budgets and bought ranks do not matter there.
     boolean gmCorrects = character.isGmMode() && character.isCreationComplete();
     if (!gmCorrects) {
-      pane.add(budget(character), "span 6");
+      pane.add(budget(character), Layouts.span(6));
     }
     for (Skill skill : Skill.values()) {
       CheckBox box = tagBox(character, skill, onChanged);
@@ -63,7 +63,7 @@ final class SkillSection {
 
   /** An empty six-column skill grid, everything left-aligned: Tag, skill, attribute, rank, −, +. */
   static @NonNull MigPane grid() {
-    return new MigPane("insets 0, gap 8 4, wrap 6", "[left][left][left][left][left][left]");
+    return Layouts.table(6);
   }
 
   /** Skill name and governing attribute, e.g. {@code Athletics} and {@code (STR)}. */
@@ -89,9 +89,9 @@ final class SkillSection {
       pane.add(new Label(character.abilities().isTagged(skill) ? TAG_MARKER : ""));
       addNameCells(pane, skill);
       pane.add(OverviewParts.baselineMarked(Integer.toString(character.abilities().skillRank(skill)),
-          character.isLegacyImport()), "span 3");
+          character.isLegacyImport()), Layouts.span(3));
     }
-    pane.add(new Label(TAG_LEGEND), "span 6");
+    pane.add(new Label(TAG_LEGEND), Layouts.span(6));
   }
 
   /** {@code [Tags left: x | Points left: y]}, with the skill point budget as tooltip. */
