@@ -99,43 +99,58 @@ final class LegacyEquipmentImport {
     if (!(payload.get(ORIGIN_OPTIONS) instanceof ObjectNode options)) {
       return false;
     }
-    JsonNode noPincerNode = options.get(NO_PINCER);
-    boolean noPincer = noPincerNode != null && noPincerNode.isBoolean() && noPincerNode.asBoolean();
-    if (noPincerNode != null && noPincerNode.isBoolean()) {
-      options.remove(NO_PINCER);
-    }
+    boolean noPincer = takeNoPincer(options);
     List<@Nullable String> names = attachmentNames(options);
     boolean anyArm = names.stream().anyMatch(Objects::nonNull);
-    boolean freeArms = false;
     boolean readable = options.path(ATTACHMENTS).isArray() || !options.has(ATTACHMENTS);
-    if (!origin.id().equals(MISTER_HANDY)) {
-      if (readable) {
-        options.remove(ATTACHMENTS);
-      }
+    boolean misterHandy = origin.id().equals(MISTER_HANDY);
+    boolean freeArms = false;
+    if (!misterHandy) {
       if (noPincer || anyArm) {
         info(ORIGIN_OPTIONS, "Pincer and arm attachments only apply to a Mister Handy; ignored.");
       }
     } else if (pack.isEmpty() || pack.get().arms().isEmpty()) {
       if (anyArm) {
         warn(ORIGIN_OPTIONS, "Arm attachments need a Mister Handy equipment pack; kept in the legacy data.");
-      } else if (readable) {
-        options.remove(ATTACHMENTS);
+        readable = false;
       }
     } else {
       if (readable) {
         options.remove(ATTACHMENTS);
+        readable = false;
       }
+      // fillArms may put the unknown attachments back.
       freeArms = fillArms(pack.get(), names, options, arms);
     }
-    if (noPincer && arms.stream().anyMatch(ArmSelection::isPincer)) {
-      info(ORIGIN_OPTIONS, "\"No pincer\" contradicts the pincer arm; the arms count.");
-    } else if (noPincer && arms.isEmpty() && origin.id().equals(MISTER_HANDY)) {
-      info(ORIGIN_OPTIONS, "\"No pincer\" cannot be kept without arms; ignored.");
+    if (readable) {
+      options.remove(ATTACHMENTS);
+    }
+    if (noPincer && misterHandy) {
+      reportNoPincer(arms);
     }
     if (options.isEmpty()) {
       payload.remove(ORIGIN_OPTIONS);
     }
     return freeArms;
+  }
+
+  /** Reads and removes the legacy "no pincer" flag; it follows from the arms now. */
+  private static boolean takeNoPincer(@NonNull ObjectNode options) {
+    JsonNode noPincerNode = options.get(NO_PINCER);
+    if (noPincerNode == null || !noPincerNode.isBoolean()) {
+      return false;
+    }
+    options.remove(NO_PINCER);
+    return noPincerNode.asBoolean();
+  }
+
+  /** A Mister Handy's legacy "no pincer" against the imported arms: a pincer arm wins, without arms it is lost. */
+  private void reportNoPincer(@NonNull List<ArmSelection> arms) {
+    if (arms.stream().anyMatch(ArmSelection::isPincer)) {
+      info(ORIGIN_OPTIONS, "\"No pincer\" contradicts the pincer arm; the arms count.");
+    } else if (arms.isEmpty()) {
+      info(ORIGIN_OPTIONS, "\"No pincer\" cannot be kept without arms; ignored.");
+    }
   }
 
   /**

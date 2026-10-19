@@ -54,10 +54,12 @@ class PlayerCharacterAdvancementTest {
   @Test
   void addXpRejectsNonPositiveAmountsAndCreation() {
     PlayerCharacter character = complete("survivor");
-    assertThrows(IllegalArgumentException.class, () -> character.advancement().addXp(0));
-    assertThrows(IllegalArgumentException.class, () -> character.advancement().addXp(-5));
-    assertThrows(IllegalStateException.class, () -> PlayerCharacter.createNew().advancement().addXp(100));
-    assertThrows(IllegalStateException.class, () -> PlayerCharacter.createNew().advancement().gainMilestoneLevel());
+    Advancement advancement = character.advancement();
+    assertThrows(IllegalArgumentException.class, () -> advancement.addXp(0));
+    assertThrows(IllegalArgumentException.class, () -> advancement.addXp(-5));
+    Advancement newAdvancement = PlayerCharacter.createNew().advancement();
+    assertThrows(IllegalStateException.class, () -> newAdvancement.addXp(100));
+    assertThrows(IllegalStateException.class, () -> newAdvancement.gainMilestoneLevel());
   }
 
   /** CRB p. 49 milestone progression: XP are raised to the threshold, higher XP stay. */
@@ -104,7 +106,8 @@ class PlayerCharacterAdvancementTest {
     assertEquals(6, character.abilities().skillRank(Skill.SNEAK));
     assertEquals(1, character.advancement().skillRanksLeft());
     assertFalse(AdvancementRules.canRaise(character, Skill.SNEAK), "rank 6 is the maximum");
-    assertThrows(IllegalArgumentException.class, () -> character.advancement().stageSkillRank(Skill.LOCKPICK, -1));
+    Advancement advancement = character.advancement();
+    assertThrows(IllegalArgumentException.class, () -> advancement.stageSkillRank(Skill.LOCKPICK, -1));
   }
 
   /** CRB p. 53: a Super Mutant's skills stop at rank 4, also after creation. */

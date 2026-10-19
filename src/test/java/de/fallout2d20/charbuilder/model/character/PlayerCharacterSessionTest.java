@@ -159,7 +159,8 @@ class PlayerCharacterSessionTest {
     character.session().setInjured(HitLocation.HEAD, true);
     character.session().setInjured(HitLocation.HEAD, false);
     assertEquals(Set.of(HitLocation.LEFT_ARM), SessionValues.of(character).injuries());
-    assertThrows(IllegalArgumentException.class, () -> character.session().setInjured(HitLocation.THRUSTER, true));
+    Session session = character.session();
+    assertThrows(IllegalArgumentException.class, () -> session.setInjured(HitLocation.THRUSTER, true));
 
     PlayerCharacter handy = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("mister-handy"))
         .creationComplete(true)
@@ -170,10 +171,11 @@ class PlayerCharacterSessionTest {
   @Test
   void sessionValuesOnlyAfterCreationButNotesAlways() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    assertThrows(IllegalStateException.class, () -> character.session().setCurrentHp(3));
-    assertThrows(IllegalStateException.class, () -> character.session().setRads(1));
-    assertThrows(IllegalStateException.class, () -> character.session().setLuckPoints(1));
-    assertThrows(IllegalStateException.class, () -> character.session().setInjured(HitLocation.HEAD, true));
+    Session session = character.session();
+    assertThrows(IllegalStateException.class, () -> session.setCurrentHp(3));
+    assertThrows(IllegalStateException.class, () -> session.setRads(1));
+    assertThrows(IllegalStateException.class, () -> session.setLuckPoints(1));
+    assertThrows(IllegalStateException.class, () -> session.setInjured(HitLocation.HEAD, true));
     character.session().setNotes("Med-X, 2 rounds left");
     assertEquals("Med-X, 2 rounds left", character.session().getVitals().notes());
     character.session().setNotes(null);

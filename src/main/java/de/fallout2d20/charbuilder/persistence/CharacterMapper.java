@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Gear;
@@ -39,6 +40,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -61,26 +63,7 @@ final class CharacterMapper {
    * @param savedWith the app version writing the file
    */
   static CharacterData toData(PlayerCharacter character, @NonNull String savedWith) {
-    Map<String, Integer> allocation = new LinkedHashMap<>();
-    for (Attribute attribute : Attribute.values()) {
-      allocation.put(attribute.id(), character.abilities().attributeAllocation(attribute));
-    }
-    Map<String, SkillData> skills = new LinkedHashMap<>();
-    for (Skill skill : Skill.values()) {
-      SkillState state = character.abilities().skillState(skill);
-      skills.put(skill.id(), new SkillData(state.tagged(), state.creationRanks(), state.advancementRanks(),
-          state.stagedRanks(), state.gmRanks()));
-    }
-    List<TraitData> traits = character.getTraits().stream()
-        .map(t -> new TraitData(toData(t.trait()), t.imported(), attributeIds(t.attributeChoices())))
-        .toList();
-    List<PerkData> perks = character.getPerks().stream()
-        .map(p -> new PerkData(toData(p.perk()), p.rank(), p.importedRanks(),
-            attributeIds(p.attributeChoices()), p.skillChoices().stream().map(Skill::id).toList(),
-            p.stagedRanks()))
-        .toList();
     CatalogRef origin = character.getOrigin();
-    Vitals vitals = character.session().getVitals();
     Progression progression = character.advancement().getProgression();
     Gear gear = character.gear();
     LegacyImport legacyImport = character.getLegacyImport();
@@ -99,26 +82,59 @@ final class CharacterMapper {
         character.isCreationComplete()
             ? character.getStartingTagSkills().stream().sorted().map(Skill::id).toList() : null,
         character.getEnabledBooks().stream().map(Book::name).toList(),
-        allocation,
-        skills,
-        traits,
-        perks,
+        allocationData(character.abilities()),
+        skillData(character.abilities()),
+        character.getTraits().stream()
+            .map(t -> new TraitData(toData(t.trait()), t.imported(), attributeIds(t.attributeChoices())))
+            .toList(),
+        character.getPerks().stream()
+            .map(p -> new PerkData(toData(p.perk()), p.rank(), p.importedRanks(),
+                attributeIds(p.attributeChoices()), p.skillChoices().stream().map(Skill::id).toList(),
+                p.stagedRanks()))
+            .toList(),
         new ProgressionData(progression.pendingSkillRanks(), progression.pendingPerks()),
-        new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints(), vitals.luckPoints(),
-            vitals.injuries().isEmpty() ? null : vitals.injuries().stream().sorted().toList(),
-            blankToNull(vitals.notes())),
+        vitalsData(character.session().getVitals()),
         toData(character.startingGear().getSelection()),
-        gear.getNotes().isBlank() ? null : gear.getNotes(),
-        gear.getWeapons().isEmpty() ? null : gear.getWeapons().stream().map(CharacterMapper::toData).toList(),
+        blankToNull(gear.getNotes()),
+        nullIfEmpty(gear.getWeapons(), CharacterMapper::toData),
         gear.getAmmunition().isEmpty() ? null : new LinkedHashMap<>(gear.getAmmunition()),
-        gear.getApparel().isEmpty() ? null : gear.getApparel().stream().map(CharacterMapper::toData).toList(),
-        gear.getItems().isEmpty() ? null : gear.getItems().stream().map(CharacterMapper::toData).toList(),
+        nullIfEmpty(gear.getApparel(), CharacterMapper::toData),
+        nullIfEmpty(gear.getItems(), CharacterMapper::toData),
         gear.getCaps() == 0 ? null : gear.getCaps(),
         toData(gear.getMaterials()),
         character.startingGear().isPackItemsAdded() ? Boolean.TRUE : null,
         toData(character.getLegacyBaseline()),
         legacyImport == null ? null : new LegacyImportData(legacyImport.sourceSchemaVersion(),
             legacyImport.importedOn(), legacyImport.payload()));
+  }
+
+  /** The mapped entries, or {@code null} for none (the field is left out of the file). */
+  private static <T, R> @Nullable List<R> nullIfEmpty(@NonNull List<T> entries, @NonNull Function<T, R> mapper) {
+    return entries.isEmpty() ? null : entries.stream().map(mapper).toList();
+  }
+
+  private static @NonNull Map<String, Integer> allocationData(@NonNull Abilities abilities) {
+    Map<String, Integer> allocation = new LinkedHashMap<>();
+    for (Attribute attribute : Attribute.values()) {
+      allocation.put(attribute.id(), abilities.attributeAllocation(attribute));
+    }
+    return allocation;
+  }
+
+  private static @NonNull Map<String, SkillData> skillData(@NonNull Abilities abilities) {
+    Map<String, SkillData> skills = new LinkedHashMap<>();
+    for (Skill skill : Skill.values()) {
+      SkillState state = abilities.skillState(skill);
+      skills.put(skill.id(), new SkillData(state.tagged(), state.creationRanks(), state.advancementRanks(),
+          state.stagedRanks(), state.gmRanks()));
+    }
+    return skills;
+  }
+
+  private static @NonNull VitalsData vitalsData(@NonNull Vitals vitals) {
+    return new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints(), vitals.luckPoints(),
+        vitals.injuries().isEmpty() ? null : vitals.injuries().stream().sorted().toList(),
+        blankToNull(vitals.notes()));
   }
 
   static PlayerCharacter toModel(CharacterData data) throws SaveFormatException {

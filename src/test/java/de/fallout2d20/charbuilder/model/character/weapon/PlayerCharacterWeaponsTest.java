@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.EnumSet;
@@ -33,10 +35,11 @@ class PlayerCharacterWeaponsTest {
     character.gear().setWeaponNotes(1, "Long Barrel");
     assertEquals(List.of(new CarriedWeapon(CatalogRef.of("frag-grenade"), null, 3, "", false),
         new CarriedWeapon(CatalogRef.of("10mm-pistol"), null, 1, "Long Barrel", false)), character.gear().getWeapons());
-    assertThrows(IllegalArgumentException.class, () -> character.gear().setWeaponQuantity(0, 0));
+    Gear gear = character.gear();
+    assertThrows(IllegalArgumentException.class, () -> gear.setWeaponQuantity(0, 0));
     character.gear().removeWeapon(0);
     assertEquals("10mm Pistol", character.gear().getWeapons().getFirst().displayName());
-    assertThrows(IndexOutOfBoundsException.class, () -> character.gear().removeWeapon(5));
+    assertThrows(IndexOutOfBoundsException.class, () -> gear.removeWeapon(5));
   }
 
   @Test
@@ -47,8 +50,9 @@ class PlayerCharacterWeaponsTest {
     assertEquals(0, character.gear().ammunition("38"));
     character.gear().setAmmunition("10mm", 0);
     assertEquals(Map.of(), character.gear().getAmmunition());
-    assertThrows(IllegalArgumentException.class, () -> character.gear().setAmmunition("10mm", -1));
-    assertThrows(IllegalArgumentException.class, () -> character.gear().setAmmunition(" ", 3));
+    Gear gear = character.gear();
+    assertThrows(IllegalArgumentException.class, () -> gear.setAmmunition("10mm", -1));
+    assertThrows(IllegalArgumentException.class, () -> gear.setAmmunition(" ", 3));
   }
 
   @Test
@@ -66,7 +70,8 @@ class PlayerCharacterWeaponsTest {
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("laser-gun")));
     character.gear().setCustomWeaponSkill(0, Skill.ENERGY_WEAPONS);
     assertEquals(Skill.ENERGY_WEAPONS, character.gear().getWeapons().getFirst().skill().orElseThrow());
-    assertThrows(IllegalStateException.class, () -> character.gear().setCustomWeaponSkill(1, Skill.SMALL_GUNS));
+    Gear gear = character.gear();
+    assertThrows(IllegalStateException.class, () -> gear.setCustomWeaponSkill(1, Skill.SMALL_GUNS));
   }
 
   /** CRB p. 27, 120: explosives and thrown weapons are used up, so their quantity matters. */
@@ -102,9 +107,9 @@ class PlayerCharacterWeaponsTest {
         character.gear().getWeapons().getFirst().mods());
     character.gear().setWeaponMod(0, ModSlot.RECEIVER, null);
     assertEquals(Map.of(), character.gear().getWeapons().getFirst().mods());
-    assertThrows(IllegalArgumentException.class,
-        () -> character.gear().setWeaponMod(0, ModSlot.STOCK,
-            WeaponCatalog.modById("small-guns-full-stock").orElseThrow()));
+    Gear gear = character.gear();
+    WeaponModData fullStock = WeaponCatalog.modById("small-guns-full-stock").orElseThrow();
+    assertThrows(IllegalArgumentException.class, () -> gear.setWeaponMod(0, ModSlot.STOCK, fullStock));
   }
 
   @Test
@@ -117,6 +122,7 @@ class PlayerCharacterWeaponsTest {
     assertEquals(Set.of(ModSlot.SIGHTS), character.gear().getWeapons().getFirst().custom().modSlots());
     assertTrue(character.gear().getWeapons().getFirst().mods().isEmpty());
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    assertThrows(IllegalStateException.class, () -> character.gear().setCustomWeaponModSlots(1, Set.of()));
+    Gear gear = character.gear();
+    assertThrows(IllegalStateException.class, () -> gear.setCustomWeaponModSlots(1, Set.of()));
   }
 }

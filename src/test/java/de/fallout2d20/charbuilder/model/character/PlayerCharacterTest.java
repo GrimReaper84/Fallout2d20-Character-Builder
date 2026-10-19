@@ -128,7 +128,8 @@ class PlayerCharacterTest {
   @Test
   void completeCharactersCannotChangeTheirOrigin() {
     PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
-    assertThrows(IllegalStateException.class, () -> complete.chooseOrigin(CatalogRef.of("ghoul")));
+    CatalogRef ghoul = CatalogRef.of("ghoul");
+    assertThrows(IllegalStateException.class, () -> complete.chooseOrigin(ghoul));
   }
 
   /** CRB p. 56: Gifted raises two chosen attributes by 1; an imported Gifted adds nothing. */
@@ -172,7 +173,8 @@ class PlayerCharacterTest {
     assertEquals(1, survivor.getTraits().size());
 
     PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
-    assertThrows(IllegalStateException.class, () -> complete.chooseTrait(CatalogRef.of("gifted")));
+    CatalogRef gifted = CatalogRef.of("gifted");
+    assertThrows(IllegalStateException.class, () -> complete.chooseTrait(gifted));
     assertThrows(IllegalStateException.class, () -> complete.removeTrait("gifted"));
     assertThrows(IllegalStateException.class,
         () -> complete.setTraitAttributeChoices("gifted", List.of(Attribute.STRENGTH)));
@@ -189,9 +191,10 @@ class PlayerCharacterTest {
     assertEquals(2, character.abilities().skillRank(Skill.REPAIR));
 
     PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
-    assertThrows(IllegalStateException.class, () -> complete.abilities().setAttributeAllocation(Attribute.LUCK, 1));
-    assertThrows(IllegalStateException.class, () -> complete.abilities().setCreationRanks(Skill.SNEAK, 1));
-    assertThrows(IllegalStateException.class, () -> complete.abilities().setFreeTag(Skill.SNEAK, true));
+    Abilities completeAbilities = complete.abilities();
+    assertThrows(IllegalStateException.class, () -> completeAbilities.setAttributeAllocation(Attribute.LUCK, 1));
+    assertThrows(IllegalStateException.class, () -> completeAbilities.setCreationRanks(Skill.SNEAK, 1));
+    assertThrows(IllegalStateException.class, () -> completeAbilities.setFreeTag(Skill.SNEAK, true));
   }
 
   /** User decision: tagging lowers bought ranks to the creation cap (CRB p. 58: 3 at level 1). */
@@ -219,7 +222,8 @@ class PlayerCharacterTest {
     PlayerCharacter ghoul = PlayerCharacter.createNew();
     ghoul.chooseOrigin(CatalogRef.of("ghoul"));
     assertTrue(ghoul.abilities().isTaggedByOrigin(Skill.SURVIVAL));
-    assertThrows(IllegalArgumentException.class, () -> ghoul.abilities().setFreeTag(Skill.SURVIVAL, true));
+    Abilities ghoulAbilities = ghoul.abilities();
+    assertThrows(IllegalArgumentException.class, () -> ghoulAbilities.setFreeTag(Skill.SURVIVAL, true));
     ghoul.abilities().setFreeTag(Skill.SURVIVAL, false);
   }
 
@@ -246,7 +250,8 @@ class PlayerCharacterTest {
     tribal.chooseTrait(CatalogRef.of("nomad"));
     assertFalse(tribal.abilities().isTagged(Skill.SCIENCE));
     assertEquals(1, tribal.abilities().skillRank(Skill.SCIENCE));
-    assertThrows(IllegalArgumentException.class, () -> tribal.abilities().setFreeTag(Skill.SCIENCE, true));
+    Abilities tribalAbilities = tribal.abilities();
+    assertThrows(IllegalArgumentException.class, () -> tribalAbilities.setFreeTag(Skill.SCIENCE, true));
   }
 
   /** User decision: an origin Tag lowers bought ranks to the cap like a free Tag (CRB p. 52, 58). */
@@ -314,7 +319,8 @@ class PlayerCharacterTest {
     assertTrue(character.abilities().isTaggedByPerk(Skill.SNEAK));
     assertFalse(character.abilities().skillState(Skill.SNEAK).tagged());
     assertTrue(character.abilities().isTagged(Skill.SNEAK));
-    assertThrows(IllegalArgumentException.class, () -> character.abilities().setFreeTag(Skill.SNEAK, true));
+    Abilities abilities = character.abilities();
+    assertThrows(IllegalArgumentException.class, () -> abilities.setFreeTag(Skill.SNEAK, true));
     character.removePerkRank("tag");
     assertFalse(character.abilities().isTagged(Skill.SNEAK));
   }
@@ -386,13 +392,16 @@ class PlayerCharacterTest {
 
   @Test
   void startingLevelOnlyDuringCreationAndAtLeastOne() {
-    assertThrows(IllegalArgumentException.class, () -> PlayerCharacter.createNew().advancement().setStartingLevel(0));
+    Advancement advancement = PlayerCharacter.createNew().advancement();
+    assertThrows(IllegalArgumentException.class, () -> advancement.setStartingLevel(0));
     PlayerCharacter huge = PlayerCharacter.createNew();
-    assertThrows(IllegalArgumentException.class, () -> huge.advancement().setStartingLevel(Integer.MAX_VALUE));
+    Advancement hugeAdvancement = huge.advancement();
+    assertThrows(IllegalArgumentException.class, () -> hugeAdvancement.setStartingLevel(Integer.MAX_VALUE));
     assertEquals(1, huge.advancement().getLevel());
     assertEquals(0, huge.advancement().getXp());
     PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
-    assertThrows(IllegalStateException.class, () -> complete.advancement().setStartingLevel(2));
+    Advancement completeAdvancement = complete.advancement();
+    assertThrows(IllegalStateException.class, () -> completeAdvancement.setStartingLevel(2));
   }
 
   /** CRB p. 50: creation ends once; afterwards creation choices are fixed. */
@@ -406,10 +415,15 @@ class PlayerCharacterTest {
     assertTrue(character.isCreationComplete());
     assertEquals(OptionalInt.of(3), character.advancement().getStartingLevel());
     assertThrows(IllegalStateException.class, character::completeCreation);
-    assertThrows(IllegalStateException.class, () -> character.chooseOrigin(CatalogRef.of("ghoul")));
-    assertThrows(IllegalStateException.class, () -> character.abilities().setFreeTag(Skill.SNEAK, true));
-    assertThrows(IllegalStateException.class, () -> character.startingGear().choosePack(CatalogRef.of("settler")));
-    assertThrows(IllegalStateException.class, () -> character.advancement().setStartingLevel(4));
+    CatalogRef ghoul = CatalogRef.of("ghoul");
+    assertThrows(IllegalStateException.class, () -> character.chooseOrigin(ghoul));
+    Abilities abilities = character.abilities();
+    assertThrows(IllegalStateException.class, () -> abilities.setFreeTag(Skill.SNEAK, true));
+    StartingGear startingGear = character.startingGear();
+    CatalogRef settler = CatalogRef.of("settler");
+    assertThrows(IllegalStateException.class, () -> startingGear.choosePack(settler));
+    Advancement advancement = character.advancement();
+    assertThrows(IllegalStateException.class, () -> advancement.setStartingLevel(4));
   }
 
   /** CRB p. 58: the creation rank cap of 3 no longer applies after creation. */

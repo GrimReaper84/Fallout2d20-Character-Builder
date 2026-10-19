@@ -119,8 +119,13 @@ final class SkillSection {
       raiseTooltip = canRaise ? "Raise " + name + " by one rank (GM correction)" : atCap(character, skill);
     } else {
       lowerTooltip = canLower ? "Take back a rank of " + name : "No bought ranks of " + name + " to take back.";
-      raiseTooltip = canRaise ? "Buy a rank of " + name
-          : SkillRules.skillPointsLeft(character) <= 0 ? "No skill points left." : atCap(character, skill);
+      if (canRaise) {
+        raiseTooltip = "Buy a rank of " + name;
+      } else if (SkillRules.skillPointsLeft(character) <= 0) {
+        raiseTooltip = "No skill points left.";
+      } else {
+        raiseTooltip = atCap(character, skill);
+      }
     }
     pane.add(StepButtons.minus(lowerTooltip, canLower, () -> step(character, skill, -1, onChanged)));
     pane.add(StepButtons.plus(raiseTooltip, canRaise, () -> step(character, skill, 1, onChanged)));

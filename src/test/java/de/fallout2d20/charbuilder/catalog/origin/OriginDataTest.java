@@ -33,8 +33,9 @@ class OriginDataTest {
     assertThrows(IllegalArgumentException.class,
         () -> rules(Map.of(Attribute.STRENGTH, 3), Map.of(), null, null, null));
     assertThrows(IllegalArgumentException.class, () -> rules(Map.of(), Map.of(), 7, null, null));
-    assertThrows(IllegalArgumentException.class, () -> rules(Map.of(), Map.of(), null,
-        Skill.SURVIVAL, new ExtraTagSkill(List.of(Skill.SURVIVAL))));
+    ExtraTagSkill survivalChoice = new ExtraTagSkill(List.of(Skill.SURVIVAL));
+    assertThrows(IllegalArgumentException.class,
+        () -> rules(Map.of(), Map.of(), null, Skill.SURVIVAL, survivalChoice));
   }
 
   /** Absent optional JSON fields mean "no rule": general maximum 10, no modifier, any extra Tag. */

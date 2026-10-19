@@ -69,22 +69,13 @@ final class LegacyImportRun {
 
   CharacterFile execute() throws SaveFormatException {
     int sourceVersion = sourceVersion();
-    JsonNode originNode = root.get(ORIGIN);
-    if (originNode == null || !originNode.isTextual() || !CatalogRef.canDeriveId(originNode.asText())) {
-      throw new SaveFormatException("Legacy file has no valid origin");
-    }
-    JsonNode attributesNode = root.get(ATTRIBUTES);
-    if (attributesNode == null || !attributesNode.isObject()) {
-      throw new SaveFormatException("Legacy file has no attributes");
-    }
+    String originName = requiredOriginName();
+    JsonNode attributesNode = requiredAttributes();
     String name = name();
-    CatalogRef origin = origin(originNode.asText());
+    CatalogRef origin = origin(originName);
     int level = intField(root, "level", 1, 1);
     long xp = intField(root, "xp", 0, 0);
-    if (ExperienceTable.levelForXp(xp) != level) {
-      info("xp", "XP " + xp + " does not match level " + level
-          + " (allowed with milestone levelling); both kept.");
-    }
+    checkXpMatchesLevel(level, xp);
     Map<Attribute, Integer> attributes = attributes(attributesNode);
     Map<Skill, SkillState> skillStates = new EnumMap<>(Skill.class);
     Map<Skill, Integer> skillRanks = skills(skillStates);
@@ -101,12 +92,7 @@ final class LegacyImportRun {
     reportKeptFields(kept);
     // Legacy saves know no book selection: all supported books are enabled. The imported Tags count as
     // the starting Tag skills (a legacy Tag! taken after creation cannot be told apart).
-    Set<Skill> startingTags = EnumSet.noneOf(Skill.class);
-    skillStates.forEach((skill, state) -> {
-      if (state.tagged()) {
-        startingTags.add(skill);
-      }
-    });
+    Set<Skill> startingTags = tagged(skillStates);
     PlayerCharacter character = PlayerCharacter.builder().name(name).origin(origin).level(level).xp(xp)
         .creationComplete(true).skills(skillStates).traits(traits).perks(perks).progression(progression)
         .vitals(vitals).legacyBaseline(new LegacyBaseline(attributes, skillRanks))
@@ -120,6 +106,40 @@ final class LegacyImportRun {
     compareDerived(character);
     capCurrentHp(character);
     return new CharacterFile(character, new ImportReport(sourceVersion, warnings));
+  }
+
+  private @NonNull String requiredOriginName() throws SaveFormatException {
+    JsonNode originNode = root.get(ORIGIN);
+    if (originNode == null || !originNode.isTextual() || !CatalogRef.canDeriveId(originNode.asText())) {
+      throw new SaveFormatException("Legacy file has no valid origin");
+    }
+    return originNode.asText();
+  }
+
+  private @NonNull JsonNode requiredAttributes() throws SaveFormatException {
+    JsonNode attributesNode = root.get(ATTRIBUTES);
+    if (attributesNode == null || !attributesNode.isObject()) {
+      throw new SaveFormatException("Legacy file has no attributes");
+    }
+    return attributesNode;
+  }
+
+  /** Milestone levelling may leave XP and level apart (CRB p. 49); both are kept and the gap reported. */
+  private void checkXpMatchesLevel(int level, long xp) {
+    if (ExperienceTable.levelForXp(xp) != level) {
+      info("xp", "XP " + xp + " does not match level " + level
+          + " (allowed with milestone levelling); both kept.");
+    }
+  }
+
+  private static @NonNull Set<Skill> tagged(@NonNull Map<Skill, SkillState> skillStates) {
+    Set<Skill> tagged = EnumSet.noneOf(Skill.class);
+    skillStates.forEach((skill, state) -> {
+      if (state.tagged()) {
+        tagged.add(skill);
+      }
+    });
+    return tagged;
   }
 
   private int sourceVersion() throws SaveFormatException {

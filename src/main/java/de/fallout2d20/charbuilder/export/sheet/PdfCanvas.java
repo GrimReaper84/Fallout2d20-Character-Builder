@@ -117,22 +117,8 @@ final class PdfCanvas implements AutoCloseable {
     }
     float innerWidth = width - 2 * PADDING;
     float innerHeight = cellHeight - 2 * PADDING;
-    float minSize = Math.min(maxSize, SheetLayout.MIN_FONT_SIZE);
-    float size = maxSize;
-    while (longestWord(clean, font, size) > innerWidth && size - SIZE_STEP >= minSize) {
-      size -= SIZE_STEP;
-    }
-    List<String> lines = wrap(clean, font, size, innerWidth);
-    while (lines.size() * size * LEADING > innerHeight && size - SIZE_STEP >= minSize) {
-      size -= SIZE_STEP;
-      lines = wrap(clean, font, size, innerWidth);
-    }
-    int fitting = Math.max(1, (int) Math.floor(innerHeight / (size * LEADING)));
-    if (lines.size() > fitting) {
-      List<String> cut = new ArrayList<>(lines.subList(0, fitting));
-      cut.set(fitting - 1, ellipsize(cut.get(fitting - 1), font, size, innerWidth));
-      lines = cut;
-    }
+    float size = fittingSize(clean, font, maxSize, innerWidth, innerHeight);
+    List<String> lines = cutToHeight(wrap(clean, font, size, innerWidth), font, size, innerWidth, innerHeight);
     float blockHeight = lines.size() * size * LEADING;
     float top = y + PADDING + Math.max(0, (innerHeight - blockHeight) / 2);
     stream.setFont(font, size);
@@ -146,6 +132,35 @@ final class PdfCanvas implements AutoCloseable {
       stream.showText(line);
       stream.endText();
     }
+  }
+
+  /**
+   * The largest size from {@code maxSize} down to the readable minimum at which the longest word fits the
+   * width and the wrapped lines fit the height; the minimum if nothing fits.
+   */
+  private static float fittingSize(@NonNull String text, @NonNull PDFont font, float maxSize, float innerWidth,
+      float innerHeight) throws IOException {
+    float minSize = Math.min(maxSize, SheetLayout.MIN_FONT_SIZE);
+    float size = maxSize;
+    while (longestWord(text, font, size) > innerWidth && size - SIZE_STEP >= minSize) {
+      size -= SIZE_STEP;
+    }
+    while (wrap(text, font, size, innerWidth).size() * size * LEADING > innerHeight && size - SIZE_STEP >= minSize) {
+      size -= SIZE_STEP;
+    }
+    return size;
+  }
+
+  /** The lines that fit the height (at least one); the last one kept ends with "…" when lines are cut off. */
+  private static @NonNull List<String> cutToHeight(@NonNull List<String> lines, @NonNull PDFont font, float size,
+      float innerWidth, float innerHeight) throws IOException {
+    int fitting = Math.max(1, (int) Math.floor(innerHeight / (size * LEADING)));
+    if (lines.size() <= fitting) {
+      return lines;
+    }
+    List<String> cut = new ArrayList<>(lines.subList(0, fitting));
+    cut.set(fitting - 1, ellipsize(cut.get(fitting - 1), font, size, innerWidth));
+    return cut;
   }
 
   @Override
@@ -168,7 +183,7 @@ final class PdfCanvas implements AutoCloseable {
       } else if (REPLACEMENTS.containsKey(codePoint)) {
         result.append(REPLACEMENTS.get(codePoint));
       } else {
-        String character = new String(java.lang.Character.toChars(codePoint));
+        String character = new String(Character.toChars(codePoint));
         result.append(encodable(character) ? character : "?");
       }
     });
@@ -206,20 +221,26 @@ final class PdfCanvas implements AutoCloseable {
           lines.add(line.toString());
           line.setLength(0);
         }
-        String rest = word;
-        while (width(rest, font, size) > width && rest.length() > 1) {
-          int cut = rest.length() - 1;
-          while (cut > 1 && width(rest.substring(0, cut), font, size) > width) {
-            cut--;
-          }
-          lines.add(rest.substring(0, cut));
-          rest = rest.substring(cut);
-        }
-        line.append(rest);
+        line.append(splitLongWord(word, font, size, width, lines));
       }
       lines.add(line.toString());
     }
     return lines;
+  }
+
+  /** Adds full-width pieces of a word wider than {@code width} to the lines and returns the rest. */
+  private static @NonNull String splitLongWord(@NonNull String word, @NonNull PDFont font, float size, float width,
+      @NonNull List<String> lines) throws IOException {
+    String rest = word;
+    while (width(rest, font, size) > width && rest.length() > 1) {
+      int cut = rest.length() - 1;
+      while (cut > 1 && width(rest.substring(0, cut), font, size) > width) {
+        cut--;
+      }
+      lines.add(rest.substring(0, cut));
+      rest = rest.substring(cut);
+    }
+    return rest;
   }
 
   /** Width of the widest word, so text shrinks before a word has to be split. */

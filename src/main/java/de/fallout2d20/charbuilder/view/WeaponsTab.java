@@ -111,9 +111,13 @@ final class WeaponsTab {
 
   /** Every carried weapon can be removed; the Unarmed Strike, a group or no selection cannot. */
   private static void updateRemove(@NonNull RemoveButton remove, @Nullable WeaponEntry entry) {
-    remove.update(entry != null && entry.weapon() != null, entry == null ? "Select a carried weapon to remove it."
-        : entry.weapon() == null ? "Every character has the Unarmed Strike; it cannot be removed."
-        : "Remove " + entry.attack().name());
+    if (entry == null) {
+      remove.update(false, "Select a carried weapon to remove it.");
+    } else if (entry.weapon() == null) {
+      remove.update(false, "Every character has the Unarmed Strike; it cannot be removed.");
+    } else {
+      remove.update(true, "Remove " + entry.attack().name());
+    }
   }
 
   private static @Nullable Window window(@NonNull Node node) {

@@ -81,8 +81,8 @@ class WeaponAttackTest {
   void carriedWeaponIsEitherCatalogOrCustom() {
     CustomWeapon custom = new CustomWeapon("Spear", Skill.MELEE_WEAPONS, 3, "", "Physical", null, null, "", null);
     assertThrows(IllegalArgumentException.class, () -> new CarriedWeapon(null, null, 1, "", false));
-    assertThrows(IllegalArgumentException.class,
-        () -> new CarriedWeapon(CatalogRef.of("sword"), custom, 1, "", false));
+    CatalogRef sword = CatalogRef.of("sword");
+    assertThrows(IllegalArgumentException.class, () -> new CarriedWeapon(sword, custom, 1, "", false));
     assertEquals("Spear", CarriedWeapon.of(custom).displayName());
     assertEquals("Sword", CarriedWeapon.of(CatalogRef.of("sword")).displayName());
   }

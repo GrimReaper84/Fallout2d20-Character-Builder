@@ -63,11 +63,12 @@ class WeaponModsTest {
   @Test
   void rejectsModsTheWeaponDoesNotAccept() {
     CarriedWeapon pistol = ModdedWeaponTest.catalog("44-pistol");
-    assertFalse(WeaponMods.canInstall(pistol, ModSlot.RECEIVER, mod("small-guns-automatic")));
-    assertThrows(IllegalArgumentException.class,
-        () -> WeaponMods.install(pistol, ModSlot.RECEIVER, mod("small-guns-automatic")));
-    assertThrows(IllegalArgumentException.class,
-        () -> WeaponMods.install(pistol, ModSlot.BARREL, mod("small-guns-hardened")), "wrong slot");
+    WeaponModData automatic = mod("small-guns-automatic");
+    WeaponModData hardened = mod("small-guns-hardened");
+    assertFalse(WeaponMods.canInstall(pistol, ModSlot.RECEIVER, automatic));
+    assertThrows(IllegalArgumentException.class, () -> WeaponMods.install(pistol, ModSlot.RECEIVER, automatic));
+    assertThrows(IllegalArgumentException.class, () -> WeaponMods.install(pistol, ModSlot.BARREL, hardened),
+        "wrong slot");
   }
 
   /** A custom weapon takes any catalog mod of its chosen slots, its own weapon type's table first. */
@@ -99,8 +100,8 @@ class WeaponModsTest {
         ModSlot.BARREL, mod("small-guns-long"));
     gun = gun.withCustomModSlots(EnumSet.of(ModSlot.GRIP));
     assertTrue(gun.mods().isEmpty());
-    assertThrows(IllegalStateException.class,
-        () -> CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withCustomModSlots(Set.of()));
+    CarriedWeapon pistol = CarriedWeapon.of(CatalogRef.of("10mm-pistol"));
+    assertThrows(IllegalStateException.class, () -> pistol.withCustomModSlots(Set.of()));
   }
 
   private static WeaponModData mod(String id) {

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 class StartingEquipmentTest {
@@ -53,7 +54,8 @@ class StartingEquipmentTest {
     choices.set(1, "RadAway");
     assertEquals(Arrays.asList(null, "Jet"), raider.choices());
     assertNull(raider.trinket());
-    assertThrows(UnsupportedOperationException.class, () -> raider.choices().set(0, "Lead pipe"));
+    List<@Nullable String> raiderChoices = raider.choices();
+    assertThrows(UnsupportedOperationException.class, () -> raiderChoices.set(0, "Lead pipe"));
     StartingEquipment picked = raider.withChoice(0, "Lead pipe").withTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
     assertEquals(Arrays.asList("Lead pipe", "Jet"), picked.choices());
     assertEquals(Map.of(Skill.THROWING, "2 + 1 CD tomahawks"), picked.tagSkillItems());

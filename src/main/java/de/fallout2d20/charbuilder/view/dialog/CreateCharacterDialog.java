@@ -31,8 +31,12 @@ public final class CreateCharacterDialog {
     alert.initOwner(owner);
     alert.setTitle("Create Character");
     alert.setHeaderText(hints ? "Create the character anyway?" : "Create the character?");
-    alert.setContentText((hints ? problems.size() + " creation hint" + (problems.size() == 1 ? " is" : "s are")
-        + " still open. " : "") + "After creating, the creation choices can no longer be changed.");
+    String openHints = "";
+    if (hints) {
+      openHints = problems.size() == 1 ? "1 creation hint is still open. "
+          : problems.size() + " creation hints are still open. ";
+    }
+    alert.setContentText(openHints + "After creating, the creation choices can no longer be changed.");
     if (hints) {
       TextArea details = new TextArea(problems.stream()
           .map(problem -> "• " + problem.topic() + ": " + problem.message())

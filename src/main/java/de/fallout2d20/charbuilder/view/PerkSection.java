@@ -55,9 +55,14 @@ final class PerkSection {
         continue;
       }
       List<String> blockers = PerkRules.blockers(character, perk);
-      List<Node> group = PerkRules.isImpossible(character, perk) ? excluded
-          : blockers.isEmpty() ? available : unavailable;
-      group.add(PerkCard.of(character, perk, blockers, editable, onChanged));
+      Node card = PerkCard.of(character, perk, blockers, editable, onChanged);
+      if (PerkRules.isImpossible(character, perk)) {
+        excluded.add(card);
+      } else if (blockers.isEmpty()) {
+        available.add(card);
+      } else {
+        unavailable.add(card);
+      }
     }
 
     Label heading = new Label("Chosen");

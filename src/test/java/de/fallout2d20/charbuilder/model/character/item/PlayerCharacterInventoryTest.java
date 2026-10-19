@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
 import java.util.List;
@@ -32,7 +33,8 @@ class PlayerCharacterInventoryTest {
     assertEquals("Lucky charm", items.get(2).notes());
     character.gear().removeItem(0);
     assertEquals(2, character.gear().getItems().size());
-    assertThrows(IllegalArgumentException.class, () -> character.gear().setItemQuantity(0, 0));
+    Gear gear = character.gear();
+    assertThrows(IllegalArgumentException.class, () -> gear.setItemQuantity(0, 0));
   }
 
   /** A magazine without a known issue shows the publication's perk. */
@@ -58,7 +60,8 @@ class PlayerCharacterInventoryTest {
     entered.gear().setCaps(60);
     entered.completeCreation();
     assertEquals(60, entered.gear().getCaps(), "a balance already entered is kept");
-    assertThrows(IllegalArgumentException.class, () -> entered.gear().setCaps(-1));
+    Gear enteredGear = entered.gear();
+    assertThrows(IllegalArgumentException.class, () -> enteredGear.setCaps(-1));
   }
 
   /** CRB p. 208: junk 2 lbs. each, materials 1 lb. per unit. */

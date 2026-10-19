@@ -23,7 +23,8 @@ class GmModeTest {
   @Test
   void creationEditsOfACompleteCharacterNeedGmMode() {
     PlayerCharacter character = complete();
-    assertThrows(IllegalStateException.class, () -> character.abilities().setAttributeAllocation(Attribute.LUCK, 2));
+    Abilities abilities = character.abilities();
+    assertThrows(IllegalStateException.class, () -> abilities.setAttributeAllocation(Attribute.LUCK, 2));
     character.setGmMode(true);
     character.chooseOrigin(CatalogRef.of("ghoul"));
     character.abilities().setAttributeAllocation(Attribute.LUCK, 3);
@@ -31,7 +32,7 @@ class GmModeTest {
     assertEquals(8, character.abilities().attributeValue(Attribute.LUCK));
     assertTrue(character.abilities().isTagged(Skill.SCIENCE));
     character.setGmMode(false);
-    assertThrows(IllegalStateException.class, () -> character.abilities().setFreeTag(Skill.SCIENCE, false));
+    assertThrows(IllegalStateException.class, () -> abilities.setFreeTag(Skill.SCIENCE, false));
   }
 
   /** No budgets in GM mode; the attribute maximum and the skill rank cap stay. */
@@ -79,13 +80,14 @@ class GmModeTest {
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.advancement().setStartingLevel(4);
     character.completeCreation();
-    assertThrows(IllegalStateException.class, () -> character.advancement().setLevelAsGm(2, 300));
+    Advancement advancement = character.advancement();
+    assertThrows(IllegalStateException.class, () -> advancement.setLevelAsGm(2, 300));
     character.setGmMode(true);
     character.advancement().setLevelAsGm(2, 300);
     assertEquals(2, character.advancement().getLevel());
     assertEquals(300, character.advancement().getXp());
     assertEquals(OptionalInt.of(2), character.advancement().getStartingLevel());
-    assertThrows(IllegalArgumentException.class, () -> character.advancement().setLevelAsGm(0, 0));
+    assertThrows(IllegalArgumentException.class, () -> advancement.setLevelAsGm(0, 0));
   }
 
   /** A Tag! bonus hides GM corrections below it; the step is then not offered and changes nothing. */
@@ -108,7 +110,8 @@ class GmModeTest {
     PlayerCharacter character = complete();
     character.setGmMode(true);
     assertThrows(IllegalStateException.class, character::completeCreation);
-    assertThrows(IllegalStateException.class, () -> character.advancement().setStartingLevel(3));
+    Advancement advancement = character.advancement();
+    assertThrows(IllegalStateException.class, () -> advancement.setStartingLevel(3));
   }
 
   /** User decision 2026-10-16: lowering the level cuts pending points and caps the current HP. */
