@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character.weapon;
 
 import de.fallout2d20.charbuilder.catalog.weapon.DamageType;
 import de.fallout2d20.charbuilder.catalog.weapon.ModEffect;
+import de.fallout2d20.charbuilder.catalog.weapon.ModEffectType;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
@@ -9,6 +10,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.derived.Weight;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -25,10 +27,12 @@ import org.jspecify.annotations.Nullable;
  * lists.
  *
  * <p>Rules: replacing values (damage, damage type, ammunition) come first, then the changes in slot order.
- * CRB p. 88: a quality is not gained twice; Accurate and Inaccurate cancel each other; every Piercing a mod
- * gives raises the rating by 1; range moves in steps between Close and Extreme. Fire rate stays within 0–6
+ * CRB p. 88: a quality is not gained twice; Accurate and Inaccurate cancel each other (likewise Reliable and
+ * Unreliable, which a weapon may not both have, CRB p. 90); every Piercing a mod gives raises the rating by 1. A
+ * quality a mod removes stays removed, whichever slot gains it (house rule, user decision 2026-10-19: the book
+ * does not say; e.g. a Grip removing Inaccurate beats a Beam Splitter gaining it); range moves in steps between Close and Extreme. Fire rate stays within 0–6
  * (CRB p. 89) and damage at 0 or more; these limits apply to the sum of all changes, so the order of the
- * mods does not matter for them. Gained and removed qualities and effects do follow slot order. Weight and cost add the mods' values (user decision 2026-10-17); a
+ * mods does not matter for them. Gained qualities and gained and removed effects follow slot order. Weight and cost add the mods' values (user decision 2026-10-17); a
  * {@code <1} weapon stays {@code <1} unless the mods add weight. The modded name puts the mods' name prefixes
  * in slot order before the name, with a Stock mod the book's rifle name (CRB p. 87).
  *
@@ -44,6 +48,8 @@ import org.jspecify.annotations.Nullable;
  * @param weight weight as printed ({@code 4}, {@code <1}); {@code null} for none
  * @param cost cost in caps; {@code null} for none
  * @param specials rules of the mods that change no value, each with the mod's name
+ * @param removedQualities the qualities mods removed or kept away, each with the mod's name, e.g.
+ *     {@code Inaccurate (removed by Comfort Grip)}
  */
 public record ModdedWeapon(
     @NonNull String name,
@@ -57,18 +63,21 @@ public record ModdedWeapon(
     @NonNull List<String> ammunition,
     @Nullable String weight,
     @Nullable Integer cost,
-    @NonNull List<String> specials) {
+    @NonNull List<String> specials,
+    @NonNull List<String> removedQualities) {
 
   private static final int MAX_FIRE_RATE = 6;
   private static final @NonNull String LIGHT = "<1";
   private static final @NonNull Pattern PIERCING = Pattern.compile("Piercing (\\d+)", Pattern.CASE_INSENSITIVE);
-  private static final @NonNull Map<String, String> OPPOSITES = Map.of("accurate", "inaccurate", "inaccurate", "accurate");
+  private static final @NonNull Map<String, String> OPPOSITES = Map.of("accurate", "inaccurate", "inaccurate", "accurate",
+      "reliable", "unreliable", "unreliable", "reliable");
 
   public ModdedWeapon {
     damageEffects = List.copyOf(damageEffects);
     qualities = List.copyOf(qualities);
     ammunition = List.copyOf(ammunition);
     specials = List.copyOf(specials);
+    removedQualities = List.copyOf(removedQualities);
   }
 
   /** The weapon with its known installed mods; empty for an id outside the catalog. */
@@ -80,7 +89,7 @@ public record ModdedWeapon(
   public static @NonNull ModdedWeapon of(@NonNull WeaponData data) {
     return new ModdedWeapon(data.name(), data.name(), data.damage(), data.damageEffects(),
         data.damageTypes().stream().map(DamageType::displayName).collect(Collectors.joining("/")), data.fireRate(),
-        data.range(), data.qualities(), data.ammunition(), data.weight(), data.cost(), List.of());
+        data.range(), data.qualities(), data.ammunition(), data.weight(), data.cost(), List.of(), List.of());
   }
 
   /**
@@ -88,7 +97,8 @@ public record ModdedWeapon(
    * number).
    */
   public static @NonNull ModdedWeapon unknown(@NonNull String name) {
-    return new ModdedWeapon(name, name, 0, List.of(), "", null, null, List.of(), List.of(), null, null, List.of());
+    return new ModdedWeapon(name, name, 0, List.of(), "", null, null, List.of(), List.of(), null, null, List.of(),
+        List.of());
   }
 
   /** The weapon's values without mods (also shown as the base value next to a changed one). */
@@ -98,7 +108,7 @@ public record ModdedWeapon(
       String ammunition = custom.ammunition();
       return Optional.of(new ModdedWeapon(custom.name(), custom.name(), custom.damage(), list(custom.effects()),
           custom.damageType(), custom.fireRate(), custom.range(), list(custom.qualities()),
-          ammunition == null ? List.of() : List.of(ammunition), null, null, List.of()));
+          ammunition == null ? List.of() : List.of(ammunition), null, null, List.of(), List.of()));
     }
     return weapon.data().map(ModdedWeapon::of);
   }
@@ -124,7 +134,18 @@ public record ModdedWeapon(
     int rateChange = 0;
     int rangeSteps = 0;
     List<String> newEffects = new ArrayList<>(damageEffects);
+    // House rule: removals win over gains in any slot, so they apply to the base qualities and block gains.
+    Map<String, String> removals = new LinkedHashMap<>();
+    for (WeaponModData mod : mods) {
+      for (ModEffect effect : mod.effects()) {
+        if (effect.type() == ModEffectType.REMOVE_QUALITY) {
+          removals.putIfAbsent(key(effect.text()), mod.name());
+        }
+      }
+    }
     List<String> newQualities = new ArrayList<>(qualities);
+    List<String> removed = new ArrayList<>();
+    newQualities.removeIf(quality -> blocked(quality, removals, removed));
     List<String> newSpecials = new ArrayList<>();
     int weightChange = 0;
     boolean weightChanged = false;
@@ -136,8 +157,12 @@ public record ModdedWeapon(
           case DAMAGE -> newDamage += effect.number();
           case FIRE_RATE -> rateChange += effect.number();
           case RANGE -> rangeSteps += effect.number();
-          case GAIN_QUALITY -> gainQuality(newQualities, effect.text());
-          case REMOVE_QUALITY -> remove(newQualities, effect.text());
+          case GAIN_QUALITY -> {
+            if (!blocked(effect.text(), removals, removed)) {
+              gainQuality(newQualities, effect.text());
+            }
+          }
+          case REMOVE_QUALITY -> { }
           case GAIN_EFFECT -> gainEffect(newEffects, effect.text());
           case REMOVE_EFFECT -> remove(newEffects, effect.text());
           case SPECIAL -> newSpecials.add(mod.name() + ": " + effect.text());
@@ -165,7 +190,8 @@ public record ModdedWeapon(
       newCost = (cost == null ? 0 : cost) + costChange;
     }
     return new ModdedWeapon(name, moddedName(mods, stockName), Math.max(0, newDamage), newEffects, newType, newRate, newRange,
-        newQualities, newAmmunition, weightChanged ? addWeight(weight, weightChange) : weight, newCost, newSpecials);
+        newQualities, newAmmunition, weightChanged ? addWeight(weight, weightChange) : weight, newCost, newSpecials,
+        removed);
   }
 
   private @NonNull String moddedName(@NonNull List<WeaponModData> mods, @Nullable String stockName) {
@@ -194,7 +220,24 @@ public record ModdedWeapon(
     return ranges[Math.clamp(range.ordinal() + steps, 0, ranges.length - 1)];
   }
 
-  /** CRB p. 88: Accurate and Inaccurate cancel; a quality is never gained twice. */
+  /**
+   * Whether a mod removes the quality; if so it is noted once in {@code removed}, e.g. "Inaccurate (removed by
+   * Comfort Grip)".
+   */
+  private static boolean blocked(@NonNull String quality, @NonNull Map<String, String> removals,
+      @NonNull List<String> removed) {
+    String mod = removals.get(key(quality));
+    if (mod == null) {
+      return false;
+    }
+    String note = quality + " (removed by " + mod + ")";
+    if (removed.stream().noneMatch(entry -> key(entry).equals(key(note)))) {
+      removed.add(note);
+    }
+    return true;
+  }
+
+  /** CRB p. 88: Accurate and Inaccurate cancel (Reliable and Unreliable too, CRB p. 90); never gained twice. */
   private static void gainQuality(@NonNull List<String> qualities, @NonNull String quality) {
     String opposite = OPPOSITES.get(key(quality));
     if (opposite != null && qualities.removeIf(present -> key(present).equals(opposite))) {

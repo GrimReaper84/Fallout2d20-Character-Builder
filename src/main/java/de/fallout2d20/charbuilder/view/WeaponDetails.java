@@ -69,8 +69,8 @@ final class WeaponDetails {
         base, values, modded -> OverviewParts.orDash(modded.fireRate())));
     detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
         modded -> modded.range() == null ? "–" : modded.range().displayName()));
-    detailRow(rows, "Qualities", withBase(text(attack.qualities()), base, values,
-        modded -> String.join(", ", modded.qualities())));
+    detailRow(rows, "Qualities", withRemoved(withBase(text(attack.qualities()), base, values,
+        modded -> String.join(", ", modded.qualities())), values));
     detailRow(rows, "Ammunition", withBase(new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
         .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.ammunition(id))
         .collect(Collectors.joining(", "))), base, values, modded -> String.join(", ", modded.ammunition())));
@@ -114,6 +114,17 @@ final class WeaponDetails {
       label.setStyle("-fx-font-weight: bold;");
       label.setTooltip(new Tooltip("Without mods: " + text.apply(base)));
     }
+    return label;
+  }
+
+  /** Adds the qualities the mods removed or kept away to the tooltip (house rule: a removal wins). */
+  private static @NonNull Label withRemoved(@NonNull Label label, @Nullable ModdedWeapon values) {
+    if (values == null || values.removedQualities().isEmpty()) {
+      return label;
+    }
+    Tooltip tooltip = label.getTooltip();
+    String removed = String.join("\n", values.removedQualities());
+    label.setTooltip(new Tooltip(tooltip == null ? removed : tooltip.getText() + "\n" + removed));
     return label;
   }
 

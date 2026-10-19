@@ -1,6 +1,8 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
@@ -42,6 +44,52 @@ class ModdedWeaponTest {
   void accurateCancelsInaccurate() {
     CarriedWeapon gun = custom("Inaccurate", EnumSet.of(ModSlot.SIGHTS));
     assertEquals(List.of(), modded(gun, ModSlot.SIGHTS, "small-guns-short-scope").qualities());
+  }
+
+  /**
+   * House rule (user decision 2026-10-19, the book does not say): a removed quality stays removed whichever slot
+   * gains it – Automatic receiver (gains Inaccurate) with a Comfort Grip (removes it).
+   */
+  @Test
+  void removalWinsOverAnEarlierGain() {
+    CarriedWeapon pistol = install(catalog("10mm-pistol"), ModSlot.RECEIVER, "small-guns-automatic");
+    ModdedWeapon modded = modded(pistol, ModSlot.GRIP, "small-guns-comfort-grip");
+    assertEquals(List.of("Close Quarters", "Reliable"), modded.qualities());
+    assertEquals(List.of("Inaccurate (removed by Comfort Grip)"), modded.removedQualities());
+  }
+
+  /** Sharpshooter's Grip removes Inaccurate, a later slot (Beam Splitter muzzle) gaining it does not bring it back. */
+  @Test
+  void removalWinsOverALaterGain() {
+    CarriedWeapon laser = install(catalog("laser-gun"), ModSlot.GRIP, "energy-weapons-sharpshooters-grip");
+    ModdedWeapon modded = modded(laser, ModSlot.MUZZLE, "energy-weapons-beam-splitter");
+    assertFalse(modded.qualities().contains("Inaccurate"));
+    assertEquals(List.of("Inaccurate (removed by Sharpshooter’s Grip)"), modded.removedQualities());
+  }
+
+  /** A Sawed-Off barrel keeps Two-Handed away although a Full Stock gains it; a removal never blocks other gains. */
+  @Test
+  void removalBlocksOnlyItsOwnQuality() {
+    CarriedWeapon shotgun = CarriedWeapon.of(new CustomWeapon("Shotgun", Skill.SMALL_GUNS, 5, "", "Physical", 0,
+        WeaponRange.CLOSE, "Two-Handed, Inaccurate", null, EnumSet.of(ModSlot.BARREL, ModSlot.STOCK)));
+    CarriedWeapon sawed = install(shotgun, ModSlot.BARREL, "small-guns-sawed-off");
+    ModdedWeapon modded = modded(sawed, ModSlot.STOCK, "small-guns-full-stock");
+    assertEquals(List.of("Close Quarters"), modded.qualities());
+    assertEquals(List.of("Two-Handed (removed by Sawed-Off)", "Inaccurate (removed by Full Stock)"),
+        modded.removedQualities());
+  }
+
+  /** Without a removal nothing is noted. */
+  @Test
+  void nothingRemoved() {
+    assertTrue(modded(catalog("10mm-pistol"), ModSlot.RECEIVER, "small-guns-automatic").removedQualities().isEmpty());
+  }
+
+  /** CRB p. 90: a weapon may not be both Reliable and Unreliable – they cancel like Accurate and Inaccurate. */
+  @Test
+  void reliableCancelsUnreliable() {
+    CarriedWeapon gun = custom("Unreliable", EnumSet.of(ModSlot.BARREL));
+    assertEquals(List.of(), modded(gun, ModSlot.BARREL, "small-guns-bull-barrel").qualities());
   }
 
   /** CRB p. 88: a quality is never gained twice. */
@@ -156,6 +204,10 @@ class ModdedWeaponTest {
   static CarriedWeapon custom(String qualities, Set<ModSlot> slots) {
     return CarriedWeapon.of(new CustomWeapon("Homebrew", Skill.SMALL_GUNS, 3, "", "Physical", 1, WeaponRange.CLOSE,
         qualities, null, slots));
+  }
+
+  private static CarriedWeapon install(CarriedWeapon weapon, ModSlot slot, String modId) {
+    return WeaponMods.install(weapon, slot, WeaponCatalog.modById(modId).orElseThrow());
   }
 
   private static ModdedWeapon modded(CarriedWeapon weapon, ModSlot slot, String modId) {
