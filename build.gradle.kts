@@ -94,6 +94,14 @@ sourceSets.main {
 
 val osName: String = System.getProperty("os.name").lowercase()
 
+// The deb takes its icon from a jpackage resource folder (see the jpackage block below).
+val linuxIconDir = layout.buildDirectory.dir("jpackage-resources")
+val prepareLinuxIcon = tasks.register<Copy>("prepareLinuxIcon") {
+    from(layout.projectDirectory.file("packaging/icon.png"))
+    into(linuxIconDir)
+    rename { "${application.applicationName}.png" }
+}
+
 jlink {
     // Portable zip per OS (and architecture on macOS), e.g. Fallout2d20CharacterBuilder-1.0.0-linux.zip.
     imageZip.set(layout.buildDirectory.file(
@@ -109,6 +117,13 @@ jlink {
         val common = listOf(
             "--description", "Character builder for Fallout: The Roleplaying Game (2d20)",
             "--copyright", "Copyright (c) 2026 GrimReaper84, MIT License")
+        // Application icon (generateIcons): ico for Windows, icns for macOS, png for Linux.
+        val iconFile = when {
+            osName.contains("win") -> "icon.ico"
+            osName.contains("mac") -> "icon.icns"
+            else -> "icon.png"
+        }
+        icon = layout.projectDirectory.file("packaging/$iconFile").asFile.absolutePath
         when {
             osName.contains("win") -> {
                 installerType = "msi"
@@ -124,7 +139,10 @@ jlink {
             }
             else -> {
                 installerType = "deb"
+                // jpackage replaces the app image's icon by its default when building the deb from the image,
+                // unless the resource folder holds <name>.png (filled by the prepareLinuxIcon task).
                 installerOptions.set(common + listOf(
+                    "--resource-dir", linuxIconDir.get().asFile.absolutePath,
                     "--linux-package-name", "fallout2d20-character-builder",
                     "--linux-shortcut", "--linux-menu-group", "Game"))
             }
@@ -145,4 +163,27 @@ tasks.register<JavaExec>("generateSamples") {
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass.set("de.fallout2d20.charbuilder.samples.GenerateSamples")
     args(layout.projectDirectory.dir("src/test/resources/samples").asFile.absolutePath)
+}
+
+// Draws the application icon (window PNGs and installer icons) from the Font Awesome radiation glyph; run by hand.
+tasks.register<JavaExec>("generateIcons") {
+    group = "development"
+    description = "Writes the window and installer icons."
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass.set("de.fallout2d20.charbuilder.icons.GenerateIcons")
+    systemProperty("java.awt.headless", "true")
+    args(
+        layout.projectDirectory.dir("src/main/resources/de/fallout2d20/charbuilder").asFile.absolutePath,
+        layout.projectDirectory.dir("packaging").asFile.absolutePath)
+}
+
+// The icon is passed as an option, not a declared input: rebuild the images when it changes.
+tasks.named("jpackageImage") {
+    inputs.dir(layout.projectDirectory.dir("packaging"))
+}
+tasks.named("jpackage") {
+    inputs.dir(layout.projectDirectory.dir("packaging"))
+    if (!osName.contains("win") && !osName.contains("mac")) {
+        dependsOn(prepareLinuxIcon)
+    }
 }

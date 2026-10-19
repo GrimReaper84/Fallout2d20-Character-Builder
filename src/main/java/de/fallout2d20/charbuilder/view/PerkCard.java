@@ -150,7 +150,7 @@ final class PerkCard {
               onChanged.run();
             }),
         StepButtons.plus(canAdd ? "Take a rank of " + perk.name() : addBlocked(character, blockers),
-            canAdd, () -> add(character, perk, onChanged)));
+            canAdd, () -> add(character, perk, card, onChanged)));
   }
 
   /** Filled stars for the ranks taken, empty ones for the rest. */
@@ -185,17 +185,17 @@ final class PerkCard {
    * Takes a rank; choice perks first ask for their attribute or skill (cancel adds nothing). Checked
    * again against the current model state, which may have changed since the card was built.
    */
-  private static void add(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
+  private static void add(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk, @NonNull Node owner,
       @NonNull Runnable onChanged) {
     CatalogRef ref = CatalogRef.of(perk.id());
     if (!PerkRules.canAdd(character, perk)) {
       onChanged.run();
     } else if (perk.choice() == PerkChoice.ATTRIBUTE) {
-      Optional<Attribute> attribute = choose("Choose the attribute " + perk.name() + " raises",
+      Optional<Attribute> attribute = choose(owner, "Choose the attribute " + perk.name() + " raises",
           PerkRules.attributeOptions(character), Attribute::displayName);
       attribute.ifPresent(choice -> character.addPerkRank(ref, choice, null));
     } else if (perk.choice() == PerkChoice.SKILL) {
-      Optional<Skill> skill = choose("Choose the skill " + perk.name() + " tags",
+      Optional<Skill> skill = choose(owner, "Choose the skill " + perk.name() + " tags",
           PerkRules.skillOptions(character), Skill::displayName);
       skill.ifPresent(choice -> character.addPerkRank(ref, null, choice));
     } else {
@@ -205,14 +205,17 @@ final class PerkCard {
   }
 
   /** A choice dialog over display names; empty when cancelled or nothing can be chosen. */
-  private static <T> @NonNull Optional<T> choose(@NonNull String header, @NonNull List<T> options,
-      @NonNull Function<T, String> displayName) {
+  private static <T> @NonNull Optional<T> choose(@NonNull Node owner, @NonNull String header,
+      @NonNull List<T> options, @NonNull Function<T, String> displayName) {
     if (options.isEmpty()) {
       return Optional.empty();
     }
     Map<String, T> byName = options.stream().collect(Collectors.toMap(displayName, option -> option,
         (first, second) -> first, LinkedHashMap::new));
     ChoiceDialog<String> dialog = new ChoiceDialog<>(byName.keySet().iterator().next(), byName.keySet());
+    if (owner.getScene() != null) {
+      dialog.initOwner(owner.getScene().getWindow());
+    }
     dialog.setTitle("Perk choice");
     dialog.setHeaderText(header);
     return dialog.showAndWait().map(byName::get);

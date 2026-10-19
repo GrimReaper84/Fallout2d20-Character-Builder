@@ -24,10 +24,12 @@ public final class AboutDialog {
     alert.setHeaderText(AppInfo.NAME + " " + AppInfo.version());
     // A text area, so the repository link can be selected and copied.
     TextArea text = new TextArea(AppInfo.LICENSE + "\n" + AppInfo.REPOSITORY + "\n\n" + DISCLAIMER
+        + "\n\nIcon: \"radiation\" from Font Awesome Free by Fonticons, Inc. (fontawesome.com), licensed under CC BY "
+        + "4.0 (https://creativecommons.org/licenses/by/4.0/), recolored on a dark background."
         + "\n\nBuilt with AI assistance (Claude Opus 5.5 via Claude Code).");
     text.setEditable(false);
     text.setWrapText(true);
-    text.setPrefRowCount(9);
+    text.setPrefRowCount(11);
     alert.getDialogPane().setContent(text);
     alert.showAndWait();
   }

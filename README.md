@@ -90,6 +90,13 @@ ZeniMax Media company. Fallout: The Roleplaying Game is published by Modiphius E
 The program contains no rules text from the books – only game values, page references and short
 summaries in our own words. You need the rulebooks to play.
 
+## Credits
+
+The application icon is the "radiation" icon of [Font Awesome Free](https://fontawesome.com) by Fonticons, Inc.,
+licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); it was recolored and placed on a dark
+background. The buttons of the program use the Font Awesome Free icon font (font files under the
+[SIL OFL 1.1](https://openfontlicense.org/), icons under CC BY 4.0) via [Ikonli](https://kordamp.org/ikonli/).
+
 ## License
 
 [MIT](LICENSE) © 2026 GrimReaper84
