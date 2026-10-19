@@ -9,7 +9,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 class WeaponAttackTest {
 
   /** A Survivor (all attributes 5) with AGI 6, STR 9, Small Guns tagged with 1 bought rank. */
-  private static Character character() {
-    Character character = Character.createNew();
+  private static PlayerCharacter character() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setAttributeAllocation(Attribute.AGILITY, 1);
     character.setAttributeAllocation(Attribute.STRENGTH, 4);
@@ -58,7 +58,7 @@ class WeaponAttackTest {
 
   @Test
   void unarmedStrikeAndPlasmaGunTypes() {
-    Character character = character();
+    PlayerCharacter character = character();
     WeaponAttack strike = WeaponAttack.of(character, WeaponCatalog.byId("unarmed-strike").orElseThrow());
     assertEquals(9, strike.targetNumber(), "STR 9 + Unarmed 0");
     assertEquals(2, strike.meleeBonus());
@@ -88,8 +88,8 @@ class WeaponAttackTest {
   }
 
   /** A Protectron with STR 8, PER 5, END 7 and no ranks in the attack skills. */
-  private static Character protectron() {
-    Character character = Character.createNew();
+  private static PlayerCharacter protectron() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("protectron"));
     character.setAttributeAllocation(Attribute.STRENGTH, 3);
     character.setAttributeAllocation(Attribute.ENDURANCE, 2);
@@ -128,7 +128,7 @@ class WeaponAttackTest {
   /** CRB p. 90: the table range wins; range-less thrown weapons and grenades use their Thrown quality. */
   @Test
   void effectiveRangeFallsBackToTheThrownQuality() {
-    Character character = character();
+    PlayerCharacter character = character();
     assertEquals(WeaponRange.CLOSE, range(character, "10mm-pistol"));
     assertEquals(WeaponRange.CLOSE, range(character, "throwing-knives"));
     assertEquals(WeaponRange.MEDIUM, range(character, "frag-grenade"));
@@ -148,14 +148,14 @@ class WeaponAttackTest {
     assertEquals(Optional.empty(), WeaponRange.byCode("Z"));
   }
 
-  private static WeaponRange range(Character character, String id) {
+  private static WeaponRange range(PlayerCharacter character, String id) {
     return WeaponAttack.of(character, CarriedWeapon.of(CatalogRef.of(id))).effectiveRange();
   }
 
   /** D4: the attack uses the modded values (Hardened +1 CD) and carries the modded name. */
   @Test
   void attackWithMods() {
-    Character character = character();
+    PlayerCharacter character = character();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
     WeaponAttack attack = WeaponAttack.of(character, character.getWeapons().getFirst());

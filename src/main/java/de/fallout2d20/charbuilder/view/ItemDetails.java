@@ -4,7 +4,7 @@ import de.fallout2d20.charbuilder.catalog.item.ChemDuration;
 import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineIssue;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
@@ -34,7 +34,7 @@ final class ItemDetails {
   private ItemDetails() {}
 
   /** The details of {@code entry}, or a prompt to select an item if it is {@code null}. */
-  static @NonNull Node build(@NonNull Character character, @Nullable ItemEntry entry,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @Nullable ItemEntry entry,
       @NonNull ViewCallbacks callbacks) {
     MigPane pane = OverviewParts.half();
     if (entry == null) {
@@ -66,7 +66,7 @@ final class ItemDetails {
     return pane;
   }
 
-  private static void addItem(@NonNull MigPane rows, @NonNull Character character, @NonNull CarriedItem item,
+  private static void addItem(@NonNull MigPane rows, @NonNull PlayerCharacter character, @NonNull CarriedItem item,
       int index, @NonNull Runnable onChanged) {
     Optional<ItemData> data = item.data();
     Optional<MagazineData> magazine = item.magazine();
@@ -84,7 +84,7 @@ final class ItemDetails {
   }
 
   /** Name (committed on Enter or when leaving the field, then the tree shows it) and the free label text. */
-  private static void addHolotape(@NonNull MigPane rows, @NonNull Character character, int index,
+  private static void addHolotape(@NonNull MigPane rows, @NonNull PlayerCharacter character, int index,
       @NonNull Holotape holotape, @NonNull ViewCallbacks callbacks) {
     OverviewParts.detailRow(rows, "Source", new Label("Holotape"));
     TextField name = new TextField(holotape.name());
@@ -122,7 +122,7 @@ final class ItemDetails {
     OverviewParts.detailRow(rows, "Weight", weight);
   }
 
-  private static void addQuantity(@NonNull MigPane rows, @NonNull Character character, @NonNull CarriedItem item,
+  private static void addQuantity(@NonNull MigPane rows, @NonNull PlayerCharacter character, @NonNull CarriedItem item,
       int index, @NonNull Runnable onChanged) {
     OverviewParts.detailRow(rows, "Quantity", StepButtons.withValue(new Label(Integer.toString(item.quantity())),
         StepButtons.NUMBER_WIDTH, StepButtons.of(
@@ -159,7 +159,7 @@ final class ItemDetails {
   }
 
   /** The issue choice of a publication with issues (CRB p. 172: rolled on its d20 table). */
-  private static @NonNull Node issue(@NonNull Character character, @NonNull CarriedItem item,
+  private static @NonNull Node issue(@NonNull PlayerCharacter character, @NonNull CarriedItem item,
       @NonNull MagazineData magazine, int index, @NonNull Runnable onChanged) {
     ComboBox<MagazineIssue> issue = new ComboBox<>();
     issue.getItems().setAll(magazine.issues());

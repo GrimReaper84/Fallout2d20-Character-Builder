@@ -16,7 +16,7 @@ import org.jspecify.annotations.NonNull;
  * @param attributeChoices one attribute per rank for perks such as Intense Training
  * @param skillChoices chosen skills for perks such as Tag! (empty for imported ranks)
  * @param stagedRanks the last ranks, taken after a level-up but not applied yet (see
- *     {@link Character#applyAdvancement()}); they count like other ranks but can be taken back
+ *     {@link PlayerCharacter#applyAdvancement()}); they count like other ranks but can be taken back
  */
 public record PerkSelection(
     @NonNull CatalogRef perk,

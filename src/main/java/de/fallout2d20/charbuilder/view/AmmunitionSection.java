@@ -2,7 +2,7 @@ package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import java.util.LinkedHashSet;
@@ -22,7 +22,7 @@ final class AmmunitionSection {
 
   private AmmunitionSection() {}
 
-  static @NonNull MigPane build(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     Set<String> shown = new LinkedHashSet<>();
     for (CarriedWeapon weapon : character.getWeapons()) {
       shown.addAll(WeaponAttack.of(character, weapon).ammunition());

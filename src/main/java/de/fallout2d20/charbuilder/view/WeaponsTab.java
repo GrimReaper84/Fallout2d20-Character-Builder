@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import de.fallout2d20.charbuilder.view.dialog.AddWeaponDialog;
@@ -36,7 +36,7 @@ final class WeaponsTab {
 
   private WeaponsTab() {}
 
-  static @NonNull Node build(@NonNull Character character, @NonNull MasterDetailState selection,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull MasterDetailState selection,
       @NonNull ViewCallbacks callbacks) {
     List<WeaponEntry> entries = entries(character);
     Integer selected = selection.current(character.getWeapons().size());
@@ -82,7 +82,7 @@ final class WeaponsTab {
   }
 
   /** The Unarmed Strike and every carried weapon with its list index. */
-  private static @NonNull List<WeaponEntry> entries(@NonNull Character character) {
+  private static @NonNull List<WeaponEntry> entries(@NonNull PlayerCharacter character) {
     List<WeaponEntry> entries = new ArrayList<>();
     WeaponCatalog.byId(UNARMED_STRIKE_ID).ifPresent(strike -> entries.add(
         new WeaponEntry(UNARMED_STRIKE_INDEX, WeaponAttack.of(character, strike), null)));
@@ -94,7 +94,7 @@ final class WeaponsTab {
   }
 
   /** Opens the catalog of the weapons offered to the character's origin and books; the new one is selected. */
-  private static @NonNull Button addButton(@NonNull Character character, @NonNull MasterDetailState selection,
+  private static @NonNull Button addButton(@NonNull PlayerCharacter character, @NonNull MasterDetailState selection,
       @NonNull Runnable onChanged) {
     Button add = new Button("Add weapon");
     add.setGraphic(new FontIcon("fas-plus"));

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
@@ -23,7 +23,7 @@ class PackInventoryTest {
    */
   @Test
   void settler() {
-    Character settler = character("survivor", "settler");
+    PlayerCharacter settler = character("survivor", "settler");
     settler.chooseEquipmentOption(0, "Pipe wrench");
     settler.setTrinket("Medal");
     settler.setFreeTag(Skill.LOCKPICK, true);
@@ -45,7 +45,7 @@ class PackInventoryTest {
   /** CRB p. 81: the d20 caps of Barter are an amount to roll. */
   @Test
   void barterCapsAreARoll() {
-    Character settler = character("survivor", "settler");
+    PlayerCharacter settler = character("survivor", "settler");
     settler.setFreeTag(Skill.BARTER, true);
     assertEquals(List.of("2d20 caps"), PackInventory.resolve(settler, StartingSource.TAG_SKILL).rolls());
   }
@@ -63,7 +63,7 @@ class PackInventoryTest {
   /** CRB p. 78: "2 stimpaks" becomes Stimpak × 2; "with" splits weapon and ammunition text. */
   @Test
   void countsAndWith() {
-    Character resident = character("vault-dweller", "vault-tec-resident");
+    PlayerCharacter resident = character("vault-dweller", "vault-tec-resident");
     PackItems added = PackInventory.resolve(resident, StartingSource.PACK);
     CarriedItem stimpaks = added.items().stream().filter(item -> item.displayName().equals("Stimpak")).findFirst()
         .orElseThrow();
@@ -75,7 +75,7 @@ class PackInventoryTest {
   /** WOA p. 22: built-in weapons; "Two laser guns" counts 2; a pack wording differing from the catalog is kept as note. */
   @Test
   void protectronAndAliases() {
-    Character protectron = character("protectron", "protectron");
+    PlayerCharacter protectron = character("protectron", "protectron");
     protectron.applyStartingEquipment(protectron.getStartingEquipment());
     PackItems added = PackInventory.resolve(protectron, StartingSource.PACK);
     assertEquals(List.of("protectron-claws", "laser-gun"), weaponIds(added));
@@ -90,7 +90,7 @@ class PackInventoryTest {
   /** WOA p. 23: a ruling in parentheses stays as note. */
   @Test
   void keepsRulingsInParentheses() {
-    Character utility = character("protectron", "utility-protectron");
+    PlayerCharacter utility = character("protectron", "utility-protectron");
     utility.chooseEquipmentOption(0, "Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)");
     PackItems added = PackInventory.resolve(utility, StartingSource.PACK);
     assertEquals("Pack: Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)", added.weapons().stream()
@@ -101,14 +101,14 @@ class PackInventoryTest {
   @Test
   void splitsKnownParts() {
     assertTrue(PackInventory.match("Lab coat").isPresent());
-    Character mercenary = character("survivor", "mercenary");
+    PlayerCharacter mercenary = character("survivor", "mercenary");
     mercenary.chooseEquipmentOption(0, "Leather armor arm and leather armor leg (choose sides)");
     PackItems added = PackInventory.resolve(mercenary, StartingSource.PACK);
     assertEquals(List.of("tough-clothing", "leather-arm", "leather-leg"), apparelIds(added));
   }
 
-  private static Character character(String origin, String pack) {
-    Character character = Character.createNew();
+  private static PlayerCharacter character(String origin, String pack) {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of(origin));
     character.chooseEquipmentPack(CatalogRef.of(pack));
     return character;

@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -40,7 +40,7 @@ public record DerivedStats(
     @NonNull Resistance poison) {
 
   /** Computes the current derived statistics of the character. */
-  public static @NonNull DerivedStats of(@NonNull Character character) {
+  public static @NonNull DerivedStats of(@NonNull PlayerCharacter character) {
     return DerivedStatsCalculator.calculate(character);
   }
 

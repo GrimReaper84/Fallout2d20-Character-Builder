@@ -4,17 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /** Inventory items, caps and materials of a character. */
-class CharacterInventoryTest {
+class PlayerCharacterInventoryTest {
 
   @Test
   void itemsHaveQuantityIssueAndNotes() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addItem(CarriedItem.of(CatalogRef.of("stimpak")));
     character.addItem(CarriedItem.of(CatalogRef.of("grognak-the-barbarian")));
     character.addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "")));
@@ -45,16 +45,16 @@ class CharacterInventoryTest {
   /** CRB pp. 76–81: "Create Character" fills the caps with pack caps and the level caps; the d20 part is rolled. */
   @Test
   void completingCreationFillsTheFixedStartingCaps() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     settler.completeCreation();
     assertEquals(45, settler.getCaps());
 
-    Character veteran = settler();
+    PlayerCharacter veteran = settler();
     veteran.setStartingLevel(3);
     veteran.completeCreation();
     assertEquals(45 + StartingEquipmentAllowance.caps(3), veteran.getCaps());
 
-    Character entered = settler();
+    PlayerCharacter entered = settler();
     entered.setCaps(60);
     entered.completeCreation();
     assertEquals(60, entered.getCaps(), "a balance already entered is kept");
@@ -68,8 +68,8 @@ class CharacterInventoryTest {
     assertThrows(IllegalArgumentException.class, () -> new Materials(-1, 0, 0, 0));
   }
 
-  private static Character settler() {
-    Character character = Character.createNew();
+  private static PlayerCharacter settler() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.chooseEquipmentPack(CatalogRef.of("settler"));
     return character;

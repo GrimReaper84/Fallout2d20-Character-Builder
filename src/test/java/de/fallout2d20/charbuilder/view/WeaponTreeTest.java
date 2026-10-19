@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 /** Grouping of the weapon tree by effective range (CRB p. 89–90). */
 class WeaponTreeTest {
 
-  private final Character character = Character.createNew();
+  private final PlayerCharacter character = PlayerCharacter.createNew();
 
   @Test
   void groupsFromNearToFarWithoutEmptyGroups() {

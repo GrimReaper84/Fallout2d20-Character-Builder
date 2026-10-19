@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
@@ -19,7 +19,7 @@ final class StatsTab {
   private StatsTab() {}
 
   /** @param hints the hints of this tab */
-  static @NonNull Node build(@NonNull Character character, @NonNull List<CreationProblem> hints,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull ViewCallbacks callbacks) {
     boolean locked = character.isCreationComplete() && !character.isGmMode();
     Runnable onChanged = callbacks.onChanged();

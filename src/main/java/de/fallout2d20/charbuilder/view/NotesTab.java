@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
@@ -15,7 +15,7 @@ final class NotesTab {
 
   private NotesTab() {}
 
-  static @NonNull Node build(@NonNull Character character, @NonNull ViewCallbacks callbacks) {
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
     TextArea notes = new TextArea(character.getVitals().notes());
     notes.setPromptText("Conditions, chems and their duration, addictions, …");
     notes.setWrapText(true);

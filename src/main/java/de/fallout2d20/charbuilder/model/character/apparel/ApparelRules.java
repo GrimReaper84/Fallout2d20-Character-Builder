@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.model.character.apparel;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.HintArea;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public final class ApparelRules {
   private ApparelRules() {}
 
   /** Whether the character is a robot (Mister Handy, Protectron, Assaultron) and so wears robot plating and armor. */
-  public static boolean isRobot(@NonNull Character character) {
+  public static boolean isRobot(@NonNull PlayerCharacter character) {
     return character.getOriginData().map(OriginData::robot).orElse(false);
   }
 
@@ -33,7 +33,7 @@ public final class ApparelRules {
    * Whether an item of this kind suits the character: robot items for robots (plus hats for a Mister Handy,
    * CRB p. 146), the rest for others.
    */
-  public static boolean suits(@NonNull Character character, @NonNull ApparelKind kind, boolean hat) {
+  public static boolean suits(@NonNull PlayerCharacter character, @NonNull ApparelKind kind, boolean hat) {
     if (character.isMisterHandy()) {
       return kind.isRobot() || hat;
     }
@@ -44,7 +44,7 @@ public final class ApparelRules {
    * Whether the add dialog offers an item of this kind: what {@link #suits} the character, and for a
    * humanoid robot also human apparel (allowed with GM permission, so only a hint), never for a Mister Handy.
    */
-  public static boolean isOffered(@NonNull Character character, @NonNull ApparelKind kind, boolean hat) {
+  public static boolean isOffered(@NonNull PlayerCharacter character, @NonNull ApparelKind kind, boolean hat) {
     return suits(character, kind, hat) || (isRobot(character) && !character.isMisterHandy());
   }
 
@@ -53,7 +53,7 @@ public final class ApparelRules {
    * of its locations, or it is armor while an outfit is worn or the other way round (CRB p. 130). A new
    * piece that clashes starts carried (user decision 2026-10-16).
    */
-  public static boolean clashesWithWorn(@NonNull Character character, @NonNull WornApparel item) {
+  public static boolean clashesWithWorn(@NonNull PlayerCharacter character, @NonNull WornApparel item) {
     Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
     if (kind.isEmpty()) {
       return false;
@@ -79,7 +79,7 @@ public final class ApparelRules {
   }
 
   /** Hints about the worn pieces (carried ones only have to be catalog items). */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     character.getApparel().stream().filter(item -> item.values().isEmpty()).forEach(item ->
         problems.add(new CreationProblem(HintArea.ARMOR, TOPIC,

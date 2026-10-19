@@ -6,7 +6,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
@@ -36,7 +36,7 @@ final class WeaponDetails {
   private WeaponDetails() {}
 
   /** The panel of {@code entry}, or a prompt to select a weapon if it is {@code null}. */
-  static @NonNull Node build(@NonNull Character character, @Nullable WeaponEntry entry,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @Nullable WeaponEntry entry,
       @NonNull ViewCallbacks callbacks) {
     MigPane pane = OverviewParts.half();
     if (entry == null) {
@@ -129,7 +129,7 @@ final class WeaponDetails {
   }
 
   /** Target number and critical range, with the attribute and skill as tooltip. */
-  private static @NonNull Label attackLabel(@NonNull Character character, @NonNull WeaponAttack attack) {
+  private static @NonNull Label attackLabel(@NonNull PlayerCharacter character, @NonNull WeaponAttack attack) {
     Label roll = new Label(attack.targetNumber() == null ? "–"
         : "TN " + attack.targetNumber() + ", crit ≤ " + attack.criticalRange());
     Skill skill = attack.skill();
@@ -151,7 +151,7 @@ final class WeaponDetails {
   }
 
   /** The attack skill of a custom weapon imported without one (the legacy app stored none). */
-  private static @NonNull Node skillChoice(@NonNull Character character, int index, @NonNull Runnable onChanged) {
+  private static @NonNull Node skillChoice(@NonNull PlayerCharacter character, int index, @NonNull Runnable onChanged) {
     ComboBox<Skill> box = new ComboBox<>();
     box.getItems().setAll(Skill.weaponSkills());
     box.setConverter(new DisplayConverter<>(Skill::displayName));

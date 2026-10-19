@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 /** Texts of the printed character sheet (layout modelled on CRB pp. 430–431). */
 class SheetContentTest {
 
-  private static Character survivor() {
-    Character character = Character.createNew();
+  private static PlayerCharacter survivor() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setName("Nora");
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setFreeTag(Skill.SMALL_GUNS, true);
@@ -55,7 +55,7 @@ class SheetContentTest {
   /** CRB p. 54: Mister Handy locations and ranges; robots are immune to radiation and poison. */
   @Test
   void misterHandyHitLocations() {
-    Character robot = Character.createNew();
+    PlayerCharacter robot = PlayerCharacter.createNew();
     robot.chooseOrigin(CatalogRef.of("mister-handy"));
     robot.chooseEquipmentPack(CatalogRef.of("mister-handy"));
     SheetContent sheet = SheetContent.of(robot);
@@ -71,7 +71,7 @@ class SheetContentTest {
 
   @Test
   void weaponRowsWithTargetNumberTagAndAmmunition() {
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Spiked"));
     SheetContent sheet = SheetContent.of(character);
@@ -90,7 +90,7 @@ class SheetContentTest {
 
   @Test
   void gearWithQuantitiesWeightsAndCarryLoad() {
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     character.addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(3));
     character.addItem(CarriedItem.of(new CustomItem("Toolbox", 2, "")).withQuantity(3));
     character.addApparel(WornApparel.of(CatalogRef.of("vault-jumpsuit")));
@@ -105,7 +105,7 @@ class SheetContentTest {
 
   @Test
   void perksAndTraitsWithRankAndSummary() {
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     character.chooseTrait(CatalogRef.of("educated"));
     character.addPerkRank(CatalogRef.of("awareness"), null, null);
     SheetContent sheet = SheetContent.of(character);

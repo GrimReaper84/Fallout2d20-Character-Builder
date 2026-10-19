@@ -27,7 +27,6 @@ import de.fallout2d20.charbuilder.model.character.equipment.StartingNotes;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.session.SessionValues;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -62,7 +61,7 @@ import org.jspecify.annotations.Nullable;
  * <p>After creation the character advances (CRB p. 49): XP and levels grant skill ranks and perks,
  * which are first staged (they count everywhere but can be taken back) and then applied.
  */
-public class Character {
+public class PlayerCharacter {
 
   /** CRB p. 58: every S.P.E.C.I.A.L. attribute starts at 5 before the origin is applied. */
   public static final int ATTRIBUTE_BASE = 5;
@@ -118,145 +117,65 @@ public class Character {
   /** GM free edit (D2): creation edits allowed after completion, no budgets; not saved (user decision). */
   private boolean gmMode;
 
-  /**
-   * Creates a character from stored parts without starting equipment and inventory notes – a test
-   * convenience only; the application uses the full constructor. Missing attributes count as allocation
-   * 0, missing skills as untrained.
-   */
-  public Character(
-      @NonNull String name,
-      @Nullable CatalogRef origin,
-      @NonNull OriginChoices originChoices,
-      int level,
-      long xp,
-      boolean creationComplete,
-      @NonNull Set<Book> enabledBooks,
-      @NonNull Map<Attribute, Integer> attributeAllocation,
-      @NonNull Map<Skill, SkillState> skills,
-      @NonNull List<TraitSelection> traits,
-      @NonNull List<PerkSelection> perks,
-      @NonNull Progression progression,
-      @NonNull Vitals vitals,
-      @Nullable LegacyBaseline legacyBaseline,
-      @Nullable LegacyImport legacyImport) {
-    this(name, origin, originChoices, level, xp, creationComplete, enabledBooks, attributeAllocation,
-        skills, traits, perks, progression, vitals, legacyBaseline, legacyImport, StartingEquipment.NONE, "",
-        null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
-  }
-
-  /**
-   * Creates a character from stored parts. Missing attributes count as allocation 0, missing
-   * skills as untrained; the starting equipment is fitted to the catalog (see
-   * {@link StartingEquipment#fittedToCatalog(boolean)}; a complete character keeps stale picks).
-   *
-   * @param startingLevel the level a complete character started at, {@code null} if unknown (imported
-   *     characters); always {@code null} for a character in creation (see {@link #getStartingLevel()})
-   * @param startingTagSkills the Tag skills of a complete character at the end of creation, {@code null}
-   *     if not stored (then its current Tag skills count); always {@code null} for a character in creation
-   *     (see {@link #getStartingTagSkills()})
-   * @param weapons the carried weapons
-   * @param ammunition shots per ammunition id; counts of 0 are dropped
-   * @param apparel the worn clothing, armor and robot armor
-   * @param inventory the carried items, caps and junk/material counters
-   * @param createdWith the app version that created the character, {@code null} if unknown (legacy
-   *     imports, files written before it was stored)
-   */
-  public Character(
-      @NonNull String name,
-      @Nullable CatalogRef origin,
-      @NonNull OriginChoices originChoices,
-      int level,
-      long xp,
-      boolean creationComplete,
-      @NonNull Set<Book> enabledBooks,
-      @NonNull Map<Attribute, Integer> attributeAllocation,
-      @NonNull Map<Skill, SkillState> skills,
-      @NonNull List<TraitSelection> traits,
-      @NonNull List<PerkSelection> perks,
-      @NonNull Progression progression,
-      @NonNull Vitals vitals,
-      @Nullable LegacyBaseline legacyBaseline,
-      @Nullable LegacyImport legacyImport,
-      @NonNull StartingEquipment startingEquipment,
-      @NonNull String inventoryNotes,
-      @Nullable Integer startingLevel,
-      @Nullable Set<Skill> startingTagSkills,
-      @NonNull List<CarriedWeapon> weapons,
-      @NonNull Map<String, Integer> ammunition,
-      @NonNull List<WornApparel> apparel,
-      @NonNull Inventory inventory,
-      @Nullable String createdWith) {
-    if (level < 1 || xp < 0) {
-      throw new IllegalArgumentException("Level must be at least 1 and XP not negative");
-    }
-    if ((startingLevel != null || startingTagSkills != null) && !creationComplete) {
-      throw new IllegalArgumentException("Only a complete character has a stored starting level or Tag skills");
-    }
-    if (startingLevel != null && (startingLevel < 1 || startingLevel > level)) {
-      throw new IllegalArgumentException("Starting level " + startingLevel + " must lie between 1 and the level "
-          + level);
-    }
-    this.name = name;
-    this.origin = origin;
-    this.originChoices = originChoices;
-    this.level = level;
-    this.xp = xp;
-    this.creationComplete = creationComplete;
+  /** Takes the parts checked by {@link PlayerCharacterBuilder#build()}. */
+  PlayerCharacter(@NonNull PlayerCharacterBuilder parts) {
+    this.name = parts.name;
+    this.origin = parts.origin;
+    this.originChoices = parts.originChoices;
+    this.level = parts.level;
+    this.xp = parts.xp;
+    this.creationComplete = parts.creationComplete;
     this.enabledBooks = EnumSet.of(Book.CRB);
-    this.enabledBooks.addAll(enabledBooks);
+    this.enabledBooks.addAll(parts.enabledBooks);
     this.attributeAllocation = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {
-      this.attributeAllocation.put(attribute, attributeAllocation.getOrDefault(attribute, 0));
+      this.attributeAllocation.put(attribute, parts.attributeAllocation.getOrDefault(attribute, 0));
     }
     this.skills = new EnumMap<>(Skill.class);
     for (Skill skill : Skill.values()) {
-      this.skills.put(skill, skills.getOrDefault(skill, SkillState.UNTRAINED));
+      this.skills.put(skill, parts.skills.getOrDefault(skill, SkillState.UNTRAINED));
     }
-    this.traits = new ArrayList<>(traits);
-    this.perks = new ArrayList<>(perks);
-    this.progression = progression;
-    this.vitals = vitals;
-    this.legacyBaseline = legacyBaseline;
-    this.legacyImport = legacyImport;
-    this.startingEquipment = startingEquipment.fittedToCatalog(creationComplete);
-    this.inventoryNotes = inventoryNotes;
-    this.completedStartingLevel = startingLevel;
-    this.completedTagSkills = startingTagSkills == null ? null : Set.copyOf(startingTagSkills);
-    this.weapons = new ArrayList<>(weapons);
+    this.traits = new ArrayList<>(parts.traits);
+    this.perks = new ArrayList<>(parts.perks);
+    this.progression = parts.progression;
+    this.vitals = parts.vitals;
+    this.legacyBaseline = parts.legacyBaseline;
+    this.legacyImport = parts.legacyImport;
+    this.startingEquipment = parts.startingEquipment.fittedToCatalog(creationComplete);
+    this.inventoryNotes = parts.inventoryNotes;
+    this.completedStartingLevel = parts.startingLevel;
+    this.completedTagSkills = parts.startingTagSkills == null ? null : Set.copyOf(parts.startingTagSkills);
+    this.weapons = new ArrayList<>(parts.weapons);
     this.ammunition = new LinkedHashMap<>();
-    ammunition.forEach((id, shots) -> {
-      if (id.isBlank() || shots < 0) {
-        throw new IllegalArgumentException("Ammunition needs an id and a non-negative number of shots");
-      }
+    parts.ammunition.forEach((id, shots) -> {
       if (shots > 0) {
         this.ammunition.put(id, shots);
       }
     });
-    this.apparel = new ArrayList<>(apparel);
-    this.items = new ArrayList<>(inventory.items());
-    this.caps = inventory.caps();
-    this.materials = inventory.materials();
-    this.packItemsAdded = inventory.packItemsAdded();
-    this.createdWith = createdWith;
+    this.apparel = new ArrayList<>(parts.apparel);
+    this.items = new ArrayList<>(parts.inventory.items());
+    this.caps = parts.inventory.caps();
+    this.materials = parts.inventory.materials();
+    this.packItemsAdded = parts.inventory.packItemsAdded();
+    this.createdWith = parts.createdWith;
+  }
+
+  /** Builder for a character from stored parts (loading, legacy import, tests); defaults: a new, empty character. */
+  public static @NonNull PlayerCharacterBuilder builder() {
+    return new PlayerCharacterBuilder();
   }
 
   /**
    * A new, empty character at the start of character creation, marked as created with {@code appVersion}
    * (kept in the save file for good).
    */
-  public static @NonNull Character createNew(@NonNull String appVersion) {
-    return create(appVersion);
-  }
-
-  private static @NonNull Character create(@Nullable String appVersion) {
-    return new Character("", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class), Map.of(), Map.of(),
-        List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "", null, null,
-        List.of(), Map.of(), List.of(), Inventory.EMPTY, appVersion);
+  public static @NonNull PlayerCharacter createNew(@NonNull String appVersion) {
+    return builder().createdWith(appVersion).build();
   }
 
   /** A new, empty character at the start of character creation without an app version (tests). */
-  public static @NonNull Character createNew() {
-    return create(null);
+  public static @NonNull PlayerCharacter createNew() {
+    return builder().build();
   }
 
   /**

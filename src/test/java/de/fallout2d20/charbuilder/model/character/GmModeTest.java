@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
@@ -14,9 +13,7 @@ import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
 import de.fallout2d20.charbuilder.model.character.session.SessionValues;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +22,7 @@ class GmModeTest {
 
   @Test
   void creationEditsOfACompleteCharacterNeedGmMode() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     assertThrows(IllegalStateException.class, () -> character.setAttributeAllocation(Attribute.LUCK, 2));
     character.setGmMode(true);
     character.chooseOrigin(CatalogRef.of("ghoul"));
@@ -40,7 +37,7 @@ class GmModeTest {
   /** No budgets in GM mode; the attribute maximum and the skill rank cap stay. */
   @Test
   void budgetsDoNotApplyButCapsDo() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.setGmMode(true);
     character.setAttributeAllocation(Attribute.STRENGTH, 4);
     character.setAttributeAllocation(Attribute.AGILITY, 1);
@@ -63,7 +60,7 @@ class GmModeTest {
   /** Perks: added as fixed ranks, any rank removable (imported too); requirements only hints. */
   @Test
   void perksInGmMode() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.setGmMode(true);
     assertTrue(PerkRules.canAdd(character, PerkCatalog.byId("adamantium-skeleton").orElseThrow()),
         "requirements are hints in GM mode");
@@ -78,7 +75,7 @@ class GmModeTest {
   /** B8 follow-up: lowering the level lowers a starting level above it. */
   @Test
   void levelAndXpGoDown() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setStartingLevel(4);
     character.completeCreation();
@@ -94,7 +91,7 @@ class GmModeTest {
   /** A Tag! bonus hides GM corrections below it; the step is then not offered and changes nothing. */
   @Test
   void stepsThatChangeNothingAreRefused() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.setGmMode(true);
     character.addPerkRank(CatalogRef.of("tag"), null, Skill.SURVIVAL);
     assertEquals(2, character.skillRank(Skill.SURVIVAL));
@@ -108,7 +105,7 @@ class GmModeTest {
   /** Ending creation and the starting level belong to creation itself, even in GM mode. */
   @Test
   void creationItselfIsNotRedone() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.setGmMode(true);
     assertThrows(IllegalStateException.class, character::completeCreation);
     assertThrows(IllegalStateException.class, () -> character.setStartingLevel(3));
@@ -117,10 +114,8 @@ class GmModeTest {
   /** User decision 2026-10-16: lowering the level cuts pending points and caps the current HP. */
   @Test
   void loweringTheLevelCutsPendingPointsAndHp() {
-    Character character = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 5, 1_000, true,
-        EnumSet.allOf(Book.class), Map.of(),
-        Map.of(), List.of(), List.of(), new Progression(3, 1), new Vitals(14, 0, 0),
-        null, null);
+    PlayerCharacter character = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).level(5)
+        .xp(1_000).creationComplete(true).progression(new Progression(3, 1)).vitals(new Vitals(14, 0, 0)).build();
     character.setGmMode(true);
     character.setLevelAsGm(3, 300);
     assertEquals(new Progression(1, 0), character.getProgression());
@@ -133,7 +128,7 @@ class GmModeTest {
   /** In GM mode a complete character gets content hints (requirements), but no budget hints. */
   @Test
   void contentHintsWithoutBudgets() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.setGmMode(true);
     character.addPerkRank(CatalogRef.of("adamantium-skeleton"), null, null);
     List<String> hints = CreationRules.problems(character).stream().map(CreationProblem::message).toList();
@@ -143,8 +138,8 @@ class GmModeTest {
     assertEquals(List.of(), CreationRules.problems(character));
   }
 
-  private static Character complete() {
-    Character character = Character.createNew();
+  private static PlayerCharacter complete() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.completeCreation();
     return character;

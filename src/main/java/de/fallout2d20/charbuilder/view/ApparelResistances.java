@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ArmorResistances;
 import de.fallout2d20.charbuilder.model.character.apparel.LocationResistance;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
@@ -19,7 +19,7 @@ final class ApparelResistances {
 
   private ApparelResistances() {}
 
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, @NonNull List<CreationProblem> hints) {
+  static void addTo(@NonNull MigPane pane, @NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints) {
     OverviewParts.sectionHeading(pane, "Damage resistance");
     MigPane table = new MigPane("insets 0, gap 16 2, wrap 5");
     for (String header : List.of("Location", "Physical", "Energy", "Radiation", "Poison")) {

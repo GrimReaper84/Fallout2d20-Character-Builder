@@ -2,7 +2,7 @@ package de.fallout2d20.charbuilder.view.dialog;
 
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +29,7 @@ public final class WeaponModDialog {
   private WeaponModDialog() {}
 
   /** Shows the dialog with {@code current} selected; empty if cancelled. */
-  public static @NonNull Optional<ModChoice> show(@Nullable Window owner, @NonNull Character character,
+  public static @NonNull Optional<ModChoice> show(@Nullable Window owner, @NonNull PlayerCharacter character,
       @NonNull String weaponName, @NonNull ModSlot slot, @NonNull List<WeaponModData> options,
       @Nullable WeaponModData current) {
     List<ModChoice> rows = new ArrayList<>();

@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.samples;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,7 +36,7 @@ public final class GenerateSamples {
   static List<Path> write(Path folder) throws IOException {
     CharacterStore store = new CharacterStore(Clock.systemUTC(), SampleCharacters.VERSION);
     List<Path> written = new ArrayList<>();
-    for (Map.Entry<String, Supplier<Character>> sample : SampleCharacters.all().entrySet()) {
+    for (Map.Entry<String, Supplier<PlayerCharacter>> sample : SampleCharacters.all().entrySet()) {
       Path file = folder.resolve(sample.getKey());
       store.save(sample.getValue().get(), file);
       written.add(file);

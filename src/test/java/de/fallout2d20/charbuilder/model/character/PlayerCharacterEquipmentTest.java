@@ -6,23 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /** Starting equipment of a character in creation (CRB p. 50 step 6, pp. 76–81). */
-class CharacterEquipmentTest {
+class PlayerCharacterEquipmentTest {
 
   @Test
   void choosingAPackOpensItsChoices() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     survivor.chooseEquipmentPack(CatalogRef.of("raider"));
     assertEquals(Arrays.asList(null, null, null), survivor.getStartingEquipment().choices());
     assertEquals(List.of(), survivor.getStartingEquipment().arms());
@@ -41,7 +38,7 @@ class CharacterEquipmentTest {
 
   @Test
   void optionsNeedAPack() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     assertThrows(IllegalStateException.class, () -> survivor.chooseEquipmentOption(0, null));
     assertThrows(IllegalStateException.class, () -> survivor.setFreeArms(true));
     assertThrows(IllegalStateException.class, () -> survivor.chooseArm(0, ArmSelection.OPEN));
@@ -50,7 +47,7 @@ class CharacterEquipmentTest {
   /** CRB p. 80: only some packs include a personal trinket; the text survives a pack change. */
   @Test
   void trinketSurvivesPackChanges() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     survivor.chooseEquipmentPack(CatalogRef.of("settler"));
     survivor.setTrinket("  small wooden ocarina ");
     assertEquals("small wooden ocarina", survivor.getStartingEquipment().trinket());
@@ -66,7 +63,7 @@ class CharacterEquipmentTest {
   /** CRB p. 81: Explosives, Melee Weapons and Throwing offer a choice; picks survive a pack change. */
   @Test
   void tagSkillItemPicks() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     survivor.chooseTagSkillItem(Skill.EXPLOSIVES, "2 baseball grenades");
     survivor.chooseEquipmentPack(CatalogRef.of("settler"));
     assertEquals(Map.of(Skill.EXPLOSIVES, "2 baseball grenades"),
@@ -80,7 +77,7 @@ class CharacterEquipmentTest {
   /** CRB p. 77: a pack sets the arms it fixes and leaves the choosable ones open. */
   @Test
   void misterHandyPackSetsItsArms() {
-    Character handy = character("mister-handy");
+    PlayerCharacter handy = character("mister-handy");
     handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
     assertEquals(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM), ArmSelection.of(ArmAttachment.BUZZ_SAW),
         ArmSelection.of(ArmAttachment.LASER_EMITTER)), handy.getStartingEquipment().arms());
@@ -97,7 +94,7 @@ class CharacterEquipmentTest {
   /** chooseArm is lenient: an arm the pack does not allow is stored and reported by the creation rules. */
   @Test
   void chooseArmAcceptsArmsThePackDoesNotAllow() {
-    Character handy = character("mister-handy");
+    PlayerCharacter handy = character("mister-handy");
     handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
     handy.chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
     assertFalse(handy.getStartingEquipment().freeArms());
@@ -107,7 +104,7 @@ class CharacterEquipmentTest {
   /** Free arms (house-rule option): any attachment or a weapon; switching back restores the pack's arms. */
   @Test
   void freeArmsAndBackToThePack() {
-    Character handy = character("mister-handy");
+    PlayerCharacter handy = character("mister-handy");
     handy.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
     handy.chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
     handy.setFreeArms(true);
@@ -125,7 +122,7 @@ class CharacterEquipmentTest {
     handy.chooseEquipmentPack(CatalogRef.of("mister-handy"));
     assertFalse(handy.getStartingEquipment().freeArms(), "a new pack starts with its own arms");
 
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     survivor.chooseEquipmentPack(CatalogRef.of("settler"));
     assertThrows(IllegalStateException.class, () -> survivor.setFreeArms(true));
   }
@@ -133,7 +130,7 @@ class CharacterEquipmentTest {
   /** Ghoul and Survivor share the Wastelander packs (CRB p. 79); other origins do not. */
   @Test
   void originChangeKeepsOnlyAPackStillOffered() {
-    Character character = character("survivor");
+    PlayerCharacter character = character("survivor");
     character.chooseEquipmentPack(CatalogRef.of("settler"));
     character.chooseEquipmentOption(0, "Pipe wrench");
     character.chooseOrigin(CatalogRef.of("ghoul"));
@@ -152,9 +149,8 @@ class CharacterEquipmentTest {
   void equipmentIsFixedAfterCreationButNotesStayEditable() {
     StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), Arrays.asList("Knuckles"),
         Map.of(), "Medal", false, List.of());
-    Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE,
-        Vitals.FULL, null, null, settler, "Notes", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
+    PlayerCharacter complete = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
+        .creationComplete(true).startingEquipment(settler).inventoryNotes("Notes").build();
     assertEquals(settler, complete.getStartingEquipment());
     assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentPack(CatalogRef.of("raider")));
     assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentOption(0, "Rolling pin"));
@@ -167,12 +163,12 @@ class CharacterEquipmentTest {
     assertEquals("42 caps, 3 bobby pins", complete.getInventoryNotes());
     complete.setInventoryNotes(null);
     assertEquals("", complete.getInventoryNotes());
-    assertEquals("", Character.createNew().getInventoryNotes());
-    assertEquals(StartingEquipment.NONE, Character.createNew().getStartingEquipment());
+    assertEquals("", PlayerCharacter.createNew().getInventoryNotes());
+    assertEquals(StartingEquipment.NONE, PlayerCharacter.createNew().getStartingEquipment());
   }
 
-  private static Character character(String origin) {
-    Character character = Character.createNew();
+  private static PlayerCharacter character(String origin) {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of(origin));
     return character;
   }

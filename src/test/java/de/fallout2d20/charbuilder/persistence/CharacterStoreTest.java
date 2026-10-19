@@ -19,11 +19,10 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
-import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
@@ -32,7 +31,6 @@ import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
@@ -64,14 +62,14 @@ class CharacterStoreTest {
   /** A GM skill correction (D2) survives a save and is written only when not 0; GM mode itself is not saved. */
   @Test
   void roundTripsGmSkillCorrections() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.completeCreation();
     character.setGmMode(true);
     character.adjustSkillRankAsGm(Skill.REPAIR, 2);
     Path file = dir.resolve("gm.json");
     store.save(character, file);
 
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(2, loaded.skillState(Skill.REPAIR).gmRanks());
     assertEquals(2, loaded.skillRank(Skill.REPAIR));
     assertFalse(loaded.isGmMode());
@@ -83,7 +81,7 @@ class CharacterStoreTest {
   /** Session vitals (D5) survive a save; a full character writes no Luck points, injuries or notes. */
   @Test
   void roundTripsSessionVitals() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.completeCreation();
     Path file = dir.resolve("vitals.json");
     store.save(character, file);
@@ -106,7 +104,7 @@ class CharacterStoreTest {
   /** Items (catalog, magazine issue, custom), caps and materials survive a save; empty parts are not written. */
   @Test
   void roundTripsTheInventory() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(2).withNotes("for Nora"));
     character.addItem(CarriedItem.of(CatalogRef.of("tumblers-today")).withIssue("Open Any Lock in 5 Seconds Flat"));
     character.addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "Cute")));
@@ -117,7 +115,7 @@ class CharacterStoreTest {
     Path file = dir.resolve("inventory.json");
     store.save(character, file);
 
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(character.getItems(), loaded.getItems());
     assertEquals(123, loaded.getCaps());
     assertEquals(List.of(false, true), loaded.getApparel().stream().map(WornApparel::carried).toList());
@@ -125,7 +123,7 @@ class CharacterStoreTest {
     assertEquals(new Materials(3, 2, 1, 0), loaded.getMaterials());
 
     Path empty = dir.resolve("empty.json");
-    store.save(Character.createNew(), empty);
+    store.save(PlayerCharacter.createNew(), empty);
     JsonNode written = JSON.readTree(empty.toFile());
     assertNull(written.get("items"));
     assertNull(written.get("caps"));
@@ -138,7 +136,7 @@ class CharacterStoreTest {
    */
   @Test
   void roundTripsHolotapesAndStartingSources() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.chooseEquipmentPack(CatalogRef.of("settler"));
     character.chooseEquipmentOption(0, "Pipe wrench");
@@ -147,7 +145,7 @@ class CharacterStoreTest {
     Path file = dir.resolve("starting.json");
     store.save(character, file);
 
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(character.getWeapons(), loaded.getWeapons());
     assertEquals(character.getApparel(), loaded.getApparel());
     assertEquals(character.getItems(), loaded.getItems());
@@ -167,7 +165,7 @@ class CharacterStoreTest {
   /** A holotape without a name is a broken file, reported like any other format error. */
   @Test
   void rejectsAHolotapeWithoutName() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addItem(CarriedItem.of(new Holotape("Code", "")));
     Path file = dir.resolve("holotape.json");
     store.save(character, file);
@@ -180,7 +178,7 @@ class CharacterStoreTest {
   /** A character whose pack items an earlier version added by button is never synced, so nothing doubles. */
   @Test
   void earlierAddedPackItemsAreNotSynced() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.chooseEquipmentPack(CatalogRef.of("settler"));
     Path file = dir.resolve("added.json");
@@ -189,7 +187,7 @@ class CharacterStoreTest {
     written.put("packItemsAdded", true);
     JSON.writeValue(file.toFile(), written);
 
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertTrue(loaded.isPackItemsAdded());
     assertFalse(loaded.canApplyStartingEquipment());
     loaded.setFreeTag(Skill.LOCKPICK, true);
@@ -199,7 +197,7 @@ class CharacterStoreTest {
 
   @Test
   void roundTripsANewCharacter() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setName("Nora");
     Path file = dir.resolve("nora.json");
     store.save(character, file);
@@ -229,8 +227,8 @@ class CharacterStoreTest {
     Path v3 = dir.resolve("survivor.json");
     store.save(imported.character(), v3);
     CharacterFile reloaded = store.load(v3);
-    Character before = imported.character();
-    Character after = reloaded.character();
+    PlayerCharacter before = imported.character();
+    PlayerCharacter after = reloaded.character();
 
     assertNull(reloaded.importReport());
     assertTrue(after.isLegacyImport());
@@ -252,7 +250,7 @@ class CharacterStoreTest {
   @Test
   void rejectsMissingRequiredParts() throws Exception {
     Path file = dir.resolve("broken.json");
-    store.save(Character.createNew(), file);
+    store.save(PlayerCharacter.createNew(), file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     node.remove("skills");
     Files.writeString(file, node.toString());
@@ -288,13 +286,13 @@ class CharacterStoreTest {
   @Test
   void roundTripsEnabledBooks() throws Exception {
     Path file = dir.resolve("books.json");
-    store.save(Character.createNew(), file);
+    store.save(PlayerCharacter.createNew(), file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     assertEquals("[\"CRB\",\"WOA\",\"WG\"]", node.get("books").toString());
 
     node.putArray("books").add("WOA");
     Files.writeString(file, node.toString());
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(EnumSet.of(Book.CRB, Book.WOA), loaded.getEnabledBooks());
     store.save(loaded, file);
     assertEquals("[\"CRB\",\"WOA\"]", JSON.readTree(file.toFile()).get("books").toString());
@@ -304,7 +302,7 @@ class CharacterStoreTest {
   @Test
   void enablesAllBooksWhenTheFieldIsMissing() throws Exception {
     Path file = dir.resolve("old.json");
-    store.save(Character.createNew(), file);
+    store.save(PlayerCharacter.createNew(), file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     node.remove("books");
     Files.writeString(file, node.toString());
@@ -314,7 +312,7 @@ class CharacterStoreTest {
   @Test
   void rejectsUnknownBooks() throws Exception {
     Path file = dir.resolve("unknown-book.json");
-    store.save(Character.createNew(), file);
+    store.save(PlayerCharacter.createNew(), file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     node.putArray("books").add("SG");
     assertUnreadable(file, node);
@@ -322,7 +320,7 @@ class CharacterStoreTest {
 
   @Test
   void roundTripsOriginChoices() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     Path file = dir.resolve("origin.json");
     store.save(character, file);
     assertFalse(JSON.readTree(file.toFile()).has("originChoices"), "omitted when nothing is chosen");
@@ -331,7 +329,7 @@ class CharacterStoreTest {
     character.chooseOriginTagSkill(Skill.SNEAK);
     character.setPurpose("Scout");
     store.save(character, file);
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(new OriginChoices(Skill.SNEAK, "Scout"), loaded.getOriginChoices());
     assertEquals("sneak", JSON.readTree(file.toFile()).get("originChoices").get("tagSkill").asText());
 
@@ -342,7 +340,7 @@ class CharacterStoreTest {
 
   @Test
   void roundTripsStartingEquipmentAndInventoryNotes() throws Exception {
-    Character settler = Character.createNew();
+    PlayerCharacter settler = PlayerCharacter.createNew();
     Path file = dir.resolve("settler.json");
     store.save(settler, file);
     JsonNode empty = JSON.readTree(file.toFile());
@@ -356,7 +354,7 @@ class CharacterStoreTest {
     settler.chooseTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
     settler.setInventoryNotes("Owes 20 caps to the Diamond City bar");
     store.save(settler, file);
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(settler.getStartingEquipment(), loaded.getStartingEquipment());
     assertEquals("Owes 20 caps to the Diamond City bar", loaded.getInventoryNotes());
     JsonNode written = JSON.readTree(file.toFile()).get("startingEquipment");
@@ -368,7 +366,7 @@ class CharacterStoreTest {
   /** Free arms (house-rule option) with a weapon text survive saving. */
   @Test
   void roundTripsMisterHandyArms() throws Exception {
-    Character handy = Character.createNew();
+    PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
     handy.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
     handy.setFreeArms(true);
@@ -384,7 +382,7 @@ class CharacterStoreTest {
   /** Picks that no longer fit the catalog (e.g. after a text correction) are opened, not rejected. */
   @Test
   void opensPicksThatNoLongerFitTheCatalog() throws Exception {
-    Character handy = Character.createNew();
+    PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
     handy.setFreeTag(Skill.EXPLOSIVES, true);
     handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
@@ -407,7 +405,7 @@ class CharacterStoreTest {
   /** Pending points, staged ranks, starting Tags and current HP survive saving (D1). */
   @Test
   void roundTripsAdvancement() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setFreeTag(Skill.SNEAK, true);
     character.completeCreation();
@@ -417,7 +415,7 @@ class CharacterStoreTest {
     Path file = dir.resolve("advanced.json");
     store.save(character, file);
 
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(5, loaded.getLevel());
     assertEquals(new Progression(4, 4), loaded.getProgression());
     assertEquals(1, loaded.skillState(Skill.REPAIR).stagedRanks());
@@ -433,7 +431,7 @@ class CharacterStoreTest {
   /** Catalog and custom weapons with quantity and note, and the ammunition per type (C1). */
   @Test
   void roundTripsWeaponsAndAmmunition() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withNotes("Long Barrel"));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")).withQuantity(3));
     character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "Piercing 1",
@@ -442,7 +440,7 @@ class CharacterStoreTest {
     Path file = dir.resolve("weapons.json");
     store.save(character, file);
 
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertEquals(character.getWeapons(), loaded.getWeapons());
     assertEquals(Map.of("10mm", 34), loaded.getAmmunition());
   }
@@ -450,7 +448,7 @@ class CharacterStoreTest {
   /** D4: installed mods, custom mod slots and an unknown mod id survive a round trip; older files have none. */
   @Test
   void roundTripsWeaponMods() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
     character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
@@ -468,7 +466,7 @@ class CharacterStoreTest {
   /** D4: the new fields are optional – a weapon without mods writes neither, so older files load unchanged. */
   @Test
   void weaponsWithoutModsWriteNoModFields() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
         WeaponRange.MEDIUM, "", null)));
@@ -485,7 +483,7 @@ class CharacterStoreTest {
   /** Slot names this version does not know (a newer file) are skipped instead of failing the load. */
   @Test
   void unknownModSlotNamesAreSkipped() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
         WeaponRange.MEDIUM, "", null, EnumSet.of(ModSlot.BARREL))));
@@ -504,7 +502,7 @@ class CharacterStoreTest {
   /** Catalog item with chosen limb and note, and a custom item (C2). */
   @Test
   void roundTripsApparel() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addApparel(WornApparel.of(CatalogRef.of("raider-arm")).withLocation(HitLocation.LEFT_ARM)
         .withNotes("Studded"));
     character.addApparel(WornApparel.of(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR,
@@ -516,7 +514,7 @@ class CharacterStoreTest {
 
   @Test
   void characterInCreationWritesNoStartingTagSkills() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setFreeTag(Skill.SNEAK, true);
     Path file = dir.resolve("creation.json");
     store.save(character, file);
@@ -528,9 +526,8 @@ class CharacterStoreTest {
   void completeCharactersKeepStalePicks() throws Exception {
     StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), List.of("Spoon"), Map.of(),
         null, false, List.of());
-    Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, settler, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
+    PlayerCharacter complete = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
+        .creationComplete(true).startingEquipment(settler).build();
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
     assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());
@@ -538,7 +535,7 @@ class CharacterStoreTest {
 
   @Test
   void rejectsUnknownAttachmentsAndSkills() throws Exception {
-    Character handy = Character.createNew();
+    PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
     handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
     Path file = dir.resolve("arms.json");
@@ -561,7 +558,7 @@ class CharacterStoreTest {
   /** The starting level is stored with the completion; characters in creation omit it. */
   @Test
   void roundTripsCompletionAndStartingLevel() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setStartingLevel(2);
     Path file = dir.resolve("level2.json");
@@ -570,7 +567,7 @@ class CharacterStoreTest {
 
     character.completeCreation();
     store.save(character, file);
-    Character loaded = store.load(file).character();
+    PlayerCharacter loaded = store.load(file).character();
     assertTrue(loaded.isCreationComplete());
     assertEquals(OptionalInt.of(2), loaded.getStartingLevel());
     assertEquals(2, JSON.readTree(file.toFile()).get("startingLevel").asInt());
@@ -578,7 +575,7 @@ class CharacterStoreTest {
 
   @Test
   void rejectsInvalidStartingLevel() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setStartingLevel(2);
     character.completeCreation();
     Path file = dir.resolve("invalid-level.json");
@@ -598,7 +595,7 @@ class CharacterStoreTest {
   @Test
   void ignoresUnknownKeys() throws Exception {
     Path file = dir.resolve("extra.json");
-    store.save(Character.createNew(), file);
+    store.save(PlayerCharacter.createNew(), file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
     node.put("somethingNew", true);
     Files.writeString(file, node.toString());
@@ -608,11 +605,11 @@ class CharacterStoreTest {
   /** User decision 2026-10-17: the creating version is kept for good, the saving version follows each save. */
   @Test
   void keepsCreatedWithAndUpdatesSavedWith() throws Exception {
-    Character character = Character.createNew("1.0.0");
+    PlayerCharacter character = PlayerCharacter.createNew("1.0.0");
     Path file = dir.resolve("new.json");
     store.save(character, file);
     CharacterStore newer = new CharacterStore(Clock.systemUTC(), "1.1.0");
-    Character loaded = newer.load(file).character();
+    PlayerCharacter loaded = newer.load(file).character();
     assertEquals(Optional.of("1.0.0"), loaded.getCreatedWith());
     newer.save(loaded, file);
     JsonNode written = JSON.readTree(file.toFile());
@@ -623,7 +620,7 @@ class CharacterStoreTest {
   /** User decision 2026-10-17: files of the 1.0.0 test builds still load and move to the new format on save. */
   @Test
   void readsTestBuildFilesAndWritesThemInTheNewFormat() throws Exception {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setName("Tester");
     Path file = dir.resolve("test-build.json");
     store.save(character, file);

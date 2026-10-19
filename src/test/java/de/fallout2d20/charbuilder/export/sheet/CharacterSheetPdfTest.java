@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 /** The PDF sheet is written, can be read back and contains the character's values. */
 class CharacterSheetPdfTest {
 
-  private static Character survivor() {
-    Character character = Character.createNew();
+  private static PlayerCharacter survivor() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setName("Nora");
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setFreeTag(Skill.SMALL_GUNS, true);
@@ -31,7 +31,7 @@ class CharacterSheetPdfTest {
     return character;
   }
 
-  private static PDDocument written(Character character) throws IOException {
+  private static PDDocument written(PlayerCharacter character) throws IOException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     CharacterSheetPdf.write(SheetContent.of(character), out);
     return Loader.loadPDF(out.toByteArray());
@@ -43,7 +43,7 @@ class CharacterSheetPdfTest {
 
   @Test
   void twoPagesWithTheCharacterValues() throws IOException {
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     character.setCaps(98765);
     try (PDDocument document = written(character)) {
       assertEquals(2, document.getNumberOfPages());
@@ -61,7 +61,7 @@ class CharacterSheetPdfTest {
   /** User decision 2026-10-16: what does not fit goes onto an extra page, with the notes. */
   @Test
   void overflowAndNotesGoOntoAnExtraPage() throws IOException {
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     for (int i = 1; i <= SheetLayout.WEAPON_ROWS + 2; i++) {
       character.addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Bat number " + i));
     }
@@ -79,7 +79,7 @@ class CharacterSheetPdfTest {
 
   @Test
   void manyNotesFlowOntoFurtherPages() throws IOException {
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     character.setInventoryNotes("A line of notes.\n".repeat(150));
     try (PDDocument document = written(character)) {
       assertTrue(document.getNumberOfPages() >= 4);
@@ -90,7 +90,7 @@ class CharacterSheetPdfTest {
   @Test
   void charactersOutsideWinAnsiAreReplaced() throws IOException {
     assertEquals("-1 difficulty, >= 2 × 3 ?", PdfCanvas.printable("−1 difficulty, ≥ 2 × 3 \uD83D\uDE00"));
-    Character character = survivor();
+    PlayerCharacter character = survivor();
     character.setName("Zoë −1 中");
     character.addItem(CarriedItem.of(new CustomItem("Lucky charm ●", 0, "")));
     try (PDDocument document = written(character)) {

@@ -4,8 +4,8 @@ import de.fallout2d20.charbuilder.catalog.origin.ExtraTagSkill;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public final class OriginRules {
   private OriginRules() {}
 
   /** All origin rule problems of a character in creation; empty for complete characters. */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (!CreationRules.isChecked(character)) {
       return problems;
@@ -57,7 +57,7 @@ public final class OriginRules {
    * Perks the origin grants on top of one perk per level: the origin's extra perks (Child of Atom,
    * WOA p. 25) plus one when an origin with trait lists takes only one trait (CRB p. 56, WG p. 15).
    */
-  public static int extraPerks(@NonNull Character character) {
+  public static int extraPerks(@NonNull PlayerCharacter character) {
     Optional<OriginData> data = character.getOriginData();
     if (data.isEmpty()) {
       return 0;
@@ -66,7 +66,7 @@ public final class OriginRules {
   }
 
   /** CRB p. 58: no attribute above 10, unless the origin changes the maximum (e.g. CRB p. 53). */
-  private static void checkAttributes(@NonNull Character character, @NonNull OriginData origin,
+  private static void checkAttributes(@NonNull PlayerCharacter character, @NonNull OriginData origin,
       @NonNull List<CreationProblem> problems) {
     for (Attribute attribute : Attribute.values()) {
       int maximum = origin.attributeMaximum(attribute);
@@ -78,7 +78,7 @@ public final class OriginRules {
   }
 
   /** The origin's extra Tag skill must be chosen, allowed and not tagged by another rule. */
-  private static void checkExtraTagSkill(@NonNull Character character, @NonNull OriginData origin,
+  private static void checkExtraTagSkill(@NonNull PlayerCharacter character, @NonNull OriginData origin,
       @NonNull List<CreationProblem> problems) {
     ExtraTagSkill extraTag = origin.extraTagSkill();
     Skill chosen = character.getOriginChoices().tagSkill();

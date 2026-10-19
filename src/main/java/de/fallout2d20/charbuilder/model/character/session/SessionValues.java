@@ -1,7 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.session;
 
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
@@ -38,7 +38,7 @@ public record SessionValues(
     int maxLuckPoints,
     @NonNull Set<HitLocation> injuries) {
 
-  public static @NonNull SessionValues of(@NonNull Character character) {
+  public static @NonNull SessionValues of(@NonNull PlayerCharacter character) {
     Vitals vitals = character.getVitals();
     DerivedStats derived = DerivedStats.of(character);
     int effectiveMaxHp = effectiveMaxHp(derived.maxHp(), vitals.rads());

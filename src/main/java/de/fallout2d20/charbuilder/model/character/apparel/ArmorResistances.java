@@ -1,7 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.apparel;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public final class ArmorResistances {
   private ArmorResistances() {}
 
   /** One entry per hit location of the character, in location order. */
-  public static @NonNull List<LocationResistance> of(@NonNull Character character) {
+  public static @NonNull List<LocationResistance> of(@NonNull PlayerCharacter character) {
     DerivedStats innate = DerivedStats.of(character);
     List<LocationResistance> result = new ArrayList<>();
     List<HitLocation> body = character.hitLocations();

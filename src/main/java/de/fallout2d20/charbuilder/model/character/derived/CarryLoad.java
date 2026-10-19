@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.model.character.derived;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -34,7 +34,7 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
   /** CRB p. 87: every further 50 lbs. over the carry weight raises the penalty by 1. */
   static final int STEP = 50;
 
-  public static @NonNull CarryLoad of(@NonNull Character character) {
+  public static @NonNull CarryLoad of(@NonNull PlayerCharacter character) {
     int carried = 0;
     for (CarriedWeapon weapon : character.getWeapons()) {
       if (weapon.isIntegrated()) {

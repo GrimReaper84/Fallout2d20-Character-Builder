@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -19,7 +19,7 @@ class StartingEquipmentSyncTest {
   /** CRB p. 79 Settler: entries marked, roll lines in the gear notes, caps 45 (pack) at level 1. */
   @Test
   void entersThePack() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     settler.setInventoryNotes("Bought a map");
     apply(settler);
 
@@ -40,7 +40,7 @@ class StartingEquipmentSyncTest {
    */
   @Test
   void anotherPickReplacesOnlyMarkedEntries() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     apply(settler);
     settler.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     settler.addItem(CarriedItem.of(CatalogRef.of("stimpak")));
@@ -66,7 +66,7 @@ class StartingEquipmentSyncTest {
   /** CRB p. 81: a Tag change re-syncs only the Tag skill items; edits of pack entries survive. */
   @Test
   void tagChangeSyncsOnlyTagSkillItems() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     apply(settler);
     settler.setWeaponNotes(0, "scratched");
     settler.setCaps(30);
@@ -84,7 +84,7 @@ class StartingEquipmentSyncTest {
   /** CRB p. 81: Barter grants no item, only 2d20 caps – tagging and untagging it still re-syncs. */
   @Test
   void barterTagSyncsItsCaps() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     apply(settler);
     settler.setFreeTag(Skill.BARTER, true);
     assertTrue(settler.getInventoryNotes().endsWith("[Tag skill] Roll: 2d20 caps"));
@@ -95,7 +95,7 @@ class StartingEquipmentSyncTest {
   /** Taking and giving back Tag! re-syncs the Tag skill items too. */
   @Test
   void perkAndTraitChangesSync() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     apply(settler);
     settler.addPerkRank(CatalogRef.of("tag"), null, Skill.LOCKPICK);
     assertTrue(settler.getInventoryNotes().contains("bobby pins"));
@@ -106,7 +106,7 @@ class StartingEquipmentSyncTest {
   /** Another origin that cannot take the pack drops it: pack and Tag skill entries go, caps fall back. */
   @Test
   void droppedPackRemovesItsEntries() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     settler.setFreeTag(Skill.LOCKPICK, true);
     apply(settler);
     settler.chooseOrigin(CatalogRef.of("vault-dweller"));
@@ -123,7 +123,7 @@ class StartingEquipmentSyncTest {
   /** Tagging before a pack is chosen enters nothing: the starting equipment step has not begun. */
   @Test
   void nothingBeforeAPack() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setFreeTag(Skill.LOCKPICK, true);
     assertEquals("", character.getInventoryNotes());
@@ -133,7 +133,7 @@ class StartingEquipmentSyncTest {
   /** CRB p. 81: a higher starting level raises the fixed starting caps. */
   @Test
   void startingLevelUpdatesCaps() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     apply(settler);
     settler.setStartingLevel(3);
     assertEquals(StartingEquipmentItems.caps(settler).fixedTotal(), settler.getCaps());
@@ -143,7 +143,7 @@ class StartingEquipmentSyncTest {
   /** After creation only GM mode re-enters the pack; Tags are frozen then, so a Tag change changes nothing. */
   @Test
   void afterCreationOnlyInGmMode() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     apply(settler);
     settler.completeCreation();
     assertFalse(settler.canApplyStartingEquipment());
@@ -160,19 +160,19 @@ class StartingEquipmentSyncTest {
   /** The cancelled dialog restores the selection. */
   @Test
   void restoresASnapshot() {
-    Character settler = settler();
+    PlayerCharacter settler = settler();
     StartingEquipment snapshot = settler.getStartingEquipment();
     settler.chooseEquipmentPack(CatalogRef.of("trader"));
     settler.restoreStartingEquipment(snapshot);
     assertEquals(snapshot, settler.getStartingEquipment());
   }
 
-  private static void apply(Character character) {
+  private static void apply(PlayerCharacter character) {
     character.applyStartingEquipment(character.getStartingEquipment());
   }
 
-  private static Character settler() {
-    Character character = Character.createNew();
+  private static PlayerCharacter settler() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.chooseEquipmentPack(CatalogRef.of("settler"));
     character.chooseEquipmentOption(0, "Pipe wrench");

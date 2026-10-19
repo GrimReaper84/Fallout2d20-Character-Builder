@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
 import java.util.Optional;
@@ -32,7 +32,7 @@ final class SkillSection {
   private SkillSection() {}
 
   /** @param locked whether the character is complete and not in GM mode (ranks read-only) */
-  static @NonNull MigPane build(@NonNull Character character, boolean locked, @NonNull Runnable onChanged) {
+  static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onChanged) {
     MigPane pane = grid();
     if (locked) {
       addLockedRows(pane, character);
@@ -84,7 +84,7 @@ final class SkillSection {
   }
 
   /** Read-only rows of a complete character: Tag marker, skill, attribute and rank. */
-  private static void addLockedRows(@NonNull MigPane pane, @NonNull Character character) {
+  private static void addLockedRows(@NonNull MigPane pane, @NonNull PlayerCharacter character) {
     for (Skill skill : Skill.values()) {
       pane.add(new Label(character.isTagged(skill) ? TAG_MARKER : ""));
       addNameCells(pane, skill);
@@ -95,7 +95,7 @@ final class SkillSection {
   }
 
   /** {@code [Tags left: x | Points left: y]}, with the skill point budget as tooltip. */
-  private static @NonNull Label budget(@NonNull Character character) {
+  private static @NonNull Label budget(@NonNull PlayerCharacter character) {
     int pointsLeft = SkillRules.skillPointsLeft(character);
     Label budget = new Label("[Tags left: " + SkillRules.freeTagsLeft(character) + " | Points left: "
         + pointsLeft + "]");
@@ -106,7 +106,7 @@ final class SkillSection {
   }
 
   /** The − and + cells: buying ranks during creation, direct rank corrections by the GM (D2). */
-  private static void addSteppers(@NonNull MigPane pane, @NonNull Character character, @NonNull Skill skill,
+  private static void addSteppers(@NonNull MigPane pane, @NonNull PlayerCharacter character, @NonNull Skill skill,
       boolean gmCorrects, @NonNull Runnable onChanged) {
     String name = skill.displayName();
     boolean canLower = SkillRules.canLower(character, skill);
@@ -126,12 +126,12 @@ final class SkillSection {
     pane.add(StepButtons.plus(raiseTooltip, canRaise, () -> step(character, skill, 1, onChanged)));
   }
 
-  private static @NonNull String atCap(@NonNull Character character, @NonNull Skill skill) {
+  private static @NonNull String atCap(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     return skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".";
   }
 
   /** The Tag checkbox (without text); disabled when it cannot be switched. */
-  private static @NonNull CheckBox tagBox(@NonNull Character character, @NonNull Skill skill,
+  private static @NonNull CheckBox tagBox(@NonNull PlayerCharacter character, @NonNull Skill skill,
       @NonNull Runnable onChanged) {
     CheckBox box = new CheckBox();
     box.setSelected(character.isTagged(skill));
@@ -150,7 +150,7 @@ final class SkillSection {
     return wrapper;
   }
 
-  private static @NonNull String tagTooltip(@NonNull Character character, @NonNull Skill skill) {
+  private static @NonNull String tagTooltip(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     String freeTag = character.skillState(skill).tagged() ? " Uncheck to free this Tag." : "";
     if (character.isTaggedByOrigin(skill)) {
       return "Tag skill from " + character.getOriginData().map(OriginData::name).orElse("the origin")
@@ -171,7 +171,7 @@ final class SkillSection {
    * level typed into the level field is taken when the button gets the focus), so the handler works on
    * the current ranks and checks again; the view is rebuilt either way.
    */
-  private static void step(@NonNull Character character, @NonNull Skill skill, int delta,
+  private static void step(@NonNull PlayerCharacter character, @NonNull Skill skill, int delta,
       @NonNull Runnable onChanged) {
     SkillRules.step(character, skill, delta);
     onChanged.run();

@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Play-session state (D5, decision Q2 of the feature checklist). Limits that depend on the character
  * (maximum HP, Luck points, the body's hit locations) are applied by {@code session.SessionValues} when
- * read and by the {@link Character} mutators when written.
+ * read and by the {@link PlayerCharacter} mutators when written.
  *
  * <p>Changes that lower a limit elsewhere (GM lowers END or LCK, removes a perk, changes the origin) do not
  * rewrite the stored values; they are only read as the lower limit. If the limit rises again, the old

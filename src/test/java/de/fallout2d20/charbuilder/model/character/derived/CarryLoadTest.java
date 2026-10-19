@@ -11,7 +11,7 @@ import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
@@ -58,7 +58,7 @@ class CarryLoadTest {
   /** Sledgehammer 12, Leather Chest Piece 3, 2 × Purified Water <1, Multi-Tool 1, custom 4 × 2, junk 2 × 2, 1 material. */
   @Test
   void sumsEverythingCarried() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("sledgehammer")));
     character.addApparel(WornApparel.of(CatalogRef.of("leather-chest-piece")));
@@ -76,7 +76,7 @@ class CarryLoadTest {
   /** CRB p. 181: a backpack adds 5 or 10 × STR; only the best one counts. */
   @Test
   void backpackRaisesCarryWeight() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.addItem(CarriedItem.of(CatalogRef.of("backpack-small")));
     assertEquals(225, DerivedStats.of(character).carryWeight());
@@ -87,7 +87,7 @@ class CarryLoadTest {
   /** CRB p. 185: robot modules lower a robot's fixed carry weight (Mister Handy 150, CRB p. 55); backpacks do not count. */
   @Test
   void robotModulesLowerARobotsCarryWeight() {
-    Character handy = Character.createNew();
+    PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
     handy.addItem(CarriedItem.of(CatalogRef.of("sensor-array")));
     handy.addItem(CarriedItem.of(CatalogRef.of("diagnosis-mod")));
@@ -98,7 +98,7 @@ class CarryLoadTest {
   /** D4: a mod's weight counts (10mm Pistol 4 + Powerful receiver +1). */
   @Test
   void modsAddWeight() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
     assertEquals(5, CarryLoad.of(character).carried());

@@ -9,7 +9,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
 import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
@@ -46,7 +46,7 @@ import org.tbee.javafx.scene.layout.MigPane;
  * house-rule option), the personal trinket with a roll on the trinket table (CRB p. 80) and the Tag skill items
  * that offer a choice (CRB p. 81), with a preview of what gets entered into the inventory. Picks change the
  * character at once and rebuild the controls; Cancel restores the selection from before, OK enters the
- * starting equipment ({@link Character#applyStartingEquipment(StartingEquipment)}).
+ * starting equipment ({@link PlayerCharacter#applyStartingEquipment(StartingEquipment)}).
  */
 public final class EquipmentPackDialog {
 
@@ -55,11 +55,11 @@ public final class EquipmentPackDialog {
   private static final String GM_PERMISSION = " (GM permission)";
   private static final double PREVIEW_WIDTH = 520;
 
-  private final @NonNull Character character;
+  private final @NonNull PlayerCharacter character;
   private final @NonNull MigPane controls = new MigPane("insets 0, gap 12 6, wrap 4", "[left][grow, fill][][]");
   private final @NonNull Label preview = new Label();
 
-  private EquipmentPackDialog(@NonNull Character character) {
+  private EquipmentPackDialog(@NonNull PlayerCharacter character) {
     this.character = character;
   }
 
@@ -70,7 +70,7 @@ public final class EquipmentPackDialog {
    *
    * @return whether the character changed
    */
-  public static boolean show(@Nullable Window owner, @NonNull Character character) {
+  public static boolean show(@Nullable Window owner, @NonNull PlayerCharacter character) {
     StartingEquipment snapshot = character.getStartingEquipment();
     EquipmentPackDialog content = new EquipmentPackDialog(character);
     content.rebuild();
@@ -111,7 +111,7 @@ public final class EquipmentPackDialog {
   }
 
   /** What a re-entry after creation replaces and adds. */
-  private static @NonNull String replacement(@NonNull Character character) {
+  private static @NonNull String replacement(@NonNull PlayerCharacter character) {
     List<String> replaced = character.startingEntryNames();
     return (replaced.isEmpty() ? "No entries are marked as starting equipment, so nothing is replaced."
         : "These entries are replaced, with their quantities and notes:\n"
@@ -120,7 +120,7 @@ public final class EquipmentPackDialog {
   }
 
   /** What OK does with the inventory. */
-  private static @NonNull String info(@NonNull Character character) {
+  private static @NonNull String info(@NonNull PlayerCharacter character) {
     if (!character.canApplyStartingEquipment()) {
       return "The pack items of this character were added by an earlier version; changes here do not touch the "
           + "inventory.";
@@ -281,7 +281,7 @@ public final class EquipmentPackDialog {
   }
 
   /** The entries OK makes, the amounts to roll and the starting caps. */
-  private static @NonNull String preview(@NonNull Character character) {
+  private static @NonNull String preview(@NonNull PlayerCharacter character) {
     List<String> weapons = new ArrayList<>();
     List<String> apparel = new ArrayList<>();
     List<String> items = new ArrayList<>();

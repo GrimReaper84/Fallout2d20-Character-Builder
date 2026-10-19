@@ -2,21 +2,16 @@ package de.fallout2d20.charbuilder.model.character.derived;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
-import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
-import de.fallout2d20.charbuilder.model.character.Progression;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
-import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -48,7 +43,7 @@ class DerivedStatsTest {
   /** CRB p. 49, 74: END + LCK + 1 per further level; CRB p. 66: Life Giver adds END per rank. */
   @Test
   void hpGrowsPerLevelAndLifeGiver() {
-    Character character = builder().level(10).attribute(Attribute.ENDURANCE, 7)
+    PlayerCharacter character = builder().level(10).attribute(Attribute.ENDURANCE, 7)
         .perk("Life Giver", 2).build();
     assertEquals(35, DerivedStats.of(character).maxHp());
   }
@@ -71,7 +66,7 @@ class DerivedStatsTest {
   /** CRB p. 56: Heavy Handed adds one Combat Die to the melee bonus. */
   @Test
   void heavyHandedAddsOneDie() {
-    Character character = builder().attribute(Attribute.STRENGTH, 7).trait("Heavy Handed").build();
+    PlayerCharacter character = builder().attribute(Attribute.STRENGTH, 7).trait("Heavy Handed").build();
     assertEquals(2, DerivedStats.of(character).meleeBonusDice());
   }
 
@@ -87,7 +82,7 @@ class DerivedStatsTest {
   @ParameterizedTest
   @CsvSource({"mister-handy, 150", "protectron, 225", "assaultron, 150"})
   void fixedCarryIgnoresStrengthAndPerks(String origin, int carry) {
-    Character character = builder().origin(origin).attribute(Attribute.STRENGTH, 8)
+    PlayerCharacter character = builder().origin(origin).attribute(Attribute.STRENGTH, 8)
         .perk("Strong Back", 1).trait("Small Frame").build();
     assertEquals(carry, DerivedStats.of(character).carryWeight());
   }
@@ -113,7 +108,7 @@ class DerivedStatsTest {
   /** CRB p. 60: Barbarian gives no bonus below STR 7. */
   @Test
   void barbarianNeedsStrengthSeven() {
-    Character character = builder().attribute(Attribute.STRENGTH, 6).perk("Barbarian", 1).build();
+    PlayerCharacter character = builder().attribute(Attribute.STRENGTH, 6).perk("Barbarian", 1).build();
     assertEquals(Resistance.of(0), DerivedStats.of(character).physical());
   }
 
@@ -130,7 +125,7 @@ class DerivedStatsTest {
   /** CRB p. 53: the STR/END +2 of a new Super Mutant feeds HP, carry weight and melee bonus. */
   @Test
   void superMutantModifiersReachTheDerivedStatistics() {
-    Character mutant = builder().origin("super-mutant").build();
+    PlayerCharacter mutant = builder().origin("super-mutant").build();
     DerivedStats stats = DerivedStats.of(mutant);
     assertEquals(7 + 5, stats.maxHp());
     assertEquals(150 + 70, stats.carryWeight());
@@ -158,13 +153,13 @@ class DerivedStatsTest {
   /** WOA p. 25, WG p. 13: Rad Sponge gives a base radiation DR of 1. */
   @Test
   void childOfAtomHasBaseRadiationDr() {
-    Character character = builder().origin("child-of-atom").perk("Rad Resistance", 1).build();
+    PlayerCharacter character = builder().origin("child-of-atom").perk("Rad Resistance", 1).build();
     assertEquals(Resistance.of(2), DerivedStats.of(character).radiation());
   }
 
   @Test
   void newCharacterWithoutOriginUsesBaseRules() {
-    DerivedStats stats = DerivedStats.of(Character.createNew());
+    DerivedStats stats = DerivedStats.of(PlayerCharacter.createNew());
     assertEquals(new DerivedStats(10, 10, 1, 200, 0, 5, Resistance.of(0), Resistance.of(0),
         Resistance.of(0), Resistance.of(0)), stats);
   }
@@ -180,11 +175,11 @@ class DerivedStatsTest {
     for (Skill skill : Skill.values()) {
       ranks.put(skill, 0);
     }
-    Character character = new Character("Imported", CatalogRef.of("survivor"), OriginChoices.NONE, 3, 300, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(),
-        List.of(new TraitSelection(CatalogRef.fromLegacyName("Small Frame"), true, List.of())),
-        List.of(new PerkSelection(CatalogRef.fromLegacyName("Life Giver"), 2, 2, List.of(), List.of())),
-        Progression.NONE, Vitals.FULL, new LegacyBaseline(attributes, ranks), null);
+    PlayerCharacter character = PlayerCharacter.builder().name("Imported").origin(CatalogRef.of("survivor")).level(3)
+        .xp(300).creationComplete(true)
+        .traits(List.of(new TraitSelection(CatalogRef.fromLegacyName("Small Frame"), true, List.of())))
+        .perks(List.of(new PerkSelection(CatalogRef.fromLegacyName("Life Giver"), 2, 2, List.of(), List.of())))
+        .legacyBaseline(new LegacyBaseline(attributes, ranks)).build();
 
     DerivedStats stats = DerivedStats.of(character);
     assertEquals(6 + 6 + 2 + 12, stats.maxHp());
@@ -198,7 +193,7 @@ class DerivedStatsTest {
   /** CRB p. 54, 146: fixed 150 lbs., Mister Gutsy Plating −10, Factory Storage Armor +20; an arm piece counts once its arm is chosen. */
   @Test
   void robotArmorChangesTheMisterHandyCarryWeight() {
-    Character handy = Character.createNew();
+    PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
     handy.addApparel(WornApparel.of(CatalogRef.of("mister-gutsy-plating")));
     assertEquals(140, DerivedStats.of(handy).carryWeight());

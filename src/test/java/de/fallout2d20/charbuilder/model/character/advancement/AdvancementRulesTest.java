@@ -4,26 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
-import de.fallout2d20.charbuilder.model.character.OriginChoices;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
-import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.HintArea;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class AdvancementRulesTest {
 
-  private static Character complete() {
-    Character character = Character.createNew();
+  private static PlayerCharacter complete() {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.completeCreation();
     return character;
@@ -31,8 +26,8 @@ class AdvancementRulesTest {
 
   @Test
   void activeOnlyWithPointsOrStagedChoicesAfterCreation() {
-    assertFalse(AdvancementRules.isActive(Character.createNew()));
-    Character character = complete();
+    assertFalse(AdvancementRules.isActive(PlayerCharacter.createNew()));
+    PlayerCharacter character = complete();
     assertFalse(AdvancementRules.isActive(character));
     character.gainMilestoneLevel();
     assertTrue(AdvancementRules.isActive(character));
@@ -45,9 +40,8 @@ class AdvancementRulesTest {
   /** Only perks pending: the perk grid is needed, the skill buttons are not. */
   @Test
   void choosesSkillsAndPerksSeparately() {
-    Character character = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 3, 300, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), new Progression(0, 1), Vitals.FULL,
-        null, null);
+    PlayerCharacter character = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).level(3)
+        .xp(300).creationComplete(true).progression(new Progression(0, 1)).build();
     assertTrue(AdvancementRules.choosesPerks(character));
     assertFalse(AdvancementRules.choosesSkills(character));
     character.addPerkRank(CatalogRef.of("skilled"), null, null);
@@ -56,7 +50,7 @@ class AdvancementRulesTest {
 
   @Test
   void canLowerOnlyStagedRanks() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.gainMilestoneLevel();
     assertFalse(AdvancementRules.canLower(character, Skill.SNEAK));
     character.stageSkillRank(Skill.SNEAK, 1);
@@ -67,7 +61,7 @@ class AdvancementRulesTest {
   /** Leftover points are no problem; too many staged choices and unmet requirements are. */
   @Test
   void problemsBlockApply() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.addXp(300);
     character.stageSkillRank(Skill.SNEAK, 1);
     assertTrue(AdvancementRules.problems(character).isEmpty());
@@ -89,7 +83,7 @@ class AdvancementRulesTest {
   /** After creation the perk grid works with the pending perks and gives back staged ranks only. */
   @Test
   void perkRulesUseThePendingPerksAfterCreation() {
-    Character character = complete();
+    PlayerCharacter character = complete();
     character.addXp(300);
     assertEquals(2, PerkRules.budget(character));
     assertEquals(2, PerkRules.perksLeft(character));

@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
 import java.util.OptionalInt;
 import javafx.scene.Node;
@@ -26,7 +26,7 @@ final class LevelSection {
   private LevelSection() {}
 
   /** The level field with −/+ buttons. */
-  static @NonNull Node control(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull Node control(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     int level = character.getLevel();
     TextField field = new TextField(Integer.toString(level));
     field.setPrefWidth(FIELD_WIDTH);
@@ -43,7 +43,7 @@ final class LevelSection {
   }
 
   /** From level 2: the extra starting caps and the maximum rarity (CRB p. 81); {@code null} at level 1. */
-  static @Nullable Label startingCaps(@NonNull Character character) {
+  static @Nullable Label startingCaps(@NonNull PlayerCharacter character) {
     int level = character.getLevel();
     if (level <= 1) {
       return null;
@@ -59,7 +59,8 @@ final class LevelSection {
    * Takes the typed level if it is a whole number of at least 1 the model accepts, else shows the
    * current level again.
    */
-  private static void commit(@NonNull Character character, @NonNull TextField field, @NonNull Runnable onChanged) {
+  private static void commit(@NonNull PlayerCharacter character, @NonNull TextField field,
+      @NonNull Runnable onChanged) {
     int typed;
     try {
       typed = Integer.parseInt(field.getText().strip());
@@ -75,12 +76,12 @@ final class LevelSection {
    * One level up or down from the current level: a typed level is taken when the button gets the
    * focus, so the captured level of the last rebuild may be outdated.
    */
-  private static void step(@NonNull Character character, int delta, @NonNull Runnable onChanged) {
+  private static void step(@NonNull PlayerCharacter character, int delta, @NonNull Runnable onChanged) {
     change(character, Math.max(1, character.getLevel() + delta), onChanged);
   }
 
   /** Sets the level if the model accepts it; the rebuild shows the current level either way. */
-  private static void change(@NonNull Character character, int level, @NonNull Runnable onChanged) {
+  private static void change(@NonNull PlayerCharacter character, int level, @NonNull Runnable onChanged) {
     try {
       character.setStartingLevel(level);
     } catch (IllegalArgumentException e) {

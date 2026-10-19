@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.creation;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.NonNull;
@@ -19,7 +19,7 @@ public final class CreationRules {
   private CreationRules() {}
 
   /** All creation problems of a character in creation; empty for complete characters. */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (!isChecked(character)) {
       return problems;
@@ -40,7 +40,7 @@ public final class CreationRules {
    * Whether the creation rules look at the character: during creation, and in GM mode also afterwards
    * (D2: content hints such as requirements and open choices; budget hints are left out in GM mode).
    */
-  public static boolean isChecked(@NonNull Character character) {
+  public static boolean isChecked(@NonNull PlayerCharacter character) {
     return !character.isCreationComplete() || character.isGmMode();
   }
 }

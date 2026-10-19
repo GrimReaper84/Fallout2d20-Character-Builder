@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.session.SessionValues;
 import java.util.function.IntConsumer;
@@ -25,7 +25,7 @@ final class SessionSection {
 
   private SessionSection() {}
 
-  static @NonNull MigPane build(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][left]");
     SessionValues values = SessionValues.of(character);
 

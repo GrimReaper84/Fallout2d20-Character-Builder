@@ -17,10 +17,10 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
@@ -51,7 +51,7 @@ class LegacyCharacterImporterTest {
 
   @Test
   void importsBaseDataAndAttributesOfTheV2SurvivorFixture() throws Exception {
-    Character character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
+    PlayerCharacter character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
 
     assertEquals("Test Survivor", character.getName());
     assertEquals("survivor", character.getOrigin().id());
@@ -71,7 +71,7 @@ class LegacyCharacterImporterTest {
 
   @Test
   void importsSkillsPerksAndTraitsOfTheV2SurvivorFixture() throws Exception {
-    Character character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
+    PlayerCharacter character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
 
     assertTag(character, Skill.LOCKPICK, 3);
     assertTag(character, Skill.REPAIR, 4);
@@ -111,7 +111,7 @@ class LegacyCharacterImporterTest {
   @Test
   void importsTheLaserGunAndItsShotsAsFusionCells() throws Exception {
     CharacterFile result = importer.importCharacter(fixture("test-survivor-v2.json"));
-    Character character = result.character();
+    PlayerCharacter character = result.character();
 
     CarriedWeapon laser = character.getWeapons().getFirst();
     assertEquals(CatalogRef.of("laser-gun"), laser.weapon());
@@ -216,7 +216,7 @@ class LegacyCharacterImporterTest {
   @Test
   void importsAnUnversionedFileAndMergesRepeatedPerks() throws Exception {
     CharacterFile result = importer.importCharacter(fixture("test-v1.json"));
-    Character character = result.character();
+    PlayerCharacter character = result.character();
 
     assertEquals(1, result.importReport().sourceSchemaVersion());
     PerkSelection lifeGiver = character.getPerks().getFirst();
@@ -237,14 +237,14 @@ class LegacyCharacterImporterTest {
   void keepsCurrentHpBelowTheLegacyMaximum() throws Exception {
     ObjectNode root = fixture("test-survivor-v2.json");
     ((ObjectNode) root.get("vitals")).put("currentHP", 7);
-    Character character = importer.importCharacter(root).character();
+    PlayerCharacter character = importer.importCharacter(root).character();
     assertEquals(7, character.getVitals().currentHp());
   }
 
   /** The imported Tags are the starting Tag skills (CRB p. 81 Tag skill items). */
   @Test
   void importedTagsAreTheStartingTagSkills() throws Exception {
-    Character character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
+    PlayerCharacter character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
     for (Skill skill : Skill.values()) {
       assertEquals(character.skillState(skill).tagged(), character.getStartingTagSkills().contains(skill),
           skill.id());
@@ -296,7 +296,7 @@ class LegacyCharacterImporterTest {
   @Test
   void importsPackTrinketAndEquipmentTextOfTheV2SurvivorFixture() throws Exception {
     ObjectNode root = fixture("test-survivor-v2.json");
-    Character character = importer.importCharacter(root).character();
+    PlayerCharacter character = importer.importCharacter(root).character();
     StartingEquipment equipment = character.getStartingEquipment();
     assertEquals(new CatalogRef("settler", "Settler"), equipment.pack());
     assertEquals(Arrays.asList((String) null), equipment.choices(), "choices only exist in the legacy text");
@@ -432,7 +432,7 @@ class LegacyCharacterImporterTest {
   void keepsOutOfScopeOriginsAsLegacyEntries() throws Exception {
     ObjectNode root = minimal();
     root.put("origin", "NCR");
-    Character character = importer.importCharacter(root).character();
+    PlayerCharacter character = importer.importCharacter(root).character();
     assertEquals("legacy-ncr", character.getOrigin().id());
     assertEquals("NCR", character.getOrigin().legacyName());
 
@@ -559,7 +559,7 @@ class LegacyCharacterImporterTest {
     assertThrows(SaveFormatException.class, () -> importer.importCharacter(emptyOrigin));
   }
 
-  private static void assertTag(Character character, Skill skill, int rank) {
+  private static void assertTag(PlayerCharacter character, Skill skill, int rank) {
     assertTrue(character.skillState(skill).tagged(), skill.id());
     assertEquals(rank, character.skillRank(skill), skill.id());
   }

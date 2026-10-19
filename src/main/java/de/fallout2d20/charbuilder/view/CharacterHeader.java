@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.HintArea;
 import java.util.List;
@@ -32,7 +32,7 @@ final class CharacterHeader {
   private CharacterHeader() {}
 
   /** @param hints all hints of the character, each with its area */
-  static @NonNull Node build(@NonNull Character character, @NonNull List<CreationProblem> hints,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull ViewCallbacks callbacks) {
     MigPane pane = new MigPane("insets 12 16 8 16, gap 8 4, wrap 8",
         "[right][grow,fill][right][grow,fill][right][][right][]");
@@ -123,7 +123,7 @@ final class CharacterHeader {
   }
 
   /** Origin of a complete character from the catalog (name, sources, trait summary), else the reference. */
-  private static @NonNull Label origin(@NonNull Character character) {
+  private static @NonNull Label origin(@NonNull PlayerCharacter character) {
     CatalogRef ref = character.getOrigin();
     if (ref == null) {
       return new Label("Not chosen");

@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.AppInfo;
 import de.fallout2d20.charbuilder.export.sheet.CharacterSheetPdf;
 import de.fallout2d20.charbuilder.export.sheet.SheetContent;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
@@ -13,9 +13,9 @@ import de.fallout2d20.charbuilder.view.dialog.AboutDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import de.fallout2d20.charbuilder.view.dialog.CreateCharacterDialog;
 import de.fallout2d20.charbuilder.view.dialog.ImportReportDialog;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -54,7 +54,7 @@ public class MainWindowController {
   @FXML private CheckMenuItem gmModeItem;
 
   private @Nullable Stage stage;
-  private @Nullable Character character;
+  private @Nullable PlayerCharacter character;
   private @Nullable CharacterView view;
   private @Nullable Path file;
   private @Nullable Path suggestedDirectory;
@@ -81,7 +81,7 @@ public class MainWindowController {
     if (!confirmDiscard()) {
       return;
     }
-    show(Character.createNew(AppInfo.version()), null);
+    show(PlayerCharacter.createNew(AppInfo.version()), null);
   }
 
   @FXML
@@ -283,7 +283,7 @@ public class MainWindowController {
     return answer.get() == discardButton || save(false);
   }
 
-  private void show(Character newCharacter, @Nullable Path newFile) {
+  private void show(PlayerCharacter newCharacter, @Nullable Path newFile) {
     character = newCharacter;
     file = newFile;
     dirty = false;
@@ -344,13 +344,13 @@ public class MainWindowController {
    * File name for the save dialog. For an imported character the dialog starts in the folder of the
    * legacy file; the name gets a {@code _v3} suffix so the legacy file is not proposed.
    */
-  private String suggestedFileName(Character current) {
+  private String suggestedFileName(PlayerCharacter current) {
     String base = fileBaseName(current);
     return current.isLegacyImport() && file == null ? base + "_v3.json" : base + ".json";
   }
 
   /** The character's name without characters that file systems reject, or "character". */
-  private static String fileBaseName(Character current) {
+  private static String fileBaseName(PlayerCharacter current) {
     return current.getName().isBlank() ? "character" : current.getName().replaceAll("[\\\\/:*?\"<>|]", "_");
   }
 

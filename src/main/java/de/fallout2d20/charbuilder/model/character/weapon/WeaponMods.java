@@ -11,7 +11,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -117,7 +117,7 @@ public final class WeaponMods {
    * The perk ranks needed for the mod that the character does not have (CRB p. 87); information only, never
    * a block (user decision 2026-10-17).
    */
-  public static @NonNull List<ModPerk> missingPerks(@NonNull Character character, @NonNull WeaponModData mod) {
+  public static @NonNull List<ModPerk> missingPerks(@NonNull PlayerCharacter character, @NonNull WeaponModData mod) {
     return mod.perks().stream()
         .filter(needed -> character.getPerks().stream()
             .noneMatch(perk -> perk.perk().id().equals(needed.perk()) && perk.rank() >= needed.rank()))

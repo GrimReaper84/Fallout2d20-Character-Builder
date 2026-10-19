@@ -5,18 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
-import de.fallout2d20.charbuilder.model.character.OriginChoices;
-import de.fallout2d20.charbuilder.model.character.Progression;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
-import de.fallout2d20.charbuilder.model.character.Vitals;
-import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +18,14 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /** Weapon and ammunition edits of a character (CRB p. 91: shots per ammunition type). */
-class CharacterWeaponsTest {
+class PlayerCharacterWeaponsTest {
 
   private static final CustomWeapon BLASTER = new CustomWeapon("Alien Blaster", null, 5, "", "Energy", 1,
       WeaponRange.MEDIUM, "", null);
 
   @Test
   void weaponsCanBeEditedInEveryMode() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.completeCreation();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
@@ -47,7 +41,7 @@ class CharacterWeaponsTest {
 
   @Test
   void ammunitionIsCountedPerTypeAndZeroRemovesIt() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setAmmunition("10mm", 34);
     assertEquals(34, character.ammunition("10mm"));
     assertEquals(0, character.ammunition("38"));
@@ -59,7 +53,7 @@ class CharacterWeaponsTest {
 
   @Test
   void constructorDropsEmptyAmmunitionAndRejectsNegativeShots() {
-    Character character = create(Map.of("10mm", 0, "38", 12));
+    PlayerCharacter character = create(Map.of("10mm", 0, "38", 12));
     assertEquals(Map.of("38", 12), character.getAmmunition());
     assertThrows(IllegalArgumentException.class, () -> create(Map.of("38", -1)));
   }
@@ -67,7 +61,7 @@ class CharacterWeaponsTest {
   /** A custom weapon imported without skill gets one later; a catalog weapon's skill is fixed. */
   @Test
   void customWeaponSkillCanBeChosen() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(BLASTER));
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("laser-gun")));
     character.setCustomWeaponSkill(0, Skill.ENERGY_WEAPONS);
@@ -93,16 +87,14 @@ class CharacterWeaponsTest {
         () -> new CustomWeapon("Gun", Skill.SMALL_GUNS, 3, "", "Physical", 7, WeaponRange.CLOSE, "", null));
   }
 
-  private static Character create(Map<String, Integer> ammunition) {
-    return new Character("Test", null, OriginChoices.NONE, 1, 0, false, EnumSet.allOf(Book.class), Map.of(),
-        Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        null, null, List.of(), ammunition, List.of(), Inventory.EMPTY, null);
+  private static PlayerCharacter create(Map<String, Integer> ammunition) {
+    return PlayerCharacter.builder().name("Test").ammunition(ammunition).build();
   }
 
   /** D4: mods are installed, replaced and removed per slot in any mode. */
   @Test
   void installsReplacesAndRemovesMods() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
     character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
@@ -115,7 +107,7 @@ class CharacterWeaponsTest {
 
   @Test
   void customWeaponModSlots() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addWeapon(CarriedWeapon.of(BLASTER));
     character.setCustomWeaponModSlots(0, EnumSet.of(ModSlot.BARREL));
     character.setWeaponMod(0, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());

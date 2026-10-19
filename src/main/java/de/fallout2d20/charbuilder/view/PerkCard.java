@@ -5,8 +5,8 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
@@ -49,7 +49,7 @@ final class PerkCard {
    * @param blockers why the next rank cannot be taken ({@link PerkRules#blockers}), computed once by the grid
    * @param editable whether perks can be changed now (creation, GM mode, pending level-up perks)
    */
-  static @NonNull VBox of(@NonNull Character character, @NonNull PerkDefinition perk,
+  static @NonNull VBox of(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
       @NonNull List<String> blockers, boolean editable, @NonNull Runnable onChanged) {
     Optional<PerkSelection> selection = character.getPerks().stream()
         .filter(taken -> taken.perk().id().equals(perk.id())).findFirst();
@@ -137,7 +137,7 @@ final class PerkCard {
   }
 
   /** The −/+ buttons; their tooltips name the reason when a button is disabled. */
-  private static @NonNull HBox buttons(@NonNull Character character, @NonNull PerkDefinition perk,
+  private static @NonNull HBox buttons(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
       @NonNull List<String> blockers, @NonNull Node card, @NonNull Runnable onChanged) {
     boolean canAdd = PerkRules.canAdd(character, perk);
     boolean canRemove = PerkRules.canRemove(character, perk.id());
@@ -165,7 +165,7 @@ final class PerkCard {
   }
 
   /** Requirements of the next rank, e.g. "Requires END 7, level 4, no robot". */
-  private static @NonNull String requirementLine(@NonNull Character character, @NonNull PerkDefinition perk,
+  private static @NonNull String requirementLine(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
       int rank) {
     if (rank >= perk.ranks()) {
       return "Maximum rank reached";
@@ -174,7 +174,7 @@ final class PerkCard {
     return parts.isEmpty() ? "No requirements" : "Requires " + String.join(", ", parts);
   }
 
-  private static @NonNull String addBlocked(@NonNull Character character, @NonNull List<String> blockers) {
+  private static @NonNull String addBlocked(@NonNull PlayerCharacter character, @NonNull List<String> blockers) {
     if (!blockers.isEmpty()) {
       return String.join("\n", blockers);
     }
@@ -185,7 +185,7 @@ final class PerkCard {
    * Takes a rank; choice perks first ask for their attribute or skill (cancel adds nothing). Checked
    * again against the current model state, which may have changed since the card was built.
    */
-  private static void add(@NonNull Character character, @NonNull PerkDefinition perk,
+  private static void add(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
       @NonNull Runnable onChanged) {
     CatalogRef ref = CatalogRef.of(perk.id());
     if (!PerkRules.canAdd(character, perk)) {
@@ -222,7 +222,7 @@ final class PerkCard {
    * Asks before the GM removes an imported rank (D2): its effect may already be part of the imported
    * attribute and skill values, which are not recalculated.
    */
-  private static boolean confirmImportedRemoval(@NonNull Character character, @NonNull PerkDefinition perk,
+  private static boolean confirmImportedRemoval(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
       @NonNull Node owner) {
     boolean imported = character.getPerks().stream()
         .anyMatch(selection -> selection.perk().id().equals(perk.id()) && selection.lastRankImported());

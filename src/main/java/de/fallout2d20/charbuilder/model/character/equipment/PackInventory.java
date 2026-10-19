@@ -7,7 +7,7 @@ import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
@@ -57,7 +57,7 @@ public final class PackInventory {
    * The entries of one part of the starting equipment, each marked with {@code source}. The Tag skills' part
    * also names the d20 caps of Barter (CRB p. 81) as an amount to roll.
    */
-  public static @NonNull PackItems resolve(@NonNull Character character, @NonNull StartingSource source) {
+  public static @NonNull PackItems resolve(@NonNull PlayerCharacter character, @NonNull StartingSource source) {
     List<CarriedWeapon> weapons = new ArrayList<>();
     List<WornApparel> apparel = new ArrayList<>();
     List<CarriedItem> items = new ArrayList<>();

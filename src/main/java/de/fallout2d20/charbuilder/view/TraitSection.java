@@ -6,7 +6,7 @@ import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.creation.TraitRules;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
@@ -47,7 +46,7 @@ final class TraitSection {
    * @param onEdited called after an edit that needs no rebuild (typed purpose)
    * @param onChanged called after an edit that changes other values; rebuilds the view
    */
-  static @NonNull MigPane build(@NonNull Character character, boolean locked, @NonNull Runnable onEdited,
+  static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onEdited,
       @NonNull Runnable onChanged) {
     MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][grow, left]");
     Optional<OriginData> origin = character.getOriginData();
@@ -115,7 +114,7 @@ final class TraitSection {
   }
 
   /** The trait lists of the origin, one checkbox per trait with its benefit and penalty below. */
-  private static void addChoice(@NonNull MigPane pane, @NonNull Character character, @NonNull OriginData origin,
+  private static void addChoice(@NonNull MigPane pane, @NonNull PlayerCharacter character, @NonNull OriginData origin,
       @NonNull Runnable onChanged) {
     Set<String> chosen = character.getTraits().stream().map(trait -> trait.trait().id())
         .collect(Collectors.toSet());
@@ -142,7 +141,7 @@ final class TraitSection {
    * the others stay visible but disabled with the reason as tooltip; it sits on a wrapper because disabled
    * controls show no tooltip.
    */
-  private static @NonNull HBox checkBox(@NonNull Character character, @NonNull TraitDefinition trait,
+  private static @NonNull HBox checkBox(@NonNull PlayerCharacter character, @NonNull TraitDefinition trait,
       @NonNull Set<String> chosen, boolean imported, @NonNull Runnable onChanged) {
     CheckBox box = OverviewParts.importMarked(new CheckBox(trait.name()), imported);
     boolean selected = chosen.contains(trait.id());
@@ -169,7 +168,7 @@ final class TraitSection {
    * compact list, so a chooser is only enabled once all choosers before it are set – otherwise a
    * value picked in the second chooser would show up in the first after the rebuild.
    */
-  private static void addAttributeChoosers(@NonNull MigPane pane, @NonNull Character character,
+  private static void addAttributeChoosers(@NonNull MigPane pane, @NonNull PlayerCharacter character,
       @NonNull TraitSelection selection, @NonNull Runnable onChanged) {
     Optional<TraitDefinition> trait = TraitCatalog.byId(selection.trait().id());
     if (trait.isEmpty() || !selection.choosesAttributes()) {

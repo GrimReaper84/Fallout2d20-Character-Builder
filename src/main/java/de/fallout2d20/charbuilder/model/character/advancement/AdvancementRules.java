@@ -2,8 +2,8 @@ package de.fallout2d20.charbuilder.model.character.advancement;
 
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.HintArea;
@@ -29,30 +29,30 @@ public final class AdvancementRules {
   private AdvancementRules() {}
 
   /** Whether the character has points to spend or staged choices, i.e. advancement controls are needed. */
-  public static boolean isActive(@NonNull Character character) {
+  public static boolean isActive(@NonNull PlayerCharacter character) {
     return choosesSkills(character) || choosesPerks(character);
   }
 
   /** Whether skill ranks are left to stage or staged, i.e. the skill −/+ buttons are needed. */
-  public static boolean choosesSkills(@NonNull Character character) {
+  public static boolean choosesSkills(@NonNull PlayerCharacter character) {
     return character.isCreationComplete() && (character.advancementSkillRanksLeft() > 0
         || Arrays.stream(Skill.values()).anyMatch(skill -> character.skillState(skill).stagedRanks() > 0));
   }
 
   /** Whether perks are left to stage or perk ranks staged, i.e. the perk grid is needed. */
-  public static boolean choosesPerks(@NonNull Character character) {
+  public static boolean choosesPerks(@NonNull PlayerCharacter character) {
     return character.isCreationComplete() && (character.getProgression().pendingPerks() > 0
         || character.getPerks().stream().anyMatch(perk -> perk.stagedRanks() > 0));
   }
 
   /** Whether a skill rank can be staged: ranks left and the skill below the rank cap. */
-  public static boolean canRaise(@NonNull Character character, @NonNull Skill skill) {
+  public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     return character.isCreationComplete() && character.advancementSkillRanksLeft() > 0
         && character.skillRank(skill) < character.skillRankCap();
   }
 
   /** Whether a staged rank of the skill can be taken back. */
-  public static boolean canLower(@NonNull Character character, @NonNull Skill skill) {
+  public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     return character.isCreationComplete() && character.skillState(skill).stagedRanks() > 0;
   }
 
@@ -61,7 +61,7 @@ public final class AdvancementRules {
    * staged Skilled) and the perk checks of creation for perks with staged ranks, such as requirements no
    * longer met after taking back a staged Intense Training. Empty for characters in creation.
    */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (!character.isCreationComplete()) {
       return problems;
@@ -86,7 +86,7 @@ public final class AdvancementRules {
   }
 
   /** Whether the staged choices can be applied: something is staged and nothing is wrong. */
-  public static boolean canApply(@NonNull Character character) {
+  public static boolean canApply(@NonNull PlayerCharacter character) {
     return character.isCreationComplete() && character.hasStagedAdvancement() && problems(character).isEmpty();
   }
 }

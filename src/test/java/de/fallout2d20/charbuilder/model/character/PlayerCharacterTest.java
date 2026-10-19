@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
-import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
@@ -15,11 +13,11 @@ import java.util.Map;
 import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 
-class CharacterTest {
+class PlayerCharacterTest {
 
   @Test
   void newCharacterStartsWithBaseValues() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     for (Attribute attribute : Attribute.values()) {
       assertEquals(5, character.attributeValue(attribute));
     }
@@ -33,16 +31,15 @@ class CharacterTest {
   /** The Core Rulebook can never be switched off (user decision). */
   @Test
   void coreRulebookIsAlwaysEnabled() {
-    assertEquals(EnumSet.allOf(Book.class), Character.createNew().getEnabledBooks());
-    Character character = new Character("Test", null, OriginChoices.NONE, 1, 0, false, EnumSet.of(Book.WOA), Map.of(),
-        Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null);
+    assertEquals(EnumSet.allOf(Book.class), PlayerCharacter.createNew().getEnabledBooks());
+    PlayerCharacter character = PlayerCharacter.builder().name("Test").enabledBooks(EnumSet.of(Book.WOA)).build();
     assertEquals(EnumSet.of(Book.CRB, Book.WOA), character.getEnabledBooks());
   }
 
   /** CRB p. 58: base 5 plus spent points; an attribute may be lowered to 4. */
   @Test
   void attributeIsBasePlusAllocation() {
-    Character character = create(Map.of(Attribute.STRENGTH, 2, Attribute.CHARISMA, -1), Map.of(), null);
+    PlayerCharacter character = create(Map.of(Attribute.STRENGTH, 2, Attribute.CHARISMA, -1), Map.of(), null);
     assertEquals(7, character.attributeValue(Attribute.STRENGTH));
     assertEquals(4, character.attributeValue(Attribute.CHARISMA));
   }
@@ -50,7 +47,7 @@ class CharacterTest {
   /** CRB p. 58: a Tag skill starts at rank 2. */
   @Test
   void tagSkillAddsTwoRanks() {
-    Character character = create(Map.of(),
+    PlayerCharacter character = create(Map.of(),
         Map.of(Skill.REPAIR, new SkillState(true, 1, 0), Skill.SNEAK, new SkillState(false, 2, 1)), null);
     assertEquals(3, character.skillRank(Skill.REPAIR));
     assertEquals(3, character.skillRank(Skill.SNEAK));
@@ -68,7 +65,7 @@ class CharacterTest {
       ranks.put(skill, 0);
     }
     ranks.put(Skill.LOCKPICK, 3);
-    Character character = create(Map.of(),
+    PlayerCharacter character = create(Map.of(),
         Map.of(Skill.LOCKPICK, new SkillState(true, 0, 1)), new LegacyBaseline(attributes, ranks));
 
     assertTrue(character.isLegacyImport());
@@ -80,22 +77,22 @@ class CharacterTest {
   /** CRB p. 53: a new Super Mutant starts with STR and END 7; an imported one keeps its baseline. */
   @Test
   void superMutantGetsAttributeModifiers() {
-    Character mutant = Character.createNew();
+    PlayerCharacter mutant = PlayerCharacter.createNew();
     mutant.chooseOrigin(CatalogRef.of("super-mutant"));
     assertEquals(7, mutant.attributeValue(Attribute.STRENGTH));
     assertEquals(7, mutant.attributeValue(Attribute.ENDURANCE));
     assertEquals(5, mutant.attributeValue(Attribute.INTELLIGENCE));
 
-    Character imported = create(Map.of(), Map.of(), baseline(8));
-    assertEquals(8, new Character("Imported", CatalogRef.of("super-mutant"), OriginChoices.NONE, 1, 0,
-        true, EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE,
-        Vitals.FULL, imported.getLegacyBaseline(), null).attributeValue(Attribute.STRENGTH));
+    PlayerCharacter imported = create(Map.of(), Map.of(), baseline(8));
+    assertEquals(8, PlayerCharacter.builder().name("Imported").origin(CatalogRef.of("super-mutant"))
+        .creationComplete(true).legacyBaseline(imported.getLegacyBaseline()).build()
+        .attributeValue(Attribute.STRENGTH));
   }
 
   /** CRB p. 52 (user reading): Survival is tagged in addition; a free Survival Tag is removed. */
   @Test
   void ghoulSurvivalIsAnAdditionalTag() {
-    Character ghoul = create(Map.of(), Map.of(Skill.SURVIVAL, new SkillState(true, 1, 0)), null);
+    PlayerCharacter ghoul = create(Map.of(), Map.of(Skill.SURVIVAL, new SkillState(true, 1, 0)), null);
     ghoul.chooseOrigin(CatalogRef.of("ghoul"));
     assertFalse(ghoul.skillState(Skill.SURVIVAL).tagged());
     assertTrue(ghoul.isTagged(Skill.SURVIVAL));
@@ -105,7 +102,7 @@ class CharacterTest {
   /** CRB p. 51: the extra Tag skill of the Brotherhood counts as a Tag skill. */
   @Test
   void originTagSkillCountsAsTag() {
-    Character initiate = Character.createNew();
+    PlayerCharacter initiate = PlayerCharacter.createNew();
     initiate.chooseOrigin(CatalogRef.of("brotherhood-initiate"));
     initiate.chooseOriginTagSkill(Skill.SCIENCE);
     assertTrue(initiate.isTagged(Skill.SCIENCE));
@@ -115,10 +112,9 @@ class CharacterTest {
 
   @Test
   void chooseOriginResetsChoicesAndTraitsButKeepsAllocation() {
-    Character character = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0,
-        false, EnumSet.allOf(Book.class), Map.of(Attribute.AGILITY, 2), Map.of(),
-        List.of(new TraitSelection(CatalogRef.of("small-frame"), false, List.of())), List.of(),
-        Progression.NONE, Vitals.FULL, null, null);
+    PlayerCharacter character = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
+        .attributeAllocation(Map.of(Attribute.AGILITY, 2))
+        .traits(List.of(new TraitSelection(CatalogRef.of("small-frame"), false, List.of()))).build();
     character.chooseOrigin(CatalogRef.of("protectron"));
     character.setPurpose("  Medical Responder ");
     assertEquals("Medical Responder", character.getOriginChoices().purpose());
@@ -131,14 +127,14 @@ class CharacterTest {
 
   @Test
   void completeCharactersCannotChangeTheirOrigin() {
-    Character complete = create(Map.of(), Map.of(), baseline(6));
+    PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
     assertThrows(IllegalStateException.class, () -> complete.chooseOrigin(CatalogRef.of("ghoul")));
   }
 
   /** CRB p. 56: Gifted raises two chosen attributes by 1; an imported Gifted adds nothing. */
   @Test
   void giftedRaisesTwoAttributes() {
-    Character survivor = Character.createNew();
+    PlayerCharacter survivor = PlayerCharacter.createNew();
     survivor.chooseOrigin(CatalogRef.of("survivor"));
     survivor.chooseTrait(CatalogRef.of("gifted"));
     survivor.setTraitAttributeChoices("gifted", List.of(Attribute.STRENGTH, Attribute.AGILITY));
@@ -147,17 +143,16 @@ class CharacterTest {
     assertEquals(5, survivor.attributeValue(Attribute.LUCK));
 
     // Without a baseline, so only the imported flag keeps the choice from counting.
-    Character imported = new Character("Imported", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0,
-        true, EnumSet.allOf(Book.class), Map.of(), Map.of(),
-        List.of(new TraitSelection(CatalogRef.of("gifted"), true, List.of(Attribute.STRENGTH))),
-        List.of(), Progression.NONE, Vitals.FULL, null, null);
+    PlayerCharacter imported = PlayerCharacter.builder().name("Imported").origin(CatalogRef.of("survivor"))
+        .creationComplete(true)
+        .traits(List.of(new TraitSelection(CatalogRef.of("gifted"), true, List.of(Attribute.STRENGTH)))).build();
     assertEquals(5, imported.attributeValue(Attribute.STRENGTH));
   }
 
   /** Choices of traits without attribute choices have no effect. */
   @Test
   void onlyTraitsWithAttributeChoicesRaiseAttributes() {
-    Character survivor = Character.createNew();
+    PlayerCharacter survivor = PlayerCharacter.createNew();
     survivor.chooseOrigin(CatalogRef.of("survivor"));
     survivor.chooseTrait(CatalogRef.of("educated"));
     survivor.setTraitAttributeChoices("educated", List.of(Attribute.STRENGTH));
@@ -166,7 +161,7 @@ class CharacterTest {
 
   @Test
   void traitMutatorsWorkOnlyDuringCreation() {
-    Character survivor = Character.createNew();
+    PlayerCharacter survivor = PlayerCharacter.createNew();
     survivor.chooseOrigin(CatalogRef.of("survivor"));
     survivor.chooseTrait(CatalogRef.of("small-frame"));
     survivor.chooseTrait(CatalogRef.of("small-frame"));
@@ -176,7 +171,7 @@ class CharacterTest {
     survivor.removeTrait("small-frame");
     assertEquals(1, survivor.getTraits().size());
 
-    Character complete = create(Map.of(), Map.of(), baseline(6));
+    PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
     assertThrows(IllegalStateException.class, () -> complete.chooseTrait(CatalogRef.of("gifted")));
     assertThrows(IllegalStateException.class, () -> complete.removeTrait("gifted"));
     assertThrows(IllegalStateException.class,
@@ -185,7 +180,7 @@ class CharacterTest {
 
   @Test
   void creationMutatorsWorkOnlyDuringCreation() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setAttributeAllocation(Attribute.LUCK, -1);
     character.setCreationRanks(Skill.SNEAK, 2);
     character.setFreeTag(Skill.REPAIR, true);
@@ -193,7 +188,7 @@ class CharacterTest {
     assertEquals(2, character.skillRank(Skill.SNEAK));
     assertEquals(2, character.skillRank(Skill.REPAIR));
 
-    Character complete = create(Map.of(), Map.of(), baseline(6));
+    PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
     assertThrows(IllegalStateException.class, () -> complete.setAttributeAllocation(Attribute.LUCK, 1));
     assertThrows(IllegalStateException.class, () -> complete.setCreationRanks(Skill.SNEAK, 1));
     assertThrows(IllegalStateException.class, () -> complete.setFreeTag(Skill.SNEAK, true));
@@ -202,7 +197,7 @@ class CharacterTest {
   /** User decision: tagging lowers bought ranks to the creation cap (CRB p. 58: 3 at level 1). */
   @Test
   void tagTrimsBoughtRanksToTheCap() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setCreationRanks(Skill.SNEAK, 3);
     character.setFreeTag(Skill.SNEAK, true);
     assertEquals(1, character.skillState(Skill.SNEAK).creationRanks());
@@ -212,7 +207,7 @@ class CharacterTest {
   /** User decision: untagging only removes the two free ranks. */
   @Test
   void untagKeepsBoughtRanks() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setFreeTag(Skill.SNEAK, true);
     character.setCreationRanks(Skill.SNEAK, 1);
     character.setFreeTag(Skill.SNEAK, false);
@@ -221,7 +216,7 @@ class CharacterTest {
 
   @Test
   void originTagsCannotBeFreeTags() {
-    Character ghoul = Character.createNew();
+    PlayerCharacter ghoul = PlayerCharacter.createNew();
     ghoul.chooseOrigin(CatalogRef.of("ghoul"));
     assertTrue(ghoul.isTaggedByOrigin(Skill.SURVIVAL));
     assertThrows(IllegalArgumentException.class, () -> ghoul.setFreeTag(Skill.SURVIVAL, true));
@@ -231,7 +226,7 @@ class CharacterTest {
   /** Choosing the origin's extra Tag on a freely tagged skill frees that Tag; bought ranks stay. */
   @Test
   void chooseOriginTagSkillClearsAFreeTag() {
-    Character initiate = Character.createNew();
+    PlayerCharacter initiate = PlayerCharacter.createNew();
     initiate.chooseOrigin(CatalogRef.of("brotherhood-initiate"));
     initiate.setFreeTag(Skill.SCIENCE, true);
     initiate.setCreationRanks(Skill.SCIENCE, 1);
@@ -244,7 +239,7 @@ class CharacterTest {
   /** User decision: choosing Nomad (WG p. 15) removes a free Tag on Science; bought ranks stay. */
   @Test
   void nomadRemovesAFreeScienceTag() {
-    Character tribal = Character.createNew();
+    PlayerCharacter tribal = PlayerCharacter.createNew();
     tribal.chooseOrigin(CatalogRef.of("tribal"));
     tribal.setFreeTag(Skill.SCIENCE, true);
     tribal.setCreationRanks(Skill.SCIENCE, 1);
@@ -257,13 +252,13 @@ class CharacterTest {
   /** User decision: an origin Tag lowers bought ranks to the cap like a free Tag (CRB p. 52, 58). */
   @Test
   void originTagsTrimBoughtRanks() {
-    Character ghoul = Character.createNew();
+    PlayerCharacter ghoul = PlayerCharacter.createNew();
     ghoul.setCreationRanks(Skill.SURVIVAL, 3);
     ghoul.chooseOrigin(CatalogRef.of("ghoul"));
     assertEquals(3, ghoul.skillRank(Skill.SURVIVAL));
     assertEquals(1, ghoul.skillState(Skill.SURVIVAL).creationRanks());
 
-    Character initiate = Character.createNew();
+    PlayerCharacter initiate = PlayerCharacter.createNew();
     initiate.chooseOrigin(CatalogRef.of("brotherhood-initiate"));
     initiate.setCreationRanks(Skill.SCIENCE, 3);
     initiate.chooseOriginTagSkill(Skill.SCIENCE);
@@ -273,7 +268,7 @@ class CharacterTest {
   /** User decision: a new origin's lower maximum (Super Mutant INT 6, CRB p. 53) returns the excess points. */
   @Test
   void superMutantOriginReturnsExcessAttributePoints() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setAttributeAllocation(Attribute.INTELLIGENCE, 3);
     character.setAttributeAllocation(Attribute.STRENGTH, 2);
     character.chooseOrigin(CatalogRef.of("super-mutant"));
@@ -285,7 +280,7 @@ class CharacterTest {
   /** CRB p. 53: switching to Super Mutant lowers bought ranks to its cap of 4. */
   @Test
   void superMutantOriginTrimsRanksToItsCap() {
-    Character character = atLevel(3, "survivor");
+    PlayerCharacter character = atLevel(3, "survivor");
     character.setCreationRanks(Skill.SNEAK, 6);
     character.chooseOrigin(CatalogRef.of("super-mutant"));
     assertEquals(4, character.skillRank(Skill.SNEAK));
@@ -294,7 +289,7 @@ class CharacterTest {
   /** CRB p. 66: Intense Training raises the chosen attribute; imported ranks are in the baseline. */
   @Test
   void intenseTrainingRaisesAttribute() {
-    Character character = atLevel(4, "survivor");
+    PlayerCharacter character = atLevel(4, "survivor");
     character.addPerkRank(CatalogRef.of("intense-training"), Attribute.AGILITY, null);
     character.addPerkRank(CatalogRef.of("intense-training"), Attribute.AGILITY, null);
     assertEquals(7, character.attributeValue(Attribute.AGILITY));
@@ -302,17 +297,18 @@ class CharacterTest {
     assertEquals(6, character.attributeValue(Attribute.AGILITY));
     assertEquals(List.of(Attribute.AGILITY), character.getPerks().getFirst().attributeChoices());
 
-    Character imported = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 4, 0, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
-        List.of(new PerkSelection(CatalogRef.of("intense-training"), 1, 1, List.of(Attribute.AGILITY), List.of())),
-        Progression.NONE, Vitals.FULL, baseline(6), null);
+    PlayerCharacter imported = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).level(4)
+        .creationComplete(true)
+        .perks(List.of(new PerkSelection(CatalogRef.of("intense-training"), 1, 1, List.of(Attribute.AGILITY),
+            List.of())))
+        .legacyBaseline(baseline(6)).build();
     assertEquals(6, imported.attributeValue(Attribute.AGILITY));
   }
 
   /** User decision: Tag! is its own Tag source; a free Tag on the same skill is freed. */
   @Test
   void tagPerkIsSeparateTagSource() {
-    Character character = atLevel(5, "survivor");
+    PlayerCharacter character = atLevel(5, "survivor");
     character.setFreeTag(Skill.SNEAK, true);
     character.addPerkRank(CatalogRef.of("tag"), null, Skill.SNEAK);
     assertTrue(character.isTaggedByPerk(Skill.SNEAK));
@@ -326,7 +322,7 @@ class CharacterTest {
   /** CRB p. 73: Tag! adds 2 ranks to at most 6; a rank-5 skill ends at 6 (user decision). */
   @Test
   void tagPerkOnRankFiveSkillCapsAtSix() {
-    Character character = atLevel(5, "survivor");
+    PlayerCharacter character = atLevel(5, "survivor");
     character.setCreationRanks(Skill.SNEAK, 5);
     character.addPerkRank(CatalogRef.of("tag"), null, Skill.SNEAK);
     assertEquals(6, character.skillRank(Skill.SNEAK));
@@ -334,21 +330,19 @@ class CharacterTest {
 
   @Test
   void addAndRemovePerkRanksOnlyInCreation() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
     assertEquals(1, character.getPerks().getFirst().rank());
     character.removePerkRank("jury-rigging");
     assertTrue(character.getPerks().isEmpty());
     character.removePerkRank("jury-rigging");
 
-    Character withImported = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, false,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(),
-        List.of(new PerkSelection(CatalogRef.of("jury-rigging"), 1, 1, List.of(), List.of())),
-        Progression.NONE, Vitals.FULL, null, null);
+    PlayerCharacter withImported = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
+        .perks(List.of(new PerkSelection(CatalogRef.of("jury-rigging"), 1, 1, List.of(), List.of()))).build();
     withImported.removePerkRank("jury-rigging");
     assertEquals(1, withImported.getPerks().getFirst().rank());
 
-    Character complete = create(Map.of(), Map.of(), baseline(6));
+    PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
     complete.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
     assertEquals(1, complete.getPerks().getFirst().stagedRanks(), "after creation a perk rank is staged");
     complete.removePerkRank("jury-rigging");
@@ -358,7 +352,7 @@ class CharacterTest {
   /** CRB p. 49: XP becomes the minimum of the starting level (user decision); no upper limit. */
   @Test
   void setStartingLevelSetsXp() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setStartingLevel(5);
     assertEquals(5, character.getLevel());
     assertEquals(1_000, character.getXp());
@@ -371,7 +365,7 @@ class CharacterTest {
   /** User decision: lowering the level trims skill ranks above the new cap (CRB p. 58). */
   @Test
   void loweringTheLevelTrimsSkillRanks() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setStartingLevel(3);
     character.setCreationRanks(Skill.SNEAK, 6);
     character.setStartingLevel(2);
@@ -381,7 +375,7 @@ class CharacterTest {
   /** Raising the level changes nothing else: extra skill points and perks only show as "left". */
   @Test
   void raisingTheLevelKeepsSkillsAndPerks() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.setCreationRanks(Skill.SNEAK, 3);
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
     character.setStartingLevel(6);
@@ -392,19 +386,19 @@ class CharacterTest {
 
   @Test
   void startingLevelOnlyDuringCreationAndAtLeastOne() {
-    assertThrows(IllegalArgumentException.class, () -> Character.createNew().setStartingLevel(0));
-    Character huge = Character.createNew();
+    assertThrows(IllegalArgumentException.class, () -> PlayerCharacter.createNew().setStartingLevel(0));
+    PlayerCharacter huge = PlayerCharacter.createNew();
     assertThrows(IllegalArgumentException.class, () -> huge.setStartingLevel(Integer.MAX_VALUE));
     assertEquals(1, huge.getLevel());
     assertEquals(0, huge.getXp());
-    Character complete = create(Map.of(), Map.of(), baseline(6));
+    PlayerCharacter complete = create(Map.of(), Map.of(), baseline(6));
     assertThrows(IllegalStateException.class, () -> complete.setStartingLevel(2));
   }
 
   /** CRB p. 50: creation ends once; afterwards creation choices are fixed. */
   @Test
   void completeCreationEndsCreation() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     character.setStartingLevel(3);
     assertEquals(OptionalInt.of(3), character.getStartingLevel(), "during creation the current level");
@@ -421,7 +415,7 @@ class CharacterTest {
   /** CRB p. 58: the creation rank cap of 3 no longer applies after creation. */
   @Test
   void completionLiftsTheCreationRankCap() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     assertEquals(3, character.skillRankCap());
     character.completeCreation();
@@ -442,28 +436,25 @@ class CharacterTest {
     assertThrows(IllegalArgumentException.class, () -> withStartingLevel(false, 2), "only complete characters");
   }
 
-  private static Character withStartingLevel(boolean complete, int startingLevel) {
-    return new Character("Test", null, OriginChoices.NONE, 2, 100, complete, EnumSet.allOf(Book.class), Map.of(),
-        Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL, null, null, StartingEquipment.NONE, "",
-        startingLevel, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
+  private static PlayerCharacter withStartingLevel(boolean complete, int startingLevel) {
+    return PlayerCharacter.builder().name("Test").level(2).xp(100).creationComplete(complete)
+        .startingLevel(startingLevel).build();
   }
 
   /** CRB p. 58: 3 during creation below level 3, else 6; CRB p. 53: Super Mutant at most 4. */
   @Test
   void skillRankCap() {
-    assertEquals(3, Character.createNew().skillRankCap());
+    assertEquals(3, PlayerCharacter.createNew().skillRankCap());
     assertEquals(6, atLevel(3, "survivor").skillRankCap());
     assertEquals(4, atLevel(3, "super-mutant").skillRankCap());
-    Character mutant = Character.createNew();
+    PlayerCharacter mutant = PlayerCharacter.createNew();
     mutant.chooseOrigin(CatalogRef.of("super-mutant"));
     assertEquals(3, mutant.skillRankCap());
     assertEquals(6, create(Map.of(), Map.of(), baseline(6)).skillRankCap());
   }
 
-  private static Character atLevel(int level, String origin) {
-    return new Character("Test", CatalogRef.of(origin), OriginChoices.NONE, level, 0, false,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE,
-        Vitals.FULL, null, null);
+  private static PlayerCharacter atLevel(int level, String origin) {
+    return PlayerCharacter.builder().name("Test").origin(CatalogRef.of(origin)).level(level).build();
   }
 
   private static LegacyBaseline baseline(int value) {
@@ -478,10 +469,9 @@ class CharacterTest {
     return new LegacyBaseline(attributes, ranks);
   }
 
-  private static Character create(Map<Attribute, Integer> allocation, Map<Skill, SkillState> skills,
+  private static PlayerCharacter create(Map<Attribute, Integer> allocation, Map<Skill, SkillState> skills,
       LegacyBaseline baseline) {
-    return new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, baseline != null,
-        EnumSet.allOf(Book.class), allocation, skills,
-        List.of(), List.of(), Progression.NONE, Vitals.FULL, baseline, null);
+    return PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).creationComplete(baseline != null)
+        .attributeAllocation(allocation).skills(skills).legacyBaseline(baseline).build();
   }
 }

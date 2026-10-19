@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ class CreationRulesTest {
   /** CRB p. 50: the name hint first, then the creation steps in book order. */
   @Test
   void collectsAllRulesInCreationOrder() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
     List<String> topics = CreationRules.problems(character).stream().map(CreationProblem::topic).toList();
     List<String> steps = List.of("Name", "Traits", "S.P.E.C.I.A.L.", "Tag skills", "Skills", "Perks", "Equipment");
@@ -27,7 +27,7 @@ class CreationRulesTest {
   /** Each hint names the part of the character it belongs to, so the view can show it in its tab. */
   @Test
   void hintsNameTheirArea() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     assertEquals(HintArea.HEADER, area(character, "Name"));
     assertEquals(HintArea.HEADER, area(character, "Origin"));
     character.chooseOrigin(CatalogRef.of("survivor"));
@@ -37,19 +37,19 @@ class CreationRulesTest {
     assertEquals(HintArea.STATS, area(character, "Skills"));
     assertEquals(HintArea.PERKS, area(character, "Perks"));
     assertEquals(HintArea.GEAR, area(character, "Equipment"));
-    Character vaultDweller = Character.createNew();
+    PlayerCharacter vaultDweller = PlayerCharacter.createNew();
     vaultDweller.chooseOrigin(CatalogRef.of("vault-dweller"));
     assertEquals(HintArea.STATS, area(vaultDweller, "Origin"), "the extra Tag skill is chosen with the skills");
   }
 
-  private static HintArea area(Character character, String topic) {
+  private static HintArea area(PlayerCharacter character, String topic) {
     return CreationRules.problems(character).stream().filter(p -> p.topic().equals(topic)).findFirst()
         .orElseThrow(() -> new AssertionError("no hint for " + topic)).area();
   }
 
   @Test
   void nameHintOnlyForABlankName() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     assertEquals("Name", CreationRules.problems(character).getFirst().topic());
     character.setName("  ");
     assertEquals("Name", CreationRules.problems(character).getFirst().topic());
@@ -65,7 +65,7 @@ class CreationRulesTest {
    */
   @Test
   void aCharacterBuiltByTheBookHasNoHints() {
-    Character nora = Character.createNew();
+    PlayerCharacter nora = PlayerCharacter.createNew();
     nora.setName("Nora");
     nora.chooseOrigin(CatalogRef.of("survivor"));
     nora.chooseTrait(CatalogRef.of("fast-shot"));
@@ -94,7 +94,7 @@ class CreationRulesTest {
 
   @Test
   void completeCharactersHaveNoHints() {
-    Character unnamed = Character.createNew();
+    PlayerCharacter unnamed = PlayerCharacter.createNew();
     unnamed.completeCreation();
     assertEquals(List.of(), CreationRules.problems(unnamed));
   }

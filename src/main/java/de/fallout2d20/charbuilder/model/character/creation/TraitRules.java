@@ -4,7 +4,7 @@ import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public final class TraitRules {
   private TraitRules() {}
 
   /** All trait problems of a character in creation; empty for complete characters. */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     Optional<OriginData> origin = character.getOriginData();
     if (!CreationRules.isChecked(character) || origin.isEmpty()) {
@@ -69,7 +69,7 @@ public final class TraitRules {
    * Whether the character takes one trait and an extra perk instead of a second trait (CRB p. 56,
    * WG p. 15): an origin with trait lists and exactly one trait chosen.
    */
-  public static boolean takesExtraPerkInsteadOfTrait(@NonNull Character character) {
+  public static boolean takesExtraPerkInsteadOfTrait(@NonNull PlayerCharacter character) {
     return character.getOriginData().map(origin -> !origin.traitLists().isEmpty()).orElse(false)
         && character.getTraits().size() == 1;
   }
@@ -99,7 +99,7 @@ public final class TraitRules {
   }
 
   /** Nomad (WG p. 15): Science cannot be a Tag skill, whatever made it one. */
-  private static void checkForbiddenTags(@NonNull Character character, @NonNull TraitDefinition trait,
+  private static void checkForbiddenTags(@NonNull PlayerCharacter character, @NonNull TraitDefinition trait,
       @NonNull List<CreationProblem> problems) {
     for (Skill skill : trait.forbiddenTagSkills()) {
       if (character.isTagged(skill)) {

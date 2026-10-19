@@ -5,14 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
-import de.fallout2d20.charbuilder.model.character.OriginChoices;
-import de.fallout2d20.charbuilder.model.character.Progression;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
-import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +18,7 @@ class EquipmentRulesTest {
 
   @Test
   void asksForAPackOnlyWhenTheOriginHasPacks() {
-    assertEquals(List.of(), messages(Character.createNew()), "the origin comes first");
+    assertEquals(List.of(), messages(PlayerCharacter.createNew()), "the origin comes first");
     assertEquals(List.of("Choose an equipment pack."), messages(character("survivor")));
     assertEquals(List.of("Choose an equipment pack."), messages(character("protectron")));
   }
@@ -32,16 +28,15 @@ class EquipmentRulesTest {
   void reportsAPackOfADisabledBook() {
     StartingEquipment medic = new StartingEquipment(CatalogRef.of("protectron-medic"), List.of(), Map.of(), null,
         false, List.of());
-    Character protectron = new Character("Test", CatalogRef.of("protectron"), OriginChoices.NONE, 1, 0, false,
-        EnumSet.of(Book.CRB), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, medic, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
+    PlayerCharacter protectron = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("protectron"))
+        .enabledBooks(EnumSet.of(Book.CRB)).startingEquipment(medic).build();
     assertEquals(List.of("Protectron Medic needs a book that is not enabled."), messages(protectron));
   }
 
   /** WOA p. 26: the Zealot leaves the clothing to choose. */
   @Test
   void woaPackChoices() {
-    Character zealot = character("child-of-atom");
+    PlayerCharacter zealot = character("child-of-atom");
     zealot.chooseEquipmentPack(CatalogRef.of("zealot"));
     assertEquals(List.of("Choose: Clothing (Zealot pack)."), messages(zealot));
     zealot.chooseEquipmentOption(0, "Drifter outfit");
@@ -51,7 +46,7 @@ class EquipmentRulesTest {
   /** CRB p. 79: Settler with its melee weapon and trinket, Tags without a choice. */
   @Test
   void completeSelectionHasNoProblems() {
-    Character settler = character("survivor");
+    PlayerCharacter settler = character("survivor");
     settler.chooseEquipmentPack(CatalogRef.of("settler"));
     settler.chooseEquipmentOption(0, "Pipe wrench");
     settler.setTrinket("Medal");
@@ -61,7 +56,7 @@ class EquipmentRulesTest {
 
   @Test
   void reportsOpenChoicesTrinketAndTagSkillItems() {
-    Character settler = character("survivor");
+    PlayerCharacter settler = character("survivor");
     settler.chooseEquipmentPack(CatalogRef.of("settler"));
     settler.setFreeTag(Skill.MELEE_WEAPONS, true);
     assertEquals(List.of("Choose: Melee weapon (Settler pack).", "Describe or roll the personal trinket.",
@@ -74,10 +69,10 @@ class EquipmentRulesTest {
   /** CRB p. 57: a ghoul may take a Vault Dweller pack with GM permission; a survivor may not. */
   @Test
   void packMustBeOfferedToTheOrigin() {
-    Character ghoul = character("ghoul");
+    PlayerCharacter ghoul = character("ghoul");
     ghoul.chooseEquipmentPack(CatalogRef.of("vault-tec-security"));
     assertEquals(List.of(), messages(ghoul));
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     survivor.chooseEquipmentPack(CatalogRef.of("vault-tec-security"));
     assertEquals(List.of("Vault-Tec Security is not an equipment pack for this origin."), messages(survivor));
   }
@@ -86,9 +81,8 @@ class EquipmentRulesTest {
   void reportsAPackOutsideTheCatalog() {
     StartingEquipment unknown = new StartingEquipment(new CatalogRef("lone-wanderer", "Lone Wanderer"),
         List.of(), Map.of(), null, false, List.of());
-    Character synth = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, false,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null, unknown, "", null, null, List.of(), Map.of(), List.of(), Inventory.EMPTY, null);
+    PlayerCharacter synth = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
+        .startingEquipment(unknown).build();
     assertEquals(List.of("\"Lone Wanderer\" is not an equipment pack of the supported books."),
         messages(synth));
   }
@@ -96,11 +90,11 @@ class EquipmentRulesTest {
   /** CRB p. 77: Nurse Handy leaves two arms to choose; Mister Gutsy fixes all three. */
   @Test
   void misterHandyArms() {
-    Character nurse = character("mister-handy");
+    PlayerCharacter nurse = character("mister-handy");
     nurse.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
     assertEquals(List.of("Choose arm 1.", "Choose arm 3."), messages(nurse));
 
-    Character gutsy = character("mister-handy");
+    PlayerCharacter gutsy = character("mister-handy");
     gutsy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
     assertEquals(List.of(), messages(gutsy));
     gutsy.chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
@@ -115,18 +109,17 @@ class EquipmentRulesTest {
 
   @Test
   void completeCharactersAreNotChecked() {
-    Character complete = new Character("Test", CatalogRef.of("survivor"), OriginChoices.NONE, 1, 0, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(), List.of(), Progression.NONE, Vitals.FULL,
-        null, null);
+    PlayerCharacter complete = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
+        .creationComplete(true).build();
     assertEquals(List.of(), messages(complete));
   }
 
-  private static List<String> messages(Character character) {
+  private static List<String> messages(PlayerCharacter character) {
     return EquipmentRules.problems(character).stream().map(CreationProblem::message).toList();
   }
 
-  private static Character character(String origin) {
-    Character character = Character.createNew();
+  private static PlayerCharacter character(String origin) {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of(origin));
     return character;
   }

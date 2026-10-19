@@ -3,8 +3,8 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
@@ -54,7 +54,7 @@ final class GearTab {
   private GearTab() {}
 
   /** @param hints the hints of this tab */
-  static @NonNull Node build(@NonNull Character character, @NonNull List<CreationProblem> hints,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull MasterDetailState selection, @NonNull ViewCallbacks callbacks) {
     List<ItemEntry> entries = ItemTree.entries(character.getItems());
     Integer selected = selection.current(entries.size());
@@ -105,7 +105,7 @@ final class GearTab {
   }
 
   /** Summary bar, hints, the Mister Handy's missing pincer, the legacy note and the equipment pack row. */
-  private static @NonNull Node top(@NonNull Character character, @NonNull List<CreationProblem> hints,
+  private static @NonNull Node top(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull Runnable onChanged) {
     VBox top = new VBox(8, GearSummary.build(character, onChanged));
     if (!hints.isEmpty()) {
@@ -128,7 +128,7 @@ final class GearTab {
   }
 
   /** The chosen pack and, while it can still be chosen (creation or GM mode), the button to the dialog. */
-  private static @NonNull Node packRow(@NonNull Character character, @NonNull Runnable onChanged) {
+  private static @NonNull Node packRow(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane row = new MigPane("insets 0, gap 8 0");
     CatalogRef pack = character.getStartingEquipment().pack();
     row.add(new Label("Equipment pack: " + (pack == null ? "none"
@@ -148,7 +148,7 @@ final class GearTab {
   }
 
   /** The gear notes, filling the lower third. */
-  private static @NonNull Node notes(@NonNull Character character, @NonNull Runnable onEdited) {
+  private static @NonNull Node notes(@NonNull PlayerCharacter character, @NonNull Runnable onEdited) {
     TextArea notes = new TextArea(character.getInventoryNotes());
     notes.setPromptText("Gear bought, found or used up, amounts to roll, …");
     notes.setWrapText(true);
@@ -165,7 +165,7 @@ final class GearTab {
   }
 
   /** "Add ▾": a catalog item (dialog) or a new holotape; the new entry is selected. */
-  private static @NonNull Node addButton(@NonNull Character character, @NonNull MasterDetailState selection,
+  private static @NonNull Node addButton(@NonNull PlayerCharacter character, @NonNull MasterDetailState selection,
       @NonNull Runnable onChanged) {
     MenuButton add = new MenuButton("Add");
     add.setGraphic(new FontIcon("fas-plus"));

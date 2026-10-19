@@ -2,8 +2,8 @@ package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ final class PerkSection {
   private PerkSection() {}
 
   /** @param editable whether perks can be changed now */
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, boolean editable,
+  static void addTo(@NonNull MigPane pane, @NonNull PlayerCharacter character, boolean editable,
       @NonNull Runnable onChanged) {
     // D2: GM changes to a complete character have no budget.
     if (editable && !(character.isGmMode() && character.isCreationComplete())) {

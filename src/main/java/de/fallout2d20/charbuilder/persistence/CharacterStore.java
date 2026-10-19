@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.AppInfo;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.persistence.legacy.LegacyCharacterImporter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -78,7 +78,7 @@ public class CharacterStore {
   }
 
   /** Writes the character in the current format, replacing the target file only after success. */
-  public void save(Character character, Path file) throws IOException {
+  public void save(PlayerCharacter character, Path file) throws IOException {
     Path absolute = file.toAbsolutePath();
     Path directory = absolute.getParent();
     Path temp = Files.createTempFile(directory, ".character", ".tmp");
@@ -108,7 +108,7 @@ public class CharacterStore {
     }
   }
 
-  private Character readCurrent(ObjectNode object) throws SaveFormatException {
+  private PlayerCharacter readCurrent(ObjectNode object) throws SaveFormatException {
     try {
       return CharacterMapper.toModel(mapper.treeToValue(object, CharacterData.class));
     } catch (JsonProcessingException e) {

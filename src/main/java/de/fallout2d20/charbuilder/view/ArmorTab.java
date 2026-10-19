@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
@@ -32,7 +32,7 @@ final class ArmorTab {
 
   private ArmorTab() {}
 
-  static @NonNull Node build(@NonNull Character character, @NonNull List<CreationProblem> tabHints,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> tabHints,
       @NonNull MasterDetailState selection, @NonNull ViewCallbacks callbacks) {
     List<ApparelEntry> entries = ApparelTree.entries(character.getApparel(), character.hitLocations());
     Integer selected = selection.current(entries.size());
@@ -79,7 +79,7 @@ final class ArmorTab {
   }
 
   /** Opens the catalog of the items offered to the character; the new piece is selected. */
-  private static @NonNull Button addButton(@NonNull Character character, @NonNull MasterDetailState selection,
+  private static @NonNull Button addButton(@NonNull PlayerCharacter character, @NonNull MasterDetailState selection,
       @NonNull Runnable onChanged) {
     Button add = new Button("Add apparel");
     add.setGraphic(new FontIcon("fas-plus"));
@@ -94,7 +94,7 @@ final class ArmorTab {
   }
 
   /** Catalog items of the enabled books offered to the character ({@link ApparelRules#isOffered}). */
-  private static @NonNull List<ApparelData> offered(@NonNull Character character) {
+  private static @NonNull List<ApparelData> offered(@NonNull PlayerCharacter character) {
     return ApparelCatalog.available(character.getEnabledBooks()).stream()
         .filter(item -> ApparelRules.isOffered(character, item.kind(), item.isHat())).toList();
   }

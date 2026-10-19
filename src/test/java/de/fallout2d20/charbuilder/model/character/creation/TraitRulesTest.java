@@ -3,18 +3,13 @@ package de.fallout2d20.charbuilder.model.character.creation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
-import de.fallout2d20.charbuilder.model.character.OriginChoices;
-import de.fallout2d20.charbuilder.model.character.Progression;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
-import de.fallout2d20.charbuilder.model.character.Vitals;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -74,32 +69,31 @@ class TraitRulesTest {
   /** WG p. 15: with Nomad, Science cannot be a Tag skill. */
   @Test
   void nomadForbidsScienceAsTag() {
-    Character nomad = character("tribal", List.of(trait("nomad"), trait("rite-of-passage")),
+    PlayerCharacter nomad = character("tribal", List.of(trait("nomad"), trait("rite-of-passage")),
         Map.of(Skill.SCIENCE, new SkillState(true, 0, 0)));
     assertEquals(List.of("Science cannot be a Tag skill with Nomad."), messages(nomad));
   }
 
   @Test
   void importedGiftedNeedsNoChoicesAndCompleteCharactersAreNotChecked() {
-    Character imported = character("survivor",
+    PlayerCharacter imported = character("survivor",
         List.of(new TraitSelection(CatalogRef.of("gifted"), true, List.of()), trait("educated")), Map.of());
     assertEquals(List.of(), messages(imported));
-    Character complete = new Character("Test", CatalogRef.of("ghoul"), OriginChoices.NONE, 1, 0, true,
-        EnumSet.allOf(Book.class), Map.of(), Map.of(), List.of(trait("educated")), List.of(),
-        Progression.NONE, Vitals.FULL, null, null);
+    PlayerCharacter complete = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("ghoul"))
+        .creationComplete(true).traits(List.of(trait("educated"))).build();
     assertTrue(TraitRules.problems(complete).isEmpty());
   }
 
-  private static Character gifted(Attribute... choices) {
+  private static PlayerCharacter gifted(Attribute... choices) {
     return character("survivor", List.of(trait("educated"),
         new TraitSelection(CatalogRef.of("gifted"), false, Arrays.asList(choices))), Map.of());
   }
 
-  private static Character survivor(String... traits) {
+  private static PlayerCharacter survivor(String... traits) {
     return character("survivor", Arrays.stream(traits).map(TraitRulesTest::trait).toList(), Map.of());
   }
 
-  private static Character tribal(String... traits) {
+  private static PlayerCharacter tribal(String... traits) {
     return character("tribal", Arrays.stream(traits).map(TraitRulesTest::trait).toList(), Map.of());
   }
 
@@ -107,14 +101,12 @@ class TraitRulesTest {
     return new TraitSelection(CatalogRef.of(id), false, List.of());
   }
 
-  private static Character character(String origin, List<TraitSelection> traits,
+  private static PlayerCharacter character(String origin, List<TraitSelection> traits,
       Map<Skill, SkillState> skills) {
-    return new Character("Test", CatalogRef.of(origin), OriginChoices.NONE, 1, 0, false,
-        EnumSet.allOf(Book.class), Map.of(), skills, traits, List.of(), Progression.NONE,
-        Vitals.FULL, null, null);
+    return PlayerCharacter.builder().name("Test").origin(CatalogRef.of(origin)).skills(skills).traits(traits).build();
   }
 
-  private static List<String> messages(Character character) {
+  private static List<String> messages(PlayerCharacter character) {
     return TraitRules.problems(character).stream().map(CreationProblem::message).toList();
   }
 }

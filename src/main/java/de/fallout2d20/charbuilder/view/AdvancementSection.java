@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.view.dialog.AdvancementDialogs;
@@ -32,7 +32,7 @@ final class AdvancementSection {
   private AdvancementSection() {}
 
   /** XP field, Add XP and Milestone level buttons. */
-  static @NonNull Node gainXp(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull Node gainXp(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     TextField amount = new TextField();
     amount.setPromptText("XP");
     amount.setPrefWidth(FIELD_WIDTH);
@@ -58,7 +58,7 @@ final class AdvancementSection {
    * While advancement is active: skill ranks and perks left and, with staged choices, Apply and Discard;
    * {@code null} otherwise.
    */
-  static @Nullable Node pending(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @Nullable Node pending(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     if (!AdvancementRules.isActive(character)) {
       return null;
     }
@@ -75,7 +75,7 @@ final class AdvancementSection {
   }
 
   /** Adds the typed XP amount; a level gain is confirmed first. Invalid input shows a warning. */
-  private static void addXp(@NonNull Character character, @NonNull TextField field, @NonNull Runnable onChanged) {
+  private static void addXp(@NonNull PlayerCharacter character, @NonNull TextField field, @NonNull Runnable onChanged) {
     long amount;
     int levels;
     try {
@@ -95,7 +95,7 @@ final class AdvancementSection {
   }
 
   /** Apply, disabled with the reason while advancement hints exist (user decision). */
-  private static @NonNull Node applyButton(@NonNull Character character, @NonNull List<CreationProblem> problems,
+  private static @NonNull Node applyButton(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> problems,
       @NonNull Runnable onChanged) {
     Button apply = new Button("Apply");
     apply.setGraphic(new FontIcon("fas-check"));
@@ -113,7 +113,7 @@ final class AdvancementSection {
     return wrapper;
   }
 
-  private static @NonNull Node discardButton(@NonNull Character character, @NonNull Runnable onChanged) {
+  private static @NonNull Node discardButton(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     Button discard = iconButton("Discard", "fas-undo", "Take back all staged skill ranks and perks.");
     discard.setOnAction(event -> {
       character.discardAdvancement();

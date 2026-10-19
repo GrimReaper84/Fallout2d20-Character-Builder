@@ -5,7 +5,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
@@ -29,7 +29,7 @@ public final class EquipmentRules {
   private EquipmentRules() {}
 
   /** All equipment problems of a character in creation; empty for complete characters. */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     CatalogRef origin = character.getOrigin();
     if (!CreationRules.isChecked(character) || origin == null) {

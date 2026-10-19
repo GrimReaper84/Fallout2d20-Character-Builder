@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
@@ -27,7 +27,7 @@ import org.jspecify.annotations.NonNull;
  */
 final class CharacterView {
 
-  private final @NonNull Character character;
+  private final @NonNull PlayerCharacter character;
   private final @NonNull ViewCallbacks callbacks;
   private final @NonNull BorderPane root = new BorderPane();
   /** The tabs and their scroll panes, in the order of {@link CharacterTab#values()}. */
@@ -39,7 +39,7 @@ final class CharacterView {
   /** The character's sync count at the last refresh: a sync moves entries, so the selections no longer fit. */
   private int startingEquipmentSyncs;
 
-  CharacterView(@NonNull Character character, @NonNull ViewCallbacks callbacks) {
+  CharacterView(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
     this.character = character;
     this.callbacks = callbacks;
     TabPane tabPane = new TabPane();
@@ -111,7 +111,7 @@ final class CharacterView {
    * All hints of the character with their areas: the creation rules during creation and in GM mode (D2:
    * content hints only), the advancement rules while level-up points are spent, and the apparel rules always.
    */
-  static @NonNull List<CreationProblem> hints(@NonNull Character character) {
+  static @NonNull List<CreationProblem> hints(@NonNull PlayerCharacter character) {
     List<CreationProblem> hints = new ArrayList<>();
     if (!character.isCreationComplete() || character.isGmMode()) {
       hints.addAll(CreationRules.problems(character));

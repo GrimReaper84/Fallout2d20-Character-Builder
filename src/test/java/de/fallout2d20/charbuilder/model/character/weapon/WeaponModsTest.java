@@ -10,7 +10,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -87,7 +87,7 @@ class WeaponModsTest {
   /** CRB p. 87: perks are information only; Gun Nut 2 is missing for an Advanced receiver. */
   @Test
   void missingPerks() {
-    Character character = Character.createNew();
+    PlayerCharacter character = PlayerCharacter.createNew();
     assertEquals(List.of("Gun Nut 2"), WeaponMods.missingPerks(character, mod("small-guns-advanced")).stream()
         .map(WeaponMods::perkText).toList());
     assertTrue(WeaponMods.missingPerks(character, mod("small-guns-hardened")).isEmpty());

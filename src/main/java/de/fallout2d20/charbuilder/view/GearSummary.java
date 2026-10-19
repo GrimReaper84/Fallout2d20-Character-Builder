@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import javafx.scene.Node;
@@ -20,7 +20,7 @@ final class GearSummary {
 
   private GearSummary() {}
 
-  static @NonNull Node build(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane bar = new MigPane("insets 0, gap 6 0", "", "[top]");
     bar.add(new Label("Caps"));
     TextField caps = NumberField.of((int) Math.min(Integer.MAX_VALUE, character.getCaps()), 0, value -> {
@@ -53,13 +53,14 @@ final class GearSummary {
     return bar;
   }
 
-  private static void set(@NonNull Character character, @NonNull Materials materials, @NonNull Runnable onChanged) {
+  private static void set(@NonNull PlayerCharacter character, @NonNull Materials materials,
+      @NonNull Runnable onChanged) {
     character.setMaterials(materials);
     onChanged.run();
   }
 
   /** CRB p. 87: "143 / 190 lbs." and, when over the carry weight, the penalty below it. */
-  private static @NonNull Node load(@NonNull Character character) {
+  private static @NonNull Node load(@NonNull PlayerCharacter character) {
     CarryLoad load = CarryLoad.of(character);
     Label total = new Label(load.carried() + " / " + load.carryWeight() + " lbs.");
     total.setTooltip(new Tooltip("Weapons, worn apparel, items, heavy ammunition, junk and materials; items of "

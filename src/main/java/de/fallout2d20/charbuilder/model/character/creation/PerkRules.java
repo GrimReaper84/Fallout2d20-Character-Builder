@@ -7,8 +7,8 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.perk.PerkRequirements;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ public final class PerkRules {
    * Perk ranks to choose: in creation one per level plus the extra perks of origin and traits; after
    * creation the pending perks of level-ups.
    */
-  public static int budget(@NonNull Character character) {
+  public static int budget(@NonNull PlayerCharacter character) {
     if (character.isCreationComplete()) {
       return character.getProgression().pendingPerks();
     }
@@ -55,7 +55,7 @@ public final class PerkRules {
   }
 
   /** Perk ranks still to choose (after creation: to stage); negative if too many are chosen. */
-  public static int perksLeft(@NonNull Character character) {
+  public static int perksLeft(@NonNull PlayerCharacter character) {
     if (character.isCreationComplete()) {
       return character.advancementPerksLeft();
     }
@@ -63,7 +63,7 @@ public final class PerkRules {
   }
 
   /** Ranks of the perk the character has. */
-  public static int rank(@NonNull Character character, @NonNull String perkId) {
+  public static int rank(@NonNull PlayerCharacter character, @NonNull String perkId) {
     return character.getPerks().stream().filter(perk -> perk.perk().id().equals(perkId))
         .mapToInt(PerkSelection::rank).sum();
   }
@@ -73,7 +73,7 @@ public final class PerkRules {
    * 2026-10-19: own "Not possible" group in the perk grid): the origin is a robot and the perk excludes robots,
    * or a chosen perk excludes it (Cautious Nature and Daring Nature, CRB p. 62), in either direction.
    */
-  public static boolean isImpossible(@NonNull Character character, @NonNull PerkDefinition perk) {
+  public static boolean isImpossible(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk) {
     if (perk.requirements().notRobot() && character.getOriginData().map(OriginData::robot).orElse(false)) {
       return true;
     }
@@ -89,7 +89,7 @@ public final class PerkRules {
    * (D2) no budget applies and unmet requirements are only hints; the maximum rank and a choice perk
    * without options still block.
    */
-  public static boolean canAdd(@NonNull Character character, @NonNull PerkDefinition perk) {
+  public static boolean canAdd(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk) {
     if (character.isGmMode()) {
       return structuralBlockers(character, perk).isEmpty();
     }
@@ -100,7 +100,7 @@ public final class PerkRules {
    * Whether a rank of the perk can be given back: in creation a rank taken in this creation, after
    * creation a staged rank; in GM mode any rank, imported ones too (D2).
    */
-  public static boolean canRemove(@NonNull Character character, @NonNull String perkId) {
+  public static boolean canRemove(@NonNull PlayerCharacter character, @NonNull String perkId) {
     return character.getPerks().stream().anyMatch(perk -> perk.perk().id().equals(perkId)
         && (character.isGmMode()
             || (character.isCreationComplete() ? perk.stagedRanks() > 0 : perk.rank() > perk.importedRanks())));
@@ -111,7 +111,7 @@ public final class PerkRules {
    * that rank, a book that is not enabled, or nothing left to choose for a choice perk. Empty if it can be
    * taken.
    */
-  public static @NonNull List<String> blockers(@NonNull Character character, @NonNull PerkDefinition perk) {
+  public static @NonNull List<String> blockers(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk) {
     int next = rank(character, perk.id()) + 1;
     if (next > perk.ranks()) {
       return List.of("Maximum rank reached.");
@@ -126,7 +126,7 @@ public final class PerkRules {
    * the character (the GM keeps the book limits), or nothing left to choose for a choice perk.
    * Requirements are not part of it.
    */
-  private static @NonNull List<String> structuralBlockers(@NonNull Character character,
+  private static @NonNull List<String> structuralBlockers(@NonNull PlayerCharacter character,
       @NonNull PerkDefinition perk) {
     if (rank(character, perk.id()) + 1 > perk.ranks()) {
       return List.of("Maximum rank reached.");
@@ -145,13 +145,13 @@ public final class PerkRules {
   }
 
   /** Attributes Intense Training may raise: those below 10 (CRB p. 66). */
-  public static @NonNull List<Attribute> attributeOptions(@NonNull Character character) {
+  public static @NonNull List<Attribute> attributeOptions(@NonNull PlayerCharacter character) {
     return Arrays.stream(Attribute.values())
         .filter(attribute -> character.attributeValue(attribute) < INTENSE_TRAINING_MAXIMUM).toList();
   }
 
   /** Skills Tag! may tag: not tagged yet and not forbidden by a trait (CRB p. 73, WG p. 15). */
-  public static @NonNull List<Skill> skillOptions(@NonNull Character character) {
+  public static @NonNull List<Skill> skillOptions(@NonNull PlayerCharacter character) {
     return Arrays.stream(Skill.values())
         .filter(skill -> !character.isTagged(skill) && character.tagForbiddenBy(skill).isEmpty()).toList();
   }
@@ -162,7 +162,7 @@ public final class PerkRules {
    * ("no robot") and excluded perks ("not with Daring Nature"). The one place requirements are listed,
    * for the rules and for the perk grid.
    */
-  public static @NonNull Map<String, Boolean> requirementStatus(@NonNull Character character,
+  public static @NonNull Map<String, Boolean> requirementStatus(@NonNull PlayerCharacter character,
       @NonNull PerkDefinition perk, int rank) {
     PerkRequirements requirements = perk.requirements();
     Map<String, Boolean> status = new LinkedHashMap<>();
@@ -187,7 +187,7 @@ public final class PerkRules {
   }
 
   /** The requirements of the given rank the character does not meet, e.g. "Requirement not met: STR 7.". */
-  public static @NonNull List<String> unmetRequirements(@NonNull Character character,
+  public static @NonNull List<String> unmetRequirements(@NonNull PlayerCharacter character,
       @NonNull PerkDefinition perk, int rank) {
     return requirementStatus(character, perk, rank).entrySet().stream()
         .filter(entry -> !entry.getValue())
@@ -196,7 +196,7 @@ public final class PerkRules {
   }
 
   /** Unmet requirements of the highest rank the character has taken; empty without a rank. */
-  public static @NonNull List<String> unmetForTakenRank(@NonNull Character character,
+  public static @NonNull List<String> unmetForTakenRank(@NonNull PlayerCharacter character,
       @NonNull PerkDefinition perk) {
     int rank = rank(character, perk.id());
     return rank == 0 ? List.of() : unmetRequirements(character, perk, Math.min(rank, perk.ranks()));
@@ -206,7 +206,7 @@ public final class PerkRules {
    * All perk problems of a character in creation (or in GM mode, without the budget); empty for complete
    * characters.
    */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (!CreationRules.isChecked(character)) {
       return problems;
@@ -235,7 +235,7 @@ public final class PerkRules {
    * of choice perks. Used for creation and for staged perks after creation; imported ranks may lack
    * their choices.
    */
-  public static @NonNull List<CreationProblem> selectionProblems(@NonNull Character character,
+  public static @NonNull List<CreationProblem> selectionProblems(@NonNull PlayerCharacter character,
       @NonNull PerkSelection selection, @NonNull PerkDefinition perk) {
     List<CreationProblem> problems = new ArrayList<>();
     String name = perk.name();
@@ -276,7 +276,7 @@ public final class PerkRules {
    * A Tag! skill that the origin tags anyway wastes the perk, and one a trait forbids breaks that trait
    * (WG p. 15); both can arise when origin or traits change after the choice (perk stays, user decision).
    */
-  private static void checkTaggedSkills(@NonNull Character character, @NonNull PerkSelection selection,
+  private static void checkTaggedSkills(@NonNull PlayerCharacter character, @NonNull PerkSelection selection,
       @NonNull String name, @NonNull List<CreationProblem> problems) {
     for (Skill skill : selection.skillChoices()) {
       if (character.isTaggedByOrigin(skill)) {

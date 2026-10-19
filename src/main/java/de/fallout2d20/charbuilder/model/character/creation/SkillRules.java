@@ -5,7 +5,7 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import org.jspecify.annotations.NonNull;
  * WG p. 12) come on top and are checked by {@link OriginRules}. Skill points are 9 plus the
  * effective Intelligence, which counts Gifted and Intense Training taken during creation (user
  * decision); one point buys one rank. All free Tags and all skill points must be used (user
- * decision). No skill may exceed {@link Character#skillRankCap()}. Soft checks only, for characters
+ * decision). No skill may exceed {@link PlayerCharacter#skillRankCap()}. Soft checks only, for characters
  * in creation. A higher starting level adds one skill point per level above 1 (CRB p. 49), Skilled 2
  * per rank (CRB p. 71).
  */
@@ -37,7 +37,7 @@ public final class SkillRules {
   private SkillRules() {}
 
   /** Free Tag skills the character may choose: three plus the extra Tags of its traits (Educated). */
-  public static int freeTagBudget(@NonNull Character character) {
+  public static int freeTagBudget(@NonNull PlayerCharacter character) {
     int budget = FREE_TAG_SKILLS;
     for (TraitSelection selection : character.getTraits()) {
       budget += TraitCatalog.byId(selection.trait().id()).map(TraitDefinition::extraTagSkills).orElse(0);
@@ -46,7 +46,7 @@ public final class SkillRules {
   }
 
   /** Free Tags still to choose; negative if too many are chosen. Origin Tags do not count. */
-  public static int freeTagsLeft(@NonNull Character character) {
+  public static int freeTagsLeft(@NonNull PlayerCharacter character) {
     int chosen = 0;
     for (Skill skill : Skill.values()) {
       if (character.skillState(skill).tagged()) {
@@ -60,13 +60,13 @@ public final class SkillRules {
    * Skill points of the character: 9 + effective Intelligence (CRB p. 58), +1 per level above 1 (CRB
    * p. 49: one skill rank per level), +2 per rank of Skilled (CRB p. 71).
    */
-  public static int skillPointBudget(@NonNull Character character) {
+  public static int skillPointBudget(@NonNull PlayerCharacter character) {
     return SKILL_POINTS_BASE + character.attributeValue(Attribute.INTELLIGENCE) + character.getLevel() - 1
         + character.perkEffect(PerkDefinition::skillPointsPerRank);
   }
 
   /** Skill points still to spend; negative if too many are spent. Free Tag ranks cost nothing. */
-  public static int skillPointsLeft(@NonNull Character character) {
+  public static int skillPointsLeft(@NonNull PlayerCharacter character) {
     int spent = 0;
     for (Skill skill : Skill.values()) {
       spent += character.skillState(skill).creationRanks();
@@ -75,7 +75,7 @@ public final class SkillRules {
   }
 
   /** Whether one more rank may be bought: points left (not in GM mode, D2) and below the rank cap. */
-  public static boolean canRaise(@NonNull Character character, @NonNull Skill skill) {
+  public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     if (gmCorrects(character)) {
       return character.skillRank(skill) < character.skillRankCap() && character.gmStepChangesRank(skill, 1);
     }
@@ -87,7 +87,7 @@ public final class SkillRules {
    * Whether a rank can be taken back: a bought one during creation; for a complete character in GM mode a
    * step that really lowers the shown rank (a Tag! bonus can hide it).
    */
-  public static boolean canLower(@NonNull Character character, @NonNull Skill skill) {
+  public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     return gmCorrects(character) ? character.gmStepChangesRank(skill, -1)
         : character.skillState(skill).creationRanks() > 0;
   }
@@ -96,7 +96,7 @@ public final class SkillRules {
    * Raises (+1) or lowers (−1) a rank if allowed: bought ranks during creation, a GM correction for a
    * complete character in GM mode (D2: counted at once).
    */
-  public static void step(@NonNull Character character, @NonNull Skill skill, int delta) {
+  public static void step(@NonNull PlayerCharacter character, @NonNull Skill skill, int delta) {
     boolean allowed = delta > 0 ? canRaise(character, skill) : canLower(character, skill);
     if (!allowed) {
       return;
@@ -109,7 +109,7 @@ public final class SkillRules {
   }
 
   /** After creation the GM corrects ranks directly; during creation ranks are bought. */
-  private static boolean gmCorrects(@NonNull Character character) {
+  private static boolean gmCorrects(@NonNull PlayerCharacter character) {
     return character.isGmMode() && character.isCreationComplete();
   }
 
@@ -118,7 +118,7 @@ public final class SkillRules {
    * needs free Tags left, and the skill must be neither tagged by the origin or a perk nor forbidden by
    * a trait.
    */
-  public static boolean canToggleTag(@NonNull Character character, @NonNull Skill skill) {
+  public static boolean canToggleTag(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     if (character.skillState(skill).tagged()) {
       return true;
     }
@@ -128,7 +128,7 @@ public final class SkillRules {
   }
 
   /** All Tag and skill point problems of a character in creation; empty for complete characters. */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (!CreationRules.isChecked(character)) {
       return problems;
@@ -157,7 +157,7 @@ public final class SkillRules {
   }
 
   /** CRB p. 58: rank 3 during creation below level 3, never above 6; origin cap 4 (CRB p. 53, WG p. 14). */
-  private static void checkRankCap(@NonNull Character character, @NonNull List<CreationProblem> problems) {
+  private static void checkRankCap(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> problems) {
     int cap = character.skillRankCap();
     Optional<String> limitingOrigin = character.getOriginData()
         .filter(origin -> Integer.valueOf(cap).equals(origin.skillRankCap()))
@@ -165,7 +165,7 @@ public final class SkillRules {
     String reason;
     if (limitingOrigin.isPresent()) {
       reason = " (" + limitingOrigin.get() + ").";
-    } else if (cap == Character.CREATION_SKILL_RANK_CAP) {
+    } else if (cap == PlayerCharacter.CREATION_SKILL_RANK_CAP) {
       reason = " during creation.";
     } else {
       reason = ".";

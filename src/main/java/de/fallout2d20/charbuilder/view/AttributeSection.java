@@ -1,7 +1,7 @@
 package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
 import javafx.scene.control.Label;
 import org.jspecify.annotations.NonNull;
@@ -18,7 +18,7 @@ final class AttributeSection {
   private AttributeSection() {}
 
   /** @param locked whether the character is complete and not in GM mode (values read-only) */
-  static @NonNull MigPane build(@NonNull Character character, boolean locked, @NonNull Runnable onChanged) {
+  static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onChanged) {
     MigPane pane = new MigPane("insets 0, gap 8 4, wrap 4", "[left][left][left][left]");
     if (locked) {
       for (Attribute attribute : Attribute.values()) {
@@ -50,7 +50,7 @@ final class AttributeSection {
   }
 
   /** Raises (+1) or lowers (−1) the allocation, checked again against the current model state. */
-  private static void step(@NonNull Character character, @NonNull Attribute attribute, int delta,
+  private static void step(@NonNull PlayerCharacter character, @NonNull Attribute attribute, int delta,
       @NonNull Runnable onChanged) {
     boolean allowed = delta > 0 ? AttributeRules.canRaise(character, attribute)
         : AttributeRules.canLower(character, attribute);
@@ -60,13 +60,13 @@ final class AttributeSection {
     onChanged.run();
   }
 
-  private static @NonNull String lowerBlocked(@NonNull Character character, @NonNull Attribute attribute) {
+  private static @NonNull String lowerBlocked(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
     return character.isGmMode()
         ? attribute.displayName() + " is at the lowest value of " + AttributeRules.GM_MINIMUM_VALUE + "."
         : attribute.displayName() + " cannot go more than 1 below its starting value.";
   }
 
-  private static @NonNull String raiseBlocked(@NonNull Character character, @NonNull Attribute attribute,
+  private static @NonNull String raiseBlocked(@NonNull PlayerCharacter character, @NonNull Attribute attribute,
       int left) {
     if (left <= 0 && !character.isGmMode()) {
       return "No S.P.E.C.I.A.L. points left.";

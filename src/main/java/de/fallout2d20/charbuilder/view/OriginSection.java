@@ -5,8 +5,8 @@ import de.fallout2d20.charbuilder.catalog.origin.ExtraTagSkill;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.Arrays;
 import java.util.Optional;
@@ -26,7 +26,7 @@ final class OriginSection {
   private OriginSection() {}
 
   /** The origin choice (limited to the enabled books). */
-  static @NonNull ComboBox<OriginData> choice(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull ComboBox<OriginData> choice(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     Optional<OriginData> selected = character.getOriginData();
     ComboBox<OriginData> origins = new ComboBox<>();
     origins.getItems().setAll(OriginCatalog.available(character.getEnabledBooks()));
@@ -53,7 +53,7 @@ final class OriginSection {
    * @param onEdited called after an edit that needs no rebuild (typed text)
    * @param onChanged called after an edit that changes other values; rebuilds the view
    */
-  static void addOptions(@NonNull MigPane pane, @NonNull Character character, @NonNull Runnable onEdited,
+  static void addOptions(@NonNull MigPane pane, @NonNull PlayerCharacter character, @NonNull Runnable onEdited,
       @NonNull Runnable onChanged) {
     Optional<OriginData> selected = character.getOriginData();
     if (selected.isEmpty()) {

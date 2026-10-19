@@ -5,7 +5,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
@@ -38,7 +38,7 @@ final class WeaponModSection {
 
   private WeaponModSection() {}
 
-  static void addTo(@NonNull MigPane pane, @NonNull Character character, int index, @NonNull CarriedWeapon weapon,
+  static void addTo(@NonNull MigPane pane, @NonNull PlayerCharacter character, int index, @NonNull CarriedWeapon weapon,
       @NonNull ModdedWeapon values, @NonNull Runnable onChanged) {
     CustomWeapon custom = weapon.custom();
     List<ModSlot> slots = WeaponMods.slots(weapon);
@@ -104,7 +104,7 @@ final class WeaponModSection {
     return label;
   }
 
-  private static @NonNull Node editButton(@NonNull Character character, int index, @NonNull CarriedWeapon weapon,
+  private static @NonNull Node editButton(@NonNull PlayerCharacter character, int index, @NonNull CarriedWeapon weapon,
       @NonNull ModSlot slot, @NonNull Runnable onChanged) {
     Button edit = new Button();
     edit.setGraphic(new FontIcon("fas-wrench"));

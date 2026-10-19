@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.CharacterStore;
 import java.nio.file.Files;
@@ -56,18 +56,18 @@ class SampleCharactersTest {
       assertEquals(!name.equals(IN_CREATION), load(name).isCreationComplete(), name);
     }
 
-    Character pending = load("level-up-pending.json");
+    PlayerCharacter pending = load("level-up-pending.json");
     assertEquals(5, pending.getLevel());
     assertEquals(2, pending.advancementSkillRanksLeft());
     assertEquals(2, pending.advancementPerksLeft());
 
-    Character veteran = load("veteran-overflow.json");
+    PlayerCharacter veteran = load("veteran-overflow.json");
     assertEquals(12, veteran.getLevel());
     assertTrue(veteran.getItems().size() >= 40);
     assertFalse(veteran.getWeapons().isEmpty());
   }
 
-  private Character load(String name) throws Exception {
+  private PlayerCharacter load(String name) throws Exception {
     return store.load(SAMPLES.resolve(name)).character();
   }
 }

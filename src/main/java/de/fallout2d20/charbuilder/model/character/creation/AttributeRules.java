@@ -2,7 +2,7 @@ package de.fallout2d20.charbuilder.model.character.creation;
 
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.NonNull;
@@ -30,7 +30,7 @@ public final class AttributeRules {
   private AttributeRules() {}
 
   /** Points still to spend; negative if too many are spent. Points gained by lowering count in. */
-  public static int pointsLeft(@NonNull Character character) {
+  public static int pointsLeft(@NonNull PlayerCharacter character) {
     int spent = 0;
     for (Attribute attribute : Attribute.values()) {
       spent += character.attributeAllocation(attribute);
@@ -39,7 +39,7 @@ public final class AttributeRules {
   }
 
   /** Highest value of the attribute: 10, or the origin's own maximum (e.g. CRB p. 53). */
-  public static int maximum(@NonNull Character character, @NonNull Attribute attribute) {
+  public static int maximum(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
     return character.getOriginData().map(data -> data.attributeMaximum(attribute))
         .orElse(OriginData.DEFAULT_ATTRIBUTE_MAXIMUM);
   }
@@ -48,7 +48,7 @@ public final class AttributeRules {
    * Whether one more point may go into the attribute: points left (not in GM mode, D2) and below its
    * maximum.
    */
-  public static boolean canRaise(@NonNull Character character, @NonNull Attribute attribute) {
+  public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
     return (character.isGmMode() || pointsLeft(character) > 0)
         && character.attributeValue(attribute) < maximum(character, attribute);
   }
@@ -57,13 +57,13 @@ public final class AttributeRules {
    * Whether the attribute may lose one point: not yet lowered below its starting value; in GM mode down to
    * {@link #GM_MINIMUM_VALUE}.
    */
-  public static boolean canLower(@NonNull Character character, @NonNull Attribute attribute) {
+  public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
     return character.isGmMode() ? character.attributeValue(attribute) > GM_MINIMUM_VALUE
         : character.attributeAllocation(attribute) > MIN_ALLOCATION;
   }
 
   /** All allocation problems of a character in creation; empty for complete characters and in GM mode (D2). */
-  public static @NonNull List<CreationProblem> problems(@NonNull Character character) {
+  public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (character.isCreationComplete() || character.isGmMode()) {
       return problems;

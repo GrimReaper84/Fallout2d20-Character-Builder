@@ -4,7 +4,7 @@ import static de.fallout2d20.charbuilder.view.OverviewParts.detailRow;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.Coverage;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelValues;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
@@ -32,7 +32,7 @@ final class ApparelDetails {
   private ApparelDetails() {}
 
   /** The details of {@code entry}, or a prompt to select a piece if it is {@code null}. */
-  static @NonNull Node build(@NonNull Character character, @Nullable ApparelEntry entry,
+  static @NonNull Node build(@NonNull PlayerCharacter character, @Nullable ApparelEntry entry,
       @NonNull ViewCallbacks callbacks) {
     MigPane pane = OverviewParts.half();
     if (entry == null) {
@@ -91,7 +91,7 @@ final class ApparelDetails {
   }
 
   /** A choice of the limb for a single-limb catalog piece, else the covered locations as text. */
-  private static @NonNull Node location(@NonNull Character character, @NonNull WornApparel item,
+  private static @NonNull Node location(@NonNull PlayerCharacter character, @NonNull WornApparel item,
       @NonNull Optional<ApparelData> data, int index, @NonNull Runnable onChanged) {
     Optional<Coverage> chosen = data.flatMap(entry -> entry.coverage().stream().filter(Coverage::isChosen).findFirst());
     if (chosen.isEmpty()) {

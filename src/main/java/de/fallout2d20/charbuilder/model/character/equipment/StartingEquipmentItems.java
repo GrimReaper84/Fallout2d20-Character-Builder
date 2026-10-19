@@ -5,7 +5,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
 import java.util.ArrayList;
@@ -25,10 +25,10 @@ import org.jspecify.annotations.NonNull;
  * Mister Handy's arms with 20 shots of ammo for each weapon arm (CRB p. 55; also for a freely chosen
  * weapon, user decision), the personal trinket if the pack has one (CRB p. 80), and the items of every
  * Tag skill (CRB p. 81; all Tag sources count – free, origin and Tag! – user decision). Caps are not a
- * line, see {@link #caps(Character)}.
+ * line, see {@link #caps(PlayerCharacter)}.
  *
  * <p>The book grants Tag skill items only for Tags chosen during creation, so a complete character uses
- * the Tag skills frozen at completion ({@link Character#getStartingTagSkills()}); a Tag! taken after a
+ * the Tag skills frozen at completion ({@link PlayerCharacter#getStartingTagSkills()}); a Tag! taken after a
  * level-up does not count.
  */
 public final class StartingEquipmentItems {
@@ -45,14 +45,14 @@ public final class StartingEquipmentItems {
 
   private StartingEquipmentItems() {}
 
-  public static @NonNull List<String> lines(@NonNull Character character) {
+  public static @NonNull List<String> lines(@NonNull PlayerCharacter character) {
     List<String> lines = new ArrayList<>(lines(character, StartingSource.PACK));
     lines.addAll(lines(character, StartingSource.TAG_SKILL));
     return lines;
   }
 
   /** The lines of one part of the starting equipment: the pack's (items, choices, arms, trinket) or the Tag skills'. */
-  public static @NonNull List<String> lines(@NonNull Character character, @NonNull StartingSource source) {
+  public static @NonNull List<String> lines(@NonNull PlayerCharacter character, @NonNull StartingSource source) {
     StartingEquipment selection = character.getStartingEquipment();
     List<String> lines = new ArrayList<>();
     if (source == StartingSource.TAG_SKILL) {
@@ -82,9 +82,9 @@ public final class StartingEquipmentItems {
   /**
    * Starting caps: pack caps, the d20 of Tag skill items (Barter) and the extra caps of the starting
    * level (CRB p. 81). The level part is left out when the starting level is unknown (imported
-   * characters, see {@link Character#getStartingLevel()}).
+   * characters, see {@link PlayerCharacter#getStartingLevel()}).
    */
-  public static @NonNull StartingCaps caps(@NonNull Character character) {
+  public static @NonNull StartingCaps caps(@NonNull PlayerCharacter character) {
     int packCaps = character.getEquipmentPack().map(EquipmentPackData::caps).orElse(0);
     OptionalInt startingLevel = character.getStartingLevel();
     long levelCaps = startingLevel.isPresent() ? StartingEquipmentAllowance.caps(startingLevel.getAsInt()) : 0;
@@ -96,7 +96,7 @@ public final class StartingEquipmentItems {
    * The Tag skill items rows of every skill that grants starting equipment: the starting Tag skills (see
    * the class comment); the one place deciding which Tags count.
    */
-  public static @NonNull Stream<TagSkillItemData> taggedSkillItems(@NonNull Character character) {
+  public static @NonNull Stream<TagSkillItemData> taggedSkillItems(@NonNull PlayerCharacter character) {
     return Arrays.stream(Skill.values()).filter(character.getStartingTagSkills()::contains)
         .map(EquipmentCatalog::tagSkillItems);
   }

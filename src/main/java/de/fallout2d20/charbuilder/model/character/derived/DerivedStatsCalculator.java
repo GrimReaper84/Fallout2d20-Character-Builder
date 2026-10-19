@@ -6,7 +6,7 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelValues;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
@@ -38,7 +38,7 @@ final class DerivedStatsCalculator {
 
   private DerivedStatsCalculator() {}
 
-  static @NonNull DerivedStats calculate(@NonNull Character character) {
+  static @NonNull DerivedStats calculate(@NonNull PlayerCharacter character) {
     OriginData origin = character.getOriginData().orElse(null);
     return new DerivedStats(
         maxHp(character),
@@ -58,19 +58,19 @@ final class DerivedStatsCalculator {
    * END per rank. The book does not say whether a later END increase raises the Life Giver bonus;
    * the current END is used (user decision, as in the legacy app).
    */
-  private static int maxHp(@NonNull Character character) {
+  private static int maxHp(@NonNull PlayerCharacter character) {
     int endurance = character.attributeValue(Attribute.ENDURANCE);
     return endurance + character.attributeValue(Attribute.LUCK) + character.getLevel() - 1
         + endurance * character.perkEffect(PerkDefinition::maxHpPerEndurance);
   }
 
   /** CRB p. 47: PER + AGI. */
-  private static int initiative(@NonNull Character character) {
+  private static int initiative(@NonNull PlayerCharacter character) {
     return character.attributeValue(Attribute.PERCEPTION) + character.attributeValue(Attribute.AGILITY);
   }
 
   /** CRB p. 47: Defense 1, or 2 from AGI 9. */
-  private static int defense(@NonNull Character character) {
+  private static int defense(@NonNull PlayerCharacter character) {
     return character.attributeValue(Attribute.AGILITY) >= 9 ? 2 : 1;
   }
 
@@ -80,7 +80,7 @@ final class DerivedStatsCalculator {
    * (robots) changes with robot plating and armor (CRB p. 146) and installed robot modules (CRB p. 185;
    * every carried module counts as installed), not with backpacks.
    */
-  private static int carryWeight(@NonNull Character character, @Nullable OriginData origin) {
+  private static int carryWeight(@NonNull PlayerCharacter character, @Nullable OriginData origin) {
     if (origin != null && origin.fixedCarryWeight() != null) {
       return origin.fixedCarryWeight() + robotArmorCarryWeight(character)
           + carriedItems(character).mapToInt(ItemData::robotCarryWeight).sum();
@@ -96,7 +96,7 @@ final class DerivedStatsCalculator {
    * The catalog entries of the carried items, once per entry: a module is installed once and only one
    * backpack is worn, so the quantity of an entry does not matter here.
    */
-  private static @NonNull Stream<ItemData> carriedItems(@NonNull Character character) {
+  private static @NonNull Stream<ItemData> carriedItems(@NonNull PlayerCharacter character) {
     return character.getItems().stream().map(CarriedItem::data).flatMap(Optional::stream);
   }
 
@@ -105,20 +105,20 @@ final class DerivedStatsCalculator {
    * count (an arm piece once its arm is chosen); two items on one location both count, the apparel hints
    * name that conflict.
    */
-  private static int robotArmorCarryWeight(@NonNull Character character) {
+  private static int robotArmorCarryWeight(@NonNull PlayerCharacter character) {
     return character.getWornApparel().stream().filter(item -> !item.locations(character.hitLocations()).isEmpty())
         .map(WornApparel::values).flatMap(Optional::stream)
         .filter(values -> values.kind().isRobot()).mapToInt(ApparelValues::carryWeight).sum();
   }
 
   /** CRB p. 47: STR 7–8 +1, 9–10 +2, 11+ +3 Combat Dice; Heavy Handed +1 (CRB p. 56). */
-  private static int meleeBonusDice(@NonNull Character character) {
+  private static int meleeBonusDice(@NonNull PlayerCharacter character) {
     return strengthTier(character.attributeValue(Attribute.STRENGTH))
         + traits(character).stream().mapToInt(TraitDefinition::meleeBonusDice).sum();
   }
 
   /** CRB p. 21: at most as many Luck points as the Luck attribute; Gifted one fewer (CRB p. 56). */
-  private static int maxLuckPoints(@NonNull Character character) {
+  private static int maxLuckPoints(@NonNull PlayerCharacter character) {
     int luck = character.attributeValue(Attribute.LUCK)
         - traits(character).stream().mapToInt(TraitDefinition::luckPointPenalty).sum();
     return Math.max(0, luck);
@@ -128,14 +128,14 @@ final class DerivedStatsCalculator {
    * Toughness +1 per rank (CRB p. 73); Barbarian +1/+2/+3 by STR (CRB p. 60). Barbarian does not
    * apply in Power Armor; that exclusion follows with the armor feature.
    */
-  private static @NonNull Resistance physicalResistance(@NonNull Character character) {
+  private static @NonNull Resistance physicalResistance(@NonNull PlayerCharacter character) {
     boolean byStrength = character.perkEffect(perk -> perk.physicalDrByStrength() ? 1 : 0) > 0;
     int barbarian = byStrength ? strengthTier(character.attributeValue(Attribute.STRENGTH)) : 0;
     return Resistance.of(character.perkEffect(PerkDefinition::physicalDrPerRank) + barbarian);
   }
 
   /** Rad Resistance +1 per rank (CRB p. 70); origin immunity or base DR (Child of Atom). */
-  private static @NonNull Resistance radiationResistance(@NonNull Character character,
+  private static @NonNull Resistance radiationResistance(@NonNull PlayerCharacter character,
       @Nullable OriginData origin) {
     if (origin != null && origin.radiationImmune()) {
       return Resistance.IMMUNITY;
@@ -145,7 +145,7 @@ final class DerivedStatsCalculator {
   }
 
   /** Snakeater +2 (CRB p. 72); origin immunity. */
-  private static @NonNull Resistance poisonResistance(@NonNull Character character,
+  private static @NonNull Resistance poisonResistance(@NonNull PlayerCharacter character,
       @Nullable OriginData origin) {
     if (origin != null && origin.poisonImmune()) {
       return Resistance.IMMUNITY;
@@ -165,7 +165,7 @@ final class DerivedStatsCalculator {
   }
 
   /** Catalog entries of the character's traits; imported traits count too (not in the baseline). */
-  private static @NonNull List<TraitDefinition> traits(@NonNull Character character) {
+  private static @NonNull List<TraitDefinition> traits(@NonNull PlayerCharacter character) {
     return character.getTraits().stream()
         .map(selection -> TraitCatalog.byId(selection.trait().id()))
         .flatMap(Optional::stream).toList();

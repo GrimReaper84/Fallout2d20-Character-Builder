@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import javafx.scene.Node;
@@ -22,7 +22,7 @@ final class StatusTab {
 
   private StatusTab() {}
 
-  static @NonNull Node build(@NonNull Character character, @NonNull ViewCallbacks callbacks) {
+  static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
     MigPane left = OverviewParts.half();
     OverviewParts.sectionHeading(left, "Session");
     if (character.isCreationComplete()) {
@@ -38,7 +38,7 @@ final class StatusTab {
   }
 
   /** Name and value per row, one below the other. */
-  private static @NonNull MigPane derivedStatistics(@NonNull Character character) {
+  private static @NonNull MigPane derivedStatistics(@NonNull PlayerCharacter character) {
     DerivedStats derived = DerivedStats.of(character);
     MigPane pane = new MigPane("insets 0, gap 8 4, wrap 2", "[left][left]");
     row(pane, new Label("Max HP"), Integer.toString(derived.maxHp()));

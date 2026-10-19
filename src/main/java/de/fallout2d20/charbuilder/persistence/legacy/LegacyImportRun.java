@@ -4,18 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
-import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
@@ -24,7 +22,6 @@ import de.fallout2d20.charbuilder.model.character.Vitals;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
-import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.session.SessionValues;
 import de.fallout2d20.charbuilder.persistence.CharacterFile;
 import de.fallout2d20.charbuilder.persistence.SaveFormatException;
@@ -109,12 +106,12 @@ final class LegacyImportRun {
         startingTags.add(skill);
       }
     });
-    Character character = new Character(name, origin, OriginChoices.NONE, level, xp, true,
-        EnumSet.allOf(Book.class), Map.of(), skillStates, traits, perks, progression, vitals,
-        new LegacyBaseline(attributes, skillRanks),
-        new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload),
-        startingEquipment, inventoryNotes, null, startingTags, weapons.weapons(), weapons.ammunition(),
-        armor.apparel(), Inventory.EMPTY, null);
+    PlayerCharacter character = PlayerCharacter.builder().name(name).origin(origin).level(level).xp(xp)
+        .creationComplete(true).skills(skillStates).traits(traits).perks(perks).progression(progression)
+        .vitals(vitals).legacyBaseline(new LegacyBaseline(attributes, skillRanks))
+        .legacyImport(new LegacyImport(sourceVersion, LocalDate.now(clock).toString(), payload))
+        .startingEquipment(startingEquipment).inventoryNotes(inventoryNotes).startingTagSkills(startingTags)
+        .weapons(weapons.weapons()).ammunition(weapons.ammunition()).apparel(armor.apparel()).build();
     if (!inventoryNotes.isBlank()) {
       // Legacy saves keep items and caps only as free text; the inventory starts empty.
       info("equipment", "Items and caps stay in the inventory notes; enter the caps balance and items by hand.");
@@ -165,8 +162,8 @@ final class LegacyImportRun {
       Integer parsed = value == null ? null : parseInt(value);
       if (parsed == null) {
         warning(ATTRIBUTES, attribute.displayName() + " is missing or invalid; using "
-            + Character.ATTRIBUTE_BASE + ".");
-        parsed = Character.ATTRIBUTE_BASE;
+            + PlayerCharacter.ATTRIBUTE_BASE + ".");
+        parsed = PlayerCharacter.ATTRIBUTE_BASE;
       } else if (parsed < 4 || parsed > 10) {
         info(ATTRIBUTES, attribute.displayName() + " is " + parsed
             + ", outside the usual range 4–10.");
@@ -356,7 +353,7 @@ final class LegacyImportRun {
    * The legacy app ignored rads for the maximum HP; here they lower it (CRB p. 31), so current HP above
    * the lowered maximum fall to it.
    */
-  private void capCurrentHp(@NonNull Character character) {
+  private void capCurrentHp(@NonNull PlayerCharacter character) {
     Integer currentHp = character.getVitals().currentHp();
     int max = SessionValues.of(character).effectiveMaxHp();
     if (currentHp != null && currentHp > max) {
@@ -369,7 +366,7 @@ final class LegacyImportRun {
    * Compares the derived values the legacy app stored with the computed ones and reports all
    * differences in one info. Missing or unreadable values are skipped; the computed values win.
    */
-  private void compareDerived(@NonNull Character character) {
+  private void compareDerived(@NonNull PlayerCharacter character) {
     JsonNode derived = root.get(DERIVED);
     if (derived == null || !derived.isObject()) {
       return;

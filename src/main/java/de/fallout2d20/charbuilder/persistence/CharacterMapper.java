@@ -6,11 +6,11 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Progression;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.SkillState;
@@ -59,7 +59,7 @@ final class CharacterMapper {
    *
    * @param savedWith the app version writing the file
    */
-  static CharacterData toData(Character character, @NonNull String savedWith) {
+  static CharacterData toData(PlayerCharacter character, @NonNull String savedWith) {
     Map<String, Integer> allocation = new LinkedHashMap<>();
     for (Attribute attribute : Attribute.values()) {
       allocation.put(attribute.id(), character.attributeAllocation(attribute));
@@ -119,28 +119,77 @@ final class CharacterMapper {
             legacyImport.importedOn(), legacyImport.payload()));
   }
 
-  static Character toModel(CharacterData data) throws SaveFormatException {
+  static PlayerCharacter toModel(CharacterData data) throws SaveFormatException {
+    CatalogRefData origin = data.origin();
+    String name = data.name();
+    String inventoryNotes = data.inventoryNotes();
+    try {
+      return PlayerCharacter.builder()
+          .name(name == null ? "" : name)
+          .origin(origin == null ? null : toModel(origin))
+          .originChoices(toModel(data.originChoices()))
+          .level(data.level())
+          .xp(data.xp())
+          .creationComplete(data.creationComplete())
+          .enabledBooks(books(data.books()))
+          .attributeAllocation(allocation(data.attributeAllocation()))
+          .skills(skills(data.skills()))
+          .traits(traits(data.traits()))
+          .perks(perks(data.perks()))
+          .progression(progression(data.progression()))
+          .vitals(vitals(data.vitals()))
+          .legacyBaseline(toModel(data.legacyBaseline()))
+          .legacyImport(legacyImport(data.legacyImport()))
+          .startingEquipment(toModel(data.startingEquipment()))
+          .inventoryNotes(inventoryNotes == null ? "" : inventoryNotes)
+          .startingLevel(data.startingLevel())
+          .startingTagSkills(startingTagSkills(data.startingTagSkills()))
+          .weapons(weapons(data.weapons()))
+          .ammunition(data.ammunition() == null ? Map.of() : data.ammunition())
+          .apparel(apparel(data.apparel()))
+          .inventory(inventory(data))
+          .createdWith(data.createdWith())
+          .build();
+    } catch (IllegalArgumentException e) {
+      throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
+    }
+  }
+
+  private static @NonNull Map<Attribute, Integer> allocation(@NonNull Map<String, Integer> data)
+      throws SaveFormatException {
     Map<Attribute, Integer> allocation = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {
-      Integer value = data.attributeAllocation().get(attribute.id());
+      Integer value = data.get(attribute.id());
       if (value == null) {
         throw new SaveFormatException("Missing attribute allocation: " + attribute.id());
       }
       allocation.put(attribute, value);
     }
+    return allocation;
+  }
+
+  private static @NonNull Map<Skill, SkillState> skills(@NonNull Map<String, SkillData> data)
+      throws SaveFormatException {
     Map<Skill, SkillState> skills = new EnumMap<>(Skill.class);
-    for (Map.Entry<String, SkillData> entry : data.skills().entrySet()) {
-      Skill skill = skill(entry.getKey());
-      SkillData skillData = entry.getValue();
-      skills.put(skill, new SkillState(skillData.tagged(), skillData.creationRanks(), skillData.advancementRanks(),
-          skillData.stagedRanks(), skillData.gmRanks()));
+    for (Map.Entry<String, SkillData> entry : data.entrySet()) {
+      SkillData skill = entry.getValue();
+      skills.put(skill(entry.getKey()), new SkillState(skill.tagged(), skill.creationRanks(),
+          skill.advancementRanks(), skill.stagedRanks(), skill.gmRanks()));
     }
+    return skills;
+  }
+
+  private static @NonNull List<TraitSelection> traits(@Nullable List<TraitData> data) throws SaveFormatException {
     List<TraitSelection> traits = new ArrayList<>();
-    for (TraitData trait : orEmpty(data.traits())) {
+    for (TraitData trait : orEmpty(data)) {
       traits.add(new TraitSelection(toModel(trait.ref()), trait.imported(), attributes(trait.attributeChoices())));
     }
+    return traits;
+  }
+
+  private static @NonNull List<PerkSelection> perks(@Nullable List<PerkData> data) throws SaveFormatException {
     List<PerkSelection> perks = new ArrayList<>();
-    for (PerkData perk : orEmpty(data.perks())) {
+    for (PerkData perk : orEmpty(data)) {
       List<Skill> skillChoices = new ArrayList<>();
       for (String id : orEmpty(perk.skillChoices())) {
         skillChoices.add(skill(id));
@@ -148,51 +197,28 @@ final class CharacterMapper {
       perks.add(new PerkSelection(toModel(perk.ref()), perk.rank(), perk.importedRanks(),
           attributes(perk.attributeChoices()), skillChoices, perk.stagedRanks()));
     }
-    ProgressionData progression = data.progression();
-    VitalsData vitals = data.vitals();
-    CatalogRefData origin = data.origin();
-    LegacyImportData legacyImport = data.legacyImport();
-    String name = data.name();
-    StartingEquipment startingEquipment = toModel(data.startingEquipment());
-    String inventoryNotes = data.inventoryNotes();
-    String sessionNotes = vitals == null ? null : vitals.notes();
-    try {
-      return new Character(
-          name == null ? "" : name,
-          origin == null ? null : toModel(origin),
-          toModel(data.originChoices()),
-          data.level(),
-          data.xp(),
-          data.creationComplete(),
-          books(data.books()),
-          allocation,
-          skills,
-          traits,
-          perks,
-          progression == null ? Progression.NONE
-              : new Progression(progression.pendingSkillRanks(), progression.pendingPerks()),
-          vitals == null ? Vitals.FULL
-              : new Vitals(vitals.currentHp(), vitals.rads(), vitals.radiationPoints(), vitals.luckPoints(),
-                  Set.copyOf(orEmpty(vitals.injuries())), sessionNotes == null ? "" : sessionNotes),
-          toModel(data.legacyBaseline()),
-          legacyImport == null ? null : new LegacyImport(legacyImport.sourceSchemaVersion(),
-              legacyImport.importedOn(), legacyImport.payload()),
-          startingEquipment,
-          inventoryNotes == null ? "" : inventoryNotes,
-          data.startingLevel(),
-          startingTagSkills(data.startingTagSkills()),
-          weapons(data.weapons()),
-          data.ammunition() == null ? Map.of() : data.ammunition(),
-          apparel(data.apparel()),
-          inventory(data),
-          data.createdWith());
-    } catch (IllegalArgumentException e) {
-      throw new SaveFormatException("Invalid character data: " + e.getMessage(), e);
+    return perks;
+  }
+
+  private static @NonNull Progression progression(@Nullable ProgressionData data) {
+    return data == null ? Progression.NONE : new Progression(data.pendingSkillRanks(), data.pendingPerks());
+  }
+
+  private static @NonNull Vitals vitals(@Nullable VitalsData data) {
+    if (data == null) {
+      return Vitals.FULL;
     }
+    String notes = data.notes();
+    return new Vitals(data.currentHp(), data.rads(), data.radiationPoints(), data.luckPoints(),
+        Set.copyOf(orEmpty(data.injuries())), notes == null ? "" : notes);
+  }
+
+  private static @Nullable LegacyImport legacyImport(@Nullable LegacyImportData data) {
+    return data == null ? null : new LegacyImport(data.sourceSchemaVersion(), data.importedOn(), data.payload());
   }
 
   /** Stored only for a complete character whose starting level is known (CRB p. 81 starting caps). */
-  private static @Nullable Integer startingLevel(@NonNull Character character) {
+  private static @Nullable Integer startingLevel(@NonNull PlayerCharacter character) {
     OptionalInt level = character.getStartingLevel();
     return character.isCreationComplete() && level.isPresent() ? level.getAsInt() : null;
   }

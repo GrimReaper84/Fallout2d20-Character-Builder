@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
@@ -15,23 +15,23 @@ import org.junit.jupiter.api.Test;
 /** Soft apparel hints (CRB p. 130, 146; user decision: never a block). */
 class ApparelRulesTest {
 
-  private static Character character(String origin) {
-    Character character = Character.createNew();
+  private static PlayerCharacter character(String origin) {
+    PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of(origin));
     return character;
   }
 
-  private static void wear(Character character, String id, @Nullable HitLocation location) {
+  private static void wear(PlayerCharacter character, String id, @Nullable HitLocation location) {
     character.addApparel(WornApparel.of(CatalogRef.of(id)).withLocation(location));
   }
 
-  private static List<String> hints(Character character) {
+  private static List<String> hints(PlayerCharacter character) {
     return ApparelRules.problems(character).stream().map(CreationProblem::message).toList();
   }
 
   @Test
   void conflictsOfAHumanoid() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     wear(survivor, "hazmat-suit", null);
     wear(survivor, "raider-chest-piece", null);
     wear(survivor, "metal-chest-piece", null);
@@ -49,7 +49,7 @@ class ApparelRulesTest {
 
   @Test
   void misterHandyWearsOnlyRobotItemsAndHats() {
-    Character handy = character("mister-handy");
+    PlayerCharacter handy = character("mister-handy");
     wear(handy, "casual-hat", null);
     wear(handy, "leather-chest-piece", null);
     assertEquals(List.of("A Mister Handy cannot wear Leather Chest Piece (CRB p. 146)."), hints(handy));
@@ -58,11 +58,11 @@ class ApparelRulesTest {
   /** CRB p. 130: armor added over a worn outfit starts carried, and an outfit added over worn armor too. */
   @Test
   void armorAndOutfitClash() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     wear(survivor, "drifter-outfit", null);
     wear(survivor, "metal-helmet", null);
     assertTrue(survivor.getApparel().get(1).carried());
-    Character soldier = character("survivor");
+    PlayerCharacter soldier = character("survivor");
     wear(soldier, "combat-leg", HitLocation.LEFT_LEG);
     wear(soldier, "drifter-outfit", null);
     assertTrue(soldier.getApparel().get(1).carried());
@@ -72,7 +72,7 @@ class ApparelRulesTest {
   /** Carried pieces take part in no hint except the catalog check (user decision 2026-10-16). */
   @Test
   void carriedPiecesGiveNoHints() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     wear(survivor, "drifter-outfit", null);
     wear(survivor, "leather-arm", null);
     wear(survivor, "standard-plating", null);
@@ -84,14 +84,14 @@ class ApparelRulesTest {
   /** A limb that does not fit the piece (e.g. from an edited file) counts as not chosen. */
   @Test
   void limbMustFitThePiece() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     wear(survivor, "raider-arm", HitLocation.HEAD);
     assertEquals(List.of("Choose where Raider Arm is worn."), hints(survivor));
   }
 
   @Test
   void itemsOutsideTheCatalogAreReported() {
-    Character survivor = character("survivor");
+    PlayerCharacter survivor = character("survivor");
     survivor.addApparel(WornApparel.of(CatalogRef.fromLegacyName("Spacesuit")));
     assertEquals(List.of("\"Spacesuit\" is not an item of the supported books."), hints(survivor));
   }
@@ -99,7 +99,7 @@ class ApparelRulesTest {
   /** House rule (user decision 2026-10-16): human apparel on a Protectron is offered, with a hint; robot armor fits. */
   @Test
   void protectronGetsAHintForHumanApparel() {
-    Character protectron = character("protectron");
+    PlayerCharacter protectron = character("protectron");
     wear(protectron, "standard-plating", null);
     wear(protectron, "factory-armor-arms", HitLocation.RIGHT_ARM);
     assertEquals(List.of(), hints(protectron));
@@ -110,7 +110,7 @@ class ApparelRulesTest {
     assertTrue(hints(protectron).contains("Choose where Factory Armor is worn."), "a Mister Handy arm does not fit");
     assertTrue(ApparelRules.isOffered(protectron, ApparelKind.ARMOR, false));
     assertTrue(ApparelRules.isOffered(protectron, ApparelKind.ROBOT_ARMOR, false));
-    Character handy = character("mister-handy");
+    PlayerCharacter handy = character("mister-handy");
     assertFalse(ApparelRules.isOffered(handy, ApparelKind.ARMOR, false));
     assertFalse(ApparelRules.isOffered(character("survivor"), ApparelKind.ROBOT_PLATING, false));
   }
@@ -118,7 +118,7 @@ class ApparelRulesTest {
   /** CRB p. 146: the hat exception belongs to the Mister Handy; on a Protectron a hat is human apparel too. */
   @Test
   void hatExceptionOnlyForAMisterHandy() {
-    Character protectron = character("protectron");
+    PlayerCharacter protectron = character("protectron");
     wear(protectron, "casual-hat", null);
     assertEquals(List.of("Robots like the Protectron wear robot plating and armor; Casual Hat only with GM "
         + "permission."), hints(protectron));

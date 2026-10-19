@@ -10,9 +10,9 @@ import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
 import de.fallout2d20.charbuilder.model.character.apparel.ArmorResistances;
@@ -83,7 +83,7 @@ public record SheetContent(
   }
 
   /** Collects the sheet texts of a character in its current state (also during creation). */
-  public static @NonNull SheetContent of(@NonNull Character character) {
+  public static @NonNull SheetContent of(@NonNull PlayerCharacter character) {
     DerivedStats derived = DerivedStats.of(character);
     Map<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {
@@ -124,7 +124,7 @@ public record SheetContent(
         notes(character));
   }
 
-  private static @NonNull String originName(@NonNull Character character) {
+  private static @NonNull String originName(@NonNull PlayerCharacter character) {
     CatalogRef origin = character.getOrigin();
     if (origin == null) {
       return "";
@@ -132,7 +132,7 @@ public record SheetContent(
     return character.getOriginData().map(OriginData::name).orElseGet(origin::displayName);
   }
 
-  private static @NonNull List<WeaponRow> weapons(@NonNull Character character) {
+  private static @NonNull List<WeaponRow> weapons(@NonNull PlayerCharacter character) {
     List<WeaponRow> rows = new ArrayList<>();
     for (CarriedWeapon weapon : character.getWeapons()) {
       WeaponAttack attack = WeaponAttack.of(character, weapon);
@@ -157,7 +157,7 @@ public record SheetContent(
   }
 
   /** Ammunition types of the carried weapons, then any other type the character has shots of. */
-  private static @NonNull List<String> ammunition(@NonNull Character character) {
+  private static @NonNull List<String> ammunition(@NonNull PlayerCharacter character) {
     Set<String> ids = new LinkedHashSet<>();
     for (CarriedWeapon weapon : character.getWeapons()) {
       ids.addAll(WeaponAttack.of(character, weapon).ammunition());
@@ -175,7 +175,7 @@ public record SheetContent(
   }
 
   /** Items with quantity and stack weight, apparel (carried pieces marked), junk and materials. */
-  private static @NonNull List<GearRow> gear(@NonNull Character character) {
+  private static @NonNull List<GearRow> gear(@NonNull PlayerCharacter character) {
     List<GearRow> rows = new ArrayList<>();
     for (CarriedItem item : character.getItems()) {
       String name = item.issue() == null ? item.displayName() : item.displayName() + " (" + item.issue() + ")";
@@ -216,7 +216,7 @@ public record SheetContent(
    * Origin trait first (origins without a named trait, such as Survivor, only lead to chosen traits),
    * then the chosen traits, then the perks with rank and choices.
    */
-  private static @NonNull List<PerkRow> perks(@NonNull Character character) {
+  private static @NonNull List<PerkRow> perks(@NonNull PlayerCharacter character) {
     List<PerkRow> rows = new ArrayList<>();
     character.getOriginData().ifPresent(origin -> {
       if (origin.traitName() != null) {
@@ -239,7 +239,7 @@ public record SheetContent(
     return rows;
   }
 
-  private static @NonNull List<String> notes(@NonNull Character character) {
+  private static @NonNull List<String> notes(@NonNull PlayerCharacter character) {
     List<String> notes = new ArrayList<>();
     String purpose = character.getOriginChoices().purpose();
     if (purpose != null && !purpose.isBlank()) {

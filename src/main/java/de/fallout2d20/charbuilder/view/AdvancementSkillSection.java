@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import javafx.scene.control.Label;
@@ -17,7 +17,7 @@ final class AdvancementSkillSection {
 
   private AdvancementSkillSection() {}
 
-  static @NonNull MigPane build(@NonNull Character character, @NonNull Runnable onChanged) {
+  static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane pane = SkillSection.grid();
     int left = character.advancementSkillRanksLeft();
     pane.add(new Label("[Ranks left: " + left + "]"), "span 6");
@@ -43,7 +43,7 @@ final class AdvancementSkillSection {
   }
 
   /** Stages (+1) or takes back (−1) a rank after checking the current model state again. */
-  private static void step(@NonNull Character character, @NonNull Skill skill, int delta,
+  private static void step(@NonNull PlayerCharacter character, @NonNull Skill skill, int delta,
       @NonNull Runnable onChanged) {
     boolean allowed = delta > 0 ? AdvancementRules.canRaise(character, skill)
         : AdvancementRules.canLower(character, skill);

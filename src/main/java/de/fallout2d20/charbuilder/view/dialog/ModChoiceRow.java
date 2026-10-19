@@ -1,7 +1,7 @@
 package de.fallout2d20.charbuilder.view.dialog;
 
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponMods;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.Tooltip;
@@ -13,9 +13,9 @@ final class ModChoiceRow extends TableRow<ModChoice> {
 
   private static final @NonNull String MISSING_STYLE = "-fx-text-fill: #a35200;";
 
-  private final @NonNull Character character;
+  private final @NonNull PlayerCharacter character;
 
-  ModChoiceRow(@NonNull Character character) {
+  ModChoiceRow(@NonNull PlayerCharacter character) {
     this.character = character;
   }
 

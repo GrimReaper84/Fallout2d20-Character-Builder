@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.model.character.weapon;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
-import de.fallout2d20.charbuilder.model.character.Character;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import java.util.List;
@@ -81,7 +81,7 @@ public record WeaponAttack(
   }
 
   /** The attack with a carried weapon (catalog or custom) and its mods. */
-  public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull CarriedWeapon weapon) {
+  public static @NonNull WeaponAttack of(@NonNull PlayerCharacter character, @NonNull CarriedWeapon weapon) {
     Skill skill = weapon.skill().orElse(null);
     Attribute attribute = weapon.data().map(WeaponData::attackAttribute)
         .orElse(skill == null ? null : skill.governingAttribute());
@@ -90,11 +90,11 @@ public record WeaponAttack(
   }
 
   /** The attack with a catalog weapon, e.g. the Unarmed Strike every character has (CRB p. 111). */
-  public static @NonNull WeaponAttack of(@NonNull Character character, @NonNull WeaponData weapon) {
+  public static @NonNull WeaponAttack of(@NonNull PlayerCharacter character, @NonNull WeaponData weapon) {
     return create(character, ModdedWeapon.of(weapon), weapon.skill(), weapon.attackAttribute());
   }
 
-  private static @NonNull WeaponAttack create(@NonNull Character character, @NonNull ModdedWeapon weapon,
+  private static @NonNull WeaponAttack create(@NonNull PlayerCharacter character, @NonNull ModdedWeapon weapon,
       @Nullable Skill skill, @Nullable Attribute attribute) {
     Integer targetNumber = null;
     Integer criticalRange = null;

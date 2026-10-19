@@ -12,8 +12,8 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Character;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
+import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
@@ -52,8 +52,8 @@ final class SampleCharacters {
   private SampleCharacters() {}
 
   /** The generated samples by file name, in menu order. {@code nora-mayfield.json} is hand-made and kept. */
-  static Map<String, Supplier<Character>> all() {
-    Map<String, Supplier<Character>> samples = new LinkedHashMap<>();
+  static Map<String, Supplier<PlayerCharacter>> all() {
+    Map<String, Supplier<PlayerCharacter>> samples = new LinkedHashMap<>();
     samples.put("brotherhood-initiate.json", SampleCharacters::brotherhoodInitiate);
     samples.put("mister-handy.json", SampleCharacters::misterHandy);
     samples.put("super-mutant.json", SampleCharacters::superMutant);
@@ -68,8 +68,8 @@ final class SampleCharacters {
     return samples;
   }
 
-  static Character brotherhoodInitiate() {
-    Character character = start("Daria Voss", "brotherhood-initiate");
+  static PlayerCharacter brotherhoodInitiate() {
+    PlayerCharacter character = start("Daria Voss", "brotherhood-initiate");
     character.chooseOriginTagSkill(Skill.ENERGY_WEAPONS);
     special(character, 0, 1, 1, 2, 0, 1, 0);
     tags(character, Skill.SCIENCE, Skill.REPAIR, Skill.MEDICINE);
@@ -78,8 +78,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character misterHandy() {
-    Character character = start("Mister Pennywhistle", "mister-handy");
+  static PlayerCharacter misterHandy() {
+    PlayerCharacter character = start("Mister Pennywhistle", "mister-handy");
     special(character, 0, 2, 1, 2, 0, 0, 0);
     tags(character, Skill.REPAIR, Skill.MEDICINE, Skill.SCIENCE);
     finish(character, List.of(Skill.REPAIR, Skill.MEDICINE, Skill.SCIENCE, Skill.ENERGY_WEAPONS),
@@ -87,8 +87,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character superMutant() {
-    Character character = start("Grak", "super-mutant");
+  static PlayerCharacter superMutant() {
+    PlayerCharacter character = start("Grak", "super-mutant");
     special(character, 1, 1, 1, -1, -1, 2, 2);
     tags(character, Skill.MELEE_WEAPONS, Skill.BIG_GUNS, Skill.ATHLETICS);
     finish(character, List.of(Skill.MELEE_WEAPONS, Skill.BIG_GUNS, Skill.ATHLETICS, Skill.SURVIVAL),
@@ -96,8 +96,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character ghoul() {
-    Character character = start("Eli Marrow", "ghoul");
+  static PlayerCharacter ghoul() {
+    PlayerCharacter character = start("Eli Marrow", "ghoul");
     special(character, 0, 2, 1, 0, 1, 1, 0);
     tags(character, Skill.SMALL_GUNS, Skill.SNEAK, Skill.LOCKPICK);
     finish(character, List.of(Skill.SMALL_GUNS, Skill.SNEAK, Skill.LOCKPICK, Skill.SURVIVAL),
@@ -105,8 +105,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character gen3Synth() {
-    Character character = start("Ada Sterling", "generation-3-synth");
+  static PlayerCharacter gen3Synth() {
+    PlayerCharacter character = start("Ada Sterling", "generation-3-synth");
     character.chooseOriginTagSkill(Skill.SPEECH);
     special(character, 0, 1, 0, 1, 1, 1, 1);
     tags(character, Skill.SMALL_GUNS, Skill.SCIENCE, Skill.SNEAK);
@@ -114,8 +114,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character protectron() {
-    Character character = start("Unit PT-7", "protectron");
+  static PlayerCharacter protectron() {
+    PlayerCharacter character = start("Unit PT-7", "protectron");
     character.setPurpose(character.getOriginData().orElseThrow().purposeSuggestions().getFirst());
     special(character, 1, 1, 1, 1, 0, 0, 1);
     tags(character, Skill.ENERGY_WEAPONS, Skill.UNARMED, Skill.REPAIR);
@@ -123,8 +123,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character childOfAtom() {
-    Character character = start("Brother Kael", "child-of-atom");
+  static PlayerCharacter childOfAtom() {
+    PlayerCharacter character = start("Brother Kael", "child-of-atom");
     special(character, 1, 1, 1, 0, 1, 0, 1);
     tags(character, Skill.MELEE_WEAPONS, Skill.SURVIVAL, Skill.SPEECH);
     finish(character, List.of(Skill.MELEE_WEAPONS, Skill.SURVIVAL, Skill.SPEECH, Skill.MEDICINE),
@@ -132,8 +132,8 @@ final class SampleCharacters {
     return complete(character);
   }
 
-  static Character tribalGifted() {
-    Character character = start("Runs-With-Storms", "tribal");
+  static PlayerCharacter tribalGifted() {
+    PlayerCharacter character = start("Runs-With-Storms", "tribal");
     character.chooseTrait(CatalogRef.of("gifted"));
     character.setTraitAttributeChoices("gifted", List.of(Attribute.AGILITY, Attribute.PERCEPTION));
     character.chooseTrait(CatalogRef.of("heavy-handed"));
@@ -144,8 +144,8 @@ final class SampleCharacters {
   }
 
   /** A Survivor halfway through creation: origin, one trait, part of S.P.E.C.I.A.L. and Tags; open hints. */
-  static Character inCreation() {
-    Character character = start("Half Done", "survivor");
+  static PlayerCharacter inCreation() {
+    PlayerCharacter character = start("Half Done", "survivor");
     character.chooseTrait(CatalogRef.of("educated"));
     special(character, 1, 1, 0, 1, 0, 0, 0);
     tags(character, Skill.SMALL_GUNS, Skill.LOCKPICK);
@@ -153,8 +153,8 @@ final class SampleCharacters {
   }
 
   /** Complete at level 3, then XP for level 5: two skill ranks and two perks wait to be spent. */
-  static Character levelUpPending() {
-    Character character = start("Mara Quill", "vault-dweller");
+  static PlayerCharacter levelUpPending() {
+    PlayerCharacter character = start("Mara Quill", "vault-dweller");
     character.chooseOriginTagSkill(Skill.SCIENCE);
     character.setStartingLevel(3);
     special(character, 0, 1, 1, 1, 1, 1, 0);
@@ -166,8 +166,8 @@ final class SampleCharacters {
   }
 
   /** A level 12 Survivor with many perks and a full inventory incl. a holotape, for long tables and PDF continuation pages. */
-  static Character veteranOverflow() {
-    Character character = start("Old Jeb Harrow", "survivor");
+  static PlayerCharacter veteranOverflow() {
+    PlayerCharacter character = start("Old Jeb Harrow", "survivor");
     character.chooseTrait(CatalogRef.of("educated"));
     character.chooseTrait(CatalogRef.of("fast-shot"));
     character.setStartingLevel(12);
@@ -192,22 +192,22 @@ final class SampleCharacters {
     return character;
   }
 
-  private static Character start(String name, String originId) {
-    Character character = Character.createNew(VERSION);
+  private static PlayerCharacter start(String name, String originId) {
+    PlayerCharacter character = PlayerCharacter.createNew(VERSION);
     character.setName(name);
     character.chooseOrigin(CatalogRef.of(originId));
     return character;
   }
 
   /** S.P.E.C.I.A.L. allocations in attribute order (STR … LCK); together they spend the five points. */
-  private static void special(Character character, int... allocations) {
+  private static void special(PlayerCharacter character, int... allocations) {
     Attribute[] attributes = Attribute.values();
     for (int i = 0; i < attributes.length; i++) {
       character.setAttributeAllocation(attributes[i], allocations[i]);
     }
   }
 
-  private static void tags(Character character, Skill... skills) {
+  private static void tags(PlayerCharacter character, Skill... skills) {
     for (Skill skill : skills) {
       character.setFreeTag(skill, true);
     }
@@ -218,7 +218,7 @@ final class SampleCharacters {
    * choice in a fixed random order; the skill points round-robin over the wished skills, then over all; the first pack the origin
    * may take (if any) with its first options, arms and Tag skill items, and a trinket.
    */
-  private static void finish(Character character, List<Skill> skills, List<String> perkIds) {
+  private static void finish(PlayerCharacter character, List<Skill> skills, List<String> perkIds) {
     for (String id : perkIds) {
       PerkDefinition perk = PerkCatalog.byId(id).orElseThrow();
       if (!PerkRules.canAdd(character, perk)) {
@@ -240,7 +240,7 @@ final class SampleCharacters {
     choosePack(character);
   }
 
-  private static void spendSkillPoints(Character character, List<Skill> skills) {
+  private static void spendSkillPoints(PlayerCharacter character, List<Skill> skills) {
     boolean spent = true;
     while (spent && SkillRules.skillPointsLeft(character) > 0) {
       spent = false;
@@ -253,7 +253,7 @@ final class SampleCharacters {
     }
   }
 
-  private static void choosePack(Character character) {
+  private static void choosePack(PlayerCharacter character) {
     String originId = character.getOriginData().orElseThrow().id();
     Optional<EquipmentPackData> offered = EquipmentCatalog.packsFor(originId, character.getEnabledBooks())
         .stream().filter(candidate -> !candidate.needsGmPermission(originId)).findFirst();
@@ -283,7 +283,7 @@ final class SampleCharacters {
    *
    * @throws IllegalStateException with the open hints if the sample does not follow the rules
    */
-  private static Character complete(Character character) {
+  private static PlayerCharacter complete(PlayerCharacter character) {
     if (character.getEquipmentPack().isPresent() && character.canApplyStartingEquipment()) {
       character.applyStartingEquipment(character.getStartingEquipment());
     }
@@ -297,7 +297,7 @@ final class SampleCharacters {
   }
 
   /** XP still needed to reach the level. */
-  private static long xpUntil(Character character, int level) {
+  private static long xpUntil(PlayerCharacter character, int level) {
     return ExperienceTable.xpForLevel(level) - character.getXp();
   }
 }
