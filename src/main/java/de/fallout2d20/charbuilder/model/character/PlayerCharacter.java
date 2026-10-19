@@ -69,7 +69,7 @@ public class PlayerCharacter {
     this.createdWith = parts.createdWith;
     this.abilities = new Abilities(this, parts.attributeAllocation, parts.skills);
     this.advancement = new Advancement(this, parts.level, parts.xp, parts.progression, parts.startingLevel);
-    this.gear = new Gear(this, parts);
+    this.gear = new Gear(this, parts.weapons, parts.ammunition, parts.apparel, parts.inventory, parts.inventoryNotes);
     this.startingGear = new StartingGear(this, parts.startingEquipment.fittedToCatalog(parts.creationComplete),
         parts.inventory.packItemsAdded());
     this.session = new Session(this, parts.vitals);

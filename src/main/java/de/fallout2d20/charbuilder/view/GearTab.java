@@ -142,7 +142,7 @@ final class GearTab {
           onChanged.run();
         }
       });
-      row.add(choose, Layouts.indented(1));
+      row.add(choose, Layouts.gapBefore(1));
     }
     return row;
   }

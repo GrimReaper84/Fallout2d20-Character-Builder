@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
 import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
@@ -11,6 +12,8 @@ import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipment;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingNotes;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
+import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -200,7 +203,15 @@ public final class StartingGear {
 
   /** Names of the weapons, apparel and items marked as starting equipment, which a re-sync replaces. */
   public @NonNull List<String> entryNames() {
-    return owner.gear().startingEntryNames();
+    Gear gear = owner.gear();
+    List<String> names = new ArrayList<>();
+    gear.getWeapons().stream().filter(weapon -> weapon.startingSource() != null).map(CarriedWeapon::displayName)
+        .forEach(names::add);
+    gear.getApparel().stream().filter(item -> item.startingSource() != null).map(WornApparel::displayName)
+        .forEach(names::add);
+    gear.getItems().stream().filter(item -> item.startingSource() != null).map(CarriedItem::displayName)
+        .forEach(names::add);
+    return names;
   }
 
   /**

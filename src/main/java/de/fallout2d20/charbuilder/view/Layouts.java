@@ -28,6 +28,8 @@ public final class Layouts {
   public static final int DIALOG_INSETS = 8;
   /** Indent of a line that belongs to the one above it (e.g. under a checkbox's text: two indents). */
   public static final int INDENT = 12;
+  /** Above the header bar. */
+  private static final int HEADER_TOP_INSET = 12;
   /** Between the two halves of a tab. */
   private static final int HALVES_GAP = 32;
 
@@ -104,6 +106,21 @@ public final class Layouts {
         new AC().align("left", 0).grow(100, 1).fill(1).index(1 + extraColumns));
   }
 
+  /**
+   * The header bar above the tabs: name, value, name, value with growing values, then two name/value pairs of
+   * natural width; a little less space above than a page.
+   */
+  public static @NonNull MigPane headerBar() {
+    return new MigPane(gaps(new LC().insets(size(HEADER_TOP_INSET), size(PAGE_INSETS), size(GAP), size(PAGE_INSETS))
+        .wrapAfter(8), GAP, ROW_GAP), new AC().align("right", 0, 2, 4, 6).grow(100, 1, 3).fill(1, 3).index(7));
+  }
+
+  /** A list of names taking the width, each with an amount on the right (ammunition). */
+  public static @NonNull MigPane amountList() {
+    return new MigPane(gaps(new LC().insetsAll("0").wrapAfter(2), GAP, ROW_GAP),
+        new AC().grow(100, 0).align("left", 0).align("right", 1));
+  }
+
   /** A dialog's form: right-aligned labels, controls filling the rest. */
   public static @NonNull MigPane dialogForm() {
     return new MigPane(new LC().insetsAll(size(DIALOG_INSETS)).wrapAfter(2),
@@ -143,6 +160,11 @@ public final class Layouts {
   /** A cell that starts a new section, with space above it. */
   public static @NonNull CC sectionStart() {
     return sectionStart(new CC());
+  }
+
+  /** A cell with space before it in a row of controls, {@code steps} × {@link #INDENT}, to set groups apart. */
+  public static @NonNull CC gapBefore(int steps) {
+    return new CC().gapLeft(size(steps * INDENT));
   }
 
   /** Space above a cell that starts a new block within a pane. */

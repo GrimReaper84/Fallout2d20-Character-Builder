@@ -102,7 +102,6 @@ final class OverviewParts {
     return value == null || value.toString().isBlank() ? "–" : value.toString();
   }
 
-
   /** Rule hints at the top of a tab; soft, they never block editing or saving. Nothing if there are none. */
   static void addHints(@NonNull MigPane pane, @NonNull List<CreationProblem> problems) {
     if (problems.isEmpty()) {

@@ -34,9 +34,7 @@ final class CharacterHeader {
   /** @param hints all hints of the character, each with its area */
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull ViewCallbacks callbacks) {
-    // One-off layout of the bar above the tabs (no Layouts preset).
-    MigPane pane = new MigPane("insets 12 16 8 16, gap 8 4, wrap 8",
-        "[right][grow,fill][right][grow,fill][right][][right][]");
+    MigPane pane = Layouts.headerBar();
     boolean complete = character.isCreationComplete();
     boolean gm = character.isGmMode();
     if (gm) {

@@ -37,20 +37,20 @@ final class GearSummary {
     Label junk = new Label("Junk");
     junk.setTooltip(new Tooltip("CRB p. 208: a junk item weighs 2 lbs. (2 caps); a unit of material 1 lb. "
         + "(common 1, uncommon 3, rare 5 caps)."));
-    bar.add(junk, Layouts.indented(2));
+    bar.add(junk, Layouts.gapBefore(2));
     bar.add(NumberField.of(materials.junk(), 0, value -> set(character,
         new Materials(value, materials.common(), materials.uncommon(), materials.rare()), onChanged)));
-    bar.add(new Label("Common"), Layouts.indented(1));
+    bar.add(new Label("Common"), Layouts.gapBefore(1));
     bar.add(NumberField.of(materials.common(), 0, value -> set(character,
         new Materials(materials.junk(), value, materials.uncommon(), materials.rare()), onChanged)));
-    bar.add(new Label("Uncommon"), Layouts.indented(1));
+    bar.add(new Label("Uncommon"), Layouts.gapBefore(1));
     bar.add(NumberField.of(materials.uncommon(), 0, value -> set(character,
         new Materials(materials.junk(), materials.common(), value, materials.rare()), onChanged)));
-    bar.add(new Label("Rare"), Layouts.indented(1));
+    bar.add(new Label("Rare"), Layouts.gapBefore(1));
     bar.add(NumberField.of(materials.rare(), 0, value -> set(character,
         new Materials(materials.junk(), materials.common(), materials.uncommon(), value), onChanged)));
 
-    bar.add(new Label("Load"), Layouts.indented(2));
+    bar.add(new Label("Load"), Layouts.gapBefore(2));
     bar.add(load(character));
     return bar;
   }

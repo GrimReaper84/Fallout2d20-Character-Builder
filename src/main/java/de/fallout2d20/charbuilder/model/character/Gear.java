@@ -10,6 +10,7 @@ import de.fallout2d20.charbuilder.model.character.equipment.StartingNotes;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
+import de.fallout2d20.charbuilder.model.character.item.Inventory;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponMods;
@@ -40,20 +41,22 @@ public final class Gear {
   private @NonNull Materials materials;
   private @NonNull String notes;
 
-  Gear(@NonNull PlayerCharacter owner, @NonNull PlayerCharacterBuilder parts) {
+  /** Ammunition counts of 0 are dropped. */
+  Gear(@NonNull PlayerCharacter owner, @NonNull List<CarriedWeapon> weapons, @NonNull Map<String, Integer> ammunition,
+      @NonNull List<WornApparel> apparel, @NonNull Inventory inventory, @NonNull String notes) {
     this.owner = owner;
-    this.weapons = new ArrayList<>(parts.weapons);
+    this.weapons = new ArrayList<>(weapons);
     this.ammunition = new LinkedHashMap<>();
-    parts.ammunition.forEach((id, shots) -> {
+    ammunition.forEach((id, shots) -> {
       if (shots > 0) {
         this.ammunition.put(id, shots);
       }
     });
-    this.apparel = new ArrayList<>(parts.apparel);
-    this.items = new ArrayList<>(parts.inventory.items());
-    this.caps = parts.inventory.caps();
-    this.materials = parts.inventory.materials();
-    this.notes = parts.inventoryNotes;
+    this.apparel = new ArrayList<>(apparel);
+    this.items = new ArrayList<>(inventory.items());
+    this.caps = inventory.caps();
+    this.materials = inventory.materials();
+    this.notes = notes;
   }
 
   /** Free-text gear notes, e.g. amounts still to roll ({@link StartingNotes}). */
@@ -272,15 +275,5 @@ public final class Gear {
     after.apparel().forEach(this::addApparel);
     items.addAll(after.items());
     notes = StartingNotes.rewrite(notes, source, before.rolls(), after.rolls());
-  }
-
-  /** Names of the weapons, apparel and items marked as starting equipment. */
-  @NonNull List<String> startingEntryNames() {
-    List<String> names = new ArrayList<>();
-    weapons.stream().filter(weapon -> weapon.startingSource() != null).map(CarriedWeapon::displayName)
-        .forEach(names::add);
-    apparel.stream().filter(item -> item.startingSource() != null).map(WornApparel::displayName).forEach(names::add);
-    items.stream().filter(item -> item.startingSource() != null).map(CarriedItem::displayName).forEach(names::add);
-    return names;
   }
 }
