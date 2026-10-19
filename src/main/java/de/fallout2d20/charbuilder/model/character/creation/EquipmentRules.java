@@ -35,7 +35,7 @@ public final class EquipmentRules {
     if (!CreationRules.isChecked(character) || origin == null) {
       return problems;
     }
-    StartingEquipment selection = character.getStartingEquipment();
+    StartingEquipment selection = character.startingGear().getSelection();
     CatalogRef packRef = selection.pack();
     if (packRef == null) {
       if (!EquipmentCatalog.packsFor(origin.id(), character.getEnabledBooks()).isEmpty()) {
@@ -43,7 +43,7 @@ public final class EquipmentRules {
       }
       return problems;
     }
-    Optional<EquipmentPackData> data = character.getEquipmentPack();
+    Optional<EquipmentPackData> data = character.startingGear().getPack();
     if (data.isEmpty()) {
       add(problems, "\"" + packRef.displayName() + "\" is not an equipment pack of the supported books.");
       return problems;

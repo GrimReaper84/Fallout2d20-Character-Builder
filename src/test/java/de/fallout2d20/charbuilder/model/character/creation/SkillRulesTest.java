@@ -49,7 +49,7 @@ class SkillRulesTest {
   void ghoulSurvivalIsNotAFreeTag() {
     PlayerCharacter ghoul = character("ghoul", THREE_TAGS, List.of());
     assertEquals(0, SkillRules.freeTagsLeft(ghoul));
-    assertTrue(ghoul.isTagged(Skill.SURVIVAL));
+    assertTrue(ghoul.abilities().isTagged(Skill.SURVIVAL));
     assertFalse(SkillRules.canToggleTag(ghoul, Skill.SURVIVAL));
   }
 
@@ -67,7 +67,7 @@ class SkillRulesTest {
   void skillPointsAreNinePlusIntelligence() {
     assertEquals(14, SkillRules.skillPointBudget(character("survivor", Map.of(), List.of())));
     PlayerCharacter smart = character("survivor", Map.of(), List.of());
-    smart.setAttributeAllocation(Attribute.INTELLIGENCE, 3);
+    smart.abilities().setAttributeAllocation(Attribute.INTELLIGENCE, 3);
     assertEquals(17, SkillRules.skillPointBudget(smart));
   }
 
@@ -83,10 +83,10 @@ class SkillRulesTest {
   @Test
   void loweringTheLevelBlocksRanksAboveTheNewCap() {
     PlayerCharacter character = character("survivor", Map.of(), List.of());
-    character.setStartingLevel(3);
-    character.setCreationRanks(Skill.SNEAK, 5);
-    character.setStartingLevel(1);
-    assertEquals(3, character.skillRank(Skill.SNEAK));
+    character.advancement().setStartingLevel(3);
+    character.abilities().setCreationRanks(Skill.SNEAK, 5);
+    character.advancement().setStartingLevel(1);
+    assertEquals(3, character.abilities().skillRank(Skill.SNEAK));
     assertFalse(SkillRules.canRaise(character, Skill.SNEAK));
   }
 
@@ -94,7 +94,7 @@ class SkillRulesTest {
   @Test
   void skillPointsGrowWithLevel() {
     PlayerCharacter character = character("survivor", Map.of(), List.of());
-    character.setStartingLevel(3);
+    character.advancement().setStartingLevel(3);
     assertEquals(16, SkillRules.skillPointBudget(character));
   }
 
@@ -118,9 +118,9 @@ class SkillRulesTest {
         Skill.ATHLETICS, new SkillState(false, 3, 0)), List.of());
     assertEquals(8, SkillRules.skillPointsLeft(character));
     assertEquals(List.of("Spend all skill points (8 left)."), messages(character));
-    character.setCreationRanks(Skill.REPAIR, 3);
-    character.setCreationRanks(Skill.SCIENCE, 3);
-    character.setCreationRanks(Skill.MEDICINE, 3);
+    character.abilities().setCreationRanks(Skill.REPAIR, 3);
+    character.abilities().setCreationRanks(Skill.SCIENCE, 3);
+    character.abilities().setCreationRanks(Skill.MEDICINE, 3);
     assertEquals(List.of("Too many skill points spent (1 too many)."), messages(character));
   }
 
@@ -130,7 +130,7 @@ class SkillRulesTest {
     PlayerCharacter character = character("survivor", Map.of(Skill.SNEAK, new SkillState(true, 1, 0)), List.of());
     assertFalse(SkillRules.canRaise(character, Skill.SNEAK));
     assertTrue(SkillRules.canRaise(character, Skill.REPAIR));
-    character.setCreationRanks(Skill.SNEAK, 2);
+    character.abilities().setCreationRanks(Skill.SNEAK, 2);
     assertTrue(messages(character).contains("Sneak may not exceed rank 3 during creation."));
   }
 
@@ -158,7 +158,7 @@ class SkillRulesTest {
   void canToggleTag() {
     PlayerCharacter tribal = character("tribal", Map.of(), List.of("nomad"));
     assertFalse(SkillRules.canToggleTag(tribal, Skill.SCIENCE));
-    assertEquals("Nomad", tribal.tagForbiddenBy(Skill.SCIENCE).orElseThrow().name());
+    assertEquals("Nomad", tribal.abilities().tagForbiddenBy(Skill.SCIENCE).orElseThrow().name());
     assertTrue(SkillRules.canToggleTag(tribal, Skill.SURVIVAL));
     PlayerCharacter full = character("survivor", THREE_TAGS, List.of());
     assertFalse(SkillRules.canToggleTag(full, Skill.REPAIR));
@@ -170,13 +170,13 @@ class SkillRulesTest {
   void aFreeTagCanAlwaysBeRemoved() {
     PlayerCharacter loaded = character("tribal", Map.of(Skill.SCIENCE, new SkillState(true, 0, 0)), List.of("nomad"));
     assertTrue(SkillRules.canToggleTag(loaded, Skill.SCIENCE));
-    loaded.setFreeTag(Skill.SCIENCE, false);
-    assertFalse(loaded.isTagged(Skill.SCIENCE));
+    loaded.abilities().setFreeTag(Skill.SCIENCE, false);
+    assertFalse(loaded.abilities().isTagged(Skill.SCIENCE));
     PlayerCharacter ghoul = character("ghoul", Map.of(Skill.SURVIVAL, new SkillState(true, 0, 0)), List.of());
     assertTrue(SkillRules.canToggleTag(ghoul, Skill.SURVIVAL));
-    ghoul.setFreeTag(Skill.SURVIVAL, false);
+    ghoul.abilities().setFreeTag(Skill.SURVIVAL, false);
     assertEquals(3, SkillRules.freeTagsLeft(ghoul));
-    assertTrue(ghoul.isTagged(Skill.SURVIVAL));
+    assertTrue(ghoul.abilities().isTagged(Skill.SURVIVAL));
   }
 
   @Test

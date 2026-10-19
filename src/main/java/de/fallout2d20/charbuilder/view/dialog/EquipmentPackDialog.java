@@ -9,7 +9,9 @@ import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
+import de.fallout2d20.charbuilder.model.character.StartingGear;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.PackInventory;
 import de.fallout2d20.charbuilder.model.character.equipment.PackItems;
@@ -46,7 +48,7 @@ import org.tbee.javafx.scene.layout.MigPane;
  * house-rule option), the personal trinket with a roll on the trinket table (CRB p. 80) and the Tag skill items
  * that offer a choice (CRB p. 81), with a preview of what gets entered into the inventory. Picks change the
  * character at once and rebuild the controls; Cancel restores the selection from before, OK enters the
- * starting equipment ({@link PlayerCharacter#applyStartingEquipment(StartingEquipment)}).
+ * starting equipment ({@link StartingGear#apply(StartingEquipment)}).
  */
 public final class EquipmentPackDialog {
 
@@ -71,7 +73,7 @@ public final class EquipmentPackDialog {
    * @return whether the character changed
    */
   public static boolean show(@Nullable Window owner, @NonNull PlayerCharacter character) {
-    StartingEquipment snapshot = character.getStartingEquipment();
+    StartingEquipment snapshot = character.startingGear().getSelection();
     EquipmentPackDialog content = new EquipmentPackDialog(character);
     content.rebuild();
 
@@ -93,26 +95,26 @@ public final class EquipmentPackDialog {
     dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
     dialog.setResultConverter(button -> button == ButtonType.OK);
     if (!dialog.showAndWait().orElse(false)) {
-      character.restoreStartingEquipment(snapshot);
+      character.startingGear().restore(snapshot);
       return false;
     }
-    if (!character.canApplyStartingEquipment()) {
+    if (!character.startingGear().canApply()) {
       return true;
     }
     // After creation (GM mode) always ask: entries are replaced, or – for a character whose pack items were typed
     // in by hand before this version – added a second time.
     if (character.isCreationComplete() && !ConfirmDialog.confirm(owner, "Equipment pack",
         "Enter the starting equipment again?", replacement(character), "Enter")) {
-      character.restoreStartingEquipment(snapshot);
+      character.startingGear().restore(snapshot);
       return false;
     }
-    character.applyStartingEquipment(snapshot);
+    character.startingGear().apply(snapshot);
     return true;
   }
 
   /** What a re-entry after creation replaces and adds. */
   private static @NonNull String replacement(@NonNull PlayerCharacter character) {
-    List<String> replaced = character.startingEntryNames();
+    List<String> replaced = character.startingGear().entryNames();
     return (replaced.isEmpty() ? "No entries are marked as starting equipment, so nothing is replaced."
         : "These entries are replaced, with their quantities and notes:\n"
             + replaced.stream().map(name -> "• " + name).collect(Collectors.joining("\n")))
@@ -121,7 +123,7 @@ public final class EquipmentPackDialog {
 
   /** What OK does with the inventory. */
   private static @NonNull String info(@NonNull PlayerCharacter character) {
-    if (!character.canApplyStartingEquipment()) {
+    if (!character.startingGear().canApply()) {
       return "The pack items of this character were added by an earlier version; changes here do not touch the "
           + "inventory.";
     }
@@ -147,7 +149,7 @@ public final class EquipmentPackDialog {
       return;
     }
     List<EquipmentPackData> packs = EquipmentCatalog.packsFor(origin.id(), character.getEnabledBooks());
-    Optional<EquipmentPackData> chosen = character.getEquipmentPack();
+    Optional<EquipmentPackData> chosen = character.startingGear().getPack();
     if (packs.isEmpty() && chosen.isEmpty()) {
       controls.add(new Label("No equipment packs for this origin yet."), "span 3");
       return;
@@ -163,7 +165,7 @@ public final class EquipmentPackDialog {
     });
     pack.valueProperty().addListener((obs, old, data) -> {
       if (data != null) {
-        character.chooseEquipmentPack(CatalogRef.of(data.id()));
+        character.startingGear().choosePack(CatalogRef.of(data.id()));
         rebuild();
       }
     });
@@ -172,13 +174,13 @@ public final class EquipmentPackDialog {
   }
 
   private void addPackChoices(@NonNull EquipmentPackData pack) {
-    StartingEquipment selection = character.getStartingEquipment();
+    StartingEquipment selection = character.startingGear().getSelection();
     List<PackChoice> choices = pack.choices();
     for (int i = 0; i < choices.size(); i++) {
       int index = i;
       controls.add(new Label(choices.get(i).label()));
       controls.add(choiceBox(choices.get(i).options(), selection.choices().get(i), option -> {
-        character.chooseEquipmentOption(index, option);
+        character.startingGear().chooseOption(index, option);
         rebuild();
       }), "span 3");
     }
@@ -191,12 +193,12 @@ public final class EquipmentPackDialog {
   }
 
   private void addArms(@NonNull EquipmentPackData pack) {
-    StartingEquipment selection = character.getStartingEquipment();
+    StartingEquipment selection = character.startingGear().getSelection();
     CheckBox free = new CheckBox("Freely configurable arms");
     free.setSelected(selection.freeArms());
     free.setTooltip(new Tooltip(FREE_ARMS_TOOLTIP));
     free.selectedProperty().addListener((obs, old, value) -> {
-      character.setFreeArms(value);
+      character.startingGear().setFreeArms(value);
       rebuild();
     });
     controls.add(new Label("Arms"));
@@ -212,7 +214,8 @@ public final class EquipmentPackDialog {
         controls.add(new Label(allowed.options().getFirst().displayName()), "span 3");
       } else {
         controls.add(armBox(allowed.options(), arm.attachment(), attachment -> {
-          character.chooseArm(index, attachment == null ? ArmSelection.OPEN : ArmSelection.of(attachment));
+          character.startingGear()
+              .chooseArm(index, attachment == null ? ArmSelection.OPEN : ArmSelection.of(attachment));
           rebuild();
         }), "span 3");
       }
@@ -223,7 +226,7 @@ public final class EquipmentPackDialog {
   private void addFreeArm(int slot, @NonNull ArmSelection arm) {
     ComboBox<ArmAttachment> attachment = armBox(Arrays.asList(ArmAttachment.values()), arm.attachment(), value -> {
       if (value != null) {
-        character.chooseArm(slot, ArmSelection.of(value));
+        character.startingGear().chooseArm(slot, ArmSelection.of(value));
         rebuild();
       }
     });
@@ -235,7 +238,7 @@ public final class EquipmentPackDialog {
         return;
       }
       // Typed text goes to the model at once; only the preview follows (a rebuild would steal the focus).
-      character.chooseArm(slot, ArmSelection.ofWeapon(text));
+      character.startingGear().chooseArm(slot, ArmSelection.ofWeapon(text));
       attachment.setValue(null);
       updatePreview();
     });
@@ -244,11 +247,11 @@ public final class EquipmentPackDialog {
   }
 
   private void addTrinket() {
-    String current = character.getStartingEquipment().trinket();
+    String current = character.startingGear().getSelection().trinket();
     TextField trinket = new TextField(current == null ? "" : current);
     trinket.setPromptText("Describe your personal trinket");
     trinket.textProperty().addListener((obs, old, text) -> {
-      character.setTrinket(text);
+      character.startingGear().setTrinket(text);
       updatePreview();
     });
     Button roll = new Button();
@@ -256,7 +259,7 @@ public final class EquipmentPackDialog {
     roll.setTooltip(new Tooltip("Roll on the trinket table (CRB p. 80)"));
     roll.setOnAction(event -> {
       TrinketData rolled = EquipmentCatalog.trinket(ThreadLocalRandom.current().nextInt(1, TrinketData.DIE_SIZE + 1));
-      character.setTrinket(rolled.name());
+      character.startingGear().setTrinket(rolled.name());
       rebuild();
     });
     controls.add(new Label("Personal trinket"));
@@ -268,9 +271,10 @@ public final class EquipmentPackDialog {
   private void addTagSkillItemChoices() {
     StartingEquipmentItems.taggedSkillItems(character).filter(TagSkillItemData::isChoice).forEach(items -> {
       controls.add(new Label(items.skill().displayName() + " items"));
-      controls.add(choiceBox(items.options(), character.getStartingEquipment().tagSkillItems().get(items.skill()),
+      String picked = character.startingGear().getSelection().tagSkillItems().get(items.skill());
+      controls.add(choiceBox(items.options(), picked,
           option -> {
-            character.chooseTagSkillItem(items.skill(), option);
+            character.startingGear().chooseTagSkillItem(items.skill(), option);
             rebuild();
           }), "span 3");
     });
@@ -286,7 +290,7 @@ public final class EquipmentPackDialog {
     List<String> apparel = new ArrayList<>();
     List<String> items = new ArrayList<>();
     List<String> rolls = new ArrayList<>();
-    if (character.getStartingEquipment().pack() != null) {
+    if (character.startingGear().getSelection().pack() != null) {
       for (StartingSource source : StartingSource.values()) {
         PackItems entries = PackInventory.resolve(character, source);
         entries.weapons().forEach(weapon -> weapons.add(weapon.displayName() + quantity(weapon.quantity())));

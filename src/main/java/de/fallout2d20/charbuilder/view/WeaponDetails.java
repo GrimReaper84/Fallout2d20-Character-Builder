@@ -45,7 +45,7 @@ final class WeaponDetails {
     }
     WeaponAttack attack = entry.attack();
     // From the model, not the entry: typed notes change the weapon without a rebuild of the tree's entries.
-    CarriedWeapon weapon = entry.weapon() == null ? null : character.getWeapons().get(entry.index());
+    CarriedWeapon weapon = entry.weapon() == null ? null : character.gear().getWeapons().get(entry.index());
     Optional<WeaponData> data = weapon == null ? WeaponCatalog.byId(WeaponsTab.UNARMED_STRIKE_ID) : weapon.data();
     ModdedWeapon values = weapon == null ? data.map(ModdedWeapon::of).orElse(null)
         : ModdedWeapon.of(weapon).orElse(null);
@@ -72,7 +72,7 @@ final class WeaponDetails {
     detailRow(rows, "Qualities", withRemoved(withBase(text(attack.qualities()), base, values,
         modded -> String.join(", ", modded.qualities())), values));
     detailRow(rows, "Ammunition", withBase(new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
-        .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.ammunition(id))
+        .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.gear().ammunition(id))
         .collect(Collectors.joining(", "))), base, values, modded -> String.join(", ", modded.ammunition())));
     if (values != null && (data.isPresent() || values.weight() != null)) {
       boolean integrated = weapon != null && weapon.isIntegrated();
@@ -88,12 +88,12 @@ final class WeaponDetails {
       int index = entry.index();
       if (weapon.isCounted()) {
         detailRow(rows, "Quantity", NumberField.of(weapon.quantity(), 1, quantity -> {
-          character.setWeaponQuantity(index, quantity);
+          character.gear().setWeaponQuantity(index, quantity);
           callbacks.onChanged().run();
         }));
       }
       OverviewParts.notesRow(rows, weapon.notes(), text -> {
-        character.setWeaponNotes(index, text);
+        character.gear().setWeaponNotes(index, text);
         callbacks.onEdited().run();
       });
     }
@@ -136,7 +136,7 @@ final class WeaponDetails {
     Attribute attribute = attack.attribute();
     if (skill != null && attribute != null) {
       roll.setTooltip(new Tooltip(attribute.abbreviation() + " + " + skill.displayName()
-          + (character.isTagged(skill) ? " (Tag skill)" : "")));
+          + (character.abilities().isTagged(skill) ? " (Tag skill)" : "")));
     }
     return roll;
   }
@@ -160,7 +160,7 @@ final class WeaponDetails {
     box.setOnAction(event -> {
       Skill chosen = box.getValue();
       if (chosen != null) {
-        character.setCustomWeaponSkill(index, chosen);
+        character.gear().setCustomWeaponSkill(index, chosen);
         onChanged.run();
       }
     });

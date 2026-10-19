@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.model.character;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Stored parts of a skill rank. The effective rank is computed by {@link PlayerCharacter#skillRank}.
+ * Stored parts of a skill rank. The effective rank is computed by {@link Abilities#skillRank}.
  *
  * <p>CRB p. 58: a Tag skill starts at rank 2, so the two free ranks are not stored here but derived
  * from {@code tagged}.
@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
  * @param creationRanks ranks bought with skill points during character creation
  * @param advancementRanks ranks gained by levelling up after creation and applied
  * @param stagedRanks ranks gained by levelling up that are chosen but not applied yet; they count
- *     like applied ranks, but can still be taken back (see {@link PlayerCharacter#applyAdvancement()})
+ *     like applied ranks, but can still be taken back (see {@link Advancement#apply()})
  * @param gmRanks correction by the GM in free edit (D2), may be negative; the effective rank never drops
  *     below 0
  */

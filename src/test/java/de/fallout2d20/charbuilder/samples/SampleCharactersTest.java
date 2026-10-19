@@ -57,14 +57,14 @@ class SampleCharactersTest {
     }
 
     PlayerCharacter pending = load("level-up-pending.json");
-    assertEquals(5, pending.getLevel());
-    assertEquals(2, pending.advancementSkillRanksLeft());
-    assertEquals(2, pending.advancementPerksLeft());
+    assertEquals(5, pending.advancement().getLevel());
+    assertEquals(2, pending.advancement().skillRanksLeft());
+    assertEquals(2, pending.advancement().perksLeft());
 
     PlayerCharacter veteran = load("veteran-overflow.json");
-    assertEquals(12, veteran.getLevel());
-    assertTrue(veteran.getItems().size() >= 40);
-    assertFalse(veteran.getWeapons().isEmpty());
+    assertEquals(12, veteran.advancement().getLevel());
+    assertTrue(veteran.gear().getItems().size() >= 40);
+    assertFalse(veteran.gear().getWeapons().isEmpty());
   }
 
   private PlayerCharacter load(String name) throws Exception {

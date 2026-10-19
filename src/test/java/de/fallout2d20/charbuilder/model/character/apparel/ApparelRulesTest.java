@@ -22,7 +22,7 @@ class ApparelRulesTest {
   }
 
   private static void wear(PlayerCharacter character, String id, @Nullable HitLocation location) {
-    character.addApparel(WornApparel.of(CatalogRef.of(id)).withLocation(location));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of(id)).withLocation(location));
   }
 
   private static List<String> hints(PlayerCharacter character) {
@@ -35,11 +35,11 @@ class ApparelRulesTest {
     wear(survivor, "hazmat-suit", null);
     wear(survivor, "raider-chest-piece", null);
     wear(survivor, "metal-chest-piece", null);
-    assertTrue(survivor.getApparel().get(2).carried(), "a clashing piece starts carried");
+    assertTrue(survivor.gear().getApparel().get(2).carried(), "a clashing piece starts carried");
     wear(survivor, "leather-arm", null);
     wear(survivor, "standard-plating", null);
-    for (int i = 0; i < survivor.getApparel().size(); i++) {
-      survivor.setApparelCarried(i, false);
+    for (int i = 0; i < survivor.gear().getApparel().size(); i++) {
+      survivor.gear().setApparelCarried(i, false);
     }
     assertEquals(List.of("Armor cannot be worn over an outfit (CRB p. 130).",
         "Raider Chest Piece and Metal Chest Piece both cover the Torso; the higher values count.",
@@ -61,11 +61,11 @@ class ApparelRulesTest {
     PlayerCharacter survivor = character("survivor");
     wear(survivor, "drifter-outfit", null);
     wear(survivor, "metal-helmet", null);
-    assertTrue(survivor.getApparel().get(1).carried());
+    assertTrue(survivor.gear().getApparel().get(1).carried());
     PlayerCharacter soldier = character("survivor");
     wear(soldier, "combat-leg", HitLocation.LEFT_LEG);
     wear(soldier, "drifter-outfit", null);
-    assertTrue(soldier.getApparel().get(1).carried());
+    assertTrue(soldier.gear().getApparel().get(1).carried());
     assertEquals(List.of(), hints(soldier));
   }
 
@@ -76,8 +76,8 @@ class ApparelRulesTest {
     wear(survivor, "drifter-outfit", null);
     wear(survivor, "leather-arm", null);
     wear(survivor, "standard-plating", null);
-    survivor.setApparelCarried(1, true);
-    survivor.setApparelCarried(2, true);
+    survivor.gear().setApparelCarried(1, true);
+    survivor.gear().setApparelCarried(2, true);
     assertEquals(List.of(), hints(survivor));
   }
 
@@ -92,7 +92,7 @@ class ApparelRulesTest {
   @Test
   void itemsOutsideTheCatalogAreReported() {
     PlayerCharacter survivor = character("survivor");
-    survivor.addApparel(WornApparel.of(CatalogRef.fromLegacyName("Spacesuit")));
+    survivor.gear().addApparel(WornApparel.of(CatalogRef.fromLegacyName("Spacesuit")));
     assertEquals(List.of("\"Spacesuit\" is not an item of the supported books."), hints(survivor));
   }
 

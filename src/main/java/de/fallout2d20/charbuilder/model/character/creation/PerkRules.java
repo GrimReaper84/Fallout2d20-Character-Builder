@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.perk.PerkRequirements;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
+import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
@@ -49,15 +50,15 @@ public final class PerkRules {
    */
   public static int budget(@NonNull PlayerCharacter character) {
     if (character.isCreationComplete()) {
-      return character.getProgression().pendingPerks();
+      return character.advancement().getProgression().pendingPerks();
     }
-    return character.getLevel() + OriginRules.extraPerks(character);
+    return character.advancement().getLevel() + OriginRules.extraPerks(character);
   }
 
   /** Perk ranks still to choose (after creation: to stage); negative if too many are chosen. */
   public static int perksLeft(@NonNull PlayerCharacter character) {
     if (character.isCreationComplete()) {
-      return character.advancementPerksLeft();
+      return character.advancement().perksLeft();
     }
     return budget(character) - character.getPerks().stream().mapToInt(PerkSelection::rank).sum();
   }
@@ -147,13 +148,14 @@ public final class PerkRules {
   /** Attributes Intense Training may raise: those below 10 (CRB p. 66). */
   public static @NonNull List<Attribute> attributeOptions(@NonNull PlayerCharacter character) {
     return Arrays.stream(Attribute.values())
-        .filter(attribute -> character.attributeValue(attribute) < INTENSE_TRAINING_MAXIMUM).toList();
+        .filter(attribute -> character.abilities().attributeValue(attribute) < INTENSE_TRAINING_MAXIMUM).toList();
   }
 
   /** Skills Tag! may tag: not tagged yet and not forbidden by a trait (CRB p. 73, WG p. 15). */
   public static @NonNull List<Skill> skillOptions(@NonNull PlayerCharacter character) {
+    Abilities abilities = character.abilities();
     return Arrays.stream(Skill.values())
-        .filter(skill -> !character.isTagged(skill) && character.tagForbiddenBy(skill).isEmpty()).toList();
+        .filter(skill -> !abilities.isTagged(skill) && abilities.tagForbiddenBy(skill).isEmpty()).toList();
   }
 
   /**
@@ -169,12 +171,13 @@ public final class PerkRules {
     for (Attribute attribute : Attribute.values()) {
       Integer minimum = requirements.attributes().get(attribute);
       if (minimum != null) {
-        status.put(attribute.abbreviation() + " " + minimum, character.attributeValue(attribute) >= minimum);
+        status.put(attribute.abbreviation() + " " + minimum,
+            character.abilities().attributeValue(attribute) >= minimum);
       }
     }
     int level = requirements.levelForRank(rank);
     if (level > 1) {
-      status.put("level " + level, character.getLevel() >= level);
+      status.put("level " + level, character.advancement().getLevel() >= level);
     }
     if (requirements.notRobot()) {
       status.put("no robot", !character.getOriginData().map(OriginData::robot).orElse(false));
@@ -252,7 +255,7 @@ public final class PerkRules {
       Set<Attribute> chosen = EnumSet.noneOf(Attribute.class);
       chosen.addAll(selection.attributeChoices());
       for (Attribute attribute : chosen) {
-        if (character.attributeValue(attribute) > INTENSE_TRAINING_MAXIMUM) {
+        if (character.abilities().attributeValue(attribute) > INTENSE_TRAINING_MAXIMUM) {
           problems.add(new CreationProblem(HintArea.PERKS, name, name + " cannot raise " + attribute.displayName()
               + " above " + INTENSE_TRAINING_MAXIMUM + "."));
         }
@@ -279,11 +282,11 @@ public final class PerkRules {
   private static void checkTaggedSkills(@NonNull PlayerCharacter character, @NonNull PerkSelection selection,
       @NonNull String name, @NonNull List<CreationProblem> problems) {
     for (Skill skill : selection.skillChoices()) {
-      if (character.isTaggedByOrigin(skill)) {
+      if (character.abilities().isTaggedByOrigin(skill)) {
         problems.add(new CreationProblem(HintArea.PERKS, name, name + ": " + skill.displayName()
             + " is already a Tag skill of the origin."));
       }
-      Optional<TraitDefinition> forbidding = character.tagForbiddenBy(skill);
+      Optional<TraitDefinition> forbidding = character.abilities().tagForbiddenBy(skill);
       if (forbidding.isPresent()) {
         problems.add(new CreationProblem(HintArea.PERKS, name, name + ": " + skill.displayName()
             + " cannot be a Tag skill with " + forbidding.get().name() + "."));

@@ -65,13 +65,13 @@ class CharacterStoreTest {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.completeCreation();
     character.setGmMode(true);
-    character.adjustSkillRankAsGm(Skill.REPAIR, 2);
+    character.abilities().adjustSkillRankAsGm(Skill.REPAIR, 2);
     Path file = dir.resolve("gm.json");
     store.save(character, file);
 
     PlayerCharacter loaded = store.load(file).character();
-    assertEquals(2, loaded.skillState(Skill.REPAIR).gmRanks());
-    assertEquals(2, loaded.skillRank(Skill.REPAIR));
+    assertEquals(2, loaded.abilities().skillState(Skill.REPAIR).gmRanks());
+    assertEquals(2, loaded.abilities().skillRank(Skill.REPAIR));
     assertFalse(loaded.isGmMode());
     JsonNode skills = JSON.readTree(file.toFile()).get("skills");
     assertEquals(2, skills.get(Skill.REPAIR.id()).get("gmRanks").asInt());
@@ -90,14 +90,14 @@ class CharacterStoreTest {
     assertNull(written.get("injuries"));
     assertNull(written.get("notes"));
 
-    character.setRads(2);
-    character.setCurrentHp(5);
-    character.setLuckPoints(1);
-    character.setInjured(HitLocation.RIGHT_LEG, true);
-    character.setInjured(HitLocation.HEAD, true);
-    character.setSessionNotes("Bleeding torso treated");
+    character.session().setRads(2);
+    character.session().setCurrentHp(5);
+    character.session().setLuckPoints(1);
+    character.session().setInjured(HitLocation.RIGHT_LEG, true);
+    character.session().setInjured(HitLocation.HEAD, true);
+    character.session().setNotes("Bleeding torso treated");
     store.save(character, file);
-    assertEquals(character.getVitals(), store.load(file).character().getVitals());
+    assertEquals(character.session().getVitals(), store.load(file).character().session().getVitals());
     assertEquals("[\"HEAD\",\"RIGHT_LEG\"]", JSON.readTree(file.toFile()).get("vitals").get("injuries").toString());
   }
 
@@ -105,22 +105,23 @@ class CharacterStoreTest {
   @Test
   void roundTripsTheInventory() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(2).withNotes("for Nora"));
-    character.addItem(CarriedItem.of(CatalogRef.of("tumblers-today")).withIssue("Open Any Lock in 5 Seconds Flat"));
-    character.addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "Cute")));
-    character.setCaps(123);
-    character.addApparel(WornApparel.of(CatalogRef.of("tough-clothing")));
-    character.addApparel(WornApparel.of(CatalogRef.of("drifter-outfit")));
-    character.setMaterials(new Materials(3, 2, 1, 0));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(2).withNotes("for Nora"));
+    character.gear()
+        .addItem(CarriedItem.of(CatalogRef.of("tumblers-today")).withIssue("Open Any Lock in 5 Seconds Flat"));
+    character.gear().addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "Cute")));
+    character.gear().setCaps(123);
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("tough-clothing")));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("drifter-outfit")));
+    character.gear().setMaterials(new Materials(3, 2, 1, 0));
     Path file = dir.resolve("inventory.json");
     store.save(character, file);
 
     PlayerCharacter loaded = store.load(file).character();
-    assertEquals(character.getItems(), loaded.getItems());
-    assertEquals(123, loaded.getCaps());
-    assertEquals(List.of(false, true), loaded.getApparel().stream().map(WornApparel::carried).toList());
+    assertEquals(character.gear().getItems(), loaded.gear().getItems());
+    assertEquals(123, loaded.gear().getCaps());
+    assertEquals(List.of(false, true), loaded.gear().getApparel().stream().map(WornApparel::carried).toList());
     assertNull(JSON.readTree(file.toFile()).get("apparel").get(0).get("carried"), "worn is not written");
-    assertEquals(new Materials(3, 2, 1, 0), loaded.getMaterials());
+    assertEquals(new Materials(3, 2, 1, 0), loaded.gear().getMaterials());
 
     Path empty = dir.resolve("empty.json");
     store.save(PlayerCharacter.createNew(), empty);
@@ -138,17 +139,17 @@ class CharacterStoreTest {
   void roundTripsHolotapesAndStartingSources() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.chooseEquipmentPack(CatalogRef.of("settler"));
-    character.chooseEquipmentOption(0, "Pipe wrench");
-    character.applyStartingEquipment(character.getStartingEquipment());
-    character.addItem(CarriedItem.of(new Holotape("Vault 81 code", "4-8-15")));
+    character.startingGear().choosePack(CatalogRef.of("settler"));
+    character.startingGear().chooseOption(0, "Pipe wrench");
+    character.startingGear().apply(character.startingGear().getSelection());
+    character.gear().addItem(CarriedItem.of(new Holotape("Vault 81 code", "4-8-15")));
     Path file = dir.resolve("starting.json");
     store.save(character, file);
 
     PlayerCharacter loaded = store.load(file).character();
-    assertEquals(character.getWeapons(), loaded.getWeapons());
-    assertEquals(character.getApparel(), loaded.getApparel());
-    assertEquals(character.getItems(), loaded.getItems());
+    assertEquals(character.gear().getWeapons(), loaded.gear().getWeapons());
+    assertEquals(character.gear().getApparel(), loaded.gear().getApparel());
+    assertEquals(character.gear().getItems(), loaded.gear().getItems());
     JsonNode written = JSON.readTree(file.toFile());
     assertEquals("PACK", written.get("weapons").get(0).get("startingSource").asText());
     assertEquals("4-8-15", written.get("items").get(1).get("holotape").get("label").asText());
@@ -157,7 +158,7 @@ class CharacterStoreTest {
     ((ObjectNode) edited.get("weapons").get(0)).put("startingSource", "FROM_THE_FUTURE");
     ((ObjectNode) edited.get("weapons").get(1)).remove("startingSource");
     JSON.writeValue(file.toFile(), edited);
-    List<CarriedWeapon> weapons = store.load(file).character().getWeapons();
+    List<CarriedWeapon> weapons = store.load(file).character().gear().getWeapons();
     assertNull(weapons.get(0).startingSource());
     assertNull(weapons.get(1).startingSource());
   }
@@ -166,7 +167,7 @@ class CharacterStoreTest {
   @Test
   void rejectsAHolotapeWithoutName() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addItem(CarriedItem.of(new Holotape("Code", "")));
+    character.gear().addItem(CarriedItem.of(new Holotape("Code", "")));
     Path file = dir.resolve("holotape.json");
     store.save(character, file);
     ObjectNode written = (ObjectNode) JSON.readTree(file.toFile());
@@ -180,7 +181,7 @@ class CharacterStoreTest {
   void earlierAddedPackItemsAreNotSynced() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.chooseEquipmentPack(CatalogRef.of("settler"));
+    character.startingGear().choosePack(CatalogRef.of("settler"));
     Path file = dir.resolve("added.json");
     store.save(character, file);
     ObjectNode written = (ObjectNode) JSON.readTree(file.toFile());
@@ -188,11 +189,11 @@ class CharacterStoreTest {
     JSON.writeValue(file.toFile(), written);
 
     PlayerCharacter loaded = store.load(file).character();
-    assertTrue(loaded.isPackItemsAdded());
-    assertFalse(loaded.canApplyStartingEquipment());
-    loaded.setFreeTag(Skill.LOCKPICK, true);
-    assertEquals("", loaded.getInventoryNotes(), "no Tag skill roll line");
-    assertTrue(loaded.getItems().isEmpty());
+    assertTrue(loaded.startingGear().isPackItemsAdded());
+    assertFalse(loaded.startingGear().canApply());
+    loaded.abilities().setFreeTag(Skill.LOCKPICK, true);
+    assertEquals("", loaded.gear().getNotes(), "no Tag skill roll line");
+    assertTrue(loaded.gear().getItems().isEmpty());
   }
 
   @Test
@@ -205,7 +206,7 @@ class CharacterStoreTest {
     CharacterFile loaded = store.load(file);
     assertNull(loaded.importReport());
     assertEquals("Nora", loaded.character().getName());
-    assertEquals(5, loaded.character().attributeValue(Attribute.LUCK));
+    assertEquals(5, loaded.character().abilities().attributeValue(Attribute.LUCK));
     JsonNode written = JSON.readTree(file.toFile());
     assertEquals("fallout2d20-character-builder", written.get("format").asText());
     assertEquals(1, written.get("formatVersion").asInt());
@@ -233,15 +234,15 @@ class CharacterStoreTest {
     assertNull(reloaded.importReport());
     assertTrue(after.isLegacyImport());
     for (Attribute attribute : Attribute.values()) {
-      assertEquals(before.attributeValue(attribute), after.attributeValue(attribute));
+      assertEquals(before.abilities().attributeValue(attribute), after.abilities().attributeValue(attribute));
     }
     for (Skill skill : Skill.values()) {
-      assertEquals(before.skillRank(skill), after.skillRank(skill));
-      assertEquals(before.skillState(skill), after.skillState(skill));
+      assertEquals(before.abilities().skillRank(skill), after.abilities().skillRank(skill));
+      assertEquals(before.abilities().skillState(skill), after.abilities().skillState(skill));
     }
     assertEquals(before.getPerks(), after.getPerks());
     assertEquals(before.getTraits(), after.getTraits());
-    assertEquals(before.getVitals(), after.getVitals());
+    assertEquals(before.session().getVitals(), after.session().getVitals());
     assertEquals(before.getOrigin(), after.getOrigin());
     assertEquals(before.getLegacyImport().payload(), after.getLegacyImport().payload());
     assertEquals("2026-10-15", after.getLegacyImport().importedOn());
@@ -348,15 +349,15 @@ class CharacterStoreTest {
     assertFalse(empty.has("inventoryNotes"), "omitted when blank");
 
     settler.chooseOrigin(CatalogRef.of("survivor"));
-    settler.setFreeTag(Skill.THROWING, true);
-    settler.chooseEquipmentPack(CatalogRef.of("raider"));
-    settler.chooseEquipmentOption(1, "1 dose of RadAway");
-    settler.chooseTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
-    settler.setInventoryNotes("Owes 20 caps to the Diamond City bar");
+    settler.abilities().setFreeTag(Skill.THROWING, true);
+    settler.startingGear().choosePack(CatalogRef.of("raider"));
+    settler.startingGear().chooseOption(1, "1 dose of RadAway");
+    settler.startingGear().chooseTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
+    settler.gear().setNotes("Owes 20 caps to the Diamond City bar");
     store.save(settler, file);
     PlayerCharacter loaded = store.load(file).character();
-    assertEquals(settler.getStartingEquipment(), loaded.getStartingEquipment());
-    assertEquals("Owes 20 caps to the Diamond City bar", loaded.getInventoryNotes());
+    assertEquals(settler.startingGear().getSelection(), loaded.startingGear().getSelection());
+    assertEquals("Owes 20 caps to the Diamond City bar", loaded.gear().getNotes());
     JsonNode written = JSON.readTree(file.toFile()).get("startingEquipment");
     assertEquals("[null,\"1 dose of RadAway\",null]", written.get("choices").toString());
     assertEquals("2 + 1 CD tomahawks", written.get("tagSkillItems").get("throwing").asText());
@@ -368,13 +369,13 @@ class CharacterStoreTest {
   void roundTripsMisterHandyArms() throws Exception {
     PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
-    handy.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
-    handy.setFreeArms(true);
-    handy.chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
-    handy.chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
+    handy.startingGear().choosePack(CatalogRef.of("nurse-handy"));
+    handy.startingGear().setFreeArms(true);
+    handy.startingGear().chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
+    handy.startingGear().chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
     Path file = dir.resolve("handy.json");
     store.save(handy, file);
-    assertEquals(handy.getStartingEquipment(), store.load(file).character().getStartingEquipment());
+    assertEquals(handy.startingGear().getSelection(), store.load(file).character().startingGear().getSelection());
     assertEquals("[{\"attachment\":\"PINCER\"},{\"attachment\":\"BUZZ_SAW\"},{\"weapon\":\"Hunting rifle\"}]",
         JSON.readTree(file.toFile()).get("startingEquipment").get("arms").toString());
   }
@@ -384,8 +385,8 @@ class CharacterStoreTest {
   void opensPicksThatNoLongerFitTheCatalog() throws Exception {
     PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
-    handy.setFreeTag(Skill.EXPLOSIVES, true);
-    handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    handy.abilities().setFreeTag(Skill.EXPLOSIVES, true);
+    handy.startingGear().choosePack(CatalogRef.of("mister-gutsy"));
     Path file = dir.resolve("stale.json");
     store.save(handy, file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
@@ -395,7 +396,7 @@ class CharacterStoreTest {
     ((ArrayNode) equipment.get("arms")).remove(2);
     Files.writeString(file, node.toString());
 
-    StartingEquipment loaded = store.load(file).character().getStartingEquipment();
+    StartingEquipment loaded = store.load(file).character().startingGear().getSelection();
     assertEquals(List.of(), loaded.choices(), "Mister Gutsy has no choices");
     assertEquals(Map.of(), loaded.tagSkillItems());
     assertEquals(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM), ArmSelection.of(ArmAttachment.BUZZ_SAW),
@@ -407,23 +408,23 @@ class CharacterStoreTest {
   void roundTripsAdvancement() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.setFreeTag(Skill.SNEAK, true);
+    character.abilities().setFreeTag(Skill.SNEAK, true);
     character.completeCreation();
-    character.addXp(1_000);
-    character.stageSkillRank(Skill.REPAIR, 1);
+    character.advancement().addXp(1_000);
+    character.advancement().stageSkillRank(Skill.REPAIR, 1);
     character.addPerkRank(CatalogRef.of("tag"), null, Skill.SCIENCE);
     Path file = dir.resolve("advanced.json");
     store.save(character, file);
 
     PlayerCharacter loaded = store.load(file).character();
-    assertEquals(5, loaded.getLevel());
-    assertEquals(new Progression(4, 4), loaded.getProgression());
-    assertEquals(1, loaded.skillState(Skill.REPAIR).stagedRanks());
+    assertEquals(5, loaded.advancement().getLevel());
+    assertEquals(new Progression(4, 4), loaded.advancement().getProgression());
+    assertEquals(1, loaded.abilities().skillState(Skill.REPAIR).stagedRanks());
     assertEquals(1, loaded.getPerks().getFirst().stagedRanks());
     assertEquals(List.of(Skill.SCIENCE), loaded.getPerks().getFirst().skillChoices());
     assertEquals(Set.of(Skill.SNEAK), loaded.getStartingTagSkills());
-    assertEquals(3, loaded.advancementSkillRanksLeft());
-    assertEquals(3, loaded.advancementPerksLeft());
+    assertEquals(3, loaded.advancement().skillRanksLeft());
+    assertEquals(3, loaded.advancement().perksLeft());
     JsonNode written = JSON.readTree(file.toFile());
     assertEquals(List.of("sneak"), List.of(written.get("startingTagSkills").get(0).asText()));
   }
@@ -432,33 +433,35 @@ class CharacterStoreTest {
   @Test
   void roundTripsWeaponsAndAmmunition() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withNotes("Long Barrel"));
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")).withQuantity(3));
-    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "Piercing 1",
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withNotes("Long Barrel"));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")).withQuantity(3));
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "Piercing 1",
         "Energy", 1, WeaponRange.MEDIUM, "Close Quarters", "fusion-cell")));
-    character.setAmmunition("10mm", 34);
+    character.gear().setAmmunition("10mm", 34);
     Path file = dir.resolve("weapons.json");
     store.save(character, file);
 
     PlayerCharacter loaded = store.load(file).character();
-    assertEquals(character.getWeapons(), loaded.getWeapons());
-    assertEquals(Map.of("10mm", 34), loaded.getAmmunition());
+    assertEquals(character.gear().getWeapons(), loaded.gear().getWeapons());
+    assertEquals(Map.of("10mm", 34), loaded.gear().getAmmunition());
   }
 
   /** D4: installed mods, custom mod slots and an unknown mod id survive a round trip; older files have none. */
   @Test
   void roundTripsWeaponMods() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
-    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "",
+        "Energy", 1,
         WeaponRange.MEDIUM, "", null, EnumSet.of(ModSlot.BARREL, ModSlot.SIGHTS))));
-    character.setWeaponMod(1, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withMod(ModSlot.MUZZLE, CatalogRef.of("gone")));
+    character.gear().setWeaponMod(1, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withMod(ModSlot.MUZZLE,
+        CatalogRef.of("gone")));
     Path file = dir.resolve("mods.json");
     store.save(character, file);
 
-    assertEquals(character.getWeapons(), store.load(file).character().getWeapons());
+    assertEquals(character.gear().getWeapons(), store.load(file).character().gear().getWeapons());
     JsonNode written = JSON.readTree(file.toFile());
     assertEquals("small-guns-hardened", written.get("weapons").get(0).get("mods").get("RECEIVER").get("id").asText());
   }
@@ -467,8 +470,9 @@ class CharacterStoreTest {
   @Test
   void weaponsWithoutModsWriteNoModFields() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "",
+        "Energy", 1,
         WeaponRange.MEDIUM, "", null)));
     Path file = dir.resolve("plain.json");
     store.save(character, file);
@@ -477,15 +481,16 @@ class CharacterStoreTest {
     assertFalse(weapons.get(0).has("mods"));
     assertFalse(weapons.get(1).has("mods"));
     assertFalse(weapons.get(1).get("custom").has("modSlots"));
-    assertEquals(character.getWeapons(), store.load(file).character().getWeapons());
+    assertEquals(character.gear().getWeapons(), store.load(file).character().gear().getWeapons());
   }
 
   /** Slot names this version does not know (a newer file) are skipped instead of failing the load. */
   @Test
   void unknownModSlotNamesAreSkipped() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "", "Energy", 1,
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Alien Blaster", Skill.ENERGY_WEAPONS, 5, "",
+        "Energy", 1,
         WeaponRange.MEDIUM, "", null, EnumSet.of(ModSlot.BARREL))));
     Path file = dir.resolve("future.json");
     store.save(character, file);
@@ -494,7 +499,7 @@ class CharacterStoreTest {
     ((ObjectNode) node.get("weapons").get(1).get("custom")).putArray("modSlots").add("MAGAZINE").add("BARREL");
     JSON.writeValue(file.toFile(), node);
 
-    List<CarriedWeapon> loaded = store.load(file).character().getWeapons();
+    List<CarriedWeapon> loaded = store.load(file).character().gear().getWeapons();
     assertTrue(loaded.getFirst().mods().isEmpty());
     assertEquals(Set.of(ModSlot.BARREL), loaded.get(1).custom().modSlots());
   }
@@ -503,19 +508,19 @@ class CharacterStoreTest {
   @Test
   void roundTripsApparel() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addApparel(WornApparel.of(CatalogRef.of("raider-arm")).withLocation(HitLocation.LEFT_ARM)
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("raider-arm")).withLocation(HitLocation.LEFT_ARM)
         .withNotes("Studded"));
-    character.addApparel(WornApparel.of(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR,
+    character.gear().addApparel(WornApparel.of(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR,
         Set.of(HitLocation.HEAD), 3, 2, 0, false, 0)));
     Path file = dir.resolve("apparel.json");
     store.save(character, file);
-    assertEquals(character.getApparel(), store.load(file).character().getApparel());
+    assertEquals(character.gear().getApparel(), store.load(file).character().gear().getApparel());
   }
 
   @Test
   void characterInCreationWritesNoStartingTagSkills() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.setFreeTag(Skill.SNEAK, true);
+    character.abilities().setFreeTag(Skill.SNEAK, true);
     Path file = dir.resolve("creation.json");
     store.save(character, file);
     assertFalse(JSON.readTree(file.toFile()).has("startingTagSkills"));
@@ -530,14 +535,14 @@ class CharacterStoreTest {
         .creationComplete(true).startingEquipment(settler).build();
     Path file = dir.resolve("complete.json");
     store.save(complete, file);
-    assertEquals(List.of("Spoon"), store.load(file).character().getStartingEquipment().choices());
+    assertEquals(List.of("Spoon"), store.load(file).character().startingGear().getSelection().choices());
   }
 
   @Test
   void rejectsUnknownAttachmentsAndSkills() throws Exception {
     PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
-    handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    handy.startingGear().choosePack(CatalogRef.of("mister-gutsy"));
     Path file = dir.resolve("arms.json");
     store.save(handy, file);
     ObjectNode valid = (ObjectNode) JSON.readTree(file.toFile());
@@ -560,7 +565,7 @@ class CharacterStoreTest {
   void roundTripsCompletionAndStartingLevel() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.setStartingLevel(2);
+    character.advancement().setStartingLevel(2);
     Path file = dir.resolve("level2.json");
     store.save(character, file);
     assertFalse(JSON.readTree(file.toFile()).has("startingLevel"), "omitted during creation");
@@ -569,14 +574,14 @@ class CharacterStoreTest {
     store.save(character, file);
     PlayerCharacter loaded = store.load(file).character();
     assertTrue(loaded.isCreationComplete());
-    assertEquals(OptionalInt.of(2), loaded.getStartingLevel());
+    assertEquals(OptionalInt.of(2), loaded.advancement().getStartingLevel());
     assertEquals(2, JSON.readTree(file.toFile()).get("startingLevel").asInt());
   }
 
   @Test
   void rejectsInvalidStartingLevel() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.setStartingLevel(2);
+    character.advancement().setStartingLevel(2);
     character.completeCreation();
     Path file = dir.resolve("invalid-level.json");
     store.save(character, file);

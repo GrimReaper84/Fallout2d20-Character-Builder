@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.view;
 
+import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.AttributeRules;
@@ -23,7 +24,7 @@ final class AttributeSection {
     if (locked) {
       for (Attribute attribute : Attribute.values()) {
         pane.add(new Label(attribute.displayName()));
-        pane.add(OverviewParts.baselineMarked(Integer.toString(character.attributeValue(attribute)),
+        pane.add(OverviewParts.baselineMarked(Integer.toString(character.abilities().attributeValue(attribute)),
             character.isLegacyImport()), "span 3");
       }
       return pane;
@@ -35,7 +36,7 @@ final class AttributeSection {
     }
     for (Attribute attribute : Attribute.values()) {
       pane.add(new Label(attribute.displayName()));
-      Label value = new Label(Integer.toString(character.attributeValue(attribute)));
+      Label value = new Label(Integer.toString(character.abilities().attributeValue(attribute)));
       value.setMinWidth(StepButtons.NUMBER_WIDTH);
       pane.add(value);
       boolean canLower = AttributeRules.canLower(character, attribute);
@@ -55,7 +56,8 @@ final class AttributeSection {
     boolean allowed = delta > 0 ? AttributeRules.canRaise(character, attribute)
         : AttributeRules.canLower(character, attribute);
     if (allowed) {
-      character.setAttributeAllocation(attribute, character.attributeAllocation(attribute) + delta);
+      Abilities abilities = character.abilities();
+      abilities.setAttributeAllocation(attribute, abilities.attributeAllocation(attribute) + delta);
     }
     onChanged.run();
   }

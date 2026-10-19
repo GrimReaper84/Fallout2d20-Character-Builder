@@ -58,7 +58,7 @@ public final class ApparelRules {
     if (kind.isEmpty()) {
       return false;
     }
-    List<WornApparel> worn = character.getWornApparel();
+    List<WornApparel> worn = character.gear().getWornApparel();
     if ((kind.get() == ApparelKind.ARMOR && has(worn, ApparelKind.OUTFIT))
         || (kind.get() == ApparelKind.OUTFIT && has(worn, ApparelKind.ARMOR))) {
       return true;
@@ -81,10 +81,10 @@ public final class ApparelRules {
   /** Hints about the worn pieces (carried ones only have to be catalog items). */
   public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
-    character.getApparel().stream().filter(item -> item.values().isEmpty()).forEach(item ->
+    character.gear().getApparel().stream().filter(item -> item.values().isEmpty()).forEach(item ->
         problems.add(new CreationProblem(HintArea.ARMOR, TOPIC,
             "\"" + item.displayName() + "\" is not an item of the supported books.")));
-    List<WornApparel> worn = character.getWornApparel();
+    List<WornApparel> worn = character.gear().getWornApparel();
     boolean robot = isRobot(character);
     List<HitLocation> body = character.hitLocations();
     if (has(worn, ApparelKind.OUTFIT) && has(worn, ApparelKind.ARMOR)) {

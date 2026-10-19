@@ -20,13 +20,13 @@ class StartingEquipmentItemsTest {
   @Test
   void tagPerkAfterCreationGrantsNoItems() {
     PlayerCharacter settler = character("survivor");
-    settler.chooseEquipmentPack(CatalogRef.of("settler"));
-    settler.setFreeTag(Skill.LOCKPICK, true);
+    settler.startingGear().choosePack(CatalogRef.of("settler"));
+    settler.abilities().setFreeTag(Skill.LOCKPICK, true);
     settler.completeCreation();
-    settler.addXp(1_000);
+    settler.advancement().addXp(1_000);
     settler.addPerkRank(CatalogRef.of("tag"), null, Skill.SCIENCE);
-    settler.applyAdvancement();
-    assertTrue(settler.isTagged(Skill.SCIENCE));
+    settler.advancement().apply();
+    assertTrue(settler.abilities().isTagged(Skill.SCIENCE));
     assertEquals(Set.of(Skill.LOCKPICK), settler.getStartingTagSkills());
     assertEquals(List.of(Skill.LOCKPICK),
         StartingEquipmentItems.taggedSkillItems(settler).map(items -> items.skill()).toList());
@@ -36,12 +36,12 @@ class StartingEquipmentItemsTest {
   @Test
   void settlerWithTagSkillItems() {
     PlayerCharacter settler = character("survivor");
-    settler.chooseEquipmentPack(CatalogRef.of("settler"));
-    settler.chooseEquipmentOption(0, "Pipe wrench");
-    settler.setTrinket("Small wooden ocarina");
-    settler.setFreeTag(Skill.LOCKPICK, true);
-    settler.setFreeTag(Skill.REPAIR, true);
-    settler.setFreeTag(Skill.SCIENCE, true);
+    settler.startingGear().choosePack(CatalogRef.of("settler"));
+    settler.startingGear().chooseOption(0, "Pipe wrench");
+    settler.startingGear().setTrinket("Small wooden ocarina");
+    settler.abilities().setFreeTag(Skill.LOCKPICK, true);
+    settler.abilities().setFreeTag(Skill.REPAIR, true);
+    settler.abilities().setFreeTag(Skill.SCIENCE, true);
     assertEquals(List.of("Tough clothing", "Pipe gun", "6 + 3 CD rounds of .38 ammunition",
         "2 rolls on the random food table (CRB p. 202)", "Pipe wrench", "Personal trinket: Small wooden ocarina",
         "Lockpick: 4 + 2 CD bobby pins", "Repair: Multi-Tool", "Science: Lab coat, 1 dose of Mentats"),
@@ -52,17 +52,17 @@ class StartingEquipmentItemsTest {
   @Test
   void openChoicesSayWhatIsMissing() {
     PlayerCharacter raider = character("survivor");
-    raider.chooseEquipmentPack(CatalogRef.of("raider"));
-    raider.setFreeTag(Skill.THROWING, true);
+    raider.startingGear().choosePack(CatalogRef.of("raider"));
+    raider.abilities().setFreeTag(Skill.THROWING, true);
     List<String> lines = StartingEquipmentItems.lines(raider);
     assertTrue(lines.contains("Melee weapon: not chosen yet"), lines.toString());
     assertTrue(lines.contains("Throwing: 4 + 2 CD throwing knives or 2 + 1 CD tomahawks (not chosen yet)"),
         lines.toString());
-    raider.chooseTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
+    raider.startingGear().chooseTagSkillItem(Skill.THROWING, "2 + 1 CD tomahawks");
     assertTrue(StartingEquipmentItems.lines(raider).contains("Throwing: 2 + 1 CD tomahawks"));
 
     PlayerCharacter settler = character("survivor");
-    settler.chooseEquipmentPack(CatalogRef.of("settler"));
+    settler.startingGear().choosePack(CatalogRef.of("settler"));
     assertTrue(StartingEquipmentItems.lines(settler).contains("Personal trinket: not described yet"));
   }
 
@@ -77,7 +77,7 @@ class StartingEquipmentItemsTest {
   @Test
   void misterGutsyArmsComeWithAmmo() {
     PlayerCharacter gutsy = character("mister-handy");
-    gutsy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    gutsy.startingGear().choosePack(CatalogRef.of("mister-gutsy"));
     assertEquals(List.of("Mister Gutsy plating", "Recon sensors mod",
         "Arm 1: 10mm Auto Pistol, with 20 shots of 10mm", "Arm 2: Buzz-Saw",
         "Arm 3: Laser Emitter, with 20 shots of Fusion Cell"), StartingEquipmentItems.lines(gutsy));
@@ -88,15 +88,15 @@ class StartingEquipmentItemsTest {
   @Test
   void nurseHandyAndFreeArms() {
     PlayerCharacter nurse = character("mister-handy");
-    nurse.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
-    nurse.chooseArm(0, ArmSelection.of(ArmAttachment.BUZZ_SAW));
+    nurse.startingGear().choosePack(CatalogRef.of("nurse-handy"));
+    nurse.startingGear().chooseArm(0, ArmSelection.of(ArmAttachment.BUZZ_SAW));
     List<String> lines = StartingEquipmentItems.lines(nurse);
     assertTrue(lines.contains("Arm 3: not chosen yet"), lines.toString());
-    nurse.chooseArm(2, ArmSelection.of(ArmAttachment.FLAMER));
+    nurse.startingGear().chooseArm(2, ArmSelection.of(ArmAttachment.FLAMER));
     assertTrue(StartingEquipmentItems.lines(nurse).contains("Arm 3: Flamer, with 20 shots of Flamer Fuel"));
 
-    nurse.setFreeArms(true);
-    nurse.chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
+    nurse.startingGear().setFreeArms(true);
+    nurse.startingGear().chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
     assertTrue(StartingEquipmentItems.lines(nurse)
         .contains("Arm 3: Hunting rifle, with 20 shots of its ammunition"));
   }
@@ -105,9 +105,9 @@ class StartingEquipmentItemsTest {
   @Test
   void capsAddPackLevelAndBarter() {
     PlayerCharacter trader = character("survivor");
-    trader.chooseEquipmentPack(CatalogRef.of("trader"));
-    trader.setFreeTag(Skill.BARTER, true);
-    trader.setStartingLevel(2);
+    trader.startingGear().choosePack(CatalogRef.of("trader"));
+    trader.abilities().setFreeTag(Skill.BARTER, true);
+    trader.advancement().setStartingLevel(2);
     StartingCaps caps = StartingEquipmentItems.caps(trader);
     assertEquals(new StartingCaps(50, 100, 2), caps);
     assertEquals(150, caps.fixedTotal());
@@ -115,7 +115,7 @@ class StartingEquipmentItemsTest {
     assertTrue(StartingEquipmentItems.lines(trader).stream().noneMatch(line -> line.startsWith("Barter")));
 
     PlayerCharacter noPack = character("survivor");
-    noPack.setFreeTag(Skill.BARTER, true);
+    noPack.abilities().setFreeTag(Skill.BARTER, true);
     assertEquals("2d20 caps", StartingEquipmentItems.caps(noPack).toString());
     assertEquals("0 caps", StartingEquipmentItems.caps(PlayerCharacter.createNew()).toString());
     assertThrows(IllegalArgumentException.class, () -> new StartingCaps(-1, 0, 0));
@@ -125,8 +125,8 @@ class StartingEquipmentItemsTest {
   @Test
   void completedCharactersKeepTheLevelCaps() {
     PlayerCharacter trader = character("survivor");
-    trader.chooseEquipmentPack(CatalogRef.of("trader"));
-    trader.setStartingLevel(2);
+    trader.startingGear().choosePack(CatalogRef.of("trader"));
+    trader.advancement().setStartingLevel(2);
     trader.completeCreation();
     assertEquals(new StartingCaps(50, 100, 0), StartingEquipmentItems.caps(trader));
   }

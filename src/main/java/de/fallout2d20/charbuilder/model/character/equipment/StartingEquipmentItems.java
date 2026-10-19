@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
+import de.fallout2d20.charbuilder.model.character.Advancement;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
@@ -53,13 +54,13 @@ public final class StartingEquipmentItems {
 
   /** The lines of one part of the starting equipment: the pack's (items, choices, arms, trinket) or the Tag skills'. */
   public static @NonNull List<String> lines(@NonNull PlayerCharacter character, @NonNull StartingSource source) {
-    StartingEquipment selection = character.getStartingEquipment();
+    StartingEquipment selection = character.startingGear().getSelection();
     List<String> lines = new ArrayList<>();
     if (source == StartingSource.TAG_SKILL) {
       taggedSkillItems(character).forEach(items -> tagSkillItems(items, selection).ifPresent(lines::add));
       return lines;
     }
-    Optional<EquipmentPackData> pack = character.getEquipmentPack();
+    Optional<EquipmentPackData> pack = character.startingGear().getPack();
     if (pack.isPresent()) {
       lines.addAll(pack.get().items());
       List<PackChoice> choices = pack.get().choices();
@@ -82,11 +83,11 @@ public final class StartingEquipmentItems {
   /**
    * Starting caps: pack caps, the d20 of Tag skill items (Barter) and the extra caps of the starting
    * level (CRB p. 81). The level part is left out when the starting level is unknown (imported
-   * characters, see {@link PlayerCharacter#getStartingLevel()}).
+   * characters, see {@link Advancement#getStartingLevel()}).
    */
   public static @NonNull StartingCaps caps(@NonNull PlayerCharacter character) {
-    int packCaps = character.getEquipmentPack().map(EquipmentPackData::caps).orElse(0);
-    OptionalInt startingLevel = character.getStartingLevel();
+    int packCaps = character.startingGear().getPack().map(EquipmentPackData::caps).orElse(0);
+    OptionalInt startingLevel = character.advancement().getStartingLevel();
     long levelCaps = startingLevel.isPresent() ? StartingEquipmentAllowance.caps(startingLevel.getAsInt()) : 0;
     int d20 = taggedSkillItems(character).mapToInt(TagSkillItemData::capsD20).sum();
     return new StartingCaps(packCaps, levelCaps, d20);

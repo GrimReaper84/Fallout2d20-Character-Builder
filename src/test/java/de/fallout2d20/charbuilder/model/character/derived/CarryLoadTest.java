@@ -60,12 +60,12 @@ class CarryLoadTest {
   void sumsEverythingCarried() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("sledgehammer")));
-    character.addApparel(WornApparel.of(CatalogRef.of("leather-chest-piece")));
-    character.addItem(CarriedItem.of(CatalogRef.of("purified-water")).withQuantity(2));
-    character.addItem(CarriedItem.of(CatalogRef.of("multi-tool")));
-    character.addItem(CarriedItem.of(new CustomItem("Brick", 4, "")).withQuantity(2));
-    character.setMaterials(new Materials(2, 1, 0, 0));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("sledgehammer")));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("leather-chest-piece")));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("purified-water")).withQuantity(2));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("multi-tool")));
+    character.gear().addItem(CarriedItem.of(new CustomItem("Brick", 4, "")).withQuantity(2));
+    character.gear().setMaterials(new Materials(2, 1, 0, 0));
     int sledgehammer = Weight.pounds(WeaponCatalog.byId("sledgehammer").orElseThrow().weight());
     int leather = Weight.pounds(ApparelCatalog.byId("leather-chest-piece").orElseThrow().weight());
     CarryLoad load = CarryLoad.of(character);
@@ -78,9 +78,9 @@ class CarryLoadTest {
   void backpackRaisesCarryWeight() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.addItem(CarriedItem.of(CatalogRef.of("backpack-small")));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("backpack-small")));
     assertEquals(225, DerivedStats.of(character).carryWeight());
-    character.addItem(CarriedItem.of(CatalogRef.of("backpack-large")));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("backpack-large")));
     assertEquals(250, DerivedStats.of(character).carryWeight());
   }
 
@@ -89,9 +89,9 @@ class CarryLoadTest {
   void robotModulesLowerARobotsCarryWeight() {
     PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
-    handy.addItem(CarriedItem.of(CatalogRef.of("sensor-array")));
-    handy.addItem(CarriedItem.of(CatalogRef.of("diagnosis-mod")));
-    handy.addItem(CarriedItem.of(CatalogRef.of("backpack-large")));
+    handy.gear().addItem(CarriedItem.of(CatalogRef.of("sensor-array")));
+    handy.gear().addItem(CarriedItem.of(CatalogRef.of("diagnosis-mod")));
+    handy.gear().addItem(CarriedItem.of(CatalogRef.of("backpack-large")));
     assertEquals(150 - 15, DerivedStats.of(handy).carryWeight());
   }
 
@@ -99,8 +99,8 @@ class CarryLoadTest {
   @Test
   void modsAddWeight() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
     assertEquals(5, CarryLoad.of(character).carried());
   }
 }

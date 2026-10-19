@@ -29,11 +29,11 @@ class AdvancementRulesTest {
     assertFalse(AdvancementRules.isActive(PlayerCharacter.createNew()));
     PlayerCharacter character = complete();
     assertFalse(AdvancementRules.isActive(character));
-    character.gainMilestoneLevel();
+    character.advancement().gainMilestoneLevel();
     assertTrue(AdvancementRules.isActive(character));
-    character.stageSkillRank(Skill.SNEAK, 1);
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
-    character.applyAdvancement();
+    character.advancement().apply();
     assertFalse(AdvancementRules.isActive(character));
   }
 
@@ -51,9 +51,9 @@ class AdvancementRulesTest {
   @Test
   void canLowerOnlyStagedRanks() {
     PlayerCharacter character = complete();
-    character.gainMilestoneLevel();
+    character.advancement().gainMilestoneLevel();
     assertFalse(AdvancementRules.canLower(character, Skill.SNEAK));
-    character.stageSkillRank(Skill.SNEAK, 1);
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
     assertTrue(AdvancementRules.canLower(character, Skill.SNEAK));
     assertFalse(AdvancementRules.canRaise(character, Skill.REPAIR), "the only rank is staged");
   }
@@ -62,8 +62,8 @@ class AdvancementRulesTest {
   @Test
   void problemsBlockApply() {
     PlayerCharacter character = complete();
-    character.addXp(300);
-    character.stageSkillRank(Skill.SNEAK, 1);
+    character.advancement().addXp(300);
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
     assertTrue(AdvancementRules.problems(character).isEmpty());
     assertTrue(AdvancementRules.canApply(character));
 
@@ -71,7 +71,7 @@ class AdvancementRulesTest {
     character.addPerkRank(CatalogRef.of("comprehension"), null, null);
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
     character.removePerkRank("intense-training");
-    character.stageSkillRank(Skill.SNEAK, 2);
+    character.advancement().stageSkillRank(Skill.SNEAK, 2);
     assertEquals(List.of("Too many skill ranks staged (1 too many).",
         "Comprehension: Requirement not met: INT 6."),
         AdvancementRules.problems(character).stream().map(CreationProblem::message).toList());
@@ -84,13 +84,13 @@ class AdvancementRulesTest {
   @Test
   void perkRulesUseThePendingPerksAfterCreation() {
     PlayerCharacter character = complete();
-    character.addXp(300);
+    character.advancement().addXp(300);
     assertEquals(2, PerkRules.budget(character));
     assertEquals(2, PerkRules.perksLeft(character));
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
     assertEquals(1, PerkRules.perksLeft(character));
     assertTrue(PerkRules.canRemove(character, "jury-rigging"));
-    character.applyAdvancement();
+    character.advancement().apply();
     assertFalse(PerkRules.canRemove(character, "jury-rigging"));
     assertEquals(1, PerkRules.budget(character));
   }

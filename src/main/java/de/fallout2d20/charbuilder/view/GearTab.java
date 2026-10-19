@@ -56,20 +56,20 @@ final class GearTab {
   /** @param hints the hints of this tab */
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> hints,
       @NonNull MasterDetailState selection, @NonNull ViewCallbacks callbacks) {
-    List<ItemEntry> entries = ItemTree.entries(character.getItems());
+    List<ItemEntry> entries = ItemTree.entries(character.gear().getItems());
     Integer selected = selection.current(entries.size());
     ItemEntry current = selected == null ? null : entries.get(selected);
 
     ScrollPane details = MasterDetail.right(ItemDetails.build(character, current, callbacks), selection);
     RemoveButton remove = new RemoveButton(() -> {
-      Integer index = selection.current(character.getItems().size());
+      Integer index = selection.current(character.gear().getItems().size());
       if (index == null) {
         return;
       }
-      CarriedItem item = character.getItems().get(index);
+      CarriedItem item = character.gear().getItems().get(index);
       if (ConfirmDialog.confirm(window(details), "Remove item", "Remove " + item.displayName() + "?",
           "The item, its quantity and note are removed from the gear.", "Remove")) {
-        character.removeItem(index);
+        character.gear().removeItem(index);
         selection.clear();
         callbacks.onChanged().run();
       }
@@ -111,7 +111,7 @@ final class GearTab {
     if (!hints.isEmpty()) {
       top.getChildren().add(OverviewParts.wrapping(OverviewParts.hintLabel(hints)));
     }
-    if (character.getStartingEquipment().lacksPincer()) {
+    if (character.startingGear().getSelection().lacksPincer()) {
       Label noPincer = new Label("No pincer: this Mister Handy has no unarmed attacks and cannot handle objects.");
       noPincer.setTooltip(new Tooltip(NO_PINCER_TOOLTIP));
       noPincer.setStyle(OverviewParts.HINT_STYLE);
@@ -130,9 +130,9 @@ final class GearTab {
   /** The chosen pack and, while it can still be chosen (creation or GM mode), the button to the dialog. */
   private static @NonNull Node packRow(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane row = new MigPane("insets 0, gap 8 0");
-    CatalogRef pack = character.getStartingEquipment().pack();
+    CatalogRef pack = character.startingGear().getSelection().pack();
     row.add(new Label("Equipment pack: " + (pack == null ? "none"
-        : character.getEquipmentPack().map(EquipmentPackData::name).orElse(pack.displayName()))));
+        : character.startingGear().getPack().map(EquipmentPackData::name).orElse(pack.displayName()))));
     if (!character.isCreationComplete() || character.isGmMode()) {
       Button choose = new Button("Equipment pack…");
       choose.setGraphic(new FontIcon("fas-box-open"));
@@ -149,11 +149,11 @@ final class GearTab {
 
   /** The gear notes, filling the lower third. */
   private static @NonNull Node notes(@NonNull PlayerCharacter character, @NonNull Runnable onEdited) {
-    TextArea notes = new TextArea(character.getInventoryNotes());
+    TextArea notes = new TextArea(character.gear().getNotes());
     notes.setPromptText("Gear bought, found or used up, amounts to roll, …");
     notes.setWrapText(true);
     notes.textProperty().addListener((obs, old, text) -> {
-      character.setInventoryNotes(text);
+      character.gear().setNotes(text);
       onEdited.run();
     });
     VBox.setVgrow(notes, Priority.ALWAYS);
@@ -172,14 +172,14 @@ final class GearTab {
     MenuItem item = new MenuItem("Item…");
     item.setOnAction(event -> AddItemDialog.show(window(add), ItemCatalog.available(character.getEnabledBooks()),
         ItemCatalog.availableMagazines(character.getEnabledBooks())).ifPresent(carried -> {
-          character.addItem(carried);
-          selection.select(character.getItems().size() - 1);
+          character.gear().addItem(carried);
+          selection.select(character.gear().getItems().size() - 1);
           onChanged.run();
         }));
     MenuItem holotape = new MenuItem("Holotape");
     holotape.setOnAction(event -> {
-      character.addItem(CarriedItem.of(new Holotape(Holotape.NEW_NAME, "")));
-      selection.select(character.getItems().size() - 1);
+      character.gear().addItem(CarriedItem.of(new Holotape(Holotape.NEW_NAME, "")));
+      selection.select(character.gear().getItems().size() - 1);
       onChanged.run();
     });
     add.getItems().addAll(item, holotape);

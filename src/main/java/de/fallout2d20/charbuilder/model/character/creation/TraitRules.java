@@ -102,7 +102,7 @@ public final class TraitRules {
   private static void checkForbiddenTags(@NonNull PlayerCharacter character, @NonNull TraitDefinition trait,
       @NonNull List<CreationProblem> problems) {
     for (Skill skill : trait.forbiddenTagSkills()) {
-      if (character.isTagged(skill)) {
+      if (character.abilities().isTagged(skill)) {
         problems.add(new CreationProblem(HintArea.STATS, TRAITS,
             skill.displayName() + " cannot be a Tag skill with " + trait.name() + "."));
       }

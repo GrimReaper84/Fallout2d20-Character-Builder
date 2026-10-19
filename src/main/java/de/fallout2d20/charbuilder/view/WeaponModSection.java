@@ -67,7 +67,7 @@ final class WeaponModSection {
       editSlots.setOnAction(event -> ModSlotsDialog.show(window(editSlots), custom.name(), custom.modSlots())
           .ifPresent(chosen -> {
             if (confirmRemoval(editSlots, weapon, chosen)) {
-              character.setCustomWeaponModSlots(index, chosen);
+              character.gear().setCustomWeaponModSlots(index, chosen);
               onChanged.run();
             }
           }));
@@ -114,7 +114,7 @@ final class WeaponModSection {
       WeaponModData current = ref == null ? null : WeaponCatalog.modById(ref.id()).orElse(null);
       WeaponModDialog.show(window(edit), character, weapon.displayName(), slot,
           WeaponMods.options(weapon, slot, character.getEnabledBooks()), current).ifPresent(choice -> {
-            character.setWeaponMod(index, slot, choice.mod());
+            character.gear().setWeaponMod(index, slot, choice.mod());
             onChanged.run();
           });
     });

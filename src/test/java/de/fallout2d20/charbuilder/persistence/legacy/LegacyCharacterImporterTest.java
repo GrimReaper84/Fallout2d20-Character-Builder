@@ -55,17 +55,17 @@ class LegacyCharacterImporterTest {
 
     assertEquals("Test Survivor", character.getName());
     assertEquals("survivor", character.getOrigin().id());
-    assertEquals(2, character.getLevel());
-    assertEquals(100, character.getXp());
+    assertEquals(2, character.advancement().getLevel());
+    assertEquals(100, character.advancement().getXp());
     assertTrue(character.isCreationComplete());
     Map<Attribute, Integer> expected = Map.of(Attribute.STRENGTH, 4, Attribute.PERCEPTION, 7,
         Attribute.ENDURANCE, 5, Attribute.CHARISMA, 5, Attribute.INTELLIGENCE, 8, Attribute.AGILITY, 6,
         Attribute.LUCK, 5);
     expected.forEach((attribute, value) -> {
-      assertEquals(value, character.attributeValue(attribute), attribute.id());
-      assertEquals(0, character.attributeAllocation(attribute));
+      assertEquals(value, character.abilities().attributeValue(attribute), attribute.id());
+      assertEquals(0, character.abilities().attributeAllocation(attribute));
     });
-    assertNull(character.getVitals().currentHp(), "current HP 11 = legacy maximum 11: at maximum");
+    assertNull(character.session().getVitals().currentHp(), "current HP 11 = legacy maximum 11: at maximum");
     assertEquals(EnumSet.allOf(Book.class), character.getEnabledBooks(), "legacy saves know no books");
   }
 
@@ -76,8 +76,8 @@ class LegacyCharacterImporterTest {
     assertTag(character, Skill.LOCKPICK, 3);
     assertTag(character, Skill.REPAIR, 4);
     assertTag(character, Skill.SCIENCE, 3);
-    assertEquals(3, character.skillRank(Skill.SURVIVAL));
-    assertFalse(character.skillState(Skill.SURVIVAL).tagged());
+    assertEquals(3, character.abilities().skillRank(Skill.SURVIVAL));
+    assertFalse(character.abilities().skillState(Skill.SURVIVAL).tagged());
     assertEquals(List.of("jury-rigging", "comprehension", "gun-nut"),
         character.getPerks().stream().map(p -> p.perk().id()).toList());
     for (PerkSelection perk : character.getPerks()) {
@@ -113,10 +113,10 @@ class LegacyCharacterImporterTest {
     CharacterFile result = importer.importCharacter(fixture("test-survivor-v2.json"));
     PlayerCharacter character = result.character();
 
-    CarriedWeapon laser = character.getWeapons().getFirst();
+    CarriedWeapon laser = character.gear().getWeapons().getFirst();
     assertEquals(CatalogRef.of("laser-gun"), laser.weapon());
     assertEquals("Legacy values: damage 3 CD", laser.notes());
-    assertEquals(Map.of("fusion-cell", 16), character.getAmmunition());
+    assertEquals(Map.of("fusion-cell", 16), character.gear().getAmmunition());
     assertTrue(hasInfo(result, "weapons"));
   }
 
@@ -134,8 +134,8 @@ class LegacyCharacterImporterTest {
     CharacterFile result = importer.importCharacter(root);
 
     assertEquals(List.of("Gatling Laser"),
-        result.character().getWeapons().stream().map(CarriedWeapon::displayName).toList());
-    assertEquals(Map.of("fusion-cell", 150), result.character().getAmmunition());
+        result.character().gear().getWeapons().stream().map(CarriedWeapon::displayName).toList());
+    assertEquals(Map.of("fusion-cell", 150), result.character().gear().getAmmunition());
     assertTrue(result.importReport().warnings().stream()
         .anyMatch(warning -> warning.message().contains("Fusion Core")));
     assertFalse(result.importReport().hasWarnings());
@@ -150,9 +150,9 @@ class LegacyCharacterImporterTest {
     root.putArray("weapons").addObject().put("name", "Protectron Shock Hands").put("dmg", "4").put("type", "Energy");
     CharacterFile result = importer.importCharacter(root);
 
-    CatalogRef pack = result.character().getStartingEquipment().pack();
+    CatalogRef pack = result.character().startingGear().getSelection().pack();
     assertEquals("protectron-medic", pack == null ? null : pack.id());
-    assertEquals(List.of("shock-hands"), result.character().getWeapons().stream()
+    assertEquals(List.of("shock-hands"), result.character().gear().getWeapons().stream()
         .map(weapon -> weapon.data().map(WeaponData::id).orElse("custom")).toList());
   }
 
@@ -166,7 +166,7 @@ class LegacyCharacterImporterTest {
     armor.putObject("Tail").put("physical", 1);
     CharacterFile result = importer.importCharacter(root);
 
-    List<WornApparel> apparel = result.character().getApparel();
+    List<WornApparel> apparel = result.character().gear().getApparel();
     assertEquals(1, apparel.size());
     assertEquals(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR, Set.of(HitLocation.HEAD), 2, 1, 0,
         false, 0), apparel.getFirst().custom());
@@ -179,7 +179,7 @@ class LegacyCharacterImporterTest {
   void legacyRobotLocationsBecomePlating() throws Exception {
     ObjectNode root = minimal();
     root.putObject("armor").putObject("Optics").put("physical", "2").put("energy", 1.0);
-    CustomApparel optics = importer.importCharacter(root).character().getApparel().getFirst().custom();
+    CustomApparel optics = importer.importCharacter(root).character().gear().getApparel().getFirst().custom();
     assertEquals(new CustomApparel("Legacy armor (Optics)", ApparelKind.ROBOT_PLATING, Set.of(HitLocation.OPTICS),
         2, 1, 0, false, 0), optics);
   }
@@ -189,7 +189,7 @@ class LegacyCharacterImporterTest {
     ObjectNode root = minimal();
     root.put("armor", "leather");
     CharacterFile result = importer.importCharacter(root);
-    assertTrue(result.character().getApparel().isEmpty());
+    assertTrue(result.character().gear().getApparel().isEmpty());
     assertEquals("leather", result.character().getLegacyImport().payload().get("armor").asText());
     assertTrue(result.importReport().hasWarnings());
   }
@@ -203,12 +203,12 @@ class LegacyCharacterImporterTest {
     root.withArray("weapons").addObject().put("dmg", "3");
     CharacterFile result = importer.importCharacter(root);
 
-    CarriedWeapon weapon = result.character().getWeapons().getFirst();
+    CarriedWeapon weapon = result.character().gear().getWeapons().getFirst();
     assertEquals(new CustomWeapon("Alien Blaster", null, 5, "", "Energy/Radiation", 1, WeaponRange.MEDIUM, "",
         null), weapon.custom());
     assertEquals("Legacy ammunition: 10 shots", weapon.notes());
-    assertEquals(1, result.character().getWeapons().size());
-    assertTrue(result.character().getAmmunition().isEmpty());
+    assertEquals(1, result.character().gear().getWeapons().size());
+    assertTrue(result.character().gear().getAmmunition().isEmpty());
     assertTrue(result.importReport().hasWarnings());
     assertEquals(1, result.character().getLegacyImport().payload().get("invalidWeapons").size());
   }
@@ -225,11 +225,11 @@ class LegacyCharacterImporterTest {
     assertEquals(2, lifeGiver.importedRanks());
     assertEquals(1, character.getPerks().get(1).rank());
     assertTrue(hasInfo(result, "perks"));
-    assertEquals(2, character.skillRank(Skill.MEDICINE));
-    assertEquals(0, character.skillRank(Skill.SNEAK));
+    assertEquals(2, character.abilities().skillRank(Skill.MEDICINE));
+    assertEquals(0, character.abilities().skillRank(Skill.SNEAK));
     assertTrue(hasInfo(result, "skills"));
-    assertNull(character.getVitals().currentHp(), "no vitals in the file: health at maximum");
-    assertEquals(0, character.getProgression().pendingPerks());
+    assertNull(character.session().getVitals().currentHp(), "no vitals in the file: health at maximum");
+    assertEquals(0, character.advancement().getProgression().pendingPerks());
   }
 
   /** Current HP below the stored legacy maximum are kept (damage taken). */
@@ -238,7 +238,7 @@ class LegacyCharacterImporterTest {
     ObjectNode root = fixture("test-survivor-v2.json");
     ((ObjectNode) root.get("vitals")).put("currentHP", 7);
     PlayerCharacter character = importer.importCharacter(root).character();
-    assertEquals(7, character.getVitals().currentHp());
+    assertEquals(7, character.session().getVitals().currentHp());
   }
 
   /** The imported Tags are the starting Tag skills (CRB p. 81 Tag skill items). */
@@ -246,7 +246,7 @@ class LegacyCharacterImporterTest {
   void importedTagsAreTheStartingTagSkills() throws Exception {
     PlayerCharacter character = importer.importCharacter(fixture("test-survivor-v2.json")).character();
     for (Skill skill : Skill.values()) {
-      assertEquals(character.skillState(skill).tagged(), character.getStartingTagSkills().contains(skill),
+      assertEquals(character.abilities().skillState(skill).tagged(), character.getStartingTagSkills().contains(skill),
           skill.id());
     }
   }
@@ -297,12 +297,12 @@ class LegacyCharacterImporterTest {
   void importsPackTrinketAndEquipmentTextOfTheV2SurvivorFixture() throws Exception {
     ObjectNode root = fixture("test-survivor-v2.json");
     PlayerCharacter character = importer.importCharacter(root).character();
-    StartingEquipment equipment = character.getStartingEquipment();
+    StartingEquipment equipment = character.startingGear().getSelection();
     assertEquals(new CatalogRef("settler", "Settler"), equipment.pack());
     assertEquals(Arrays.asList((String) null), equipment.choices(), "choices only exist in the legacy text");
     assertNull(equipment.trinket(), "the fixture's trinket field is empty");
     assertEquals(List.of(), equipment.arms());
-    assertEquals(root.get("equipment").asText(), character.getInventoryNotes());
+    assertEquals(root.get("equipment").asText(), character.gear().getNotes());
   }
 
   /** CRB p. 77: legacy arms that fit the pack (in any order) keep the pack's arms. */
@@ -311,7 +311,7 @@ class LegacyCharacterImporterTest {
     ObjectNode root = misterHandy("Nurse Handy", "Flamer", "Buzz-Saw", "Pincer");
     root.put("trinket", "  Oil can ");
     CharacterFile result = importer.importCharacter(root);
-    StartingEquipment equipment = result.character().getStartingEquipment();
+    StartingEquipment equipment = result.character().startingGear().getSelection();
     assertFalse(equipment.freeArms());
     assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.of(ArmAttachment.BUZZ_SAW),
         ArmSelection.of(ArmAttachment.FLAMER)), equipment.arms());
@@ -325,7 +325,7 @@ class LegacyCharacterImporterTest {
   @Test
   void importsIncompleteArmsThatFitThePack() throws Exception {
     CharacterFile result = importer.importCharacter(misterHandy("Miss Nanny", "Flamer", "Pincer"));
-    StartingEquipment equipment = result.character().getStartingEquipment();
+    StartingEquipment equipment = result.character().startingGear().getSelection();
     assertFalse(equipment.freeArms());
     assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.of(ArmAttachment.FLAMER),
         ArmSelection.OPEN), equipment.arms());
@@ -336,14 +336,14 @@ class LegacyCharacterImporterTest {
   @Test
   void importsOtherArmsAsFreeArms() throws Exception {
     CharacterFile result = importer.importCharacter(misterHandy("Mister Handy", "Pincer", "", "Pincer"));
-    StartingEquipment equipment = result.character().getStartingEquipment();
+    StartingEquipment equipment = result.character().startingGear().getSelection();
     assertTrue(equipment.freeArms());
     assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.OPEN,
         ArmSelection.of(ArmAttachment.PINCER)), equipment.arms());
     assertTrue(hasInfo(result, "originOptions"));
 
     StartingEquipment packArms = importer.importCharacter(misterHandy("Mister Gutsy")).character()
-        .getStartingEquipment();
+        .startingGear().getSelection();
     assertEquals(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM), ArmSelection.of(ArmAttachment.BUZZ_SAW),
         ArmSelection.of(ArmAttachment.LASER_EMITTER)), packArms.arms(), "no legacy names: the pack's arms");
   }
@@ -356,12 +356,12 @@ class LegacyCharacterImporterTest {
     CharacterFile result = importer.importCharacter(handy);
     assertTrue(result.importReport().warnings().stream().anyMatch(w -> w.severity() == WarningSeverity.INFO
         && w.field().equals("originOptions") && w.message().contains("the arms count")));
-    assertFalse(result.character().getStartingEquipment().lacksPincer());
+    assertFalse(result.character().startingGear().getSelection().lacksPincer());
 
     ObjectNode gutsy = misterHandy("Mister Gutsy");
     ((ObjectNode) gutsy.get("originOptions")).put("noPincer", true);
     CharacterFile consistent = importer.importCharacter(gutsy);
-    assertTrue(consistent.character().getStartingEquipment().lacksPincer());
+    assertTrue(consistent.character().startingGear().getSelection().lacksPincer());
     assertFalse(hasInfo(consistent, "originOptions"));
   }
 
@@ -372,7 +372,7 @@ class LegacyCharacterImporterTest {
     unknownPack.put("equipmentPack", "Lone Wanderer");
     unknownPack.put("trinket", "Broken holotape");
     CharacterFile result = importer.importCharacter(unknownPack);
-    assertEquals(StartingEquipment.NONE, result.character().getStartingEquipment());
+    assertEquals(StartingEquipment.NONE, result.character().startingGear().getSelection());
     ObjectNode payload = result.character().getLegacyImport().payload();
     assertEquals("Lone Wanderer", payload.get("equipmentPack").asText());
     assertEquals("Broken holotape", payload.get("trinket").asText());
@@ -400,7 +400,7 @@ class LegacyCharacterImporterTest {
     root.put("origin", "Mister Handy");
     root.putObject("originOptions").put("noPincer", true).putArray("attachments").add("Pincer");
     CharacterFile result = importer.importCharacter(root);
-    assertEquals(StartingEquipment.NONE, result.character().getStartingEquipment());
+    assertEquals(StartingEquipment.NONE, result.character().startingGear().getSelection());
     assertEquals("{\"attachments\":[\"Pincer\"]}",
         result.character().getLegacyImport().payload().get("originOptions").toString());
     assertTrue(has(result, WarningSeverity.WARNING, "originOptions"));
@@ -519,15 +519,15 @@ class LegacyCharacterImporterTest {
     root.put("origin", "ChildOfAtom");
     root.putObject("vitals").put("rads", 3).put("radiationPoints", 9);
     CharacterFile result = importer.importCharacter(root);
-    assertEquals(5, result.character().getVitals().radiationPoints());
-    assertEquals(3, result.character().getVitals().rads());
+    assertEquals(5, result.character().session().getVitals().radiationPoints());
+    assertEquals(3, result.character().session().getVitals().rads());
     assertTrue(hasInfo(result, "vitals"));
 
     // Other origins store none (before D5 the import kept up to 5 for every origin).
     ObjectNode survivor = minimal();
     survivor.putObject("vitals").put("radiationPoints", 2);
     CharacterFile survivorResult = importer.importCharacter(survivor);
-    assertEquals(0, survivorResult.character().getVitals().radiationPoints());
+    assertEquals(0, survivorResult.character().session().getVitals().radiationPoints());
     assertTrue(survivorResult.importReport().warnings().stream()
         .anyMatch(w -> w.field().equals("vitals") && w.message().contains("reduced to 0")));
   }
@@ -538,7 +538,7 @@ class LegacyCharacterImporterTest {
     ObjectNode root = minimal();
     root.putObject("vitals").put("currentHP", 9).put("rads", 3);
     CharacterFile result = importer.importCharacter(root);
-    assertNull(result.character().getVitals().currentHp(), "9 above END 5 + LCK 5 − 3 rads: at maximum");
+    assertNull(result.character().session().getVitals().currentHp(), "9 above END 5 + LCK 5 − 3 rads: at maximum");
     assertTrue(result.importReport().warnings().stream()
         .anyMatch(w -> w.field().equals("vitals") && w.message().contains("lowered to 7")));
   }
@@ -560,8 +560,8 @@ class LegacyCharacterImporterTest {
   }
 
   private static void assertTag(PlayerCharacter character, Skill skill, int rank) {
-    assertTrue(character.skillState(skill).tagged(), skill.id());
-    assertEquals(rank, character.skillRank(skill), skill.id());
+    assertTrue(character.abilities().skillState(skill).tagged(), skill.id());
+    assertEquals(rank, character.abilities().skillRank(skill), skill.id());
   }
 
   private static List<ImportWarning> derivedWarnings(CharacterFile result) {

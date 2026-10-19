@@ -27,34 +27,34 @@ class PlayerCharacterWeaponsTest {
   void weaponsCanBeEditedInEveryMode() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.completeCreation();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")));
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.setWeaponQuantity(0, 3);
-    character.setWeaponNotes(1, "Long Barrel");
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().setWeaponQuantity(0, 3);
+    character.gear().setWeaponNotes(1, "Long Barrel");
     assertEquals(List.of(new CarriedWeapon(CatalogRef.of("frag-grenade"), null, 3, "", false),
-        new CarriedWeapon(CatalogRef.of("10mm-pistol"), null, 1, "Long Barrel", false)), character.getWeapons());
-    assertThrows(IllegalArgumentException.class, () -> character.setWeaponQuantity(0, 0));
-    character.removeWeapon(0);
-    assertEquals("10mm Pistol", character.getWeapons().getFirst().displayName());
-    assertThrows(IndexOutOfBoundsException.class, () -> character.removeWeapon(5));
+        new CarriedWeapon(CatalogRef.of("10mm-pistol"), null, 1, "Long Barrel", false)), character.gear().getWeapons());
+    assertThrows(IllegalArgumentException.class, () -> character.gear().setWeaponQuantity(0, 0));
+    character.gear().removeWeapon(0);
+    assertEquals("10mm Pistol", character.gear().getWeapons().getFirst().displayName());
+    assertThrows(IndexOutOfBoundsException.class, () -> character.gear().removeWeapon(5));
   }
 
   @Test
   void ammunitionIsCountedPerTypeAndZeroRemovesIt() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.setAmmunition("10mm", 34);
-    assertEquals(34, character.ammunition("10mm"));
-    assertEquals(0, character.ammunition("38"));
-    character.setAmmunition("10mm", 0);
-    assertEquals(Map.of(), character.getAmmunition());
-    assertThrows(IllegalArgumentException.class, () -> character.setAmmunition("10mm", -1));
-    assertThrows(IllegalArgumentException.class, () -> character.setAmmunition(" ", 3));
+    character.gear().setAmmunition("10mm", 34);
+    assertEquals(34, character.gear().ammunition("10mm"));
+    assertEquals(0, character.gear().ammunition("38"));
+    character.gear().setAmmunition("10mm", 0);
+    assertEquals(Map.of(), character.gear().getAmmunition());
+    assertThrows(IllegalArgumentException.class, () -> character.gear().setAmmunition("10mm", -1));
+    assertThrows(IllegalArgumentException.class, () -> character.gear().setAmmunition(" ", 3));
   }
 
   @Test
   void constructorDropsEmptyAmmunitionAndRejectsNegativeShots() {
     PlayerCharacter character = create(Map.of("10mm", 0, "38", 12));
-    assertEquals(Map.of("38", 12), character.getAmmunition());
+    assertEquals(Map.of("38", 12), character.gear().getAmmunition());
     assertThrows(IllegalArgumentException.class, () -> create(Map.of("38", -1)));
   }
 
@@ -62,11 +62,11 @@ class PlayerCharacterWeaponsTest {
   @Test
   void customWeaponSkillCanBeChosen() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(BLASTER));
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("laser-gun")));
-    character.setCustomWeaponSkill(0, Skill.ENERGY_WEAPONS);
-    assertEquals(Skill.ENERGY_WEAPONS, character.getWeapons().getFirst().skill().orElseThrow());
-    assertThrows(IllegalStateException.class, () -> character.setCustomWeaponSkill(1, Skill.SMALL_GUNS));
+    character.gear().addWeapon(CarriedWeapon.of(BLASTER));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("laser-gun")));
+    character.gear().setCustomWeaponSkill(0, Skill.ENERGY_WEAPONS);
+    assertEquals(Skill.ENERGY_WEAPONS, character.gear().getWeapons().getFirst().skill().orElseThrow());
+    assertThrows(IllegalStateException.class, () -> character.gear().setCustomWeaponSkill(1, Skill.SMALL_GUNS));
   }
 
   /** CRB p. 27, 120: explosives and thrown weapons are used up, so their quantity matters. */
@@ -95,26 +95,28 @@ class PlayerCharacterWeaponsTest {
   @Test
   void installsReplacesAndRemovesMods() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
-    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
-    assertEquals(Map.of(ModSlot.RECEIVER, CatalogRef.of("small-guns-powerful")), character.getWeapons().getFirst().mods());
-    character.setWeaponMod(0, ModSlot.RECEIVER, null);
-    assertEquals(Map.of(), character.getWeapons().getFirst().mods());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
+    character.gear().setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
+    assertEquals(Map.of(ModSlot.RECEIVER, CatalogRef.of("small-guns-powerful")),
+        character.gear().getWeapons().getFirst().mods());
+    character.gear().setWeaponMod(0, ModSlot.RECEIVER, null);
+    assertEquals(Map.of(), character.gear().getWeapons().getFirst().mods());
     assertThrows(IllegalArgumentException.class,
-        () -> character.setWeaponMod(0, ModSlot.STOCK, WeaponCatalog.modById("small-guns-full-stock").orElseThrow()));
+        () -> character.gear().setWeaponMod(0, ModSlot.STOCK,
+            WeaponCatalog.modById("small-guns-full-stock").orElseThrow()));
   }
 
   @Test
   void customWeaponModSlots() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addWeapon(CarriedWeapon.of(BLASTER));
-    character.setCustomWeaponModSlots(0, EnumSet.of(ModSlot.BARREL));
-    character.setWeaponMod(0, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());
-    character.setCustomWeaponModSlots(0, EnumSet.of(ModSlot.SIGHTS));
-    assertEquals(Set.of(ModSlot.SIGHTS), character.getWeapons().getFirst().custom().modSlots());
-    assertTrue(character.getWeapons().getFirst().mods().isEmpty());
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    assertThrows(IllegalStateException.class, () -> character.setCustomWeaponModSlots(1, Set.of()));
+    character.gear().addWeapon(CarriedWeapon.of(BLASTER));
+    character.gear().setCustomWeaponModSlots(0, EnumSet.of(ModSlot.BARREL));
+    character.gear().setWeaponMod(0, ModSlot.BARREL, WeaponCatalog.modById("energy-weapons-long-barrel").orElseThrow());
+    character.gear().setCustomWeaponModSlots(0, EnumSet.of(ModSlot.SIGHTS));
+    assertEquals(Set.of(ModSlot.SIGHTS), character.gear().getWeapons().getFirst().custom().modSlots());
+    assertTrue(character.gear().getWeapons().getFirst().mods().isEmpty());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    assertThrows(IllegalStateException.class, () -> character.gear().setCustomWeaponModSlots(1, Set.of()));
   }
 }

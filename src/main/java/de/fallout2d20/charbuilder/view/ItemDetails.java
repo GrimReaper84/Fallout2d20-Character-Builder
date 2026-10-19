@@ -44,7 +44,7 @@ final class ItemDetails {
     }
     int index = entry.index();
     // From the model, not the entry: typed text changes the item without a rebuild of the tree's entries.
-    CarriedItem item = character.getItems().get(index);
+    CarriedItem item = character.gear().getItems().get(index);
     OverviewParts.sectionHeading(pane, item.displayName());
 
     MigPane rows = new MigPane("insets 0, gap 16 6, wrap 2", "[left][grow, fill]");
@@ -59,7 +59,7 @@ final class ItemDetails {
       OverviewParts.detailRow(rows, "Starting equipment", new Label(source.description()));
     }
     OverviewParts.notesRow(rows, item.notes(), text -> {
-      character.setItemNotes(index, text);
+      character.gear().setItemNotes(index, text);
       callbacks.onEdited().run();
     });
     pane.add(rows);
@@ -90,10 +90,10 @@ final class ItemDetails {
     TextField name = new TextField(holotape.name());
     name.setPromptText("Name of the holotape");
     Runnable commitName = () -> {
-      Holotape current = character.getItems().get(index).holotape();
+      Holotape current = character.gear().getItems().get(index).holotape();
       String typed = name.getText().strip();
       if (current != null && !typed.isEmpty() && !typed.equals(current.name())) {
-        character.setItemHolotape(index, new Holotape(typed, current.label()));
+        character.gear().setItemHolotape(index, new Holotape(typed, current.label()));
         callbacks.onChanged().run();
       }
     };
@@ -109,9 +109,9 @@ final class ItemDetails {
     label.setWrapText(true);
     label.setPrefRowCount(LABEL_ROWS);
     label.textProperty().addListener((obs, old, text) -> {
-      Holotape current = character.getItems().get(index).holotape();
+      Holotape current = character.gear().getItems().get(index).holotape();
       if (current != null) {
-        character.setItemHolotape(index, new Holotape(current.name(), text));
+        character.gear().setItemHolotape(index, new Holotape(current.name(), text));
         callbacks.onEdited().run();
       }
     });
@@ -128,11 +128,11 @@ final class ItemDetails {
         StepButtons.NUMBER_WIDTH, StepButtons.of(
             StepButtons.minus(item.quantity() > 1 ? "One less" : "Use Remove to take the item out",
                 item.quantity() > 1, () -> {
-                  character.setItemQuantity(index, item.quantity() - 1);
+                  character.gear().setItemQuantity(index, item.quantity() - 1);
                   onChanged.run();
                 }),
             StepButtons.plus("One more", true, () -> {
-              character.setItemQuantity(index, item.quantity() + 1);
+              character.gear().setItemQuantity(index, item.quantity() + 1);
               onChanged.run();
             }))));
   }
@@ -170,7 +170,7 @@ final class ItemDetails {
     issue.setOnAction(event -> {
       MagazineIssue chosen = issue.getValue();
       if (chosen != null && !chosen.title().equals(item.issue())) {
-        character.setItemIssue(index, chosen.title());
+        character.gear().setItemIssue(index, chosen.title());
         onChanged.run();
       }
     });

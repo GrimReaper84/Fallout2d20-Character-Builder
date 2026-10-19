@@ -87,12 +87,12 @@ public record SheetContent(
     DerivedStats derived = DerivedStats.of(character);
     Map<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
     for (Attribute attribute : Attribute.values()) {
-      attributes.put(attribute, character.attributeValue(attribute));
+      attributes.put(attribute, character.abilities().attributeValue(attribute));
     }
     List<SkillRow> skills = new ArrayList<>();
     for (Skill skill : Skill.values()) {
       skills.add(new SkillRow(skill.displayName(), skill.governingAttribute().abbreviation(),
-          character.isTagged(skill), character.skillRank(skill)));
+          character.abilities().isTagged(skill), character.abilities().skillRank(skill)));
     }
     List<HitLocationRow> locations = new ArrayList<>();
     for (LocationResistance resistance : ArmorResistances.of(character)) {
@@ -103,9 +103,9 @@ public record SheetContent(
     return new SheetContent(
         character.getName(),
         originName(character),
-        Integer.toString(character.getLevel()),
-        Long.toString(character.getXp()),
-        Long.toString(ExperienceTable.xpForLevel(character.getLevel() + 1)),
+        Integer.toString(character.advancement().getLevel()),
+        Long.toString(character.advancement().getXp()),
+        Long.toString(ExperienceTable.xpForLevel(character.advancement().getLevel() + 1)),
         attributes,
         skills,
         derived.meleeDamageText(),
@@ -134,7 +134,7 @@ public record SheetContent(
 
   private static @NonNull List<WeaponRow> weapons(@NonNull PlayerCharacter character) {
     List<WeaponRow> rows = new ArrayList<>();
-    for (CarriedWeapon weapon : character.getWeapons()) {
+    for (CarriedWeapon weapon : character.gear().getWeapons()) {
       WeaponAttack attack = WeaponAttack.of(character, weapon);
       Skill skill = attack.skill();
       String weight = weapon.isIntegrated() ? "–"
@@ -143,7 +143,7 @@ public record SheetContent(
           withQuantity(attack.moddedName(), weapon.quantity()),
           skill == null ? "" : skill.displayName(),
           attack.targetNumber() == null ? "" : attack.targetNumber().toString(),
-          skill != null && character.isTagged(skill),
+          skill != null && character.abilities().isTagged(skill),
           attack.damageText(),
           attack.effects(),
           attack.damageType(),
@@ -159,10 +159,10 @@ public record SheetContent(
   /** Ammunition types of the carried weapons, then any other type the character has shots of. */
   private static @NonNull List<String> ammunition(@NonNull PlayerCharacter character) {
     Set<String> ids = new LinkedHashSet<>();
-    for (CarriedWeapon weapon : character.getWeapons()) {
+    for (CarriedWeapon weapon : character.gear().getWeapons()) {
       ids.addAll(WeaponAttack.of(character, weapon).ammunition());
     }
-    character.getAmmunition().forEach((id, shots) -> {
+    character.gear().getAmmunition().forEach((id, shots) -> {
       if (shots > 0) {
         ids.add(id);
       }
@@ -177,15 +177,15 @@ public record SheetContent(
   /** Items with quantity and stack weight, apparel (carried pieces marked), junk and materials. */
   private static @NonNull List<GearRow> gear(@NonNull PlayerCharacter character) {
     List<GearRow> rows = new ArrayList<>();
-    for (CarriedItem item : character.getItems()) {
+    for (CarriedItem item : character.gear().getItems()) {
       String name = item.issue() == null ? item.displayName() : item.displayName() + " (" + item.issue() + ")";
       rows.add(new GearRow(withQuantity(name, item.quantity()), pounds(item.printedWeight(), item.quantity())));
     }
-    for (WornApparel apparel : character.getApparel()) {
+    for (WornApparel apparel : character.gear().getApparel()) {
       String name = apparel.carried() ? apparel.displayName() + " (carried)" : apparel.displayName();
       rows.add(new GearRow(name, pounds(apparel.data().map(ApparelData::weight).orElse(null), 1)));
     }
-    Materials materials = character.getMaterials();
+    Materials materials = character.gear().getMaterials();
     addMaterial(rows, "Junk", materials.junk(), Materials.JUNK_WEIGHT);
     addMaterial(rows, "Common materials", materials.common(), Materials.MATERIAL_WEIGHT);
     addMaterial(rows, "Uncommon materials", materials.uncommon(), Materials.MATERIAL_WEIGHT);
@@ -245,26 +245,26 @@ public record SheetContent(
     if (purpose != null && !purpose.isBlank()) {
       notes.add("Purpose: " + purpose.strip());
     }
-    List<ArmSelection> arms = character.getStartingEquipment().arms();
+    List<ArmSelection> arms = character.startingGear().getSelection().arms();
     for (int i = 0; i < arms.size(); i++) {
       ArmSelection arm = arms.get(i);
       String fitted = arm.attachment() != null ? arm.attachment().displayName() : arm.weapon();
       notes.add("Arm " + (i + 1) + ": " + (fitted == null ? "open" : fitted));
     }
-    String trinket = character.getStartingEquipment().trinket();
+    String trinket = character.startingGear().getSelection().trinket();
     if (trinket != null) {
       notes.add("Trinket: " + trinket);
     }
-    for (CarriedWeapon weapon : character.getWeapons()) {
+    for (CarriedWeapon weapon : character.gear().getWeapons()) {
       addNote(notes, weapon.displayName(), weapon.notes());
     }
-    for (WornApparel apparel : character.getApparel()) {
+    for (WornApparel apparel : character.gear().getApparel()) {
       addNote(notes, apparel.displayName(), apparel.notes());
     }
-    for (CarriedItem item : character.getItems()) {
+    for (CarriedItem item : character.gear().getItems()) {
       addNote(notes, item.displayName(), item.notes());
     }
-    String inventory = character.getInventoryNotes();
+    String inventory = character.gear().getNotes();
     if (!inventory.isBlank()) {
       notes.add(inventory.strip());
     }

@@ -34,7 +34,7 @@ final class ArmorTab {
 
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull List<CreationProblem> tabHints,
       @NonNull MasterDetailState selection, @NonNull ViewCallbacks callbacks) {
-    List<ApparelEntry> entries = ApparelTree.entries(character.getApparel(), character.hitLocations());
+    List<ApparelEntry> entries = ApparelTree.entries(character.gear().getApparel(), character.hitLocations());
     Integer selected = selection.current(entries.size());
     ApparelEntry current = selected == null ? null : entries.get(selected);
 
@@ -45,14 +45,14 @@ final class ArmorTab {
     right.add(details, "gaptop 16");
     ScrollPane rightScroll = MasterDetail.right(right, selection);
     RemoveButton remove = new RemoveButton(() -> {
-      Integer index = selection.current(character.getApparel().size());
+      Integer index = selection.current(character.gear().getApparel().size());
       if (index == null) {
         return;
       }
-      WornApparel item = character.getApparel().get(index);
+      WornApparel item = character.gear().getApparel().get(index);
       if (ConfirmDialog.confirm(window(rightScroll), "Remove apparel", "Remove " + item.displayName() + "?",
           "The item and its note are removed.", "Remove")) {
-        character.removeApparel(index);
+        character.gear().removeApparel(index);
         selection.clear();
         callbacks.onChanged().run();
       }
@@ -86,8 +86,8 @@ final class ArmorTab {
     ApparelKind defaultKind = ApparelRules.isRobot(character) ? ApparelKind.ROBOT_ARMOR : ApparelKind.ARMOR;
     add.setOnAction(event -> AddApparelDialog.show(window(add), offered(character), character.hitLocations(),
         defaultKind).ifPresent(item -> {
-          character.addApparel(item);
-          selection.select(character.getApparel().size() - 1);
+          character.gear().addApparel(item);
+          selection.select(character.gear().getApparel().size() - 1);
           onChanged.run();
         }));
     return add;

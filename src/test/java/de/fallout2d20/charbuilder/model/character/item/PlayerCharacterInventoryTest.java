@@ -15,14 +15,14 @@ class PlayerCharacterInventoryTest {
   @Test
   void itemsHaveQuantityIssueAndNotes() {
     PlayerCharacter character = PlayerCharacter.createNew();
-    character.addItem(CarriedItem.of(CatalogRef.of("stimpak")));
-    character.addItem(CarriedItem.of(CatalogRef.of("grognak-the-barbarian")));
-    character.addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "")));
-    character.setItemQuantity(0, 3);
-    character.setItemIssue(1, "Fatherless Cur!");
-    character.setItemNotes(2, "Lucky charm");
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("stimpak")));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("grognak-the-barbarian")));
+    character.gear().addItem(CarriedItem.of(new CustomItem("Teddy bear", 1, "")));
+    character.gear().setItemQuantity(0, 3);
+    character.gear().setItemIssue(1, "Fatherless Cur!");
+    character.gear().setItemNotes(2, "Lucky charm");
 
-    List<CarriedItem> items = character.getItems();
+    List<CarriedItem> items = character.gear().getItems();
     assertEquals("Stimpak", items.getFirst().displayName());
     assertEquals(3, items.getFirst().quantity());
     assertEquals("Heals 4 HP", items.getFirst().effects());
@@ -30,9 +30,9 @@ class PlayerCharacterInventoryTest {
     assertEquals("Ignore one complication on a melee attack", items.get(1).effects());
     assertEquals("<1", items.get(1).printedWeight(), "CRB p. 172");
     assertEquals("Lucky charm", items.get(2).notes());
-    character.removeItem(0);
-    assertEquals(2, character.getItems().size());
-    assertThrows(IllegalArgumentException.class, () -> character.setItemQuantity(0, 0));
+    character.gear().removeItem(0);
+    assertEquals(2, character.gear().getItems().size());
+    assertThrows(IllegalArgumentException.class, () -> character.gear().setItemQuantity(0, 0));
   }
 
   /** A magazine without a known issue shows the publication's perk. */
@@ -47,18 +47,18 @@ class PlayerCharacterInventoryTest {
   void completingCreationFillsTheFixedStartingCaps() {
     PlayerCharacter settler = settler();
     settler.completeCreation();
-    assertEquals(45, settler.getCaps());
+    assertEquals(45, settler.gear().getCaps());
 
     PlayerCharacter veteran = settler();
-    veteran.setStartingLevel(3);
+    veteran.advancement().setStartingLevel(3);
     veteran.completeCreation();
-    assertEquals(45 + StartingEquipmentAllowance.caps(3), veteran.getCaps());
+    assertEquals(45 + StartingEquipmentAllowance.caps(3), veteran.gear().getCaps());
 
     PlayerCharacter entered = settler();
-    entered.setCaps(60);
+    entered.gear().setCaps(60);
     entered.completeCreation();
-    assertEquals(60, entered.getCaps(), "a balance already entered is kept");
-    assertThrows(IllegalArgumentException.class, () -> entered.setCaps(-1));
+    assertEquals(60, entered.gear().getCaps(), "a balance already entered is kept");
+    assertThrows(IllegalArgumentException.class, () -> entered.gear().setCaps(-1));
   }
 
   /** CRB p. 208: junk 2 lbs. each, materials 1 lb. per unit. */
@@ -71,7 +71,7 @@ class PlayerCharacterInventoryTest {
   private static PlayerCharacter settler() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.chooseEquipmentPack(CatalogRef.of("settler"));
+    character.startingGear().choosePack(CatalogRef.of("settler"));
     return character;
   }
 }

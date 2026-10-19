@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
@@ -62,11 +63,11 @@ final class CharacterMapper {
   static CharacterData toData(PlayerCharacter character, @NonNull String savedWith) {
     Map<String, Integer> allocation = new LinkedHashMap<>();
     for (Attribute attribute : Attribute.values()) {
-      allocation.put(attribute.id(), character.attributeAllocation(attribute));
+      allocation.put(attribute.id(), character.abilities().attributeAllocation(attribute));
     }
     Map<String, SkillData> skills = new LinkedHashMap<>();
     for (Skill skill : Skill.values()) {
-      SkillState state = character.skillState(skill);
+      SkillState state = character.abilities().skillState(skill);
       skills.put(skill.id(), new SkillData(state.tagged(), state.creationRanks(), state.advancementRanks(),
           state.stagedRanks(), state.gmRanks()));
     }
@@ -79,7 +80,9 @@ final class CharacterMapper {
             p.stagedRanks()))
         .toList();
     CatalogRef origin = character.getOrigin();
-    Vitals vitals = character.getVitals();
+    Vitals vitals = character.session().getVitals();
+    Progression progression = character.advancement().getProgression();
+    Gear gear = character.gear();
     LegacyImport legacyImport = character.getLegacyImport();
     return new CharacterData(
         FORMAT,
@@ -89,8 +92,8 @@ final class CharacterMapper {
         character.getName(),
         origin == null ? null : toData(origin),
         toData(character.getOriginChoices()),
-        character.getLevel(),
-        character.getXp(),
+        character.advancement().getLevel(),
+        character.advancement().getXp(),
         character.isCreationComplete(),
         startingLevel(character),
         character.isCreationComplete()
@@ -100,20 +103,19 @@ final class CharacterMapper {
         skills,
         traits,
         perks,
-        new ProgressionData(character.getProgression().pendingSkillRanks(),
-            character.getProgression().pendingPerks()),
+        new ProgressionData(progression.pendingSkillRanks(), progression.pendingPerks()),
         new VitalsData(vitals.currentHp(), vitals.rads(), vitals.radiationPoints(), vitals.luckPoints(),
             vitals.injuries().isEmpty() ? null : vitals.injuries().stream().sorted().toList(),
             blankToNull(vitals.notes())),
-        toData(character.getStartingEquipment()),
-        character.getInventoryNotes().isBlank() ? null : character.getInventoryNotes(),
-        character.getWeapons().isEmpty() ? null : character.getWeapons().stream().map(CharacterMapper::toData).toList(),
-        character.getAmmunition().isEmpty() ? null : new LinkedHashMap<>(character.getAmmunition()),
-        character.getApparel().isEmpty() ? null : character.getApparel().stream().map(CharacterMapper::toData).toList(),
-        character.getItems().isEmpty() ? null : character.getItems().stream().map(CharacterMapper::toData).toList(),
-        character.getCaps() == 0 ? null : character.getCaps(),
-        toData(character.getMaterials()),
-        character.isPackItemsAdded() ? Boolean.TRUE : null,
+        toData(character.startingGear().getSelection()),
+        gear.getNotes().isBlank() ? null : gear.getNotes(),
+        gear.getWeapons().isEmpty() ? null : gear.getWeapons().stream().map(CharacterMapper::toData).toList(),
+        gear.getAmmunition().isEmpty() ? null : new LinkedHashMap<>(gear.getAmmunition()),
+        gear.getApparel().isEmpty() ? null : gear.getApparel().stream().map(CharacterMapper::toData).toList(),
+        gear.getItems().isEmpty() ? null : gear.getItems().stream().map(CharacterMapper::toData).toList(),
+        gear.getCaps() == 0 ? null : gear.getCaps(),
+        toData(gear.getMaterials()),
+        character.startingGear().isPackItemsAdded() ? Boolean.TRUE : null,
         toData(character.getLegacyBaseline()),
         legacyImport == null ? null : new LegacyImportData(legacyImport.sourceSchemaVersion(),
             legacyImport.importedOn(), legacyImport.payload()));
@@ -219,7 +221,7 @@ final class CharacterMapper {
 
   /** Stored only for a complete character whose starting level is known (CRB p. 81 starting caps). */
   private static @Nullable Integer startingLevel(@NonNull PlayerCharacter character) {
-    OptionalInt level = character.getStartingLevel();
+    OptionalInt level = character.advancement().getStartingLevel();
     return character.isCreationComplete() && level.isPresent() ? level.getAsInt() : null;
   }
 

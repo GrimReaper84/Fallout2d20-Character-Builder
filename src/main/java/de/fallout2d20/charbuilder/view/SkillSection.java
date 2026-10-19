@@ -55,7 +55,7 @@ final class SkillSection {
       });
       pane.add(name);
       pane.add(attribute(skill));
-      pane.add(rank(Integer.toString(character.skillRank(skill)), StepButtons.NUMBER_WIDTH));
+      pane.add(rank(Integer.toString(character.abilities().skillRank(skill)), StepButtons.NUMBER_WIDTH));
       addSteppers(pane, character, skill, gmCorrects, onChanged);
     }
     return pane;
@@ -86,9 +86,9 @@ final class SkillSection {
   /** Read-only rows of a complete character: Tag marker, skill, attribute and rank. */
   private static void addLockedRows(@NonNull MigPane pane, @NonNull PlayerCharacter character) {
     for (Skill skill : Skill.values()) {
-      pane.add(new Label(character.isTagged(skill) ? TAG_MARKER : ""));
+      pane.add(new Label(character.abilities().isTagged(skill) ? TAG_MARKER : ""));
       addNameCells(pane, skill);
-      pane.add(OverviewParts.baselineMarked(Integer.toString(character.skillRank(skill)),
+      pane.add(OverviewParts.baselineMarked(Integer.toString(character.abilities().skillRank(skill)),
           character.isLegacyImport()), "span 3");
     }
     pane.add(new Label(TAG_LEGEND), "span 6");
@@ -127,17 +127,17 @@ final class SkillSection {
   }
 
   private static @NonNull String atCap(@NonNull PlayerCharacter character, @NonNull Skill skill) {
-    return skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".";
+    return skill.displayName() + " is at its maximum rank of " + character.abilities().skillRankCap() + ".";
   }
 
   /** The Tag checkbox (without text); disabled when it cannot be switched. */
   private static @NonNull CheckBox tagBox(@NonNull PlayerCharacter character, @NonNull Skill skill,
       @NonNull Runnable onChanged) {
     CheckBox box = new CheckBox();
-    box.setSelected(character.isTagged(skill));
+    box.setSelected(character.abilities().isTagged(skill));
     box.setDisable(!SkillRules.canToggleTag(character, skill));
     box.selectedProperty().addListener((obs, old, value) -> {
-      character.setFreeTag(skill, value);
+      character.abilities().setFreeTag(skill, value);
       onChanged.run();
     });
     return box;
@@ -151,15 +151,15 @@ final class SkillSection {
   }
 
   private static @NonNull String tagTooltip(@NonNull PlayerCharacter character, @NonNull Skill skill) {
-    String freeTag = character.skillState(skill).tagged() ? " Uncheck to free this Tag." : "";
-    if (character.isTaggedByOrigin(skill)) {
+    String freeTag = character.abilities().skillState(skill).tagged() ? " Uncheck to free this Tag." : "";
+    if (character.abilities().isTaggedByOrigin(skill)) {
       return "Tag skill from " + character.getOriginData().map(OriginData::name).orElse("the origin")
           + "." + freeTag;
     }
-    if (character.isTaggedByPerk(skill)) {
+    if (character.abilities().isTaggedByPerk(skill)) {
       return "Tag skill from the Tag! perk." + freeTag;
     }
-    Optional<TraitDefinition> forbidding = character.tagForbiddenBy(skill);
+    Optional<TraitDefinition> forbidding = character.abilities().tagForbiddenBy(skill);
     if (forbidding.isPresent()) {
       return skill.displayName() + " cannot be a Tag skill with " + forbidding.get().name() + "." + freeTag;
     }

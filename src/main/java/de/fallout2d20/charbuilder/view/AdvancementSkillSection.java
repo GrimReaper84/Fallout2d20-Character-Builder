@@ -19,14 +19,14 @@ final class AdvancementSkillSection {
 
   static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane pane = SkillSection.grid();
-    int left = character.advancementSkillRanksLeft();
+    int left = character.advancement().skillRanksLeft();
     pane.add(new Label("[Ranks left: " + left + "]"), "span 6");
     for (Skill skill : Skill.values()) {
-      int staged = character.skillState(skill).stagedRanks();
-      pane.add(new Label(character.isTagged(skill) ? SkillSection.TAG_MARKER : ""));
+      int staged = character.abilities().skillState(skill).stagedRanks();
+      pane.add(new Label(character.abilities().isTagged(skill) ? SkillSection.TAG_MARKER : ""));
       SkillSection.addNameCells(pane, skill);
       // Wide enough for "3 (+1)", so the buttons stay put while ranks are staged.
-      pane.add(SkillSection.rank(character.skillRank(skill) + (staged > 0 ? " (+" + staged + ")" : ""),
+      pane.add(SkillSection.rank(character.abilities().skillRank(skill) + (staged > 0 ? " (+" + staged + ")" : ""),
           StepButtons.FRACTION_WIDTH));
       boolean canLower = AdvancementRules.canLower(character, skill);
       boolean canRaise = AdvancementRules.canRaise(character, skill);
@@ -35,7 +35,7 @@ final class AdvancementSkillSection {
           canLower, () -> step(character, skill, -1, onChanged)));
       pane.add(StepButtons.plus(canRaise ? "Stage a rank of " + skill.displayName()
               : left <= 0 ? "No skill ranks left."
-              : skill.displayName() + " is at its maximum rank of " + character.skillRankCap() + ".",
+              : skill.displayName() + " is at its maximum rank of " + character.abilities().skillRankCap() + ".",
           canRaise, () -> step(character, skill, 1, onChanged)));
     }
     pane.add(new Label(SkillSection.TAG_LEGEND), "span 6");
@@ -48,7 +48,7 @@ final class AdvancementSkillSection {
     boolean allowed = delta > 0 ? AdvancementRules.canRaise(character, skill)
         : AdvancementRules.canLower(character, skill);
     if (allowed) {
-      character.stageSkillRank(skill, delta);
+      character.advancement().stageSkillRank(skill, delta);
     }
     onChanged.run();
   }

@@ -22,7 +22,7 @@ class SheetContentTest {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.setName("Nora");
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.setFreeTag(Skill.SMALL_GUNS, true);
+    character.abilities().setFreeTag(Skill.SMALL_GUNS, true);
     return character;
   }
 
@@ -57,7 +57,7 @@ class SheetContentTest {
   void misterHandyHitLocations() {
     PlayerCharacter robot = PlayerCharacter.createNew();
     robot.chooseOrigin(CatalogRef.of("mister-handy"));
-    robot.chooseEquipmentPack(CatalogRef.of("mister-handy"));
+    robot.startingGear().choosePack(CatalogRef.of("mister-handy"));
     SheetContent sheet = SheetContent.of(robot);
     assertEquals(List.of("Optics", "Main Body", "Arm 1", "Arm 2", "Arm 3", "Thruster"),
         sheet.hitLocations().stream().map(HitLocationRow::name).toList());
@@ -72,8 +72,8 @@ class SheetContentTest {
   @Test
   void weaponRowsWithTargetNumberTagAndAmmunition() {
     PlayerCharacter character = survivor();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Spiked"));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Spiked"));
     SheetContent sheet = SheetContent.of(character);
     WeaponRow pistol = sheet.weapons().getFirst();
     assertEquals("10mm Pistol", pistol.name());
@@ -91,10 +91,10 @@ class SheetContentTest {
   @Test
   void gearWithQuantitiesWeightsAndCarryLoad() {
     PlayerCharacter character = survivor();
-    character.addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(3));
-    character.addItem(CarriedItem.of(new CustomItem("Toolbox", 2, "")).withQuantity(3));
-    character.addApparel(WornApparel.of(CatalogRef.of("vault-jumpsuit")));
-    character.setApparelCarried(0, true);
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(3));
+    character.gear().addItem(CarriedItem.of(new CustomItem("Toolbox", 2, "")).withQuantity(3));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("vault-jumpsuit")));
+    character.gear().setApparelCarried(0, true);
     SheetContent sheet = SheetContent.of(character);
     assertEquals(new GearRow("Stimpak ×3", "<1"), sheet.gear().getFirst(), "light items keep the printed weight");
     assertEquals(new GearRow("Toolbox ×3", "6"), sheet.gear().get(1));

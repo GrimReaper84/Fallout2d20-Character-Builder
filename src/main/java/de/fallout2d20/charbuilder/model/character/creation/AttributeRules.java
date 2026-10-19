@@ -33,7 +33,7 @@ public final class AttributeRules {
   public static int pointsLeft(@NonNull PlayerCharacter character) {
     int spent = 0;
     for (Attribute attribute : Attribute.values()) {
-      spent += character.attributeAllocation(attribute);
+      spent += character.abilities().attributeAllocation(attribute);
     }
     return SPECIAL_POINTS - spent;
   }
@@ -50,7 +50,7 @@ public final class AttributeRules {
    */
   public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
     return (character.isGmMode() || pointsLeft(character) > 0)
-        && character.attributeValue(attribute) < maximum(character, attribute);
+        && character.abilities().attributeValue(attribute) < maximum(character, attribute);
   }
 
   /**
@@ -58,8 +58,8 @@ public final class AttributeRules {
    * {@link #GM_MINIMUM_VALUE}.
    */
   public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
-    return character.isGmMode() ? character.attributeValue(attribute) > GM_MINIMUM_VALUE
-        : character.attributeAllocation(attribute) > MIN_ALLOCATION;
+    return character.isGmMode() ? character.abilities().attributeValue(attribute) > GM_MINIMUM_VALUE
+        : character.abilities().attributeAllocation(attribute) > MIN_ALLOCATION;
   }
 
   /** All allocation problems of a character in creation; empty for complete characters and in GM mode (D2). */
@@ -76,7 +76,7 @@ public final class AttributeRules {
           "Too many S.P.E.C.I.A.L. points spent (" + -left + " too many)."));
     }
     for (Attribute attribute : Attribute.values()) {
-      if (character.attributeAllocation(attribute) < MIN_ALLOCATION) {
+      if (character.abilities().attributeAllocation(attribute) < MIN_ALLOCATION) {
         problems.add(new CreationProblem(HintArea.STATS, attribute.displayName(), attribute.displayName()
             + " may be lowered by at most 1 below its starting value."));
       }

@@ -20,129 +20,131 @@ class PlayerCharacterEquipmentTest {
   @Test
   void choosingAPackOpensItsChoices() {
     PlayerCharacter survivor = character("survivor");
-    survivor.chooseEquipmentPack(CatalogRef.of("raider"));
-    assertEquals(Arrays.asList(null, null, null), survivor.getStartingEquipment().choices());
-    assertEquals(List.of(), survivor.getStartingEquipment().arms());
+    survivor.startingGear().choosePack(CatalogRef.of("raider"));
+    assertEquals(Arrays.asList(null, null, null), survivor.startingGear().getSelection().choices());
+    assertEquals(List.of(), survivor.startingGear().getSelection().arms());
 
-    survivor.chooseEquipmentOption(0, "Pool cue");
-    survivor.chooseEquipmentOption(1, "1 dose of Jet");
-    assertEquals(Arrays.asList("Pool cue", "1 dose of Jet", null), survivor.getStartingEquipment().choices());
-    survivor.chooseEquipmentOption(1, null);
-    assertNull(survivor.getStartingEquipment().choices().get(1));
+    survivor.startingGear().chooseOption(0, "Pool cue");
+    survivor.startingGear().chooseOption(1, "1 dose of Jet");
+    assertEquals(Arrays.asList("Pool cue", "1 dose of Jet", null), survivor.startingGear().getSelection().choices());
+    survivor.startingGear().chooseOption(1, null);
+    assertNull(survivor.startingGear().getSelection().choices().get(1));
 
-    assertThrows(IllegalArgumentException.class, () -> survivor.chooseEquipmentOption(0, "Machete"));
-    assertThrows(IllegalArgumentException.class, () -> survivor.chooseEquipmentOption(3, null));
+    assertThrows(IllegalArgumentException.class, () -> survivor.startingGear().chooseOption(0, "Machete"));
+    assertThrows(IllegalArgumentException.class, () -> survivor.startingGear().chooseOption(3, null));
     assertThrows(IllegalArgumentException.class,
-        () -> survivor.chooseEquipmentPack(CatalogRef.of("lone-wanderer")));
+        () -> survivor.startingGear().choosePack(CatalogRef.of("lone-wanderer")));
   }
 
   @Test
   void optionsNeedAPack() {
     PlayerCharacter survivor = character("survivor");
-    assertThrows(IllegalStateException.class, () -> survivor.chooseEquipmentOption(0, null));
-    assertThrows(IllegalStateException.class, () -> survivor.setFreeArms(true));
-    assertThrows(IllegalStateException.class, () -> survivor.chooseArm(0, ArmSelection.OPEN));
+    assertThrows(IllegalStateException.class, () -> survivor.startingGear().chooseOption(0, null));
+    assertThrows(IllegalStateException.class, () -> survivor.startingGear().setFreeArms(true));
+    assertThrows(IllegalStateException.class, () -> survivor.startingGear().chooseArm(0, ArmSelection.OPEN));
   }
 
   /** CRB p. 80: only some packs include a personal trinket; the text survives a pack change. */
   @Test
   void trinketSurvivesPackChanges() {
     PlayerCharacter survivor = character("survivor");
-    survivor.chooseEquipmentPack(CatalogRef.of("settler"));
-    survivor.setTrinket("  small wooden ocarina ");
-    assertEquals("small wooden ocarina", survivor.getStartingEquipment().trinket());
-    survivor.chooseEquipmentPack(CatalogRef.of("wanderer"));
-    assertEquals("small wooden ocarina", survivor.getStartingEquipment().trinket());
-    survivor.chooseEquipmentPack(CatalogRef.of("raider"));
-    survivor.chooseEquipmentPack(CatalogRef.of("settler"));
-    assertEquals("small wooden ocarina", survivor.getStartingEquipment().trinket());
-    survivor.setTrinket(" ");
-    assertNull(survivor.getStartingEquipment().trinket());
+    survivor.startingGear().choosePack(CatalogRef.of("settler"));
+    survivor.startingGear().setTrinket("  small wooden ocarina ");
+    assertEquals("small wooden ocarina", survivor.startingGear().getSelection().trinket());
+    survivor.startingGear().choosePack(CatalogRef.of("wanderer"));
+    assertEquals("small wooden ocarina", survivor.startingGear().getSelection().trinket());
+    survivor.startingGear().choosePack(CatalogRef.of("raider"));
+    survivor.startingGear().choosePack(CatalogRef.of("settler"));
+    assertEquals("small wooden ocarina", survivor.startingGear().getSelection().trinket());
+    survivor.startingGear().setTrinket(" ");
+    assertNull(survivor.startingGear().getSelection().trinket());
   }
 
   /** CRB p. 81: Explosives, Melee Weapons and Throwing offer a choice; picks survive a pack change. */
   @Test
   void tagSkillItemPicks() {
     PlayerCharacter survivor = character("survivor");
-    survivor.chooseTagSkillItem(Skill.EXPLOSIVES, "2 baseball grenades");
-    survivor.chooseEquipmentPack(CatalogRef.of("settler"));
+    survivor.startingGear().chooseTagSkillItem(Skill.EXPLOSIVES, "2 baseball grenades");
+    survivor.startingGear().choosePack(CatalogRef.of("settler"));
     assertEquals(Map.of(Skill.EXPLOSIVES, "2 baseball grenades"),
-        survivor.getStartingEquipment().tagSkillItems());
-    survivor.chooseTagSkillItem(Skill.EXPLOSIVES, null);
-    assertEquals(Map.of(), survivor.getStartingEquipment().tagSkillItems());
-    assertThrows(IllegalArgumentException.class, () -> survivor.chooseTagSkillItem(Skill.REPAIR, "Multi-Tool"));
-    assertThrows(IllegalArgumentException.class, () -> survivor.chooseTagSkillItem(Skill.THROWING, "Spear"));
+        survivor.startingGear().getSelection().tagSkillItems());
+    survivor.startingGear().chooseTagSkillItem(Skill.EXPLOSIVES, null);
+    assertEquals(Map.of(), survivor.startingGear().getSelection().tagSkillItems());
+    assertThrows(IllegalArgumentException.class, () -> survivor.startingGear().chooseTagSkillItem(Skill.REPAIR,
+        "Multi-Tool"));
+    assertThrows(IllegalArgumentException.class, () -> survivor.startingGear().chooseTagSkillItem(Skill.THROWING,
+        "Spear"));
   }
 
   /** CRB p. 77: a pack sets the arms it fixes and leaves the choosable ones open. */
   @Test
   void misterHandyPackSetsItsArms() {
     PlayerCharacter handy = character("mister-handy");
-    handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    handy.startingGear().choosePack(CatalogRef.of("mister-gutsy"));
     assertEquals(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM), ArmSelection.of(ArmAttachment.BUZZ_SAW),
-        ArmSelection.of(ArmAttachment.LASER_EMITTER)), handy.getStartingEquipment().arms());
-    assertFalse(handy.getStartingEquipment().hasPincer());
+        ArmSelection.of(ArmAttachment.LASER_EMITTER)), handy.startingGear().getSelection().arms());
+    assertFalse(handy.startingGear().getSelection().hasPincer());
 
-    handy.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
+    handy.startingGear().choosePack(CatalogRef.of("nurse-handy"));
     assertEquals(List.of(ArmSelection.OPEN, ArmSelection.of(ArmAttachment.BUZZ_SAW), ArmSelection.OPEN),
-        handy.getStartingEquipment().arms());
-    handy.chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
-    assertTrue(handy.getStartingEquipment().hasPincer());
-    assertThrows(IllegalArgumentException.class, () -> handy.chooseArm(3, ArmSelection.OPEN));
+        handy.startingGear().getSelection().arms());
+    handy.startingGear().chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
+    assertTrue(handy.startingGear().getSelection().hasPincer());
+    assertThrows(IllegalArgumentException.class, () -> handy.startingGear().chooseArm(3, ArmSelection.OPEN));
   }
 
   /** chooseArm is lenient: an arm the pack does not allow is stored and reported by the creation rules. */
   @Test
   void chooseArmAcceptsArmsThePackDoesNotAllow() {
     PlayerCharacter handy = character("mister-handy");
-    handy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
-    handy.chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
-    assertFalse(handy.getStartingEquipment().freeArms());
-    assertEquals(ArmSelection.of(ArmAttachment.PINCER), handy.getStartingEquipment().arms().get(1));
+    handy.startingGear().choosePack(CatalogRef.of("mister-gutsy"));
+    handy.startingGear().chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
+    assertFalse(handy.startingGear().getSelection().freeArms());
+    assertEquals(ArmSelection.of(ArmAttachment.PINCER), handy.startingGear().getSelection().arms().get(1));
   }
 
   /** Free arms (house-rule option): any attachment or a weapon; switching back restores the pack's arms. */
   @Test
   void freeArmsAndBackToThePack() {
     PlayerCharacter handy = character("mister-handy");
-    handy.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
-    handy.chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
-    handy.setFreeArms(true);
-    assertTrue(handy.getStartingEquipment().freeArms());
-    assertEquals(ArmSelection.of(ArmAttachment.PINCER), handy.getStartingEquipment().arms().getFirst());
-    handy.chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
-    handy.chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
+    handy.startingGear().choosePack(CatalogRef.of("nurse-handy"));
+    handy.startingGear().chooseArm(0, ArmSelection.of(ArmAttachment.PINCER));
+    handy.startingGear().setFreeArms(true);
+    assertTrue(handy.startingGear().getSelection().freeArms());
+    assertEquals(ArmSelection.of(ArmAttachment.PINCER), handy.startingGear().getSelection().arms().getFirst());
+    handy.startingGear().chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
+    handy.startingGear().chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
 
-    handy.setFreeArms(false);
-    assertFalse(handy.getStartingEquipment().freeArms());
+    handy.startingGear().setFreeArms(false);
+    assertFalse(handy.startingGear().getSelection().freeArms());
     assertEquals(List.of(ArmSelection.of(ArmAttachment.PINCER), ArmSelection.of(ArmAttachment.BUZZ_SAW),
-        ArmSelection.OPEN), handy.getStartingEquipment().arms());
+        ArmSelection.OPEN), handy.startingGear().getSelection().arms());
 
-    handy.setFreeArms(true);
-    handy.chooseEquipmentPack(CatalogRef.of("mister-handy"));
-    assertFalse(handy.getStartingEquipment().freeArms(), "a new pack starts with its own arms");
+    handy.startingGear().setFreeArms(true);
+    handy.startingGear().choosePack(CatalogRef.of("mister-handy"));
+    assertFalse(handy.startingGear().getSelection().freeArms(), "a new pack starts with its own arms");
 
     PlayerCharacter survivor = character("survivor");
-    survivor.chooseEquipmentPack(CatalogRef.of("settler"));
-    assertThrows(IllegalStateException.class, () -> survivor.setFreeArms(true));
+    survivor.startingGear().choosePack(CatalogRef.of("settler"));
+    assertThrows(IllegalStateException.class, () -> survivor.startingGear().setFreeArms(true));
   }
 
   /** Ghoul and Survivor share the Wastelander packs (CRB p. 79); other origins do not. */
   @Test
   void originChangeKeepsOnlyAPackStillOffered() {
     PlayerCharacter character = character("survivor");
-    character.chooseEquipmentPack(CatalogRef.of("settler"));
-    character.chooseEquipmentOption(0, "Pipe wrench");
+    character.startingGear().choosePack(CatalogRef.of("settler"));
+    character.startingGear().chooseOption(0, "Pipe wrench");
     character.chooseOrigin(CatalogRef.of("ghoul"));
-    assertEquals(CatalogRef.of("settler"), character.getStartingEquipment().pack());
-    assertEquals(List.of("Pipe wrench"), character.getStartingEquipment().choices());
+    assertEquals(CatalogRef.of("settler"), character.startingGear().getSelection().pack());
+    assertEquals(List.of("Pipe wrench"), character.startingGear().getSelection().choices());
     character.chooseOrigin(CatalogRef.of("vault-dweller"));
-    assertEquals(StartingEquipment.NONE, character.getStartingEquipment());
+    assertEquals(StartingEquipment.NONE, character.startingGear().getSelection());
 
     character.chooseOrigin(CatalogRef.of("ghoul"));
-    character.chooseEquipmentPack(CatalogRef.of("vault-tec-security"));
+    character.startingGear().choosePack(CatalogRef.of("vault-tec-security"));
     character.chooseOrigin(CatalogRef.of("vault-dweller"));
-    assertEquals(CatalogRef.of("vault-tec-security"), character.getStartingEquipment().pack());
+    assertEquals(CatalogRef.of("vault-tec-security"), character.startingGear().getSelection().pack());
   }
 
   @Test
@@ -151,20 +153,20 @@ class PlayerCharacterEquipmentTest {
         Map.of(), "Medal", false, List.of());
     PlayerCharacter complete = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
         .creationComplete(true).startingEquipment(settler).inventoryNotes("Notes").build();
-    assertEquals(settler, complete.getStartingEquipment());
-    assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentPack(CatalogRef.of("raider")));
-    assertThrows(IllegalStateException.class, () -> complete.chooseEquipmentOption(0, "Rolling pin"));
-    assertThrows(IllegalStateException.class, () -> complete.chooseTagSkillItem(Skill.THROWING, null));
-    assertThrows(IllegalStateException.class, () -> complete.setTrinket("Wedding ring"));
-    assertThrows(IllegalStateException.class, () -> complete.setFreeArms(true));
-    assertThrows(IllegalStateException.class, () -> complete.chooseArm(0, ArmSelection.OPEN));
-    assertEquals("Notes", complete.getInventoryNotes());
-    complete.setInventoryNotes("42 caps, 3 bobby pins");
-    assertEquals("42 caps, 3 bobby pins", complete.getInventoryNotes());
-    complete.setInventoryNotes(null);
-    assertEquals("", complete.getInventoryNotes());
-    assertEquals("", PlayerCharacter.createNew().getInventoryNotes());
-    assertEquals(StartingEquipment.NONE, PlayerCharacter.createNew().getStartingEquipment());
+    assertEquals(settler, complete.startingGear().getSelection());
+    assertThrows(IllegalStateException.class, () -> complete.startingGear().choosePack(CatalogRef.of("raider")));
+    assertThrows(IllegalStateException.class, () -> complete.startingGear().chooseOption(0, "Rolling pin"));
+    assertThrows(IllegalStateException.class, () -> complete.startingGear().chooseTagSkillItem(Skill.THROWING, null));
+    assertThrows(IllegalStateException.class, () -> complete.startingGear().setTrinket("Wedding ring"));
+    assertThrows(IllegalStateException.class, () -> complete.startingGear().setFreeArms(true));
+    assertThrows(IllegalStateException.class, () -> complete.startingGear().chooseArm(0, ArmSelection.OPEN));
+    assertEquals("Notes", complete.gear().getNotes());
+    complete.gear().setNotes("42 caps, 3 bobby pins");
+    assertEquals("42 caps, 3 bobby pins", complete.gear().getNotes());
+    complete.gear().setNotes(null);
+    assertEquals("", complete.gear().getNotes());
+    assertEquals("", PlayerCharacter.createNew().gear().getNotes());
+    assertEquals(StartingEquipment.NONE, PlayerCharacter.createNew().startingGear().getSelection());
   }
 
   private static PlayerCharacter character(String origin) {

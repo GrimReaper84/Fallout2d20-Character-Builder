@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
+import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
@@ -162,8 +163,8 @@ final class LegacyImportRun {
       Integer parsed = value == null ? null : parseInt(value);
       if (parsed == null) {
         warning(ATTRIBUTES, attribute.displayName() + " is missing or invalid; using "
-            + PlayerCharacter.ATTRIBUTE_BASE + ".");
-        parsed = PlayerCharacter.ATTRIBUTE_BASE;
+            + Abilities.ATTRIBUTE_BASE + ".");
+        parsed = Abilities.ATTRIBUTE_BASE;
       } else if (parsed < 4 || parsed > 10) {
         info(ATTRIBUTES, attribute.displayName() + " is " + parsed
             + ", outside the usual range 4–10.");
@@ -354,10 +355,10 @@ final class LegacyImportRun {
    * the lowered maximum fall to it.
    */
   private void capCurrentHp(@NonNull PlayerCharacter character) {
-    Integer currentHp = character.getVitals().currentHp();
+    Integer currentHp = character.session().getVitals().currentHp();
     int max = SessionValues.of(character).effectiveMaxHp();
     if (currentHp != null && currentHp > max) {
-      character.setCurrentHp(currentHp);
+      character.session().setCurrentHp(currentHp);
       info(VITALS, "Current HP " + currentHp + " lowered to " + max + ": rads lower the maximum HP.");
     }
   }

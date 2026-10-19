@@ -16,11 +16,11 @@ final class NotesTab {
   private NotesTab() {}
 
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
-    TextArea notes = new TextArea(character.getVitals().notes());
+    TextArea notes = new TextArea(character.session().getVitals().notes());
     notes.setPromptText("Conditions, chems and their duration, addictions, …");
     notes.setWrapText(true);
     notes.textProperty().addListener((obs, old, text) -> {
-      character.setSessionNotes(text);
+      character.session().setNotes(text);
       callbacks.onEdited().run();
     });
     BorderPane pane = new BorderPane(notes);

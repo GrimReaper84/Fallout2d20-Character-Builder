@@ -23,15 +23,15 @@ class GmModeTest {
   @Test
   void creationEditsOfACompleteCharacterNeedGmMode() {
     PlayerCharacter character = complete();
-    assertThrows(IllegalStateException.class, () -> character.setAttributeAllocation(Attribute.LUCK, 2));
+    assertThrows(IllegalStateException.class, () -> character.abilities().setAttributeAllocation(Attribute.LUCK, 2));
     character.setGmMode(true);
     character.chooseOrigin(CatalogRef.of("ghoul"));
-    character.setAttributeAllocation(Attribute.LUCK, 3);
-    character.setFreeTag(Skill.SCIENCE, true);
-    assertEquals(8, character.attributeValue(Attribute.LUCK));
-    assertTrue(character.isTagged(Skill.SCIENCE));
+    character.abilities().setAttributeAllocation(Attribute.LUCK, 3);
+    character.abilities().setFreeTag(Skill.SCIENCE, true);
+    assertEquals(8, character.abilities().attributeValue(Attribute.LUCK));
+    assertTrue(character.abilities().isTagged(Skill.SCIENCE));
     character.setGmMode(false);
-    assertThrows(IllegalStateException.class, () -> character.setFreeTag(Skill.SCIENCE, false));
+    assertThrows(IllegalStateException.class, () -> character.abilities().setFreeTag(Skill.SCIENCE, false));
   }
 
   /** No budgets in GM mode; the attribute maximum and the skill rank cap stay. */
@@ -39,20 +39,20 @@ class GmModeTest {
   void budgetsDoNotApplyButCapsDo() {
     PlayerCharacter character = complete();
     character.setGmMode(true);
-    character.setAttributeAllocation(Attribute.STRENGTH, 4);
-    character.setAttributeAllocation(Attribute.AGILITY, 1);
+    character.abilities().setAttributeAllocation(Attribute.STRENGTH, 4);
+    character.abilities().setAttributeAllocation(Attribute.AGILITY, 1);
     assertEquals(0, AttributeRules.pointsLeft(character));
     assertTrue(AttributeRules.canRaise(character, Attribute.STRENGTH), "no budget in GM mode");
-    character.setAttributeAllocation(Attribute.STRENGTH, 5);
-    assertEquals(10, character.attributeValue(Attribute.STRENGTH));
+    character.abilities().setAttributeAllocation(Attribute.STRENGTH, 5);
+    assertEquals(10, character.abilities().attributeValue(Attribute.STRENGTH));
     assertFalse(AttributeRules.canRaise(character, Attribute.STRENGTH), "maximum 10 (CRB p. 50)");
-    character.setAttributeAllocation(Attribute.AGILITY, -4);
+    character.abilities().setAttributeAllocation(Attribute.AGILITY, -4);
     assertFalse(AttributeRules.canLower(character, Attribute.AGILITY), "technical floor 1");
 
     for (int i = 0; i < 6; i++) {
       SkillRules.step(character, Skill.REPAIR, 1);
     }
-    assertEquals(6, character.skillRank(Skill.REPAIR));
+    assertEquals(6, character.abilities().skillRank(Skill.REPAIR));
     assertFalse(SkillRules.canRaise(character, Skill.REPAIR), "rank cap 6 (CRB p. 49)");
     assertTrue(SkillRules.canToggleTag(character, Skill.SPEECH));
   }
@@ -77,15 +77,15 @@ class GmModeTest {
   void levelAndXpGoDown() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.setStartingLevel(4);
+    character.advancement().setStartingLevel(4);
     character.completeCreation();
-    assertThrows(IllegalStateException.class, () -> character.setLevelAsGm(2, 300));
+    assertThrows(IllegalStateException.class, () -> character.advancement().setLevelAsGm(2, 300));
     character.setGmMode(true);
-    character.setLevelAsGm(2, 300);
-    assertEquals(2, character.getLevel());
-    assertEquals(300, character.getXp());
-    assertEquals(OptionalInt.of(2), character.getStartingLevel());
-    assertThrows(IllegalArgumentException.class, () -> character.setLevelAsGm(0, 0));
+    character.advancement().setLevelAsGm(2, 300);
+    assertEquals(2, character.advancement().getLevel());
+    assertEquals(300, character.advancement().getXp());
+    assertEquals(OptionalInt.of(2), character.advancement().getStartingLevel());
+    assertThrows(IllegalArgumentException.class, () -> character.advancement().setLevelAsGm(0, 0));
   }
 
   /** A Tag! bonus hides GM corrections below it; the step is then not offered and changes nothing. */
@@ -94,12 +94,12 @@ class GmModeTest {
     PlayerCharacter character = complete();
     character.setGmMode(true);
     character.addPerkRank(CatalogRef.of("tag"), null, Skill.SURVIVAL);
-    assertEquals(2, character.skillRank(Skill.SURVIVAL));
+    assertEquals(2, character.abilities().skillRank(Skill.SURVIVAL));
     assertFalse(SkillRules.canLower(character, Skill.SURVIVAL));
     SkillRules.step(character, Skill.SURVIVAL, -1);
-    assertEquals(0, character.skillState(Skill.SURVIVAL).gmRanks());
+    assertEquals(0, character.abilities().skillState(Skill.SURVIVAL).gmRanks());
     SkillRules.step(character, Skill.SURVIVAL, 1);
-    assertEquals(3, character.skillRank(Skill.SURVIVAL));
+    assertEquals(3, character.abilities().skillRank(Skill.SURVIVAL));
   }
 
   /** Ending creation and the starting level belong to creation itself, even in GM mode. */
@@ -108,7 +108,7 @@ class GmModeTest {
     PlayerCharacter character = complete();
     character.setGmMode(true);
     assertThrows(IllegalStateException.class, character::completeCreation);
-    assertThrows(IllegalStateException.class, () -> character.setStartingLevel(3));
+    assertThrows(IllegalStateException.class, () -> character.advancement().setStartingLevel(3));
   }
 
   /** User decision 2026-10-16: lowering the level cuts pending points and caps the current HP. */
@@ -117,12 +117,12 @@ class GmModeTest {
     PlayerCharacter character = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).level(5)
         .xp(1_000).creationComplete(true).progression(new Progression(3, 1)).vitals(new Vitals(14, 0, 0)).build();
     character.setGmMode(true);
-    character.setLevelAsGm(3, 300);
-    assertEquals(new Progression(1, 0), character.getProgression());
+    character.advancement().setLevelAsGm(3, 300);
+    assertEquals(new Progression(1, 0), character.advancement().getProgression());
     assertEquals(12, SessionValues.of(character).currentHp(), "END 5 + LCK 5 + 2 levels (CRB p. 49)");
-    assertNull(character.getVitals().currentHp(), "capped at the maximum = stored as full");
-    character.setLevelAsGm(6, 1_500);
-    assertEquals(new Progression(1, 0), character.getProgression(), "raising grants no points");
+    assertNull(character.session().getVitals().currentHp(), "capped at the maximum = stored as full");
+    character.advancement().setLevelAsGm(6, 1_500);
+    assertEquals(new Progression(1, 0), character.advancement().getProgression(), "raising grants no points");
   }
 
   /** In GM mode a complete character gets content hints (requirements), but no budget hints. */

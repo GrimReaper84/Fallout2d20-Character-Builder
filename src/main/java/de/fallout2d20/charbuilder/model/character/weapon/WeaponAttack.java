@@ -100,9 +100,9 @@ public record WeaponAttack(
     Integer criticalRange = null;
     int meleeBonus = 0;
     if (skill != null && attribute != null) {
-      int rank = character.skillRank(skill);
-      targetNumber = character.attributeValue(attribute) + rank;
-      criticalRange = character.isTagged(skill) ? Math.max(1, rank) : 1;
+      int rank = character.abilities().skillRank(skill);
+      targetNumber = character.abilities().attributeValue(attribute) + rank;
+      criticalRange = character.abilities().isTagged(skill) ? Math.max(1, rank) : 1;
       if (skill == Skill.MELEE_WEAPONS || skill == Skill.UNARMED) {
         meleeBonus = DerivedStats.of(character).meleeBonusDice();
       }

@@ -19,21 +19,21 @@ class PlayerCharacterBuilderTest {
     PlayerCharacter character = PlayerCharacter.builder().build();
     assertEquals("", character.getName());
     assertNull(character.getOrigin());
-    assertEquals(1, character.getLevel());
-    assertEquals(0, character.getXp());
+    assertEquals(1, character.advancement().getLevel());
+    assertEquals(0, character.advancement().getXp());
     assertFalse(character.isCreationComplete());
     assertEquals(EnumSet.allOf(Book.class), character.getEnabledBooks());
     for (Attribute attribute : Attribute.values()) {
-      assertEquals(0, character.attributeAllocation(attribute));
+      assertEquals(0, character.abilities().attributeAllocation(attribute));
     }
     for (Skill skill : Skill.values()) {
-      assertEquals(SkillState.UNTRAINED, character.skillState(skill));
+      assertEquals(SkillState.UNTRAINED, character.abilities().skillState(skill));
     }
     assertTrue(character.getTraits().isEmpty());
     assertTrue(character.getPerks().isEmpty());
-    assertEquals(Vitals.FULL, character.getVitals());
-    assertTrue(character.getWeapons().isEmpty());
-    assertTrue(character.getItems().isEmpty());
+    assertEquals(Vitals.FULL, character.session().getVitals());
+    assertTrue(character.gear().getWeapons().isEmpty());
+    assertTrue(character.gear().getItems().isEmpty());
     assertTrue(character.getCreatedWith().isEmpty());
   }
 
@@ -46,7 +46,7 @@ class PlayerCharacterBuilderTest {
   @Test
   void ammunitionWithoutShotsIsDropped() {
     PlayerCharacter character = PlayerCharacter.builder().ammunition(Map.of("10mm", 12, "fusion-cell", 0)).build();
-    assertEquals(Map.of("10mm", 12), character.getAmmunition());
+    assertEquals(Map.of("10mm", 12), character.gear().getAmmunition());
   }
 
   @Test
@@ -72,7 +72,7 @@ class PlayerCharacterBuilderTest {
   void completeCharacterKeepsStartingLevelAndTags() {
     PlayerCharacter character = PlayerCharacter.builder().creationComplete(true).level(3).startingLevel(2)
         .startingTagSkills(Set.of(Skill.SCIENCE)).build();
-    assertEquals(2, character.getStartingLevel().orElseThrow());
+    assertEquals(2, character.advancement().getStartingLevel().orElseThrow());
     assertEquals(Set.of(Skill.SCIENCE), character.getStartingTagSkills());
   }
 }

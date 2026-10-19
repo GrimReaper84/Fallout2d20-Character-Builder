@@ -20,13 +20,13 @@ class GmModeImportTest {
     PlayerCharacter imported = new LegacyCharacterImporter(Clock.systemUTC())
         .importCharacter(LegacyCharacterImporterTest.fixture("test-survivor-v2.json")).character();
     imported.setGmMode(true);
-    Skill skill = Arrays.stream(Skill.values()).filter(candidate -> imported.skillRank(candidate) > 0)
+    Skill skill = Arrays.stream(Skill.values()).filter(candidate -> imported.abilities().skillRank(candidate) > 0)
         .findFirst().orElseThrow();
-    int before = imported.skillRank(skill);
+    int before = imported.abilities().skillRank(skill);
     SkillRules.step(imported, skill, -1);
-    assertEquals(before - 1, imported.skillRank(skill));
-    assertEquals(-1, imported.skillState(skill).gmRanks());
-    assertEquals(0, imported.skillState(skill).stagedRanks(), "not staged");
+    assertEquals(before - 1, imported.abilities().skillRank(skill));
+    assertEquals(-1, imported.abilities().skillState(skill).gmRanks());
+    assertEquals(0, imported.abilities().skillState(skill).stagedRanks(), "not staged");
   }
 
   /** An imported perk rank can be removed in GM mode; the imported rank count follows. */

@@ -31,7 +31,7 @@ public final class ArmorResistances {
     List<HitLocation> body = character.hitLocations();
     for (HitLocation location : body) {
       List<ApparelValues> worn = new ArrayList<>();
-      for (WornApparel item : character.getWornApparel()) {
+      for (WornApparel item : character.gear().getWornApparel()) {
         if (item.locations(body).contains(location)) {
           item.values().ifPresent(worn::add);
         }

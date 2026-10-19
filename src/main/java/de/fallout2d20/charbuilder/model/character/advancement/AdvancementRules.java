@@ -35,25 +35,25 @@ public final class AdvancementRules {
 
   /** Whether skill ranks are left to stage or staged, i.e. the skill −/+ buttons are needed. */
   public static boolean choosesSkills(@NonNull PlayerCharacter character) {
-    return character.isCreationComplete() && (character.advancementSkillRanksLeft() > 0
-        || Arrays.stream(Skill.values()).anyMatch(skill -> character.skillState(skill).stagedRanks() > 0));
+    return character.isCreationComplete() && (character.advancement().skillRanksLeft() > 0
+        || Arrays.stream(Skill.values()).anyMatch(skill -> character.abilities().skillState(skill).stagedRanks() > 0));
   }
 
   /** Whether perks are left to stage or perk ranks staged, i.e. the perk grid is needed. */
   public static boolean choosesPerks(@NonNull PlayerCharacter character) {
-    return character.isCreationComplete() && (character.getProgression().pendingPerks() > 0
+    return character.isCreationComplete() && (character.advancement().getProgression().pendingPerks() > 0
         || character.getPerks().stream().anyMatch(perk -> perk.stagedRanks() > 0));
   }
 
   /** Whether a skill rank can be staged: ranks left and the skill below the rank cap. */
   public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Skill skill) {
-    return character.isCreationComplete() && character.advancementSkillRanksLeft() > 0
-        && character.skillRank(skill) < character.skillRankCap();
+    return character.isCreationComplete() && character.advancement().skillRanksLeft() > 0
+        && character.abilities().skillRank(skill) < character.abilities().skillRankCap();
   }
 
   /** Whether a staged rank of the skill can be taken back. */
   public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Skill skill) {
-    return character.isCreationComplete() && character.skillState(skill).stagedRanks() > 0;
+    return character.isCreationComplete() && character.abilities().skillState(skill).stagedRanks() > 0;
   }
 
   /**
@@ -66,12 +66,12 @@ public final class AdvancementRules {
     if (!character.isCreationComplete()) {
       return problems;
     }
-    int ranksLeft = character.advancementSkillRanksLeft();
+    int ranksLeft = character.advancement().skillRanksLeft();
     if (ranksLeft < 0) {
       problems.add(new CreationProblem(HintArea.STATS, SKILLS,
           "Too many skill ranks staged (" + -ranksLeft + " too many)."));
     }
-    int perksLeft = character.advancementPerksLeft();
+    int perksLeft = character.advancement().perksLeft();
     if (perksLeft < 0) {
       problems.add(new CreationProblem(HintArea.PERKS, PERKS, "Too many perks staged (" + -perksLeft + " too many)."));
     }
@@ -87,6 +87,6 @@ public final class AdvancementRules {
 
   /** Whether the staged choices can be applied: something is staged and nothing is wrong. */
   public static boolean canApply(@NonNull PlayerCharacter character) {
-    return character.isCreationComplete() && character.hasStagedAdvancement() && problems(character).isEmpty();
+    return character.isCreationComplete() && character.advancement().hasStaged() && problems(character).isEmpty();
   }
 }

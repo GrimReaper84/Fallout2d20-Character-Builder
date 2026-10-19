@@ -27,7 +27,7 @@ final class LevelSection {
 
   /** The level field with −/+ buttons. */
   static @NonNull Node control(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    int level = character.getLevel();
+    int level = character.advancement().getLevel();
     TextField field = new TextField(Integer.toString(level));
     field.setPrefWidth(FIELD_WIDTH);
     field.setOnAction(event -> commit(character, field, onChanged));
@@ -44,7 +44,7 @@ final class LevelSection {
 
   /** From level 2: the extra starting caps and the maximum rarity (CRB p. 81); {@code null} at level 1. */
   static @Nullable Label startingCaps(@NonNull PlayerCharacter character) {
-    int level = character.getLevel();
+    int level = character.advancement().getLevel();
     if (level <= 1) {
       return null;
     }
@@ -67,7 +67,7 @@ final class LevelSection {
     } catch (NumberFormatException e) {
       typed = 0;
     }
-    if (typed != character.getLevel()) {
+    if (typed != character.advancement().getLevel()) {
       change(character, typed, onChanged);
     }
   }
@@ -77,13 +77,13 @@ final class LevelSection {
    * focus, so the captured level of the last rebuild may be outdated.
    */
   private static void step(@NonNull PlayerCharacter character, int delta, @NonNull Runnable onChanged) {
-    change(character, Math.max(1, character.getLevel() + delta), onChanged);
+    change(character, Math.max(1, character.advancement().getLevel() + delta), onChanged);
   }
 
   /** Sets the level if the model accepts it; the rebuild shows the current level either way. */
   private static void change(@NonNull PlayerCharacter character, int level, @NonNull Runnable onChanged) {
     try {
-      character.setStartingLevel(level);
+      character.advancement().setStartingLevel(level);
     } catch (IllegalArgumentException e) {
       // below 1 or too high to compute: keep the current level
     }

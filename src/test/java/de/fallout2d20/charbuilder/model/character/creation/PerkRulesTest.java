@@ -112,7 +112,7 @@ class PerkRulesTest {
     PlayerCharacter character = character("vault-dweller", 2, Map.of(Attribute.STRENGTH, 1),
         List.of(new PerkSelection(CatalogRef.of("intense-training"), 1, 0, List.of(Attribute.STRENGTH), List.of())),
         List.of());
-    assertEquals(7, character.attributeValue(Attribute.STRENGTH));
+    assertEquals(7, character.abilities().attributeValue(Attribute.STRENGTH));
     assertEquals(List.of(), PerkRules.blockers(character, def("adrenalin-rush")));
   }
 
@@ -145,7 +145,7 @@ class PerkRulesTest {
   @Test
   void noIntenseTrainingOptionAtTen() {
     PlayerCharacter mutant = character("super-mutant", 2, Map.of(Attribute.STRENGTH, 3), List.of(), List.of());
-    assertEquals(10, mutant.attributeValue(Attribute.STRENGTH));
+    assertEquals(10, mutant.abilities().attributeValue(Attribute.STRENGTH));
     assertFalse(PerkRules.attributeOptions(mutant).contains(Attribute.STRENGTH));
   }
 

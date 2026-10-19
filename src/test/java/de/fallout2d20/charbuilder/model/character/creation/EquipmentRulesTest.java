@@ -37,9 +37,9 @@ class EquipmentRulesTest {
   @Test
   void woaPackChoices() {
     PlayerCharacter zealot = character("child-of-atom");
-    zealot.chooseEquipmentPack(CatalogRef.of("zealot"));
+    zealot.startingGear().choosePack(CatalogRef.of("zealot"));
     assertEquals(List.of("Choose: Clothing (Zealot pack)."), messages(zealot));
-    zealot.chooseEquipmentOption(0, "Drifter outfit");
+    zealot.startingGear().chooseOption(0, "Drifter outfit");
     assertEquals(List.of(), messages(zealot));
   }
 
@@ -47,21 +47,21 @@ class EquipmentRulesTest {
   @Test
   void completeSelectionHasNoProblems() {
     PlayerCharacter settler = character("survivor");
-    settler.chooseEquipmentPack(CatalogRef.of("settler"));
-    settler.chooseEquipmentOption(0, "Pipe wrench");
-    settler.setTrinket("Medal");
-    settler.setFreeTag(Skill.LOCKPICK, true);
+    settler.startingGear().choosePack(CatalogRef.of("settler"));
+    settler.startingGear().chooseOption(0, "Pipe wrench");
+    settler.startingGear().setTrinket("Medal");
+    settler.abilities().setFreeTag(Skill.LOCKPICK, true);
     assertEquals(List.of(), messages(settler));
   }
 
   @Test
   void reportsOpenChoicesTrinketAndTagSkillItems() {
     PlayerCharacter settler = character("survivor");
-    settler.chooseEquipmentPack(CatalogRef.of("settler"));
-    settler.setFreeTag(Skill.MELEE_WEAPONS, true);
+    settler.startingGear().choosePack(CatalogRef.of("settler"));
+    settler.abilities().setFreeTag(Skill.MELEE_WEAPONS, true);
     assertEquals(List.of("Choose: Melee weapon (Settler pack).", "Describe or roll the personal trinket.",
         "Choose the Tag skill items for Melee Weapons."), messages(settler));
-    settler.chooseTagSkillItem(Skill.MELEE_WEAPONS, "Machete");
+    settler.startingGear().chooseTagSkillItem(Skill.MELEE_WEAPONS, "Machete");
     assertEquals(List.of("Choose: Melee weapon (Settler pack).", "Describe or roll the personal trinket."),
         messages(settler));
   }
@@ -70,10 +70,10 @@ class EquipmentRulesTest {
   @Test
   void packMustBeOfferedToTheOrigin() {
     PlayerCharacter ghoul = character("ghoul");
-    ghoul.chooseEquipmentPack(CatalogRef.of("vault-tec-security"));
+    ghoul.startingGear().choosePack(CatalogRef.of("vault-tec-security"));
     assertEquals(List.of(), messages(ghoul));
     PlayerCharacter survivor = character("survivor");
-    survivor.chooseEquipmentPack(CatalogRef.of("vault-tec-security"));
+    survivor.startingGear().choosePack(CatalogRef.of("vault-tec-security"));
     assertEquals(List.of("Vault-Tec Security is not an equipment pack for this origin."), messages(survivor));
   }
 
@@ -91,19 +91,19 @@ class EquipmentRulesTest {
   @Test
   void misterHandyArms() {
     PlayerCharacter nurse = character("mister-handy");
-    nurse.chooseEquipmentPack(CatalogRef.of("nurse-handy"));
+    nurse.startingGear().choosePack(CatalogRef.of("nurse-handy"));
     assertEquals(List.of("Choose arm 1.", "Choose arm 3."), messages(nurse));
 
     PlayerCharacter gutsy = character("mister-handy");
-    gutsy.chooseEquipmentPack(CatalogRef.of("mister-gutsy"));
+    gutsy.startingGear().choosePack(CatalogRef.of("mister-gutsy"));
     assertEquals(List.of(), messages(gutsy));
-    gutsy.chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
+    gutsy.startingGear().chooseArm(1, ArmSelection.of(ArmAttachment.PINCER));
     assertEquals(List.of("The Mister Gutsy pack does not allow this attachment on arm 2; switch on freely "
         + "configurable arms to keep it."), messages(gutsy));
-    gutsy.setFreeArms(true);
-    gutsy.chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
+    gutsy.startingGear().setFreeArms(true);
+    gutsy.startingGear().chooseArm(2, ArmSelection.ofWeapon("Hunting rifle"));
     assertEquals(List.of(), messages(gutsy), "free arms allow any attachment or weapon");
-    gutsy.chooseArm(0, ArmSelection.OPEN);
+    gutsy.startingGear().chooseArm(0, ArmSelection.OPEN);
     assertEquals(List.of("Choose arm 1."), messages(gutsy));
   }
 

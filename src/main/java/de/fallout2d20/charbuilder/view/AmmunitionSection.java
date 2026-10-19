@@ -24,10 +24,10 @@ final class AmmunitionSection {
 
   static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     Set<String> shown = new LinkedHashSet<>();
-    for (CarriedWeapon weapon : character.getWeapons()) {
+    for (CarriedWeapon weapon : character.gear().getWeapons()) {
       shown.addAll(WeaponAttack.of(character, weapon).ammunition());
     }
-    shown.addAll(character.getAmmunition().keySet());
+    shown.addAll(character.gear().getAmmunition().keySet());
     MigPane rows = new MigPane("insets 0, gap 10 4, wrap 2", "[grow, left][right]");
     for (String id : shown) {
       Label name = new Label(ammunitionName(id));
@@ -35,8 +35,8 @@ final class AmmunitionSection {
           + OverviewParts.orDash(data.quantityFound()) + ", rarity " + OverviewParts.orDash(data.rarity())
           + " (" + data.sources().getFirst() + ")")));
       rows.add(name);
-      rows.add(NumberField.of(character.ammunition(id), 0, shots -> {
-        character.setAmmunition(id, shots);
+      rows.add(NumberField.of(character.gear().ammunition(id), 0, shots -> {
+        character.gear().setAmmunition(id, shots);
         onChanged.run();
       }));
     }
@@ -50,7 +50,7 @@ final class AmmunitionSection {
     add.setOnAction(event -> {
       AmmunitionData chosen = add.getValue();
       if (chosen != null) {
-        character.setAmmunition(chosen.id(), 1);
+        character.gear().setAmmunition(chosen.id(), 1);
         onChanged.run();
       }
     });

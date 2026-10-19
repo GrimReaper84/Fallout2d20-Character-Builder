@@ -156,12 +156,12 @@ final class SampleCharacters {
   static PlayerCharacter levelUpPending() {
     PlayerCharacter character = start("Mara Quill", "vault-dweller");
     character.chooseOriginTagSkill(Skill.SCIENCE);
-    character.setStartingLevel(3);
+    character.advancement().setStartingLevel(3);
     special(character, 0, 1, 1, 1, 1, 1, 0);
     tags(character, Skill.SMALL_GUNS, Skill.MEDICINE, Skill.SPEECH);
     finish(character, List.of(Skill.SMALL_GUNS, Skill.MEDICINE, Skill.SPEECH, Skill.SCIENCE), List.of());
     complete(character);
-    character.addXp(xpUntil(character, 5));
+    character.advancement().addXp(xpUntil(character, 5));
     return character;
   }
 
@@ -170,24 +170,24 @@ final class SampleCharacters {
     PlayerCharacter character = start("Old Jeb Harrow", "survivor");
     character.chooseTrait(CatalogRef.of("educated"));
     character.chooseTrait(CatalogRef.of("fast-shot"));
-    character.setStartingLevel(12);
+    character.advancement().setStartingLevel(12);
     special(character, 1, 1, 1, 0, 1, 1, 0);
     tags(character, Skill.SMALL_GUNS, Skill.LOCKPICK, Skill.SNEAK, Skill.REPAIR);
     finish(character, List.of(Skill.SMALL_GUNS, Skill.LOCKPICK, Skill.SNEAK, Skill.REPAIR, Skill.SCIENCE,
         Skill.MEDICINE), List.of());
     complete(character);
     WeaponCatalog.offered("survivor", character.getEnabledBooks()).stream().limit(15)
-        .forEach(weapon -> character.addWeapon(CarriedWeapon.of(CatalogRef.of(weapon.id()))));
-    int worn = character.getApparel().size();
+        .forEach(weapon -> character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of(weapon.id()))));
+    int worn = character.gear().getApparel().size();
     ApparelCatalog.available(character.getEnabledBooks()).stream().limit(10)
-        .forEach(apparel -> character.addApparel(WornApparel.of(CatalogRef.of(apparel.id()))));
+        .forEach(apparel -> character.gear().addApparel(WornApparel.of(CatalogRef.of(apparel.id()))));
     // Only carried, so the extra apparel causes no clash hints.
-    for (int i = worn; i < character.getApparel().size(); i++) {
-      character.setApparelCarried(i, true);
+    for (int i = worn; i < character.gear().getApparel().size(); i++) {
+      character.gear().setApparelCarried(i, true);
     }
     ItemCatalog.all().stream().limit(40)
-        .forEach(item -> character.addItem(CarriedItem.of(CatalogRef.of(item.id()))));
-    character.addItem(CarriedItem.of(new Holotape("Vault 81 entry code", "Door code 4-8-15, recorded by the "
+        .forEach(item -> character.gear().addItem(CarriedItem.of(CatalogRef.of(item.id()))));
+    character.gear().addItem(CarriedItem.of(new Holotape("Vault 81 entry code", "Door code 4-8-15, recorded by the "
         + "overseer.")));
     return character;
   }
@@ -203,13 +203,13 @@ final class SampleCharacters {
   private static void special(PlayerCharacter character, int... allocations) {
     Attribute[] attributes = Attribute.values();
     for (int i = 0; i < attributes.length; i++) {
-      character.setAttributeAllocation(attributes[i], allocations[i]);
+      character.abilities().setAttributeAllocation(attributes[i], allocations[i]);
     }
   }
 
   private static void tags(PlayerCharacter character, Skill... skills) {
     for (Skill skill : skills) {
-      character.setFreeTag(skill, true);
+      character.abilities().setFreeTag(skill, true);
     }
   }
 
@@ -261,19 +261,19 @@ final class SampleCharacters {
       return; // e.g. Tribal: the WG packs are not in the catalog yet (F4)
     }
     EquipmentPackData pack = offered.get();
-    character.chooseEquipmentPack(CatalogRef.of(pack.id()));
+    character.startingGear().choosePack(CatalogRef.of(pack.id()));
     List<PackChoice> choices = pack.choices();
     for (int i = 0; i < choices.size(); i++) {
-      character.chooseEquipmentOption(i, choices.get(i).options().getFirst());
+      character.startingGear().chooseOption(i, choices.get(i).options().getFirst());
     }
     List<ArmSlot> arms = pack.arms();
     for (int slot = 0; slot < arms.size(); slot++) {
-      character.chooseArm(slot, ArmSelection.of(arms.get(slot).options().getFirst()));
+      character.startingGear().chooseArm(slot, ArmSelection.of(arms.get(slot).options().getFirst()));
     }
     StartingEquipmentItems.taggedSkillItems(character).filter(TagSkillItemData::isChoice)
-        .forEach(items -> character.chooseTagSkillItem(items.skill(), items.options().getFirst()));
+        .forEach(items -> character.startingGear().chooseTagSkillItem(items.skill(), items.options().getFirst()));
     if (pack.trinket()) {
-      character.setTrinket("A dented harmonica");
+      character.startingGear().setTrinket("A dented harmonica");
     }
   }
 
@@ -284,8 +284,8 @@ final class SampleCharacters {
    * @throws IllegalStateException with the open hints if the sample does not follow the rules
    */
   private static PlayerCharacter complete(PlayerCharacter character) {
-    if (character.getEquipmentPack().isPresent() && character.canApplyStartingEquipment()) {
-      character.applyStartingEquipment(character.getStartingEquipment());
+    if (character.startingGear().getPack().isPresent() && character.startingGear().canApply()) {
+      character.startingGear().apply(character.startingGear().getSelection());
     }
     List<CreationProblem> problems = CreationRules.problems(character);
     if (!problems.isEmpty()) {
@@ -298,6 +298,6 @@ final class SampleCharacters {
 
   /** XP still needed to reach the level. */
   private static long xpUntil(PlayerCharacter character, int level) {
-    return ExperienceTable.xpForLevel(level) - character.getXp();
+    return ExperienceTable.xpForLevel(level) - character.advancement().getXp();
   }
 }

@@ -24,9 +24,9 @@ class PackInventoryTest {
   @Test
   void settler() {
     PlayerCharacter settler = character("survivor", "settler");
-    settler.chooseEquipmentOption(0, "Pipe wrench");
-    settler.setTrinket("Medal");
-    settler.setFreeTag(Skill.LOCKPICK, true);
+    settler.startingGear().chooseOption(0, "Pipe wrench");
+    settler.startingGear().setTrinket("Medal");
+    settler.abilities().setFreeTag(Skill.LOCKPICK, true);
 
     PackItems pack = PackInventory.resolve(settler, StartingSource.PACK);
     assertEquals(List.of("pipe-gun", "pipe-wrench"), weaponIds(pack));
@@ -46,7 +46,7 @@ class PackInventoryTest {
   @Test
   void barterCapsAreARoll() {
     PlayerCharacter settler = character("survivor", "settler");
-    settler.setFreeTag(Skill.BARTER, true);
+    settler.abilities().setFreeTag(Skill.BARTER, true);
     assertEquals(List.of("2d20 caps"), PackInventory.resolve(settler, StartingSource.TAG_SKILL).rolls());
   }
 
@@ -76,7 +76,7 @@ class PackInventoryTest {
   @Test
   void protectronAndAliases() {
     PlayerCharacter protectron = character("protectron", "protectron");
-    protectron.applyStartingEquipment(protectron.getStartingEquipment());
+    protectron.startingGear().apply(protectron.startingGear().getSelection());
     PackItems added = PackInventory.resolve(protectron, StartingSource.PACK);
     assertEquals(List.of("protectron-claws", "laser-gun"), weaponIds(added));
     assertEquals(2, added.weapons().get(1).quantity());
@@ -91,7 +91,7 @@ class PackInventoryTest {
   @Test
   void keepsRulingsInParentheses() {
     PlayerCharacter utility = character("protectron", "utility-protectron");
-    utility.chooseEquipmentOption(0, "Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)");
+    utility.startingGear().chooseOption(0, "Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)");
     PackItems added = PackInventory.resolve(utility, StartingSource.PACK);
     assertEquals("Pack: Railway rifle with 6 + 3 CD railway spikes (Two-Handed ignored)", added.weapons().stream()
         .filter(weapon -> weapon.displayName().equals("Railway Rifle")).findFirst().orElseThrow().notes());
@@ -102,7 +102,7 @@ class PackInventoryTest {
   void splitsKnownParts() {
     assertTrue(PackInventory.match("Lab coat").isPresent());
     PlayerCharacter mercenary = character("survivor", "mercenary");
-    mercenary.chooseEquipmentOption(0, "Leather armor arm and leather armor leg (choose sides)");
+    mercenary.startingGear().chooseOption(0, "Leather armor arm and leather armor leg (choose sides)");
     PackItems added = PackInventory.resolve(mercenary, StartingSource.PACK);
     assertEquals(List.of("tough-clothing", "leather-arm", "leather-leg"), apparelIds(added));
   }
@@ -110,7 +110,7 @@ class PackInventoryTest {
   private static PlayerCharacter character(String origin, String pack) {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of(origin));
-    character.chooseEquipmentPack(CatalogRef.of(pack));
+    character.startingGear().choosePack(CatalogRef.of(pack));
     return character;
   }
 

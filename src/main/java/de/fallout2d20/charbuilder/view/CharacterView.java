@@ -64,8 +64,8 @@ final class CharacterView {
 
   /** Rebuilds header and tab contents from the character; keeps the selected tab and scroll positions. */
   void refresh() {
-    if (character.startingEquipmentSyncs() != startingEquipmentSyncs) {
-      startingEquipmentSyncs = character.startingEquipmentSyncs();
+    if (character.startingGear().syncs() != startingEquipmentSyncs) {
+      startingEquipmentSyncs = character.startingGear().syncs();
       weaponSelection.select(WeaponsTab.UNARMED_STRIKE_INDEX);
       apparelSelection.clear();
       itemSelection.clear();

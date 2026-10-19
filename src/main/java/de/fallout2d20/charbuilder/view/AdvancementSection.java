@@ -43,7 +43,7 @@ final class AdvancementSection {
     milestone.setOnAction(event -> {
       if (AdvancementDialogs.confirmLevelUp(window(milestone), 1)) {
         try {
-          character.gainMilestoneLevel();
+          character.advancement().gainMilestoneLevel();
         } catch (IllegalArgumentException e) {
           Notifications.create().owner(milestone).title("Milestone level").text(e.getMessage()).showWarning();
           return;
@@ -62,12 +62,12 @@ final class AdvancementSection {
     if (!AdvancementRules.isActive(character)) {
       return null;
     }
-    Label left = new Label(character.advancementSkillRanksLeft() + " skill ranks, "
-        + character.advancementPerksLeft() + " perks left");
+    Label left = new Label(character.advancement().skillRanksLeft() + " skill ranks, "
+        + character.advancement().perksLeft() + " perks left");
     left.setTooltip(new Tooltip("Spend them in the Stats and Perks tabs (CRB p. 49)."));
     HBox box = new HBox(6, left);
     box.setAlignment(Pos.CENTER_LEFT);
-    if (character.hasStagedAdvancement()) {
+    if (character.advancement().hasStaged()) {
       List<CreationProblem> problems = AdvancementRules.problems(character);
       box.getChildren().addAll(applyButton(character, problems, onChanged), discardButton(character, onChanged));
     }
@@ -80,7 +80,7 @@ final class AdvancementSection {
     int levels;
     try {
       amount = Long.parseLong(field.getText().strip());
-      levels = character.levelsGainedBy(amount);
+      levels = character.advancement().levelsGainedBy(amount);
     } catch (IllegalArgumentException e) {
       Notifications.create().owner(field).title("Add XP")
           .text("Enter a whole number of XP of at least 1.").showWarning();
@@ -90,7 +90,7 @@ final class AdvancementSection {
     if (levels > 0 && !AdvancementDialogs.confirmLevelUp(window(field), levels)) {
       return;
     }
-    character.addXp(amount);
+    character.advancement().addXp(amount);
     onChanged.run();
   }
 
@@ -102,7 +102,7 @@ final class AdvancementSection {
     apply.setDisable(!problems.isEmpty());
     apply.setOnAction(event -> {
       if (AdvancementRules.canApply(character) && AdvancementDialogs.confirmApply(window(apply))) {
-        character.applyAdvancement();
+        character.advancement().apply();
         onChanged.run();
       }
     });
@@ -116,7 +116,7 @@ final class AdvancementSection {
   private static @NonNull Node discardButton(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     Button discard = iconButton("Discard", "fas-undo", "Take back all staged skill ranks and perks.");
     discard.setOnAction(event -> {
-      character.discardAdvancement();
+      character.advancement().discard();
       onChanged.run();
     });
     return discard;

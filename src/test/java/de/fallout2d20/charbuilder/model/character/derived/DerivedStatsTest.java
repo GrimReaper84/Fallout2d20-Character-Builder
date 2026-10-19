@@ -195,13 +195,13 @@ class DerivedStatsTest {
   void robotArmorChangesTheMisterHandyCarryWeight() {
     PlayerCharacter handy = PlayerCharacter.createNew();
     handy.chooseOrigin(CatalogRef.of("mister-handy"));
-    handy.addApparel(WornApparel.of(CatalogRef.of("mister-gutsy-plating")));
+    handy.gear().addApparel(WornApparel.of(CatalogRef.of("mister-gutsy-plating")));
     assertEquals(140, DerivedStats.of(handy).carryWeight());
-    handy.addApparel(WornApparel.of(CatalogRef.of("factory-storage-armor-main-body")));
+    handy.gear().addApparel(WornApparel.of(CatalogRef.of("factory-storage-armor-main-body")));
     assertEquals(160, DerivedStats.of(handy).carryWeight());
-    handy.addApparel(WornApparel.of(CatalogRef.of("primal-plate-arms")));
+    handy.gear().addApparel(WornApparel.of(CatalogRef.of("primal-plate-arms")));
     assertEquals(160, DerivedStats.of(handy).carryWeight(), "no arm chosen yet");
-    handy.setApparelLocation(2, HitLocation.ARM_2);
+    handy.gear().setApparelLocation(2, HitLocation.ARM_2);
     assertEquals(150, DerivedStats.of(handy).carryWeight());
   }
 }

@@ -24,10 +24,10 @@ class CharacterSheetPdfTest {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.setName("Nora");
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.setFreeTag(Skill.SMALL_GUNS, true);
+    character.abilities().setFreeTag(Skill.SMALL_GUNS, true);
     character.chooseTrait(CatalogRef.of("educated"));
     character.addPerkRank(CatalogRef.of("awareness"), null, null);
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     return character;
   }
 
@@ -44,7 +44,7 @@ class CharacterSheetPdfTest {
   @Test
   void twoPagesWithTheCharacterValues() throws IOException {
     PlayerCharacter character = survivor();
-    character.setCaps(98765);
+    character.gear().setCaps(98765);
     try (PDDocument document = written(character)) {
       assertEquals(2, document.getNumberOfPages());
       String text = text(document);
@@ -63,7 +63,7 @@ class CharacterSheetPdfTest {
   void overflowAndNotesGoOntoAnExtraPage() throws IOException {
     PlayerCharacter character = survivor();
     for (int i = 1; i <= SheetLayout.WEAPON_ROWS + 2; i++) {
-      character.addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Bat number " + i));
+      character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("baseball-bat")).withNotes("Bat number " + i));
     }
     try (PDDocument document = written(character)) {
       assertEquals(3, document.getNumberOfPages());
@@ -80,7 +80,7 @@ class CharacterSheetPdfTest {
   @Test
   void manyNotesFlowOntoFurtherPages() throws IOException {
     PlayerCharacter character = survivor();
-    character.setInventoryNotes("A line of notes.\n".repeat(150));
+    character.gear().setNotes("A line of notes.\n".repeat(150));
     try (PDDocument document = written(character)) {
       assertTrue(document.getNumberOfPages() >= 4);
     }
@@ -92,7 +92,7 @@ class CharacterSheetPdfTest {
     assertEquals("-1 difficulty, >= 2 × 3 ?", PdfCanvas.printable("−1 difficulty, ≥ 2 × 3 \uD83D\uDE00"));
     PlayerCharacter character = survivor();
     character.setName("Zoë −1 中");
-    character.addItem(CarriedItem.of(new CustomItem("Lucky charm ●", 0, "")));
+    character.gear().addItem(CarriedItem.of(new CustomItem("Lucky charm ●", 0, "")));
     try (PDDocument document = written(character)) {
       String text = text(document);
       assertTrue(text.contains("Zoë -1 ?"));

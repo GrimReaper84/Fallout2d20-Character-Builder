@@ -61,11 +61,11 @@ final class CharacterHeader {
     } else if (gm) {
       pane.add(GmLevelSection.levelField(character, callbacks.onChanged()));
     } else {
-      pane.add(new Label(Integer.toString(character.getLevel())));
+      pane.add(new Label(Integer.toString(character.advancement().getLevel())));
     }
     pane.add(new Label("XP"));
     pane.add(complete && gm ? GmLevelSection.xpField(character, callbacks.onChanged())
-        : new Label(Long.toString(character.getXp())));
+        : new Label(Long.toString(character.advancement().getXp())));
 
     HBox actions = new HBox(12);
     actions.setAlignment(Pos.CENTER_LEFT);

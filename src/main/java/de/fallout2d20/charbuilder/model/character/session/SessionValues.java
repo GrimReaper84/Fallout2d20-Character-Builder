@@ -39,7 +39,7 @@ public record SessionValues(
     @NonNull Set<HitLocation> injuries) {
 
   public static @NonNull SessionValues of(@NonNull PlayerCharacter character) {
-    Vitals vitals = character.getVitals();
+    Vitals vitals = character.session().getVitals();
     DerivedStats derived = DerivedStats.of(character);
     int effectiveMaxHp = effectiveMaxHp(derived.maxHp(), vitals.rads());
     Integer storedHp = vitals.currentHp();

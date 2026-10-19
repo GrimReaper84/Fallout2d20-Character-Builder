@@ -42,7 +42,7 @@ final class ApparelDetails {
     }
     int index = entry.index();
     // From the model, not the entry: typed notes change the piece without a rebuild of the tree's entries.
-    WornApparel item = character.getApparel().get(index);
+    WornApparel item = character.gear().getApparel().get(index);
     Optional<ApparelData> data = item.data();
     Optional<ApparelValues> values = item.values();
     OverviewParts.sectionHeading(pane, item.displayName());
@@ -54,7 +54,7 @@ final class ApparelDetails {
     worn.setSelected(!item.carried());
     worn.setTooltip(new Tooltip("Worn pieces protect; carried pieces only count toward the load."));
     worn.setOnAction(event -> {
-      character.setApparelCarried(index, !worn.isSelected());
+      character.gear().setApparelCarried(index, !worn.isSelected());
       callbacks.onChanged().run();
     });
     detailRow(rows, "Worn", worn);
@@ -75,7 +75,7 @@ final class ApparelDetails {
       }
     });
     OverviewParts.notesRow(rows, item.notes(), text -> {
-      character.setApparelNotes(index, text);
+      character.gear().setApparelNotes(index, text);
       callbacks.onEdited().run();
     });
     pane.add(rows);
@@ -106,7 +106,7 @@ final class ApparelDetails {
     box.setMaxWidth(Region.USE_PREF_SIZE);
     box.setOnAction(event -> {
       if (box.getValue() != item.location()) {
-        character.setApparelLocation(index, box.getValue());
+        character.gear().setApparelLocation(index, box.getValue());
         onChanged.run();
       }
     });

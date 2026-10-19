@@ -16,14 +16,14 @@ final class GmLevelSection {
 
   /** The level field; a new level sets the XP to its minimum. */
   static @NonNull TextField levelField(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    TextField level = NumberField.of(character.getLevel(), 1, value -> {
+    TextField level = NumberField.of(character.advancement().getLevel(), 1, value -> {
       long xp;
       try {
         xp = ExperienceTable.xpForLevel(value);
       } catch (ArithmeticException e) {
-        xp = character.getXp();
+        xp = character.advancement().getXp();
       }
-      character.setLevelAsGm(value, xp);
+      character.advancement().setLevelAsGm(value, xp);
       onChanged.run();
     });
     level.setTooltip(new Tooltip("Sets the level directly; XP becomes the minimum of that level."));
@@ -32,8 +32,8 @@ final class GmLevelSection {
 
   /** The XP field; the level stays. */
   static @NonNull TextField xpField(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    TextField xp = NumberField.of((int) Math.min(Integer.MAX_VALUE, character.getXp()), 0, value -> {
-      character.setLevelAsGm(character.getLevel(), value);
+    TextField xp = NumberField.of((int) Math.min(Integer.MAX_VALUE, character.advancement().getXp()), 0, value -> {
+      character.advancement().setLevelAsGm(character.advancement().getLevel(), value);
       onChanged.run();
     });
     xp.setTooltip(new Tooltip("Sets the XP directly; the level stays."));

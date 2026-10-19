@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
+import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelValues;
@@ -59,19 +60,20 @@ final class DerivedStatsCalculator {
    * the current END is used (user decision, as in the legacy app).
    */
   private static int maxHp(@NonNull PlayerCharacter character) {
-    int endurance = character.attributeValue(Attribute.ENDURANCE);
-    return endurance + character.attributeValue(Attribute.LUCK) + character.getLevel() - 1
+    int endurance = character.abilities().attributeValue(Attribute.ENDURANCE);
+    return endurance + character.abilities().attributeValue(Attribute.LUCK) + character.advancement().getLevel() - 1
         + endurance * character.perkEffect(PerkDefinition::maxHpPerEndurance);
   }
 
   /** CRB p. 47: PER + AGI. */
   private static int initiative(@NonNull PlayerCharacter character) {
-    return character.attributeValue(Attribute.PERCEPTION) + character.attributeValue(Attribute.AGILITY);
+    Abilities abilities = character.abilities();
+    return abilities.attributeValue(Attribute.PERCEPTION) + abilities.attributeValue(Attribute.AGILITY);
   }
 
   /** CRB p. 47: Defense 1, or 2 from AGI 9. */
   private static int defense(@NonNull PlayerCharacter character) {
-    return character.attributeValue(Attribute.AGILITY) >= 9 ? 2 : 1;
+    return character.abilities().attributeValue(Attribute.AGILITY) >= 9 ? 2 : 1;
   }
 
   /**
@@ -88,7 +90,7 @@ final class DerivedStatsCalculator {
     int backpack = carriedItems(character).mapToInt(ItemData::carryWeightPerStrength).max().orElse(0);
     int perStrength = traits(character).stream().map(TraitDefinition::carryWeightPerStrength)
         .filter(Objects::nonNull).min(Integer::compare).orElse(CARRY_PER_STRENGTH);
-    return CARRY_BASE + (perStrength + backpack) * character.attributeValue(Attribute.STRENGTH)
+    return CARRY_BASE + (perStrength + backpack) * character.abilities().attributeValue(Attribute.STRENGTH)
         + character.perkEffect(PerkDefinition::carryWeightPerRank);
   }
 
@@ -97,7 +99,7 @@ final class DerivedStatsCalculator {
    * backpack is worn, so the quantity of an entry does not matter here.
    */
   private static @NonNull Stream<ItemData> carriedItems(@NonNull PlayerCharacter character) {
-    return character.getItems().stream().map(CarriedItem::data).flatMap(Optional::stream);
+    return character.gear().getItems().stream().map(CarriedItem::data).flatMap(Optional::stream);
   }
 
   /**
@@ -106,20 +108,21 @@ final class DerivedStatsCalculator {
    * name that conflict.
    */
   private static int robotArmorCarryWeight(@NonNull PlayerCharacter character) {
-    return character.getWornApparel().stream().filter(item -> !item.locations(character.hitLocations()).isEmpty())
+    return character.gear().getWornApparel().stream()
+        .filter(item -> !item.locations(character.hitLocations()).isEmpty())
         .map(WornApparel::values).flatMap(Optional::stream)
         .filter(values -> values.kind().isRobot()).mapToInt(ApparelValues::carryWeight).sum();
   }
 
   /** CRB p. 47: STR 7–8 +1, 9–10 +2, 11+ +3 Combat Dice; Heavy Handed +1 (CRB p. 56). */
   private static int meleeBonusDice(@NonNull PlayerCharacter character) {
-    return strengthTier(character.attributeValue(Attribute.STRENGTH))
+    return strengthTier(character.abilities().attributeValue(Attribute.STRENGTH))
         + traits(character).stream().mapToInt(TraitDefinition::meleeBonusDice).sum();
   }
 
   /** CRB p. 21: at most as many Luck points as the Luck attribute; Gifted one fewer (CRB p. 56). */
   private static int maxLuckPoints(@NonNull PlayerCharacter character) {
-    int luck = character.attributeValue(Attribute.LUCK)
+    int luck = character.abilities().attributeValue(Attribute.LUCK)
         - traits(character).stream().mapToInt(TraitDefinition::luckPointPenalty).sum();
     return Math.max(0, luck);
   }
@@ -130,7 +133,7 @@ final class DerivedStatsCalculator {
    */
   private static @NonNull Resistance physicalResistance(@NonNull PlayerCharacter character) {
     boolean byStrength = character.perkEffect(perk -> perk.physicalDrByStrength() ? 1 : 0) > 0;
-    int barbarian = byStrength ? strengthTier(character.attributeValue(Attribute.STRENGTH)) : 0;
+    int barbarian = byStrength ? strengthTier(character.abilities().attributeValue(Attribute.STRENGTH)) : 0;
     return Resistance.of(character.perkEffect(PerkDefinition::physicalDrPerRank) + barbarian);
   }
 

@@ -70,22 +70,22 @@ class CreationRulesTest {
     nora.chooseOrigin(CatalogRef.of("survivor"));
     nora.chooseTrait(CatalogRef.of("fast-shot"));
     nora.chooseTrait(CatalogRef.of("heavy-handed"));
-    nora.setAttributeAllocation(Attribute.STRENGTH, 2);
-    nora.setAttributeAllocation(Attribute.PERCEPTION, 1);
-    nora.setAttributeAllocation(Attribute.ENDURANCE, 1);
-    nora.setAttributeAllocation(Attribute.AGILITY, 1);
+    nora.abilities().setAttributeAllocation(Attribute.STRENGTH, 2);
+    nora.abilities().setAttributeAllocation(Attribute.PERCEPTION, 1);
+    nora.abilities().setAttributeAllocation(Attribute.ENDURANCE, 1);
+    nora.abilities().setAttributeAllocation(Attribute.AGILITY, 1);
     for (Skill tag : List.of(Skill.SMALL_GUNS, Skill.REPAIR, Skill.SNEAK)) {
-      nora.setFreeTag(tag, true);
-      nora.setCreationRanks(tag, 1);
+      nora.abilities().setFreeTag(tag, true);
+      nora.abilities().setCreationRanks(tag, 1);
     }
-    nora.setCreationRanks(Skill.ATHLETICS, 3);
-    nora.setCreationRanks(Skill.LOCKPICK, 3);
-    nora.setCreationRanks(Skill.MEDICINE, 3);
-    nora.setCreationRanks(Skill.BARTER, 2);
+    nora.abilities().setCreationRanks(Skill.ATHLETICS, 3);
+    nora.abilities().setCreationRanks(Skill.LOCKPICK, 3);
+    nora.abilities().setCreationRanks(Skill.MEDICINE, 3);
+    nora.abilities().setCreationRanks(Skill.BARTER, 2);
     nora.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
-    nora.chooseEquipmentPack(CatalogRef.of("settler"));
-    nora.chooseEquipmentOption(0, "Pipe wrench");
-    nora.setTrinket("Small wooden ocarina");
+    nora.startingGear().choosePack(CatalogRef.of("settler"));
+    nora.startingGear().chooseOption(0, "Pipe wrench");
+    nora.startingGear().setTrinket("Small wooden ocarina");
     assertEquals(List.of(), CreationRules.problems(nora));
 
     nora.completeCreation();

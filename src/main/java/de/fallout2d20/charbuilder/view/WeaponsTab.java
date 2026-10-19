@@ -39,20 +39,20 @@ final class WeaponsTab {
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull MasterDetailState selection,
       @NonNull ViewCallbacks callbacks) {
     List<WeaponEntry> entries = entries(character);
-    Integer selected = selection.current(character.getWeapons().size());
+    Integer selected = selection.current(character.gear().getWeapons().size());
     WeaponEntry current = selected == null ? null
         : entries.stream().filter(entry -> entry.index() == selected).findFirst().orElse(null);
 
     ScrollPane details = MasterDetail.right(WeaponDetails.build(character, current, callbacks), selection);
     RemoveButton remove = new RemoveButton(() -> {
-      Integer index = selection.current(character.getWeapons().size());
+      Integer index = selection.current(character.gear().getWeapons().size());
       if (index == null || index == UNARMED_STRIKE_INDEX) {
         return;
       }
-      CarriedWeapon weapon = character.getWeapons().get(index);
+      CarriedWeapon weapon = character.gear().getWeapons().get(index);
       if (ConfirmDialog.confirm(window(details), "Remove weapon", "Remove " + weapon.displayName() + "?",
           "The weapon and its note are removed from the weapons.", "Remove")) {
-        character.removeWeapon(index);
+        character.gear().removeWeapon(index);
         selection.clear();
         callbacks.onChanged().run();
       }
@@ -86,7 +86,7 @@ final class WeaponsTab {
     List<WeaponEntry> entries = new ArrayList<>();
     WeaponCatalog.byId(UNARMED_STRIKE_ID).ifPresent(strike -> entries.add(
         new WeaponEntry(UNARMED_STRIKE_INDEX, WeaponAttack.of(character, strike), null)));
-    List<CarriedWeapon> weapons = character.getWeapons();
+    List<CarriedWeapon> weapons = character.gear().getWeapons();
     for (int i = 0; i < weapons.size(); i++) {
       entries.add(new WeaponEntry(i, WeaponAttack.of(character, weapons.get(i)), weapons.get(i)));
     }
@@ -102,8 +102,8 @@ final class WeaponsTab {
     List<WeaponData> offered = WeaponCatalog.offered(origin == null ? null : origin.id(), character.getEnabledBooks())
         .stream().filter(data -> !data.id().equals(UNARMED_STRIKE_ID)).toList();
     add.setOnAction(event -> AddWeaponDialog.show(window(add), offered).ifPresent(weapon -> {
-      character.addWeapon(weapon);
-      selection.select(character.getWeapons().size() - 1);
+      character.gear().addWeapon(weapon);
+      selection.select(character.gear().getWeapons().size() - 1);
       onChanged.run();
     }));
     return add;

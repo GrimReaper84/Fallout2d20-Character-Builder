@@ -23,15 +23,15 @@ final class GearSummary {
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane bar = new MigPane("insets 0, gap 6 0", "", "[top]");
     bar.add(new Label("Caps"));
-    TextField caps = NumberField.of((int) Math.min(Integer.MAX_VALUE, character.getCaps()), 0, value -> {
-      character.setCaps(value);
+    TextField caps = NumberField.of((int) Math.min(Integer.MAX_VALUE, character.gear().getCaps()), 0, value -> {
+      character.gear().setCaps(value);
       onChanged.run();
     });
     caps.setTooltip(new Tooltip("Caps on hand. The equipment pack fills in the fixed starting caps; rolled caps "
         + "(e.g. Barter 2d20) are a line in the gear notes."));
     bar.add(caps);
 
-    Materials materials = character.getMaterials();
+    Materials materials = character.gear().getMaterials();
     Label junk = new Label("Junk");
     junk.setTooltip(new Tooltip("CRB p. 208: a junk item weighs 2 lbs. (2 caps); a unit of material 1 lb. "
         + "(common 1, uncommon 3, rare 5 caps)."));
@@ -55,7 +55,7 @@ final class GearSummary {
 
   private static void set(@NonNull PlayerCharacter character, @NonNull Materials materials,
       @NonNull Runnable onChanged) {
-    character.setMaterials(materials);
+    character.gear().setMaterials(materials);
     onChanged.run();
   }
 

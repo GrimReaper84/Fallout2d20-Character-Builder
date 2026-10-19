@@ -28,7 +28,7 @@ class ArmorResistancesTest {
   }
 
   private static void wear(PlayerCharacter character, String id, HitLocation location) {
-    character.addApparel(WornApparel.of(CatalogRef.of(id)).withLocation(location));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of(id)).withLocation(location));
   }
 
   /** CRB p. 130: over clothing the higher value of each type counts (Vault Jumpsuit 0/1/2, Metal Chest Piece 2/1/0). */
@@ -52,12 +52,13 @@ class ArmorResistancesTest {
     wear(survivor, "metal-helmet", null);
     wear(survivor, "raider-chest-piece", null);
     wear(survivor, "metal-chest-piece", null);
-    assertEquals(List.of(false, false, false, true), survivor.getApparel().stream().map(WornApparel::carried).toList(),
+    assertEquals(List.of(false, false, false, true),
+        survivor.gear().getApparel().stream().map(WornApparel::carried).toList(),
         "clothing and armor are different layers; the second chest piece clashes");
     assertEquals(Resistance.of(1), at(survivor, HitLocation.TORSO).physical(), "Raider Chest Piece");
     int carried = CarryLoad.of(survivor).carried();
-    survivor.setApparelCarried(2, true);
-    survivor.setApparelCarried(3, false);
+    survivor.gear().setApparelCarried(2, true);
+    survivor.gear().setApparelCarried(3, false);
     assertEquals(Resistance.of(2), at(survivor, HitLocation.TORSO).physical(), "Metal Chest Piece");
     assertEquals(carried, CarryLoad.of(survivor).carried(), "worn or carried, the weight counts");
   }
@@ -68,7 +69,7 @@ class ArmorResistancesTest {
     PlayerCharacter protectron = character("protectron");
     wear(protectron, "actuated-frame-main-body", null);
     assertEquals(245, DerivedStats.of(protectron).carryWeight());
-    protectron.setApparelCarried(0, true);
+    protectron.gear().setApparelCarried(0, true);
     assertEquals(225, DerivedStats.of(protectron).carryWeight());
   }
 
@@ -120,13 +121,13 @@ class ArmorResistancesTest {
   @Test
   void customItemsCoverTheirLocations() {
     PlayerCharacter survivor = character("survivor");
-    survivor.addApparel(WornApparel.of(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR,
+    survivor.gear().addApparel(WornApparel.of(new CustomApparel("Legacy armor (Head)", ApparelKind.ARMOR,
         Set.of(HitLocation.HEAD), 3, 2, 1, false, 0)));
     assertEquals(Resistance.of(3), at(survivor, HitLocation.HEAD).physical());
-    survivor.setApparelNotes(0, "Ballistic weave");
-    assertEquals("Ballistic weave", survivor.getApparel().getFirst().notes());
-    survivor.removeApparel(0);
-    assertTrue(survivor.getApparel().isEmpty());
+    survivor.gear().setApparelNotes(0, "Ballistic weave");
+    assertEquals("Ballistic weave", survivor.gear().getApparel().getFirst().notes());
+    survivor.gear().removeApparel(0);
+    assertTrue(survivor.gear().getApparel().isEmpty());
   }
 
   /** House rule (user decision 2026-10-16): a Protectron has humanoid locations and wears robot armor mapped onto them. */
@@ -159,7 +160,7 @@ class ArmorResistancesTest {
     wear(protectron, "actuated-frame-main-body", null);
     wear(protectron, "actuated-frame-arms", null);
     assertEquals(245, DerivedStats.of(protectron).carryWeight());
-    protectron.setApparelLocation(1, HitLocation.RIGHT_ARM);
+    protectron.gear().setApparelLocation(1, HitLocation.RIGHT_ARM);
     assertEquals(255, DerivedStats.of(protectron).carryWeight());
   }
 }

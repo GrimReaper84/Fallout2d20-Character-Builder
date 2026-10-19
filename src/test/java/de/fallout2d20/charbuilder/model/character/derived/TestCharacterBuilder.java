@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
+import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
@@ -32,7 +33,7 @@ final class TestCharacterBuilder {
   }
 
   TestCharacterBuilder attribute(Attribute attribute, int value) {
-    allocation.put(attribute, value - PlayerCharacter.ATTRIBUTE_BASE);
+    allocation.put(attribute, value - Abilities.ATTRIBUTE_BASE);
     return this;
   }
 

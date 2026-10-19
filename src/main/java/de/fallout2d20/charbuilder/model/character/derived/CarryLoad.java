@@ -36,23 +36,23 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
 
   public static @NonNull CarryLoad of(@NonNull PlayerCharacter character) {
     int carried = 0;
-    for (CarriedWeapon weapon : character.getWeapons()) {
+    for (CarriedWeapon weapon : character.gear().getWeapons()) {
       if (weapon.isIntegrated()) {
         continue;
       }
       carried += ModdedWeapon.of(weapon).map(ModdedWeapon::weight).map(Weight::pounds).orElse(0) * weapon.quantity();
     }
-    for (WornApparel item : character.getApparel()) {
+    for (WornApparel item : character.gear().getApparel()) {
       carried += item.data().map(ApparelData::weight).map(Weight::pounds).orElse(0);
     }
-    for (CarriedItem item : character.getItems()) {
+    for (CarriedItem item : character.gear().getItems()) {
       carried += Weight.pounds(item.printedWeight()) * item.quantity();
     }
-    for (Map.Entry<String, Integer> ammunition : character.getAmmunition().entrySet()) {
+    for (Map.Entry<String, Integer> ammunition : character.gear().getAmmunition().entrySet()) {
       carried += WeaponCatalog.ammunitionById(ammunition.getKey()).map(AmmunitionData::weight).map(Weight::pounds)
           .orElse(0) * ammunition.getValue();
     }
-    carried += character.getMaterials().weight();
+    carried += character.gear().getMaterials().weight();
     return of(carried, DerivedStats.of(character).carryWeight());
   }
 

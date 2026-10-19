@@ -52,7 +52,7 @@ class AttributeRulesTest {
   @Test
   void superMutantStrengthMayDropToSix() {
     PlayerCharacter mutant = character("super-mutant", -1, 1, 1, 1, 1, 1, 1);
-    assertEquals(6, mutant.attributeValue(Attribute.STRENGTH));
+    assertEquals(6, mutant.abilities().attributeValue(Attribute.STRENGTH));
     assertEquals(List.of(), messages(mutant));
     assertFalse(AttributeRules.canLower(mutant, Attribute.STRENGTH));
     PlayerCharacter five = character("super-mutant", -2, 1, 1, 1, 1, 1, 2);

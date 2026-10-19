@@ -22,10 +22,10 @@ class WeaponAttackTest {
   private static PlayerCharacter character() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("survivor"));
-    character.setAttributeAllocation(Attribute.AGILITY, 1);
-    character.setAttributeAllocation(Attribute.STRENGTH, 4);
-    character.setFreeTag(Skill.SMALL_GUNS, true);
-    character.setCreationRanks(Skill.SMALL_GUNS, 1);
+    character.abilities().setAttributeAllocation(Attribute.AGILITY, 1);
+    character.abilities().setAttributeAllocation(Attribute.STRENGTH, 4);
+    character.abilities().setFreeTag(Skill.SMALL_GUNS, true);
+    character.abilities().setCreationRanks(Skill.SMALL_GUNS, 1);
     return character;
   }
 
@@ -91,8 +91,8 @@ class WeaponAttackTest {
   private static PlayerCharacter protectron() {
     PlayerCharacter character = PlayerCharacter.createNew();
     character.chooseOrigin(CatalogRef.of("protectron"));
-    character.setAttributeAllocation(Attribute.STRENGTH, 3);
-    character.setAttributeAllocation(Attribute.ENDURANCE, 2);
+    character.abilities().setAttributeAllocation(Attribute.STRENGTH, 3);
+    character.abilities().setAttributeAllocation(Attribute.ENDURANCE, 2);
     return character;
   }
 
@@ -156,9 +156,9 @@ class WeaponAttackTest {
   @Test
   void attackWithMods() {
     PlayerCharacter character = character();
-    character.addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
-    character.setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
-    WeaponAttack attack = WeaponAttack.of(character, character.getWeapons().getFirst());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    character.gear().setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-hardened").orElseThrow());
+    WeaponAttack attack = WeaponAttack.of(character, character.gear().getWeapons().getFirst());
     assertEquals(5, attack.damage());
     assertEquals("10mm Pistol", attack.name());
     assertEquals("Hardened 10mm Pistol", attack.moddedName());

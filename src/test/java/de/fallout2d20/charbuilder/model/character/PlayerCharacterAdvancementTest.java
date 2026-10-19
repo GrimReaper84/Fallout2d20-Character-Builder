@@ -33,48 +33,48 @@ class PlayerCharacterAdvancementTest {
   @Test
   void addXpCrossingThresholdsGainsLevels() {
     PlayerCharacter character = complete("survivor");
-    assertEquals(2, character.levelsGainedBy(300));
-    assertEquals(1, character.getLevel(), "the preview changes nothing");
-    assertEquals(2, character.addXp(300));
-    assertEquals(3, character.getLevel());
-    assertEquals(300, character.getXp());
-    assertEquals(new Progression(2, 2), character.getProgression());
+    assertEquals(2, character.advancement().levelsGainedBy(300));
+    assertEquals(1, character.advancement().getLevel(), "the preview changes nothing");
+    assertEquals(2, character.advancement().addXp(300));
+    assertEquals(3, character.advancement().getLevel());
+    assertEquals(300, character.advancement().getXp());
+    assertEquals(new Progression(2, 2), character.advancement().getProgression());
   }
 
   @Test
   void addXpBelowTheNextThresholdGainsNoLevel() {
     PlayerCharacter character = complete("survivor");
-    assertEquals(0, character.addXp(99));
-    assertEquals(1, character.getLevel());
-    assertEquals(99, character.getXp());
-    assertEquals(Progression.NONE, character.getProgression());
-    assertEquals(1, character.addXp(1), "XP are added, not set");
+    assertEquals(0, character.advancement().addXp(99));
+    assertEquals(1, character.advancement().getLevel());
+    assertEquals(99, character.advancement().getXp());
+    assertEquals(Progression.NONE, character.advancement().getProgression());
+    assertEquals(1, character.advancement().addXp(1), "XP are added, not set");
   }
 
   @Test
   void addXpRejectsNonPositiveAmountsAndCreation() {
     PlayerCharacter character = complete("survivor");
-    assertThrows(IllegalArgumentException.class, () -> character.addXp(0));
-    assertThrows(IllegalArgumentException.class, () -> character.addXp(-5));
-    assertThrows(IllegalStateException.class, () -> PlayerCharacter.createNew().addXp(100));
-    assertThrows(IllegalStateException.class, () -> PlayerCharacter.createNew().gainMilestoneLevel());
+    assertThrows(IllegalArgumentException.class, () -> character.advancement().addXp(0));
+    assertThrows(IllegalArgumentException.class, () -> character.advancement().addXp(-5));
+    assertThrows(IllegalStateException.class, () -> PlayerCharacter.createNew().advancement().addXp(100));
+    assertThrows(IllegalStateException.class, () -> PlayerCharacter.createNew().advancement().gainMilestoneLevel());
   }
 
   /** CRB p. 49 milestone progression: XP are raised to the threshold, higher XP stay. */
   @Test
   void milestoneLevelRaisesXpToTheThresholdAndKeepsHigherXp() {
     PlayerCharacter character = complete("survivor");
-    character.gainMilestoneLevel();
-    assertEquals(2, character.getLevel());
-    assertEquals(100, character.getXp());
-    assertEquals(new Progression(1, 1), character.getProgression());
+    character.advancement().gainMilestoneLevel();
+    assertEquals(2, character.advancement().getLevel());
+    assertEquals(100, character.advancement().getXp());
+    assertEquals(new Progression(1, 1), character.advancement().getProgression());
 
     // An imported character may have more XP than its level needs (legacy milestone levelling).
     PlayerCharacter ahead = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).level(2).xp(700)
         .creationComplete(true).build();
-    ahead.gainMilestoneLevel();
-    assertEquals(3, ahead.getLevel());
-    assertEquals(700, ahead.getXp(), "already above the level 3 threshold of 300");
+    ahead.advancement().gainMilestoneLevel();
+    assertEquals(3, ahead.advancement().getLevel());
+    assertEquals(700, ahead.advancement().getXp(), "already above the level 3 threshold of 300");
   }
 
   /** CRB p. 49: +1 max HP per level; current HP rise as well (user decision), "at maximum" stays. */
@@ -82,14 +82,14 @@ class PlayerCharacterAdvancementTest {
   void levelUpRaisesMaxAndCurrentHp() {
     PlayerCharacter atMaximum = complete("survivor");
     int maxHp = DerivedStats.of(atMaximum).maxHp();
-    atMaximum.addXp(300);
+    atMaximum.advancement().addXp(300);
     assertEquals(maxHp + 2, DerivedStats.of(atMaximum).maxHp());
-    assertNull(atMaximum.getVitals().currentHp());
+    assertNull(atMaximum.session().getVitals().currentHp());
 
     PlayerCharacter hurt = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
         .creationComplete(true).vitals(new Vitals(4, 3, 0)).build();
-    hurt.gainMilestoneLevel();
-    assertEquals(new Vitals(5, 3, 0), hurt.getVitals());
+    hurt.advancement().gainMilestoneLevel();
+    assertEquals(new Vitals(5, 3, 0), hurt.session().getVitals());
   }
 
   /** CRB p. 49: a skill rank per level, up to 6; staged ranks count in the rank. */
@@ -98,25 +98,25 @@ class PlayerCharacterAdvancementTest {
     PlayerCharacter character = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).level(2)
         .xp(100).creationComplete(true).skills(Map.of(Skill.SNEAK, new SkillState(true, 3, 0)))
         .progression(new Progression(2, 0)).build();
-    assertEquals(5, character.skillRank(Skill.SNEAK));
+    assertEquals(5, character.abilities().skillRank(Skill.SNEAK));
     assertTrue(AdvancementRules.canRaise(character, Skill.SNEAK));
-    character.stageSkillRank(Skill.SNEAK, 1);
-    assertEquals(6, character.skillRank(Skill.SNEAK));
-    assertEquals(1, character.advancementSkillRanksLeft());
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
+    assertEquals(6, character.abilities().skillRank(Skill.SNEAK));
+    assertEquals(1, character.advancement().skillRanksLeft());
     assertFalse(AdvancementRules.canRaise(character, Skill.SNEAK), "rank 6 is the maximum");
-    assertThrows(IllegalArgumentException.class, () -> character.stageSkillRank(Skill.LOCKPICK, -1));
+    assertThrows(IllegalArgumentException.class, () -> character.advancement().stageSkillRank(Skill.LOCKPICK, -1));
   }
 
   /** CRB p. 53: a Super Mutant's skills stop at rank 4, also after creation. */
   @Test
   void superMutantSkillsStopAtFour() {
     PlayerCharacter character = complete("super-mutant");
-    character.addXp(1_000);
+    character.advancement().addXp(1_000);
     for (int i = 0; i < 4; i++) {
       assertTrue(AdvancementRules.canRaise(character, Skill.MELEE_WEAPONS), "rank " + i);
-      character.stageSkillRank(Skill.MELEE_WEAPONS, 1);
+      character.advancement().stageSkillRank(Skill.MELEE_WEAPONS, 1);
     }
-    assertEquals(4, character.skillRank(Skill.MELEE_WEAPONS));
+    assertEquals(4, character.abilities().skillRank(Skill.MELEE_WEAPONS));
     assertFalse(AdvancementRules.canRaise(character, Skill.MELEE_WEAPONS));
   }
 
@@ -124,17 +124,17 @@ class PlayerCharacterAdvancementTest {
   @Test
   void stagedSkilledAddsTwoSkillRanks() {
     PlayerCharacter character = complete("survivor");
-    character.addXp(300);
+    character.advancement().addXp(300);
     character.addPerkRank(SKILLED, null, null);
-    assertEquals(4, character.advancementSkillRanksLeft());
-    assertEquals(1, character.advancementPerksLeft());
+    assertEquals(4, character.advancement().skillRanksLeft());
+    assertEquals(1, character.advancement().perksLeft());
     for (Skill skill : List.of(Skill.values()).subList(0, 4)) {
-      character.stageSkillRank(skill, 1);
+      character.advancement().stageSkillRank(skill, 1);
     }
-    assertEquals(0, character.advancementSkillRanksLeft());
+    assertEquals(0, character.advancement().skillRanksLeft());
     character.removePerkRank(SKILLED.id());
-    assertEquals(-2, character.advancementSkillRanksLeft());
-    assertThrows(IllegalStateException.class, character::applyAdvancement);
+    assertEquals(-2, character.advancement().skillRanksLeft());
+    assertThrows(IllegalStateException.class, character.advancement()::apply);
   }
 
   /** CRB p. 73: Tag! adds 2 ranks, but not above 6. */
@@ -145,11 +145,11 @@ class PlayerCharacterAdvancementTest {
         .skills(Map.of(Skill.SCIENCE, new SkillState(false, 3, 2), Skill.REPAIR, new SkillState(false, 1, 0)))
         .progression(new Progression(0, 2)).build();
     character.addPerkRank(TAG, null, Skill.REPAIR);
-    assertTrue(character.isTagged(Skill.REPAIR));
-    assertEquals(3, character.skillRank(Skill.REPAIR));
+    assertTrue(character.abilities().isTagged(Skill.REPAIR));
+    assertEquals(3, character.abilities().skillRank(Skill.REPAIR));
     character.removePerkRank(TAG.id());
     character.addPerkRank(TAG, null, Skill.SCIENCE);
-    assertEquals(6, character.skillRank(Skill.SCIENCE), "rank 5 + 2 is capped at 6");
+    assertEquals(6, character.abilities().skillRank(Skill.SCIENCE), "rank 5 + 2 is capped at 6");
   }
 
   /** An imported character's baseline already holds its old Tags; a new Tag! adds its 2 ranks on top. */
@@ -167,9 +167,9 @@ class PlayerCharacterAdvancementTest {
         .xp(1_000).creationComplete(true).progression(new Progression(1, 1))
         .legacyBaseline(new LegacyBaseline(attributes, ranks)).build();
     character.addPerkRank(TAG, null, Skill.SNEAK);
-    assertEquals(3, character.skillRank(Skill.SNEAK));
-    character.stageSkillRank(Skill.SNEAK, 1);
-    assertEquals(4, character.skillRank(Skill.SNEAK));
+    assertEquals(3, character.abilities().skillRank(Skill.SNEAK));
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
+    assertEquals(4, character.abilities().skillRank(Skill.SNEAK));
   }
 
   /**
@@ -183,12 +183,12 @@ class PlayerCharacterAdvancementTest {
         .perks(List.of(new PerkSelection(CatalogRef.of("intense-training"), 2, 2, List.of(), List.of())))
         .progression(new Progression(0, 1)).build();
     character.addPerkRank(CatalogRef.of("intense-training"), Attribute.STRENGTH, null);
-    assertEquals(6, character.attributeValue(Attribute.STRENGTH), "only the new rank adds +1");
+    assertEquals(6, character.abilities().attributeValue(Attribute.STRENGTH), "only the new rank adds +1");
     assertTrue(AdvancementRules.problems(character).isEmpty(), "imported ranks may lack their choices");
     character.removePerkRank("intense-training");
     assertEquals(new PerkSelection(CatalogRef.of("intense-training"), 2, 2, List.of(), List.of()),
         character.getPerks().getFirst());
-    assertEquals(5, character.attributeValue(Attribute.STRENGTH));
+    assertEquals(5, character.abilities().attributeValue(Attribute.STRENGTH));
   }
 
   /** Imported perk ranks cannot be given back after creation. */
@@ -205,9 +205,9 @@ class PlayerCharacterAdvancementTest {
   @Test
   void stagedIntenseTrainingMeetsAnotherStagedRequirement() {
     PlayerCharacter character = complete("survivor");
-    character.addXp(300);
+    character.advancement().addXp(300);
     character.addPerkRank(CatalogRef.of("intense-training"), Attribute.INTELLIGENCE, null);
-    assertEquals(6, character.attributeValue(Attribute.INTELLIGENCE));
+    assertEquals(6, character.abilities().attributeValue(Attribute.INTELLIGENCE));
     character.addPerkRank(CatalogRef.of("comprehension"), null, null);
     assertTrue(AdvancementRules.canApply(character));
     character.removePerkRank("intense-training");
@@ -218,14 +218,14 @@ class PlayerCharacterAdvancementTest {
   @Test
   void applyMakesStagedChoicesPermanentAndKeepsLeftovers() {
     PlayerCharacter character = complete("survivor");
-    character.addXp(300);
-    character.stageSkillRank(Skill.SNEAK, 1);
+    character.advancement().addXp(300);
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
     character.addPerkRank(CatalogRef.of("jury-rigging"), null, null);
-    character.applyAdvancement();
-    assertEquals(new SkillState(false, 0, 1, 0), character.skillState(Skill.SNEAK));
+    character.advancement().apply();
+    assertEquals(new SkillState(false, 0, 1, 0), character.abilities().skillState(Skill.SNEAK));
     assertEquals(0, character.getPerks().getFirst().stagedRanks());
-    assertEquals(new Progression(1, 1), character.getProgression());
-    assertFalse(character.hasStagedAdvancement());
+    assertEquals(new Progression(1, 1), character.advancement().getProgression());
+    assertFalse(character.advancement().hasStaged());
     character.removePerkRank("jury-rigging");
     assertEquals(1, character.getPerks().size(), "applied perks cannot be given back");
   }
@@ -233,15 +233,15 @@ class PlayerCharacterAdvancementTest {
   @Test
   void discardTakesBackAllStagedChoices() {
     PlayerCharacter character = complete("survivor");
-    character.addXp(300);
-    character.stageSkillRank(Skill.SNEAK, 1);
+    character.advancement().addXp(300);
+    character.advancement().stageSkillRank(Skill.SNEAK, 1);
     character.addPerkRank(CatalogRef.of("intense-training"), Attribute.AGILITY, null);
-    character.discardAdvancement();
-    assertFalse(character.hasStagedAdvancement());
+    character.advancement().discard();
+    assertFalse(character.advancement().hasStaged());
     assertTrue(character.getPerks().isEmpty());
-    assertEquals(0, character.skillRank(Skill.SNEAK));
-    assertEquals(5, character.attributeValue(Attribute.AGILITY));
-    assertEquals(new Progression(2, 2), character.getProgression());
+    assertEquals(0, character.abilities().skillRank(Skill.SNEAK));
+    assertEquals(5, character.abilities().attributeValue(Attribute.AGILITY));
+    assertEquals(new Progression(2, 2), character.advancement().getProgression());
   }
 
   /** CRB p. 73: Tag! needs level 5; the requirement uses the new level. */
@@ -249,7 +249,7 @@ class PlayerCharacterAdvancementTest {
   void perkLevelRequirementUsesTheNewLevel() {
     PlayerCharacter character = complete("survivor");
     assertFalse(PerkRules.blockers(character, PerkCatalog.byId("tag").orElseThrow()).isEmpty());
-    character.addXp(1_000);
+    character.advancement().addXp(1_000);
     assertTrue(PerkRules.blockers(character, PerkCatalog.byId("tag").orElseThrow()).isEmpty());
   }
 }

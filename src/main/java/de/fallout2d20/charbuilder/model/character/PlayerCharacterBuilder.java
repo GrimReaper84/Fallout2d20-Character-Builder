@@ -143,7 +143,7 @@ public final class PlayerCharacterBuilder {
 
   /**
    * The level a complete character started at, between 1 and its level; {@code null} if unknown (imported
-   * characters) and always for a character in creation (see {@link PlayerCharacter#getStartingLevel()}).
+   * characters) and always for a character in creation (see {@link Advancement#getStartingLevel()}).
    */
   public @NonNull PlayerCharacterBuilder startingLevel(@Nullable Integer startingLevel) {
     this.startingLevel = startingLevel;

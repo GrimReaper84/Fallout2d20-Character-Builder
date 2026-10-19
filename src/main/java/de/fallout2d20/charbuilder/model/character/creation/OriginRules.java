@@ -70,7 +70,7 @@ public final class OriginRules {
       @NonNull List<CreationProblem> problems) {
     for (Attribute attribute : Attribute.values()) {
       int maximum = origin.attributeMaximum(attribute);
-      if (character.attributeValue(attribute) > maximum) {
+      if (character.abilities().attributeValue(attribute) > maximum) {
         problems.add(new CreationProblem(HintArea.STATS, attribute.displayName(),
             attribute.displayName() + " may not exceed " + maximum + " (" + origin.name() + ")."));
       }
@@ -91,7 +91,7 @@ public final class OriginRules {
     } else if (!extraTag.allows(chosen)) {
       problems.add(new CreationProblem(HintArea.STATS, ORIGIN, chosen.displayName()
           + " cannot be the extra Tag skill granted by " + origin.name() + "."));
-    } else if (character.skillState(chosen).tagged() || chosen == origin.fixedTagSkill()) {
+    } else if (character.abilities().skillState(chosen).tagged() || chosen == origin.fixedTagSkill()) {
       problems.add(new CreationProblem(HintArea.STATS, ORIGIN, chosen.displayName()
           + " is already a Tag skill; choose another extra Tag skill."));
     }
