@@ -1,16 +1,16 @@
 [versions]
-javafx-runtime = "21.0.6"
+javafx-runtime = "25.0.4"
 javafx-plugin = "0.1.0"
 jlink-plugin = "4.1.1"
-errorprone-plugin = "4.0.1"
+errorprone-plugin = "5.1.1"
 jspecify = "1.0.0"
 jackson = "2.17.2"
 controlsfx = "11.2.1"
 miglayout = "11.4.3"
 ikonli = "12.4.0"
 pdfbox = "3.0.5"
-errorprone-core = "2.26.1"
-nullaway = "0.10.22"
+errorprone-core = "2.50.0"
+nullaway = "0.14.2"
 junit-bom = "6.0.0"
 
 [libraries]

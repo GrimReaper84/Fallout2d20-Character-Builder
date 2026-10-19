@@ -49,7 +49,7 @@ Portable zip: unpack it anywhere and start `bin/Fallout2d20CharacterBuilder` (`.
 
 ## Building from source
 
-Requires JDK 21.
+Requires JDK 25.
 
 ```bash
 ./gradlew build      # compile and run the tests

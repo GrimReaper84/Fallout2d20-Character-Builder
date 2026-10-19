@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 25
       # v5, not v6: v6 moved its caching into a closed-source component with separate terms of use.
       - uses: gradle/actions/setup-gradle@v5
 
@@ -43,7 +43,8 @@ jobs:
             exit 1
           fi
 
-      # JDK 21's jpackage needs WiX Toolset 3 for MSI installers.
+      # jpackage needs the WiX Toolset for MSI installers; version 3 is installed if missing (JDK 25 also
+      # accepts WiX 4/5, so a newer one may replace it if the runner image drops version 3).
       - name: Make sure WiX Toolset 3 is available
         if: runner.os == 'Windows'
         shell: pwsh
