@@ -147,16 +147,18 @@ class EquipmentCatalogTest {
   void validatesTagSkillItemsAndTrinketRows() {
     assertThrows(IllegalArgumentException.class,
         () -> new TagSkillItemData(Skill.BARTER, List.of(), 0, CRB));
+    List<String> multiTool = List.of("Multi-Tool");
     assertThrows(IllegalArgumentException.class,
-        () -> new TagSkillItemData(Skill.REPAIR, List.of("Multi-Tool"), 0, List.of()));
+        () -> new TagSkillItemData(Skill.REPAIR, multiTool, 0, List.of()));
     assertThrows(IllegalArgumentException.class,
-        () -> new TagSkillItemData(Skill.REPAIR, List.of("Multi-Tool"), -1, CRB));
+        () -> new TagSkillItemData(Skill.REPAIR, multiTool, -1, CRB));
     assertFalse(new TagSkillItemData(Skill.BARTER, null, 2, CRB).isChoice());
     assertTrue(new TagSkillItemData(Skill.MELEE_WEAPONS, List.of("Machete", "Baseball bat"), 0, CRB)
         .isChoice());
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(0, "Medal", CRB.getFirst()));
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(21, "Medal", CRB.getFirst()));
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(5, " ", CRB.getFirst()));
+    Source source = CRB.getFirst();
+    assertThrows(IllegalArgumentException.class, () -> new TrinketData(0, "Medal", source));
+    assertThrows(IllegalArgumentException.class, () -> new TrinketData(21, "Medal", source));
+    assertThrows(IllegalArgumentException.class, () -> new TrinketData(5, " ", source));
   }
 
   private static List<String> packIds(String originId) {

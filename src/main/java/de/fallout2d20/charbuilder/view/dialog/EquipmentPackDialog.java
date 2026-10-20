@@ -54,6 +54,7 @@ public final class EquipmentPackDialog {
 
   private static final String FREE_ARMS_TOOLTIP =
       "House rule: any arm attachment, or a weapon of your choice, on each arm.";
+  private static final @NonNull String TITLE = "Equipment pack";
   private static final String GM_PERMISSION = " (GM permission)";
   private static final double PREVIEW_WIDTH = 520;
 
@@ -89,7 +90,7 @@ public final class EquipmentPackDialog {
 
     Dialog<Boolean> dialog = new Dialog<>();
     dialog.initOwner(owner);
-    dialog.setTitle("Equipment pack");
+    dialog.setTitle(TITLE);
     dialog.setHeaderText("Choose the starting equipment (CRB p. 50).");
     dialog.getDialogPane().setContent(scroll);
     dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -103,7 +104,7 @@ public final class EquipmentPackDialog {
     }
     // After creation (GM mode) always ask: entries are replaced, or – for a character whose pack items were typed
     // in by hand before this version – added a second time.
-    if (character.isCreationComplete() && !ConfirmDialog.confirm(owner, "Equipment pack",
+    if (character.isCreationComplete() && !ConfirmDialog.confirm(owner, TITLE,
         "Enter the starting equipment again?", replacement(character), "Enter")) {
       character.startingGear().restore(snapshot);
       return false;
@@ -143,7 +144,7 @@ public final class EquipmentPackDialog {
 
   private void addPackControls() {
     CatalogRef origin = character.getOrigin();
-    controls.add(new Label("Equipment pack"));
+    controls.add(new Label(TITLE));
     if (origin == null) {
       controls.add(new Label("Choose an origin first."), Layouts.span(3));
       return;

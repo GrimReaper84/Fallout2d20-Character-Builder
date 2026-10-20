@@ -59,7 +59,8 @@ class PlayerCharacterWeaponsTest {
   void constructorDropsEmptyAmmunitionAndRejectsNegativeShots() {
     PlayerCharacter character = create(Map.of("10mm", 0, "38", 12));
     assertEquals(Map.of("38", 12), character.gear().getAmmunition());
-    assertThrows(IllegalArgumentException.class, () -> create(Map.of("38", -1)));
+    Map<String, Integer> negativeShots = Map.of("38", -1);
+    assertThrows(IllegalArgumentException.class, () -> create(negativeShots));
   }
 
   /** A custom weapon imported without skill gets one later; a catalog weapon's skill is fixed. */

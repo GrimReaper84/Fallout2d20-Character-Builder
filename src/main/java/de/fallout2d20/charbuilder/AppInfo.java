@@ -25,7 +25,7 @@ public final class AppInfo {
       Properties properties = new Properties();
       properties.load(in);
       return properties.getProperty("version", UNKNOWN_VERSION);
-    } catch (IOException e) {
+    } catch (IOException _) {
       return UNKNOWN_VERSION;
     }
   }

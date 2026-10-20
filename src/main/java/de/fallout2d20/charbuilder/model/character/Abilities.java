@@ -140,9 +140,13 @@ public final class Abilities {
   private int skillRank(@NonNull Skill skill, @NonNull SkillState state) {
     boolean perkTagOnly = isTaggedByPerk(skill) && !state.tagged() && !isTaggedByOrigin(skill);
     LegacyBaseline legacyBaseline = owner.getLegacyBaseline();
-    int start = legacyBaseline != null
-        ? legacyBaseline.skillRank(skill)
-        : (isTagged(skill) && !perkTagOnly ? TAG_SKILL_BONUS : 0) + state.creationRanks();
+    int start;
+    if (legacyBaseline != null) {
+      start = legacyBaseline.skillRank(skill);
+    } else {
+      int tagBonus = isTagged(skill) && !perkTagOnly ? TAG_SKILL_BONUS : 0;
+      start = tagBonus + state.creationRanks();
+    }
     int rank = Math.max(0, start + state.advancementRanks() + state.stagedRanks() + state.gmRanks());
     return perkTagOnly ? Math.clamp(skillRankCap(), rank, rank + TAG_SKILL_BONUS) : rank;
   }
@@ -223,7 +227,7 @@ public final class Abilities {
     int tagBonus = freeTag || hasFixedTag(skill) ? TAG_SKILL_BONUS : 0;
     int room = skillRankCap() - tagBonus - state.advancementRanks() - state.stagedRanks()
         - Math.max(0, state.gmRanks());
-    return Math.max(0, Math.min(state.creationRanks(), room));
+    return Math.clamp(state.creationRanks(), 0, Math.max(0, room));
   }
 
   /**

@@ -25,7 +25,7 @@ final class ViewPreferences {
   boolean getBoolean(@NonNull String key, boolean defaultValue) {
     try {
       return node.getBoolean(key, defaultValue);
-    } catch (IllegalStateException | SecurityException e) {
+    } catch (IllegalStateException | SecurityException _) {
       return defaultValue;
     }
   }
@@ -34,7 +34,7 @@ final class ViewPreferences {
     try {
       node.putBoolean(key, value);
       node.flush();
-    } catch (BackingStoreException | IllegalStateException | SecurityException e) {
+    } catch (BackingStoreException | IllegalStateException | SecurityException _) {
       // UI state only; losing it is harmless.
     }
   }

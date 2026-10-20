@@ -64,7 +64,7 @@ final class LevelSection {
     int typed;
     try {
       typed = Integer.parseInt(field.getText().strip());
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException _) {
       typed = 0;
     }
     if (typed != character.advancement().getLevel()) {
@@ -84,7 +84,7 @@ final class LevelSection {
   private static void change(@NonNull PlayerCharacter character, int level, @NonNull Runnable onChanged) {
     try {
       character.advancement().setStartingLevel(level);
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException _) {
       // below 1 or too high to compute: keep the current level
     }
     onChanged.run();

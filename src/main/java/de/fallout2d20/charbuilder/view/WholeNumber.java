@@ -12,7 +12,7 @@ public final class WholeNumber {
   public static @NonNull OptionalInt parse(@NonNull String text) {
     try {
       return OptionalInt.of(Integer.parseInt(text.strip()));
-    } catch (NumberFormatException e) {
+    } catch (NumberFormatException _) {
       return OptionalInt.empty();
     }
   }

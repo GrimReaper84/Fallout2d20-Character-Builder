@@ -504,7 +504,7 @@ final class LegacyImportRun {
     if (node.isTextual()) {
       try {
         return (int) Double.parseDouble(node.asText().trim());
-      } catch (NumberFormatException e) {
+      } catch (NumberFormatException _) {
         return null;
       }
     }

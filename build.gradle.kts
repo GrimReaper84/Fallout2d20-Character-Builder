@@ -78,6 +78,8 @@ tasks.test {
 
 // Version for the About dialog, read by AppInfo.
 val generateVersionResource = tasks.register("generateVersionResource") {
+    group = "build"
+    description = "Writes the app version into a resource for the About dialog and the save files."
     val appVersion = project.version.toString()
     val output = layout.buildDirectory.dir("generated/version")
     inputs.property("version", appVersion)
@@ -97,6 +99,8 @@ val osName: String = System.getProperty("os.name").lowercase()
 // The deb takes its icon from a jpackage resource folder (see the jpackage block below).
 val linuxIconDir = layout.buildDirectory.dir("jpackage-resources")
 val prepareLinuxIcon = tasks.register<Copy>("prepareLinuxIcon") {
+    group = "distribution"
+    description = "Copies the app icon into the jpackage resource folder for the deb."
     from(layout.projectDirectory.file("packaging/icon.png"))
     into(linuxIconDir)
     rename { "${application.applicationName}.png" }

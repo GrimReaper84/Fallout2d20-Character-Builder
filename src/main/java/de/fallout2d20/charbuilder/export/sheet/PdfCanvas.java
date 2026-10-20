@@ -194,7 +194,7 @@ final class PdfCanvas implements AutoCloseable {
     try {
       REGULAR.encode(character);
       return true;
-    } catch (IllegalArgumentException | IOException e) {
+    } catch (IllegalArgumentException | IOException _) {
       return false;
     }
   }

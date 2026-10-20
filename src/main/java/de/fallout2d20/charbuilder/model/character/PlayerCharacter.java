@@ -213,9 +213,7 @@ public class PlayerCharacter {
   /** Removes a trait (and its attribute choices) during creation. */
   public void removeTrait(@NonNull String traitId) {
     requireCreation();
-    startingGear.syncing(() -> {
-      traits.removeIf(selection -> selection.trait().id().equals(traitId));
-    });
+    startingGear.syncing(() -> traits.removeIf(selection -> selection.trait().id().equals(traitId)));
   }
 
   /** Sets the attribute choices of a chosen trait (Gifted); checked by the creation rules, not here. */

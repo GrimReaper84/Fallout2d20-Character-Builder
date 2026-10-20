@@ -34,7 +34,8 @@ class StartingEquipmentTest {
   /** CRB p. 55: a Mister Handy has three arms; "no pincer" follows from them. */
   @Test
   void hasThreeArmsOrNone() {
-    assertThrows(IllegalArgumentException.class, () -> withArms(List.of(PINCER)));
+    List<ArmSelection> oneArm = List.of(PINCER);
+    assertThrows(IllegalArgumentException.class, () -> withArms(oneArm));
     assertFalse(StartingEquipment.NONE.hasPincer());
     assertFalse(StartingEquipment.NONE.lacksPincer(), "without arms nothing is known");
     StartingEquipment gutsy = withArms(List.of(ArmSelection.of(ArmAttachment.AUTO_PISTOL_10MM),

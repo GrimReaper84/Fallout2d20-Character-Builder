@@ -25,7 +25,11 @@ final class ModChoiceRow extends TableRow<ModChoice> {
     WeaponModData mod = empty || choice == null ? null : choice.mod();
     boolean missing = mod != null && !WeaponMods.missingPerks(character, mod).isEmpty();
     setStyle(missing ? MISSING_STYLE : "");
-    setTooltip(mod == null ? null : new Tooltip(ModTexts.details(mod)
-        + (missing ? "\nThe character lacks a needed perk (information only)." : "")));
+    if (mod == null) {
+      setTooltip(null);
+      return;
+    }
+    String note = missing ? "\nThe character lacks a needed perk (information only)." : "";
+    setTooltip(new Tooltip(ModTexts.details(mod) + note));
   }
 }

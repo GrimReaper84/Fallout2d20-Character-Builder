@@ -176,8 +176,8 @@ class PlayerCharacterTest {
     CatalogRef gifted = CatalogRef.of("gifted");
     assertThrows(IllegalStateException.class, () -> complete.chooseTrait(gifted));
     assertThrows(IllegalStateException.class, () -> complete.removeTrait("gifted"));
-    assertThrows(IllegalStateException.class,
-        () -> complete.setTraitAttributeChoices("gifted", List.of(Attribute.STRENGTH)));
+    List<Attribute> strength = List.of(Attribute.STRENGTH);
+    assertThrows(IllegalStateException.class, () -> complete.setTraitAttributeChoices("gifted", strength));
   }
 
   @Test

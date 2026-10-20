@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -118,23 +119,30 @@ public record ModdedWeapon(
   }
 
   private @NonNull ModdedWeapon apply(@NonNull List<WeaponModData> mods, @Nullable String stockName) {
-    int newDamage = damage;
-    String newType = damageType;
-    List<String> newAmmunition = ammunition;
+    Changes changes = new Changes(this, removals(mods));
+    for (WeaponModData mod : mods) {
+      mod.effects().forEach(changes::replace);
+    }
     for (WeaponModData mod : mods) {
       for (ModEffect effect : mod.effects()) {
-        switch (effect.type()) {
-          case SET_DAMAGE -> newDamage = effect.number();
-          case SET_DAMAGE_TYPE -> newType = DamageType.valueOf(effect.text()).displayName();
-          case SET_AMMUNITION -> newAmmunition = List.of(effect.text());
-          default -> { }
-        }
+        changes.change(mod, effect);
       }
     }
-    int rateChange = 0;
-    int rangeSteps = 0;
-    List<String> newEffects = new ArrayList<>(damageEffects);
-    // House rule: removals win over gains in any slot, so they apply to the base qualities and block gains.
+    Integer weightChange = total(mods, WeaponModData::weight);
+    String newWeight = weightChange == null ? weight : addWeight(weight, weightChange);
+    Integer costChange = total(mods, WeaponModData::cost);
+    Integer newCost = cost;
+    if (costChange != null) {
+      newCost = (cost == null ? 0 : cost) + costChange;
+    }
+    WeaponRange newRange = range == null ? null : step(range, changes.rangeSteps);
+    return new ModdedWeapon(name, moddedName(mods, stockName), Math.max(0, changes.damage), changes.effects,
+        changes.damageType, changes.fireRate(fireRate), newRange, changes.qualities, changes.ammunition, newWeight,
+        newCost, changes.specials, changes.removed);
+  }
+
+  /** The qualities the mods remove, each with the first mod that removes it (house rule: removals win). */
+  private static @NonNull Map<String, String> removals(@NonNull List<WeaponModData> mods) {
     Map<String, String> removals = new LinkedHashMap<>();
     for (WeaponModData mod : mods) {
       for (ModEffect effect : mod.effects()) {
@@ -143,55 +151,136 @@ public record ModdedWeapon(
         }
       }
     }
-    List<String> newQualities = new ArrayList<>(qualities);
-    List<String> removed = new ArrayList<>();
-    newQualities.removeIf(quality -> blocked(quality, removals, removed));
-    List<String> newSpecials = new ArrayList<>();
-    int weightChange = 0;
-    boolean weightChanged = false;
-    int costChange = 0;
-    boolean costChanged = false;
+    return removals;
+  }
+
+  /** The sum of a value of the mods (weight, cost); {@code null} if no mod has one. */
+  private static @Nullable Integer total(@NonNull List<WeaponModData> mods,
+      @NonNull Function<WeaponModData, @Nullable Integer> value) {
+    Integer total = null;
     for (WeaponModData mod : mods) {
-      for (ModEffect effect : mod.effects()) {
-        switch (effect.type()) {
-          case DAMAGE -> newDamage += effect.number();
-          case FIRE_RATE -> rateChange += effect.number();
-          case RANGE -> rangeSteps += effect.number();
-          case GAIN_QUALITY -> {
-            if (!blocked(effect.text(), removals, removed)) {
-              gainQuality(newQualities, effect.text());
-            }
-          }
-          case REMOVE_QUALITY -> { }
-          case GAIN_EFFECT -> gainEffect(newEffects, effect.text());
-          case REMOVE_EFFECT -> remove(newEffects, effect.text());
-          case SPECIAL -> newSpecials.add(mod.name() + ": " + effect.text());
-          case SET_DAMAGE, SET_DAMAGE_TYPE, SET_AMMUNITION, ALLOWS_SLOT -> { }
+      Integer modValue = value.apply(mod);
+      if (modValue != null) {
+        total = (total == null ? 0 : total) + modValue;
+      }
+    }
+    return total;
+  }
+
+  /**
+   * The weapon's values while the mods' effects are applied: first the replacing values of all mods
+   * ({@link #replace}), then the changes in slot order ({@link #change}). Qualities the mods remove are taken
+   * off the base qualities up front and kept away from gains.
+   */
+  private static final class Changes {
+
+    private final @NonNull Map<String, String> removals;
+    private int damage;
+    private @NonNull String damageType;
+    private @NonNull List<String> ammunition;
+    private int rateChange;
+    private int rangeSteps;
+    private final @NonNull List<String> effects;
+    private final @NonNull List<String> qualities;
+    private final @NonNull List<String> specials = new ArrayList<>();
+    private final @NonNull List<String> removed = new ArrayList<>();
+
+    Changes(@NonNull ModdedWeapon base, @NonNull Map<String, String> removals) {
+      this.removals = removals;
+      damage = base.damage;
+      damageType = base.damageType;
+      ammunition = base.ammunition;
+      effects = new ArrayList<>(base.damageEffects);
+      qualities = new ArrayList<>(base.qualities);
+      qualities.removeIf(this::blocked);
+    }
+
+    void replace(@NonNull ModEffect effect) {
+      switch (effect.type()) {
+        case SET_DAMAGE -> damage = effect.number();
+        case SET_DAMAGE_TYPE -> damageType = DamageType.valueOf(effect.text()).displayName();
+        case SET_AMMUNITION -> ammunition = List.of(effect.text());
+        default -> {
+          // every other effect is a change, applied afterwards by change()
         }
       }
-      Integer modWeight = mod.weight();
-      if (modWeight != null) {
-        weightChange += modWeight;
-        weightChanged = true;
+    }
+
+    void change(@NonNull WeaponModData mod, @NonNull ModEffect effect) {
+      switch (effect.type()) {
+        case DAMAGE -> damage += effect.number();
+        case FIRE_RATE -> rateChange += effect.number();
+        case RANGE -> rangeSteps += effect.number();
+        case GAIN_QUALITY -> gainUnlessRemoved(effect.text());
+        case GAIN_EFFECT -> gainEffect(effect.text());
+        case REMOVE_EFFECT -> removeEffect(effect.text());
+        case SPECIAL -> specials.add(mod.name() + ": " + effect.text());
+        case REMOVE_QUALITY, SET_DAMAGE, SET_DAMAGE_TYPE, SET_AMMUNITION, ALLOWS_SLOT -> {
+          // removals were applied up front, replacing values by replace(); slots change no value
+        }
       }
-      Integer modCost = mod.cost();
-      if (modCost != null) {
-        costChange += modCost;
-        costChanged = true;
+    }
+
+    private void gainUnlessRemoved(@NonNull String quality) {
+      if (!blocked(quality)) {
+        gainQuality(quality);
       }
     }
-    Integer newRate = fireRate;
-    if (rateChange != 0) {
-      newRate = Math.clamp((fireRate == null ? 0 : fireRate) + rateChange, 0, MAX_FIRE_RATE);
+
+    /**
+     * Whether a mod removes the quality; if so it is noted once in {@code removed}, e.g. "Inaccurate (removed by
+     * Comfort Grip)".
+     */
+    private boolean blocked(@NonNull String quality) {
+      String mod = removals.get(key(quality));
+      if (mod == null) {
+        return false;
+      }
+      String note = quality + " (removed by " + mod + ")";
+      if (removed.stream().noneMatch(entry -> key(entry).equals(key(note)))) {
+        removed.add(note);
+      }
+      return true;
     }
-    WeaponRange newRange = range == null ? null : step(range, rangeSteps);
-    Integer newCost = cost;
-    if (costChanged) {
-      newCost = (cost == null ? 0 : cost) + costChange;
+
+    /** CRB p. 88: Accurate and Inaccurate cancel (Reliable and Unreliable too, CRB p. 90); never gained twice. */
+    private void gainQuality(@NonNull String quality) {
+      String opposite = OPPOSITES.get(key(quality));
+      if (opposite != null && qualities.removeIf(present -> key(present).equals(opposite))) {
+        return;
+      }
+      if (qualities.stream().noneMatch(present -> key(present).equals(key(quality)))) {
+        qualities.add(quality);
+      }
     }
-    return new ModdedWeapon(name, moddedName(mods, stockName), Math.max(0, newDamage), newEffects, newType, newRate, newRange,
-        newQualities, newAmmunition, weightChanged ? addWeight(weight, weightChange) : weight, newCost, newSpecials,
-        removed);
+
+    /** CRB p. 88: every Piercing gained raises the rating by 1; other effects are not gained twice. */
+    private void gainEffect(@NonNull String effect) {
+      if (PIERCING.matcher(effect).matches()) {
+        for (int i = 0; i < effects.size(); i++) {
+          Matcher piercing = PIERCING.matcher(effects.get(i));
+          if (piercing.matches()) {
+            effects.set(i, "Piercing " + (Integer.parseInt(piercing.group(1)) + 1));
+            return;
+          }
+        }
+      }
+      if (effects.stream().noneMatch(present -> key(present).equals(key(effect)))) {
+        effects.add(effect);
+      }
+    }
+
+    private void removeEffect(@NonNull String effect) {
+      effects.removeIf(present -> key(present).equals(key(effect)));
+    }
+
+    /** The fire rate with the changes; their sum stays within 0–6 (CRB p. 89). */
+    @Nullable Integer fireRate(@Nullable Integer base) {
+      if (rateChange == 0) {
+        return base;
+      }
+      return Math.clamp((long) (base == null ? 0 : base) + rateChange, 0, MAX_FIRE_RATE);
+    }
   }
 
   private @NonNull String moddedName(@NonNull List<WeaponModData> mods, @Nullable String stockName) {
@@ -219,55 +308,7 @@ public record ModdedWeapon(
   @SuppressWarnings("EnumOrdinal")
   private static @NonNull WeaponRange step(@NonNull WeaponRange range, int steps) {
     WeaponRange[] ranges = WeaponRange.values();
-    return ranges[Math.clamp(range.ordinal() + steps, 0, ranges.length - 1)];
-  }
-
-  /**
-   * Whether a mod removes the quality; if so it is noted once in {@code removed}, e.g. "Inaccurate (removed by
-   * Comfort Grip)".
-   */
-  private static boolean blocked(@NonNull String quality, @NonNull Map<String, String> removals,
-      @NonNull List<String> removed) {
-    String mod = removals.get(key(quality));
-    if (mod == null) {
-      return false;
-    }
-    String note = quality + " (removed by " + mod + ")";
-    if (removed.stream().noneMatch(entry -> key(entry).equals(key(note)))) {
-      removed.add(note);
-    }
-    return true;
-  }
-
-  /** CRB p. 88: Accurate and Inaccurate cancel (Reliable and Unreliable too, CRB p. 90); never gained twice. */
-  private static void gainQuality(@NonNull List<String> qualities, @NonNull String quality) {
-    String opposite = OPPOSITES.get(key(quality));
-    if (opposite != null && qualities.removeIf(present -> key(present).equals(opposite))) {
-      return;
-    }
-    if (qualities.stream().noneMatch(present -> key(present).equals(key(quality)))) {
-      qualities.add(quality);
-    }
-  }
-
-  /** CRB p. 88: every Piercing gained raises the rating by 1; other effects are not gained twice. */
-  private static void gainEffect(@NonNull List<String> effects, @NonNull String effect) {
-    if (PIERCING.matcher(effect).matches()) {
-      for (int i = 0; i < effects.size(); i++) {
-        Matcher piercing = PIERCING.matcher(effects.get(i));
-        if (piercing.matches()) {
-          effects.set(i, "Piercing " + (Integer.parseInt(piercing.group(1)) + 1));
-          return;
-        }
-      }
-    }
-    if (effects.stream().noneMatch(present -> key(present).equals(key(effect)))) {
-      effects.add(effect);
-    }
-  }
-
-  private static void remove(@NonNull List<String> values, @NonNull String value) {
-    values.removeIf(present -> key(present).equals(key(value)));
+    return ranges[Math.clamp((long) range.ordinal() + steps, 0, ranges.length - 1)];
   }
 
   /** Compares names regardless of case and of the book's "Close-Quarters" / "Close Quarters" spellings. */

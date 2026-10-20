@@ -94,7 +94,7 @@ final class PerkInfo {
         .findFirst().orElse(Screen.getPrimary()).getVisualBounds();
     double above = bounds.getMinY() - height - GAP;
     double y = above >= screen.getMinY() ? above : bounds.getMaxY() + GAP;
-    double x = Math.max(screen.getMinX(), Math.min(bounds.getMinX(), screen.getMaxX() - width));
+    double x = Math.clamp(bounds.getMinX(), screen.getMinX(), Math.max(screen.getMinX(), screen.getMaxX() - width));
     panel.show(button, x, y);
   }
 }

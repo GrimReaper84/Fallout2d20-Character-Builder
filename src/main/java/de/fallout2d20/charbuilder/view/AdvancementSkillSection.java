@@ -33,13 +33,23 @@ final class AdvancementSkillSection {
       pane.add(StepButtons.minus(canLower ? "Take back a staged rank of " + skill.displayName()
               : "No staged ranks of " + skill.displayName() + " to take back.",
           canLower, () -> step(character, skill, -1, onChanged)));
-      pane.add(StepButtons.plus(canRaise ? "Stage a rank of " + skill.displayName()
-              : left <= 0 ? "No skill ranks left."
-              : skill.displayName() + " is at its maximum rank of " + character.abilities().skillRankCap() + ".",
-          canRaise, () -> step(character, skill, 1, onChanged)));
+      pane.add(StepButtons.plus(raiseTooltip(character, skill, canRaise, left), canRaise,
+          () -> step(character, skill, 1, onChanged)));
     }
     pane.add(new Label(SkillSection.TAG_LEGEND), Layouts.span(6));
     return pane;
+  }
+
+  /** Why the + button of the skill is (not) enabled. */
+  private static @NonNull String raiseTooltip(@NonNull PlayerCharacter character, @NonNull Skill skill,
+      boolean canRaise, int left) {
+    if (canRaise) {
+      return "Stage a rank of " + skill.displayName();
+    }
+    if (left <= 0) {
+      return "No skill ranks left.";
+    }
+    return skill.displayName() + " is at its maximum rank of " + character.abilities().skillRankCap() + ".";
   }
 
   /** Stages (+1) or takes back (−1) a rank after checking the current model state again. */

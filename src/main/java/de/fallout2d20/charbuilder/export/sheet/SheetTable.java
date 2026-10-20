@@ -63,6 +63,9 @@ final class SheetTable {
       total += column.weight();
     }
     float[] widths = new float[columns.size()];
+    if (total <= 0) {
+      return widths;
+    }
     for (int c = 0; c < columns.size(); c++) {
       widths[c] = columns.get(c).weight() / total * width;
     }

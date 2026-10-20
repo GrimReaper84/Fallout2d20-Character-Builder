@@ -81,7 +81,7 @@ final class AdvancementSection {
     try {
       amount = Long.parseLong(field.getText().strip());
       levels = character.advancement().levelsGainedBy(amount);
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException _) {
       Notifications.create().owner(field).title("Add XP")
           .text("Enter a whole number of XP of at least 1.").showWarning();
       field.clear();

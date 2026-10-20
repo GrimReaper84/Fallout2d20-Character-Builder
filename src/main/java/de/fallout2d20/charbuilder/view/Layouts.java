@@ -14,6 +14,9 @@ import org.tbee.javafx.scene.layout.MigPane;
  */
 public final class Layouts {
 
+  private static final @NonNull String RIGHT = "right";
+  private static final @NonNull String LEFT = "left";
+
   /** Between the rows of a table or a column. */
   public static final int ROW_GAP = 4;
   /** Between the cells of a table and the buttons of a row. */
@@ -42,7 +45,7 @@ public final class Layouts {
    */
   public static @NonNull MigPane page() {
     MigPane pane = new MigPane(gaps(new LC().insetsAll(size(PAGE_INSETS)).wrapAfter(4), GAP, ROW_GAP),
-        new AC().align("right", 0, 2).align("left", 1, 3));
+        new AC().align(RIGHT, 0, 2).align(LEFT, 1, 3));
     pane.setMinWidth(Region.USE_PREF_SIZE);
     return pane;
   }
@@ -50,7 +53,7 @@ public final class Layouts {
   /** Like {@link #page()}, but the value columns share the window width (for the flowing perk cards). */
   public static @NonNull MigPane fillingPage() {
     return new MigPane(gaps(new LC().insetsAll(size(PAGE_INSETS)).wrapAfter(4), GAP, ROW_GAP),
-        new AC().align("right", 0, 2).grow(100, 1, 3).fill(1, 3));
+        new AC().align(RIGHT, 0, 2).grow(100, 1, 3).fill(1, 3));
   }
 
   /**
@@ -103,7 +106,7 @@ public final class Layouts {
    */
   public static @NonNull MigPane details(int extraColumns) {
     return new MigPane(gaps(new LC().insetsAll("0").wrapAfter(2 + extraColumns), WIDE_GAP, DETAIL_ROW_GAP),
-        new AC().align("left", 0).grow(100, 1).fill(1).index(1 + extraColumns));
+        new AC().align(LEFT, 0).grow(100, 1).fill(1).index(1 + extraColumns));
   }
 
   /**
@@ -112,19 +115,19 @@ public final class Layouts {
    */
   public static @NonNull MigPane headerBar() {
     return new MigPane(gaps(new LC().insets(size(HEADER_TOP_INSET), size(PAGE_INSETS), size(GAP), size(PAGE_INSETS))
-        .wrapAfter(8), GAP, ROW_GAP), new AC().align("right", 0, 2, 4, 6).grow(100, 1, 3).fill(1, 3).index(7));
+        .wrapAfter(8), GAP, ROW_GAP), new AC().align(RIGHT, 0, 2, 4, 6).grow(100, 1, 3).fill(1, 3).index(7));
   }
 
   /** A list of names taking the width, each with an amount on the right (ammunition). */
   public static @NonNull MigPane amountList() {
     return new MigPane(gaps(new LC().insetsAll("0").wrapAfter(2), GAP, ROW_GAP),
-        new AC().grow(100, 0).align("left", 0).align("right", 1));
+        new AC().grow(100, 0).align(LEFT, 0).align(RIGHT, 1));
   }
 
   /** A dialog's form: right-aligned labels, controls filling the rest. */
   public static @NonNull MigPane dialogForm() {
     return new MigPane(new LC().insetsAll(size(DIALOG_INSETS)).wrapAfter(2),
-        new AC().align("right", 0).grow(100, 1).fill(1));
+        new AC().align(RIGHT, 0).grow(100, 1).fill(1));
   }
 
   /** A cell without constraints, to chain MigLayout's own {@link CC} methods. */
@@ -187,7 +190,7 @@ public final class Layouts {
     for (int i = 0; i < columns; i++) {
       all[i] = i;
     }
-    return new AC().align("left", all);
+    return new AC().align(LEFT, all);
   }
 
   /** Unitless like the constraint strings, so MigLayout's default unit (logical pixels, scaled with the DPI) applies. */

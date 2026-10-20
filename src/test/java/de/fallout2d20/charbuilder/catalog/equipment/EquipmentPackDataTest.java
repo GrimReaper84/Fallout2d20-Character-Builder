@@ -20,31 +20,37 @@ class EquipmentPackDataTest {
 
   @Test
   void rejectsIncompletePacks() {
-    assertThrows(IllegalArgumentException.class, () -> pack(List.of(), List.of("vault-dweller"), null, 0, null));
+    List<String> vaultDweller = List.of("vault-dweller");
+    List<String> blankItem = List.of(" ");
+    assertThrows(IllegalArgumentException.class, () -> pack(List.of(), vaultDweller, null, 0, null));
     assertThrows(IllegalArgumentException.class, () -> pack(CRB, List.of(), null, 0, null));
     assertThrows(IllegalArgumentException.class, () -> new EquipmentPackData(" ", "X", CRB,
-        List.of("vault-dweller"), null, List.of(), null, false, 0, null));
+        vaultDweller, null, List.of(), null, false, 0, null));
     assertThrows(IllegalArgumentException.class, () -> new EquipmentPackData("x", "X", CRB,
-        List.of("vault-dweller"), null, List.of(" "), null, false, 0, null));
+        vaultDweller, null, blankItem, null, false, 0, null));
   }
 
   @Test
   void rejectsInvalidContents() {
-    assertThrows(IllegalArgumentException.class, () -> pack(CRB, List.of("vault-dweller"), null, -1, null));
-    assertThrows(IllegalArgumentException.class,
-        () -> pack(CRB, List.of("mister-handy"), null, 10, List.of(PINCER, PINCER)));
-    assertThrows(IllegalArgumentException.class,
-        () -> pack(CRB, List.of("vault-dweller"), List.of("vault-dweller"), 0, null));
+    List<String> vaultDweller = List.of("vault-dweller");
+    List<String> misterHandy = List.of("mister-handy");
+    List<ArmSlot> twoArms = List.of(PINCER, PINCER);
+    assertThrows(IllegalArgumentException.class, () -> pack(CRB, vaultDweller, null, -1, null));
+    assertThrows(IllegalArgumentException.class, () -> pack(CRB, misterHandy, null, 10, twoArms));
+    assertThrows(IllegalArgumentException.class, () -> pack(CRB, vaultDweller, vaultDweller, 0, null));
   }
 
   @Test
   void rejectsInvalidChoicesAndArmSlots() {
-    assertThrows(IllegalArgumentException.class, () -> new PackChoice("Melee weapon", List.of("Baton")));
-    assertThrows(IllegalArgumentException.class, () -> new PackChoice("Aid", List.of("Jet", "Jet")));
-    assertThrows(IllegalArgumentException.class, () -> new PackChoice(" ", List.of("Jet", "RadAway")));
+    List<String> oneOption = List.of("Baton");
+    List<String> sameOptions = List.of("Jet", "Jet");
+    List<String> options = List.of("Jet", "RadAway");
+    List<ArmAttachment> samePincers = List.of(ArmAttachment.PINCER, ArmAttachment.PINCER);
+    assertThrows(IllegalArgumentException.class, () -> new PackChoice("Melee weapon", oneOption));
+    assertThrows(IllegalArgumentException.class, () -> new PackChoice("Aid", sameOptions));
+    assertThrows(IllegalArgumentException.class, () -> new PackChoice(" ", options));
     assertThrows(IllegalArgumentException.class, () -> new ArmSlot(List.of()));
-    assertThrows(IllegalArgumentException.class,
-        () -> new ArmSlot(List.of(ArmAttachment.PINCER, ArmAttachment.PINCER)));
+    assertThrows(IllegalArgumentException.class, () -> new ArmSlot(samePincers));
     assertTrue(PINCER.fixed());
     assertTrue(PINCER.allows(ArmAttachment.PINCER));
     assertFalse(PINCER.allows(ArmAttachment.FLAMER));

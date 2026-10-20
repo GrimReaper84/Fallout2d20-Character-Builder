@@ -60,48 +60,72 @@ final class WeaponDetails {
     }
     detailRow(rows, "Attack", entry.needsSkill() ? skillChoice(character, entry.index(), callbacks.onChanged())
         : attackLabel(character, attack));
-    detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values,
-        modded -> modded.damage() + " CD"));
-    detailRow(rows, "Effects", withBase(text(attack.effects()), base, values,
-        modded -> String.join(", ", modded.damageEffects())));
-    detailRow(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
-    detailRow(rows, "Fire rate", withBase(new Label(attack.fireRate() == null ? "–" : attack.fireRate().toString()),
-        base, values, modded -> OverviewParts.orDash(modded.fireRate())));
-    detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
-        modded -> modded.range() == null ? "–" : modded.range().displayName()));
-    detailRow(rows, "Qualities", withRemoved(withBase(text(attack.qualities()), base, values,
-        modded -> String.join(", ", modded.qualities())), values));
-    detailRow(rows, "Ammunition", withBase(new Label(attack.ammunition().isEmpty() ? "–" : attack.ammunition().stream()
-        .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.gear().ammunition(id))
-        .collect(Collectors.joining(", "))), base, values, modded -> String.join(", ", modded.ammunition())));
+    addAttackValues(rows, character, attack, base, values);
     if (values != null && (data.isPresent() || values.weight() != null)) {
-      boolean integrated = weapon != null && weapon.isIntegrated();
-      Label weight = new Label(values.weight() == null ? "–" : values.weight() + " lbs.");
-      // A built-in weapon weighs nothing, with or without mods.
-      detailRow(rows, "Weight", integrated ? new Label("– (built in)")
-          : withBase(weight, base, values, modded -> OverviewParts.orDash(modded.weight())));
-      detailRow(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values,
-          modded -> OverviewParts.orDash(modded.cost())));
+      addWeightAndCost(rows, weapon != null && weapon.isIntegrated(), base, values);
     }
     data.ifPresent(weaponData -> detailRow(rows, "Rarity", new Label(OverviewParts.orDash(weaponData.rarity()))));
     if (weapon != null) {
-      int index = entry.index();
-      if (weapon.isCounted()) {
-        detailRow(rows, "Quantity", NumberField.of(weapon.quantity(), 1, quantity -> {
-          character.gear().setWeaponQuantity(index, quantity);
-          callbacks.onChanged().run();
-        }));
-      }
-      OverviewParts.notesRow(rows, weapon.notes(), text -> {
-        character.gear().setWeaponNotes(index, text);
-        callbacks.onEdited().run();
-      });
+      addOwnValues(rows, character, weapon, entry.index(), callbacks);
     }
     pane.add(rows);
     if (weapon != null && values != null) {
       WeaponModSection.addTo(pane, character, entry.index(), weapon, values, callbacks.onChanged());
     }
     return pane;
+  }
+
+  /** Damage to ammunition, each marked when the mods changed it. */
+  private static void addAttackValues(@NonNull MigPane rows, @NonNull PlayerCharacter character,
+      @NonNull WeaponAttack attack, @Nullable ModdedWeapon base, @Nullable ModdedWeapon values) {
+    detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values,
+        modded -> modded.damage() + " CD"));
+    detailRow(rows, "Effects", withBase(text(attack.effects()), base, values,
+        modded -> String.join(", ", modded.damageEffects())));
+    detailRow(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
+    detailRow(rows, "Fire rate", withBase(new Label(OverviewParts.orDash(attack.fireRate())),
+        base, values, modded -> OverviewParts.orDash(modded.fireRate())));
+    detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
+        modded -> modded.range() == null ? "–" : modded.range().displayName()));
+    detailRow(rows, "Qualities", withRemoved(withBase(text(attack.qualities()), base, values,
+        modded -> String.join(", ", modded.qualities())), values));
+    detailRow(rows, "Ammunition", withBase(new Label(ammunitionText(character, attack)), base, values,
+        modded -> String.join(", ", modded.ammunition())));
+  }
+
+  /** Each ammunition type with the rounds the character carries. */
+  private static @NonNull String ammunitionText(@NonNull PlayerCharacter character, @NonNull WeaponAttack attack) {
+    if (attack.ammunition().isEmpty()) {
+      return "–";
+    }
+    return attack.ammunition().stream()
+        .map(id -> AmmunitionSection.ammunitionName(id) + ": " + character.gear().ammunition(id))
+        .collect(Collectors.joining(", "));
+  }
+
+  /** Weight and cost with the mods' values; a built-in weapon weighs nothing, with or without mods. */
+  private static void addWeightAndCost(@NonNull MigPane rows, boolean integrated, @Nullable ModdedWeapon base,
+      @NonNull ModdedWeapon values) {
+    Label weight = new Label(values.weight() == null ? "–" : values.weight() + " lbs.");
+    detailRow(rows, "Weight", integrated ? new Label("– (built in)")
+        : withBase(weight, base, values, modded -> OverviewParts.orDash(modded.weight())));
+    detailRow(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values,
+        modded -> OverviewParts.orDash(modded.cost())));
+  }
+
+  /** Quantity (explosives, thrown weapons) and note of a carried weapon. */
+  private static void addOwnValues(@NonNull MigPane rows, @NonNull PlayerCharacter character,
+      @NonNull CarriedWeapon weapon, int index, @NonNull ViewCallbacks callbacks) {
+    if (weapon.isCounted()) {
+      detailRow(rows, "Quantity", NumberField.of(weapon.quantity(), 1, quantity -> {
+        character.gear().setWeaponQuantity(index, quantity);
+        callbacks.onChanged().run();
+      }));
+    }
+    OverviewParts.notesRow(rows, weapon.notes(), text -> {
+      character.gear().setWeaponNotes(index, text);
+      callbacks.onEdited().run();
+    });
   }
 
   /**

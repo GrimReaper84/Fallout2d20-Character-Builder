@@ -20,7 +20,7 @@ final class GmLevelSection {
       long xp;
       try {
         xp = ExperienceTable.xpForLevel(value);
-      } catch (ArithmeticException e) {
+      } catch (ArithmeticException _) {
         xp = character.advancement().getXp();
       }
       character.advancement().setLevelAsGm(value, xp);

@@ -29,10 +29,10 @@ class OriginDataTest {
 
   @Test
   void rejectsInvalidCreationRules() {
-    assertThrows(IllegalArgumentException.class,
-        () -> rules(Map.of(), Map.of(Attribute.STRENGTH, 13), null, null, null));
-    assertThrows(IllegalArgumentException.class,
-        () -> rules(Map.of(Attribute.STRENGTH, 3), Map.of(), null, null, null));
+    Map<Attribute, Integer> strengthThirteen = Map.of(Attribute.STRENGTH, 13);
+    Map<Attribute, Integer> strengthThree = Map.of(Attribute.STRENGTH, 3);
+    assertThrows(IllegalArgumentException.class, () -> rules(Map.of(), strengthThirteen, null, null, null));
+    assertThrows(IllegalArgumentException.class, () -> rules(strengthThree, Map.of(), null, null, null));
     assertThrows(IllegalArgumentException.class, () -> rules(Map.of(), Map.of(), 7, null, null));
     ExtraTagSkill survivalChoice = new ExtraTagSkill(List.of(Skill.SURVIVAL));
     assertThrows(IllegalArgumentException.class,

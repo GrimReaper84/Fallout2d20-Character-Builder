@@ -16,7 +16,7 @@ final class LegacyNumbers {
     }
     try {
       return (node.isNumber() ? node.decimalValue() : new BigDecimal(node.asText().strip())).intValueExact();
-    } catch (NumberFormatException | ArithmeticException e) {
+    } catch (NumberFormatException | ArithmeticException _) {
       return null;
     }
   }
