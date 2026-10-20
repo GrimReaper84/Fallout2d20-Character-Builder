@@ -62,7 +62,7 @@ public final class AddApparelDialog {
     FilteredList<ApparelData> filtered = new FilteredList<>(FXCollections.observableArrayList(items));
     TextField search = new TextField();
     search.setPromptText("Search");
-    search.textProperty().addListener((obs, old, text) -> {
+    search.textProperty().addListener((_, _, text) -> {
       String key = text.strip().toLowerCase(Locale.ROOT);
       filtered.setPredicate(item -> item.name().toLowerCase(Locale.ROOT).contains(key));
     });

@@ -137,7 +137,7 @@ final class GearTab {
       Button choose = new Button("Equipment pack…");
       choose.setGraphic(new FontIcon("fas-box-open"));
       choose.setTooltip(new Tooltip("Choose the pack, its options and the Tag skill items; OK enters them."));
-      choose.setOnAction(event -> {
+      choose.setOnAction(_ -> {
         if (EquipmentPackDialog.show(window(choose), character)) {
           onChanged.run();
         }
@@ -152,7 +152,7 @@ final class GearTab {
     TextArea notes = new TextArea(character.gear().getNotes());
     notes.setPromptText("Gear bought, found or used up, amounts to roll, …");
     notes.setWrapText(true);
-    notes.textProperty().addListener((obs, old, text) -> {
+    notes.textProperty().addListener((_, _, text) -> {
       character.gear().setNotes(text);
       onEdited.run();
     });
@@ -170,14 +170,14 @@ final class GearTab {
     MenuButton add = new MenuButton("Add");
     add.setGraphic(new FontIcon("fas-plus"));
     MenuItem item = new MenuItem("Item…");
-    item.setOnAction(event -> AddItemDialog.show(window(add), ItemCatalog.available(character.getEnabledBooks()),
+    item.setOnAction(_ -> AddItemDialog.show(window(add), ItemCatalog.available(character.getEnabledBooks()),
         ItemCatalog.availableMagazines(character.getEnabledBooks())).ifPresent(carried -> {
           character.gear().addItem(carried);
           selection.select(character.gear().getItems().size() - 1);
           onChanged.run();
         }));
     MenuItem holotape = new MenuItem("Holotape");
-    holotape.setOnAction(event -> {
+    holotape.setOnAction(_ -> {
       character.gear().addItem(CarriedItem.of(new Holotape(Holotape.NEW_NAME, "")));
       selection.select(character.gear().getItems().size() - 1);
       onChanged.run();

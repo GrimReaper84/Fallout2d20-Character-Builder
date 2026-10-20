@@ -211,7 +211,7 @@ final class PerkCard {
       return Optional.empty();
     }
     Map<String, T> byName = options.stream().collect(Collectors.toMap(displayName, option -> option,
-        (first, second) -> first, LinkedHashMap::new));
+        (first, _) -> first, LinkedHashMap::new));
     ChoiceDialog<String> dialog = new ChoiceDialog<>(byName.keySet().iterator().next(), byName.keySet());
     if (owner.getScene() != null) {
       dialog.initOwner(owner.getScene().getWindow());

@@ -49,12 +49,12 @@ final class GroupedTree {
     TreeView<N> tree = new TreeView<>(root);
     tree.setShowRoot(false);
     tree.setMinHeight(MIN_HEIGHT);
-    tree.setCellFactory(view -> cells.get());
+    tree.setCellFactory(_ -> cells.get());
     if (selected != null) {
       tree.getSelectionModel().select(selected);
       tree.scrollTo(tree.getRow(selected));
     }
-    tree.getSelectionModel().selectedItemProperty().addListener((obs, old, item) -> {
+    tree.getSelectionModel().selectedItemProperty().addListener((_, _, item) -> {
       N value = item == null ? null : item.getValue();
       onSelect.accept(entryType.isInstance(value) ? entryType.cast(value) : null);
     });

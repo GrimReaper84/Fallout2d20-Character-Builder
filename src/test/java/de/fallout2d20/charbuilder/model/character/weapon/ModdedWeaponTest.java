@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character.weapon;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
@@ -158,7 +159,7 @@ class ModdedWeaponTest {
   @Test
   void customWeaponWeighsItsMods() {
     CarriedWeapon gun = custom("", EnumSet.of(ModSlot.RECEIVER));
-    assertEquals(null, ModdedWeapon.of(gun).orElseThrow().weight());
+    assertNull(ModdedWeapon.of(gun).orElseThrow().weight());
     assertEquals("1", modded(gun, ModSlot.RECEIVER, "small-guns-powerful").weight());
   }
 

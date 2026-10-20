@@ -31,10 +31,6 @@ public record MagazineData(
   public static final @NonNull String CATEGORY = "Book/Magazine";
   /** CRB p. 172: weight of every book and magazine. */
   public static final @NonNull String WEIGHT = "<1";
-  /** CRB p. 172: cost of every book and magazine. */
-  public static final int COST = 100;
-  /** CRB p. 172: rarity of every book and magazine. */
-  public static final int RARITY = 3;
 
   public MagazineData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()

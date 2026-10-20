@@ -62,7 +62,7 @@ final class SessionSection {
       CheckBox box = new CheckBox(location.displayName());
       box.setSelected(values.injuries().contains(location));
       box.setTooltip(new Tooltip(injuryEffect(location)));
-      box.setOnAction(event -> {
+      box.setOnAction(_ -> {
         character.session().setInjured(location, box.isSelected());
         onChanged.run();
       });
@@ -99,7 +99,7 @@ final class SessionSection {
     button.setGraphic(new FontIcon(icon));
     button.setTooltip(new Tooltip(tooltip));
     button.setDisable(!enabled);
-    button.setOnAction(event -> {
+    button.setOnAction(_ -> {
       action.run();
       onChanged.run();
     });

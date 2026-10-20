@@ -19,7 +19,7 @@ final class NotesTab {
     TextArea notes = new TextArea(character.session().getVitals().notes());
     notes.setPromptText("Conditions, chems and their duration, addictions, …");
     notes.setWrapText(true);
-    notes.textProperty().addListener((obs, old, text) -> {
+    notes.textProperty().addListener((_, _, text) -> {
       character.session().setNotes(text);
       callbacks.onEdited().run();
     });

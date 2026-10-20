@@ -263,7 +263,7 @@ final class LegacyImportRun {
       }
       merged |= ranks.containsKey(perkName);
       ranks.merge(perkName, perkRank(item), Integer::sum);
-      collectChoices(perkName, item, choices.computeIfAbsent(perkName, k -> new ArrayList<>()),
+      collectChoices(perkName, item, choices.computeIfAbsent(perkName, _ -> new ArrayList<>()),
           invalidChoices);
     }
     reportPerkProblems(merged, invalid, invalidChoices);

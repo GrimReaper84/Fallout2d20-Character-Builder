@@ -144,7 +144,7 @@ public final class Abilities {
         ? legacyBaseline.skillRank(skill)
         : (isTagged(skill) && !perkTagOnly ? TAG_SKILL_BONUS : 0) + state.creationRanks();
     int rank = Math.max(0, start + state.advancementRanks() + state.stagedRanks() + state.gmRanks());
-    return perkTagOnly ? Math.max(rank, Math.min(rank + TAG_SKILL_BONUS, skillRankCap())) : rank;
+    return perkTagOnly ? Math.clamp(skillRankCap(), rank, rank + TAG_SKILL_BONUS) : rank;
   }
 
   /**
@@ -296,6 +296,6 @@ public final class Abilities {
 
   /** Makes the staged advancement ranks of every skill permanent. */
   void applyStagedRanks() {
-    skills.replaceAll((skill, state) -> state.withAdvancement(state.advancementRanks() + state.stagedRanks(), 0));
+    skills.replaceAll((_, state) -> state.withAdvancement(state.advancementRanks() + state.stagedRanks(), 0));
   }
 }

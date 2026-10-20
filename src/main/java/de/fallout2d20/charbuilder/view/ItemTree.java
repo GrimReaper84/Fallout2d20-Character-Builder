@@ -35,7 +35,7 @@ final class ItemTree {
   static @NonNull Map<ItemGroup, List<ItemEntry>> grouped(@NonNull List<ItemEntry> entries) {
     Map<ItemGroup, List<ItemEntry>> groups = new EnumMap<>(ItemGroup.class);
     for (ItemEntry entry : entries) {
-      groups.computeIfAbsent(entry.group(), group -> new ArrayList<>()).add(entry);
+      groups.computeIfAbsent(entry.group(), _ -> new ArrayList<>()).add(entry);
     }
     groups.values().forEach(group -> group.sort(BY_NAME));
     return groups;

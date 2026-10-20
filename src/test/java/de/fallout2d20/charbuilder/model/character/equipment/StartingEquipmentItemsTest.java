@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
+import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -29,7 +30,7 @@ class StartingEquipmentItemsTest {
     assertTrue(settler.abilities().isTagged(Skill.SCIENCE));
     assertEquals(Set.of(Skill.LOCKPICK), settler.getStartingTagSkills());
     assertEquals(List.of(Skill.LOCKPICK),
-        StartingEquipmentItems.taggedSkillItems(settler).map(items -> items.skill()).toList());
+        StartingEquipmentItems.taggedSkillItems(settler).map(TagSkillItemData::skill).toList());
   }
 
   /** Like the legacy save JC.json: Survivor with the Settler pack (CRB p. 79) and three Tags (CRB p. 81). */

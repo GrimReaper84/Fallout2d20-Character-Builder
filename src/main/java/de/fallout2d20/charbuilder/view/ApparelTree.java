@@ -65,7 +65,7 @@ final class ApparelTree {
   static @NonNull Map<ApparelGroup, List<ApparelEntry>> grouped(@NonNull List<ApparelEntry> entries) {
     Map<ApparelGroup, List<ApparelEntry>> groups = new EnumMap<>(ApparelGroup.class);
     for (ApparelEntry entry : entries) {
-      groups.computeIfAbsent(entry.group(), group -> new ArrayList<>()).add(entry);
+      groups.computeIfAbsent(entry.group(), _ -> new ArrayList<>()).add(entry);
     }
     groups.values().forEach(group -> group.sort(BY_NAME));
     return groups;

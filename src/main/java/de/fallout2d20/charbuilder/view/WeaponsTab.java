@@ -101,7 +101,7 @@ final class WeaponsTab {
     CatalogRef origin = character.getOrigin();
     List<WeaponData> offered = WeaponCatalog.offered(origin == null ? null : origin.id(), character.getEnabledBooks())
         .stream().filter(data -> !data.id().equals(UNARMED_STRIKE_ID)).toList();
-    add.setOnAction(event -> AddWeaponDialog.show(window(add), offered).ifPresent(weapon -> {
+    add.setOnAction(_ -> AddWeaponDialog.show(window(add), offered).ifPresent(weapon -> {
       character.gear().addWeapon(weapon);
       selection.select(character.gear().getWeapons().size() - 1);
       onChanged.run();

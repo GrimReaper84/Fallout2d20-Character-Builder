@@ -157,7 +157,7 @@ final class WeaponDetails {
     box.setConverter(new DisplayConverter<>(Skill::displayName));
     box.setPromptText("Choose skill");
     box.setTooltip(new Tooltip("The skill used to attack with this weapon; it decides the target number."));
-    box.setOnAction(event -> {
+    box.setOnAction(_ -> {
       Skill chosen = box.getValue();
       if (chosen != null) {
         character.gear().setCustomWeaponSkill(index, chosen);

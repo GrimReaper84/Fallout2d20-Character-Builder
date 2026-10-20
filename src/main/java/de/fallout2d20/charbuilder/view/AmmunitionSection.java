@@ -47,7 +47,7 @@ final class AmmunitionSection {
     add.setConverter(new DisplayConverter<>(AmmunitionData::name));
     add.setPromptText("Add ammunition type");
     add.setMaxWidth(Double.MAX_VALUE);
-    add.setOnAction(event -> {
+    add.setOnAction(_ -> {
       AmmunitionData chosen = add.getValue();
       if (chosen != null) {
         character.gear().setAmmunition(chosen.id(), 1);

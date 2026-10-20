@@ -73,7 +73,7 @@ final class ItemDetails {
     OverviewParts.detailRow(rows, "Source", new Label(data.map(entry -> entry.sources().getFirst().toString())
         .or(() -> magazine.map(entry -> entry.sources().getFirst().toString())).orElse("Custom item")));
     OverviewParts.detailRow(rows, "Type", OverviewParts.wrappingInCell(new Label(data.map(ItemDetails::type)
-        .or(() -> magazine.map(entry -> MagazineData.CATEGORY)).orElse("–"))));
+        .or(() -> magazine.map(_ -> MagazineData.CATEGORY)).orElse("–"))));
     addQuantity(rows, character, item, index, onChanged);
     String weight = item.printedWeight();
     OverviewParts.detailRow(rows, "Weight", new Label(weight == null ? "–" : weight + " lbs."));
@@ -97,8 +97,8 @@ final class ItemDetails {
         callbacks.onChanged().run();
       }
     };
-    name.setOnAction(event -> commitName.run());
-    name.focusedProperty().addListener((obs, old, focused) -> {
+    name.setOnAction(_ -> commitName.run());
+    name.focusedProperty().addListener((_, _, focused) -> {
       if (!focused) {
         commitName.run();
       }
@@ -108,7 +108,7 @@ final class ItemDetails {
     label.setPromptText("Label, contents or code");
     label.setWrapText(true);
     label.setPrefRowCount(LABEL_ROWS);
-    label.textProperty().addListener((obs, old, text) -> {
+    label.textProperty().addListener((_, _, text) -> {
       Holotape current = character.gear().getItems().get(index).holotape();
       if (current != null) {
         character.gear().setItemHolotape(index, new Holotape(current.name(), text));
@@ -167,7 +167,7 @@ final class ItemDetails {
     issue.setPromptText("Roll the issue (d20)");
     issue.setMaxWidth(Region.USE_PREF_SIZE);
     magazine.issue(item.issue()).ifPresent(issue::setValue);
-    issue.setOnAction(event -> {
+    issue.setOnAction(_ -> {
       MagazineIssue chosen = issue.getValue();
       if (chosen != null && !chosen.title().equals(item.issue())) {
         character.gear().setItemIssue(index, chosen.title());

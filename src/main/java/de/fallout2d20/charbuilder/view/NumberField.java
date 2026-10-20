@@ -33,8 +33,8 @@ final class NumberField {
         field.setText(Integer.toString(value));
       }
     };
-    field.setOnAction(event -> take.run());
-    field.focusedProperty().addListener((obs, old, focused) -> {
+    field.setOnAction(_ -> take.run());
+    field.focusedProperty().addListener((_, _, focused) -> {
       if (!focused) {
         take.run();
       }

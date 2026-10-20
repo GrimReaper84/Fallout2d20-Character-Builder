@@ -63,7 +63,7 @@ final class MasterDetail {
     ScrollPane scroll = new ScrollPane(padded(content));
     scroll.setFitToWidth(true);
     scroll.setStyle("-fx-background-color: transparent;");
-    scroll.vvalueProperty().addListener((obs, old, value) -> {
+    scroll.vvalueProperty().addListener((_, _, value) -> {
       if (scroll.getScene() != null) {
         save.accept(value.doubleValue());
       }

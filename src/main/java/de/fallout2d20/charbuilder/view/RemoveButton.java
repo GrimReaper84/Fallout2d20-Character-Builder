@@ -18,7 +18,7 @@ final class RemoveButton {
 
   RemoveButton(@NonNull Runnable onRemove) {
     button.setGraphic(new FontIcon("fas-trash"));
-    button.setOnAction(event -> onRemove.run());
+    button.setOnAction(_ -> onRemove.run());
     Tooltip.install(node, tooltip);
   }
 

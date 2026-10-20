@@ -46,7 +46,7 @@ final class CharacterHeader {
 
     TextField name = new TextField(character.getName());
     name.setPromptText("Name");
-    name.textProperty().addListener((obs, old, value) -> {
+    name.textProperty().addListener((_, _, value) -> {
       character.setName(value);
       callbacks.onEdited().run();
     });
@@ -97,7 +97,7 @@ final class CharacterHeader {
     Button create = new Button("Create Character");
     create.setGraphic(new FontIcon("fas-check"));
     create.setTooltip(new Tooltip("End character creation; creation choices cannot be changed afterwards."));
-    create.setOnAction(event -> onComplete.run());
+    create.setOnAction(_ -> onComplete.run());
     return create;
   }
 

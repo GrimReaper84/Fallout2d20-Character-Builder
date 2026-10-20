@@ -57,7 +57,7 @@ final class BetaMenu {
     Menu samples = new Menu("Samples");
     Menu legacy = new Menu("Legacy imports");
     MenuItem reload = new MenuItem("Reload list");
-    reload.setOnAction(event -> fill(folder, samples, legacy, openSample, openLegacy));
+    reload.setOnAction(_ -> fill(folder, samples, legacy, openSample, openLegacy));
     fill(folder, samples, legacy, openSample, openLegacy);
     return new Menu("Beta", null, samples, legacy, new SeparatorMenuItem(), reload);
   }
@@ -85,7 +85,7 @@ final class BetaMenu {
     }
     return files.stream().map(file -> {
       MenuItem item = new MenuItem(label.apply(file));
-      item.setOnAction(event -> open.accept(file));
+      item.setOnAction(_ -> open.accept(file));
       return item;
     }).toList();
   }

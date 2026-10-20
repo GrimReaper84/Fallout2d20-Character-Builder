@@ -25,7 +25,7 @@ final class WeaponTree {
   static @NonNull Map<RangeGroup, List<WeaponEntry>> grouped(@NonNull List<WeaponEntry> entries) {
     Map<RangeGroup, List<WeaponEntry>> groups = new EnumMap<>(RangeGroup.class);
     for (WeaponEntry entry : entries) {
-      groups.computeIfAbsent(RangeGroup.of(entry.attack()), group -> new ArrayList<>()).add(entry);
+      groups.computeIfAbsent(RangeGroup.of(entry.attack()), _ -> new ArrayList<>()).add(entry);
     }
     groups.values().forEach(group -> group.sort(BY_NAME));
     return groups;

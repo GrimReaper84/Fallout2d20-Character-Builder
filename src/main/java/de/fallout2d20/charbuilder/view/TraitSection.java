@@ -151,7 +151,7 @@ final class TraitSection {
     box.setSelected(selected);
     boolean full = !selected && chosen.size() >= TraitRules.MAX_TRAITS;
     box.setDisable(full);
-    box.selectedProperty().addListener((obs, old, value) -> {
+    box.selectedProperty().addListener((_, _, value) -> {
       if (value) {
         character.chooseTrait(CatalogRef.of(trait.id()));
       } else {
@@ -192,7 +192,7 @@ final class TraitSection {
       pane.add(chooser);
     }
     for (ComboBox<Attribute> chooser : choosers) {
-      chooser.valueProperty().addListener((obs, old, value) -> {
+      chooser.valueProperty().addListener((_, _, _) -> {
         List<Attribute> choices = choosers.stream().map(ComboBox::getValue)
             .filter(Objects::nonNull).toList();
         character.setTraitAttributeChoices(trait.get().id(), choices);

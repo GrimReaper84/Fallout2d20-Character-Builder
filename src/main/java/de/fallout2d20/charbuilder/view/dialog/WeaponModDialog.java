@@ -43,7 +43,7 @@ public final class WeaponModDialog {
     table.getColumns().add(column("Cost", 60, "", mod -> ModTexts.signed(mod.cost())));
     table.getColumns().add(column("Perks", 150, "", ModTexts::perks));
     table.getColumns().add(column("Source", 90, "", mod -> mod.sources().getFirst().toString()));
-    table.setRowFactory(view -> new ModChoiceRow(character));
+    table.setRowFactory(_ -> new ModChoiceRow(character));
     table.setPrefSize(900, 380);
     rows.stream().filter(row -> Objects.equals(row.mod(), current)).findFirst()
         .ifPresent(row -> table.getSelectionModel().select(row));

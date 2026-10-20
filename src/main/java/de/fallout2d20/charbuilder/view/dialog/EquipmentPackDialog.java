@@ -9,7 +9,6 @@ import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
-import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.StartingGear;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
@@ -164,7 +163,7 @@ public final class EquipmentPackDialog {
       pack.setValue(data);
       pack.setTooltip(new Tooltip(describe(data, origin.id())));
     });
-    pack.valueProperty().addListener((obs, old, data) -> {
+    pack.valueProperty().addListener((_, _, data) -> {
       if (data != null) {
         character.startingGear().choosePack(CatalogRef.of(data.id()));
         rebuild();
@@ -198,7 +197,7 @@ public final class EquipmentPackDialog {
     CheckBox free = new CheckBox("Freely configurable arms");
     free.setSelected(selection.freeArms());
     free.setTooltip(new Tooltip(FREE_ARMS_TOOLTIP));
-    free.selectedProperty().addListener((obs, old, value) -> {
+    free.selectedProperty().addListener((_, _, value) -> {
       character.startingGear().setFreeArms(value);
       rebuild();
     });
@@ -233,7 +232,7 @@ public final class EquipmentPackDialog {
     });
     TextField weapon = new TextField(arm.weapon() == null ? "" : arm.weapon());
     weapon.setPromptText("or a weapon, e.g. Hunting rifle");
-    weapon.textProperty().addListener((obs, old, text) -> {
+    weapon.textProperty().addListener((_, _, text) -> {
       // Blank text does not replace a chosen attachment.
       if (text.isBlank() && attachment.getValue() != null) {
         return;
@@ -251,14 +250,14 @@ public final class EquipmentPackDialog {
     String current = character.startingGear().getSelection().trinket();
     TextField trinket = new TextField(current == null ? "" : current);
     trinket.setPromptText("Describe your personal trinket");
-    trinket.textProperty().addListener((obs, old, text) -> {
+    trinket.textProperty().addListener((_, _, text) -> {
       character.startingGear().setTrinket(text);
       updatePreview();
     });
     Button roll = new Button();
     roll.setGraphic(new FontIcon("fas-dice-d20"));
     roll.setTooltip(new Tooltip("Roll on the trinket table (CRB p. 80)"));
-    roll.setOnAction(event -> {
+    roll.setOnAction(_ -> {
       TrinketData rolled = EquipmentCatalog.trinket(ThreadLocalRandom.current().nextInt(1, TrinketData.DIE_SIZE + 1));
       character.startingGear().setTrinket(rolled.name());
       rebuild();
@@ -319,7 +318,7 @@ public final class EquipmentPackDialog {
     box.getItems().setAll(options);
     box.setPromptText("Choose");
     box.setValue(value);
-    box.valueProperty().addListener((obs, old, option) -> {
+    box.valueProperty().addListener((_, _, option) -> {
       if (option != null) {
         onPick.accept(option);
       }
@@ -334,7 +333,7 @@ public final class EquipmentPackDialog {
     box.setConverter(new DisplayConverter<>(ArmAttachment::displayName));
     box.setPromptText("Choose an attachment");
     box.setValue(value);
-    box.valueProperty().addListener((obs, old, attachment) -> onPick.accept(attachment));
+    box.valueProperty().addListener((_, _, attachment) -> onPick.accept(attachment));
     return box;
   }
 

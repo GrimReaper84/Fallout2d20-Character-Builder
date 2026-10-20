@@ -152,7 +152,7 @@ class PlayerCharacterEquipmentTest {
 
   @Test
   void equipmentIsFixedAfterCreationButNotesStayEditable() {
-    StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), Arrays.asList("Knuckles"),
+    StartingEquipment settler = new StartingEquipment(CatalogRef.of("settler"), List.of("Knuckles"),
         Map.of(), "Medal", false, List.of());
     PlayerCharacter complete = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor"))
         .creationComplete(true).startingEquipment(settler).inventoryNotes("Notes").build();

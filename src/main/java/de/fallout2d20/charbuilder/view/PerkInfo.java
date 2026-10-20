@@ -42,18 +42,18 @@ final class PerkInfo {
   /** Shows {@code text} above {@code card} while the mouse is over the button. */
   static void attach(@NonNull Node button, @NonNull Node card, @NonNull String text) {
     Popup[] panel = new Popup[1];
-    button.setOnMouseEntered(event -> {
+    button.setOnMouseEntered(_ -> {
       if (panel[0] == null) {
         panel[0] = panel(text);
       }
       show(panel[0], button, card);
     });
-    button.setOnMouseExited(event -> {
+    button.setOnMouseExited(_ -> {
       if (panel[0] != null) {
         panel[0].hide();
       }
     });
-    button.sceneProperty().addListener((obs, old, scene) -> {
+    button.sceneProperty().addListener((_, _, scene) -> {
       if (scene == null && panel[0] != null) {
         panel[0].hide();
       }

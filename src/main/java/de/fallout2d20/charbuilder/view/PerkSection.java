@@ -90,7 +90,7 @@ final class PerkSection {
     // No animation: the view is rebuilt after every change and must not replay it.
     group.setAnimated(false);
     group.setExpanded(ViewPreferences.user().getBoolean(key, expandedByDefault));
-    group.expandedProperty().addListener((obs, old, expanded) -> ViewPreferences.user().putBoolean(key, expanded));
+    group.expandedProperty().addListener((_, _, expanded) -> ViewPreferences.user().putBoolean(key, expanded));
     pane.add(group, Layouts.spaced(Layouts.span(4).growX().minWidth("0")));
   }
 

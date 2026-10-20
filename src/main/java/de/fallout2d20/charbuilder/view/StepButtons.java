@@ -50,7 +50,7 @@ final class StepButtons {
     Button button = new Button();
     button.setGraphic(new FontIcon(icon));
     button.setDisable(!enabled);
-    button.setOnAction(event -> action.run());
+    button.setOnAction(_ -> action.run());
     HBox wrapper = new HBox(button);
     Tooltip.install(wrapper, new Tooltip(tooltip));
     return wrapper;

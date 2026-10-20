@@ -65,8 +65,8 @@ public final class AddItemDialog {
       filtered.setPredicate(choice -> choice.name().toLowerCase(Locale.ROOT).contains(key)
           && (chosen == null || chosen.equals(ALL) || chosen.equals(choice.category())));
     };
-    search.textProperty().addListener((obs, old, text) -> filter.run());
-    category.valueProperty().addListener((obs, old, value) -> filter.run());
+    search.textProperty().addListener((_, _, _) -> filter.run());
+    category.valueProperty().addListener((_, _, _) -> filter.run());
     ListView<ItemChoice> list = new ListView<>(filtered);
     list.setCellFactory(TextFieldListCell.forListView(new DisplayConverter<>(
         choice -> choice.name() + " (" + choice.category() + ") – " + choice.description())));

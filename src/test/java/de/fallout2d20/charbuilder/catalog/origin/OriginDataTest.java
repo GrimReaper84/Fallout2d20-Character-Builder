@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.catalog.origin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
@@ -45,7 +46,7 @@ class OriginDataTest {
     assertEquals(10, origin.attributeMaximum(Attribute.INTELLIGENCE));
     assertEquals(0, origin.attributeModifier(Attribute.STRENGTH));
     assertEquals(List.of(), origin.traitLists());
-    assertEquals(true, new ExtraTagSkill(null).allows(Skill.SNEAK));
+    assertTrue(new ExtraTagSkill(null).allows(Skill.SNEAK));
   }
 
   private static OriginData origin(List<Source> sources, String summary,

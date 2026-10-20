@@ -37,10 +37,10 @@ final class AdvancementSection {
     amount.setPromptText("XP");
     amount.setPrefWidth(FIELD_WIDTH);
     Button add = iconButton("Add XP", "fas-plus", "Add the XP awarded by the GM");
-    add.setOnAction(event -> addXp(character, amount, onChanged));
-    amount.setOnAction(event -> addXp(character, amount, onChanged));
+    add.setOnAction(_ -> addXp(character, amount, onChanged));
+    amount.setOnAction(_ -> addXp(character, amount, onChanged));
     Button milestone = iconButton("Milestone level", "fas-arrow-up", "The GM grants a level (CRB p. 49)");
-    milestone.setOnAction(event -> {
+    milestone.setOnAction(_ -> {
       if (AdvancementDialogs.confirmLevelUp(window(milestone), 1)) {
         try {
           character.advancement().gainMilestoneLevel();
@@ -100,7 +100,7 @@ final class AdvancementSection {
     Button apply = new Button("Apply");
     apply.setGraphic(new FontIcon("fas-check"));
     apply.setDisable(!problems.isEmpty());
-    apply.setOnAction(event -> {
+    apply.setOnAction(_ -> {
       if (AdvancementRules.canApply(character) && AdvancementDialogs.confirmApply(window(apply))) {
         character.advancement().apply();
         onChanged.run();
@@ -115,7 +115,7 @@ final class AdvancementSection {
 
   private static @NonNull Node discardButton(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     Button discard = iconButton("Discard", "fas-undo", "Take back all staged skill ranks and perks.");
-    discard.setOnAction(event -> {
+    discard.setOnAction(_ -> {
       character.advancement().discard();
       onChanged.run();
     });

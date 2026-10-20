@@ -84,7 +84,7 @@ final class ArmorTab {
     Button add = new Button("Add apparel");
     add.setGraphic(new FontIcon("fas-plus"));
     ApparelKind defaultKind = ApparelRules.isRobot(character) ? ApparelKind.ROBOT_ARMOR : ApparelKind.ARMOR;
-    add.setOnAction(event -> AddApparelDialog.show(window(add), offered(character), character.hitLocations(),
+    add.setOnAction(_ -> AddApparelDialog.show(window(add), offered(character), character.hitLocations(),
         defaultKind).ifPresent(item -> {
           character.gear().addApparel(item);
           selection.select(character.gear().getApparel().size() - 1);

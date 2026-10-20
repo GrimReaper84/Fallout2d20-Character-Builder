@@ -207,7 +207,7 @@ public record ModdedWeapon(
   }
 
   /** Weight with the mods' change; a {@code <1} weapon gets the added pounds, never below nothing. */
-  private static @Nullable String addWeight(@Nullable String printed, int change) {
+  private static @NonNull String addWeight(@Nullable String printed, int change) {
     int pounds = Weight.pounds(printed) + change;
     if (pounds > 0) {
       return Integer.toString(pounds);

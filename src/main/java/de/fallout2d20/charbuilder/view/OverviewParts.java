@@ -63,13 +63,6 @@ final class OverviewParts {
     return label;
   }
 
-  /** A notes area {@link #TEXT_WIDTH} wide by preference; spanning cells, it may get narrower. */
-  static @NonNull TextArea notesArea(@NonNull TextArea area) {
-    area.setPrefWidth(TEXT_WIDTH);
-    area.setMinWidth(0);
-    return area;
-  }
-
   /** Rows of the notes field in a details panel. */
   private static final int NOTES_ROWS = 4;
 
@@ -85,7 +78,7 @@ final class OverviewParts {
     notes.setPromptText("Notes, e.g. mods");
     notes.setWrapText(true);
     notes.setPrefRowCount(NOTES_ROWS);
-    notes.textProperty().addListener((obs, old, typed) -> onText.accept(typed));
+    notes.textProperty().addListener((_, _, typed) -> onText.accept(typed));
     rows.add(rowName("Notes"), Layouts.top());
     rows.add(notes);
   }

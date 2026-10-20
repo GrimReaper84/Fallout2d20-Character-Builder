@@ -30,8 +30,8 @@ final class LevelSection {
     int level = character.advancement().getLevel();
     TextField field = new TextField(Integer.toString(level));
     field.setPrefWidth(FIELD_WIDTH);
-    field.setOnAction(event -> commit(character, field, onChanged));
-    field.focusedProperty().addListener((obs, old, focused) -> {
+    field.setOnAction(_ -> commit(character, field, onChanged));
+    field.focusedProperty().addListener((_, _, focused) -> {
       if (!focused) {
         commit(character, field, onChanged);
       }

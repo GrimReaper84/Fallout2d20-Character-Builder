@@ -57,7 +57,7 @@ public final class AddWeaponDialog {
     FilteredList<WeaponData> filtered = new FilteredList<>(FXCollections.observableArrayList(weapons));
     TextField search = new TextField();
     search.setPromptText("Search");
-    search.textProperty().addListener((obs, old, text) -> {
+    search.textProperty().addListener((_, _, text) -> {
       String key = text.strip().toLowerCase(Locale.ROOT);
       filtered.setPredicate(weapon -> weapon.name().toLowerCase(Locale.ROOT).contains(key));
     });

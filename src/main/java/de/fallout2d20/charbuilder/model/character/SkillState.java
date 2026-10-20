@@ -3,7 +3,7 @@ package de.fallout2d20.charbuilder.model.character;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Stored parts of a skill rank. The effective rank is computed by {@link Abilities#skillRank}.
+ * Stored parts of a skill rank. The effective rank is computed by {@link Abilities#skillRank(Skill)}.
  *
  * <p>CRB p. 58: a Tag skill starts at rank 2, so the two free ranks are not stored here but derived
  * from {@code tagged}.

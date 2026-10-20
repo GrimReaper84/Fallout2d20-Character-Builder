@@ -53,7 +53,7 @@ final class ApparelDetails {
     CheckBox worn = new CheckBox();
     worn.setSelected(!item.carried());
     worn.setTooltip(new Tooltip("Worn pieces protect; carried pieces only count toward the load."));
-    worn.setOnAction(event -> {
+    worn.setOnAction(_ -> {
       character.gear().setApparelCarried(index, !worn.isSelected());
       callbacks.onChanged().run();
     });
@@ -104,7 +104,7 @@ final class ApparelDetails {
     box.setPromptText("Choose");
     box.setValue(item.location());
     box.setMaxWidth(Region.USE_PREF_SIZE);
-    box.setOnAction(event -> {
+    box.setOnAction(_ -> {
       if (box.getValue() != item.location()) {
         character.gear().setApparelLocation(index, box.getValue());
         onChanged.run();

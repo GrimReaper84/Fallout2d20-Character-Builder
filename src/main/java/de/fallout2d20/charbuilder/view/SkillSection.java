@@ -48,7 +48,7 @@ final class SkillSection {
       pane.add(withTooltip(box, tagTooltip(character, skill)));
       Label name = new Label(skill.displayName());
       // Clicking the name switches the Tag, as when the name was the checkbox's own text.
-      name.setOnMouseClicked(event -> {
+      name.setOnMouseClicked(_ -> {
         if (!box.isDisabled()) {
           box.fire();
         }
@@ -141,7 +141,7 @@ final class SkillSection {
     CheckBox box = new CheckBox();
     box.setSelected(character.abilities().isTagged(skill));
     box.setDisable(!SkillRules.canToggleTag(character, skill));
-    box.selectedProperty().addListener((obs, old, value) -> {
+    box.selectedProperty().addListener((_, _, value) -> {
       character.abilities().setFreeTag(skill, value);
       onChanged.run();
     });

@@ -59,7 +59,7 @@ class PlayerCharacterAdvancementTest {
     assertThrows(IllegalArgumentException.class, () -> advancement.addXp(-5));
     Advancement newAdvancement = PlayerCharacter.createNew().advancement();
     assertThrows(IllegalStateException.class, () -> newAdvancement.addXp(100));
-    assertThrows(IllegalStateException.class, () -> newAdvancement.gainMilestoneLevel());
+    assertThrows(IllegalStateException.class, newAdvancement::gainMilestoneLevel);
   }
 
   /** CRB p. 49 milestone progression: XP are raised to the threshold, higher XP stay. */

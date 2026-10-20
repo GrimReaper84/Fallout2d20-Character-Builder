@@ -36,7 +36,7 @@ final class OriginSection {
       origins.setValue(origin);
       origins.setTooltip(new Tooltip(describe(origin)));
     });
-    origins.valueProperty().addListener((obs, old, origin) -> {
+    origins.valueProperty().addListener((_, _, origin) -> {
       if (origin != null) {
         character.chooseOrigin(CatalogRef.of(origin.id()));
         onChanged.run();
@@ -69,7 +69,7 @@ final class OriginSection {
       tagSkill.setConverter(new DisplayConverter<>(Skill::displayName));
       tagSkill.setPromptText("Choose a skill");
       tagSkill.setValue(choices.tagSkill());
-      tagSkill.valueProperty().addListener((obs, old, skill) -> {
+      tagSkill.valueProperty().addListener((_, _, skill) -> {
         character.chooseOriginTagSkill(skill);
         onChanged.run();
       });
@@ -84,11 +84,11 @@ final class OriginSection {
       purpose.setValue(choices.purpose());
       // Typed text goes to the model at once (like the name), so saving right away keeps it; only
       // picking a suggestion rebuilds the overview, which would otherwise steal the focus.
-      purpose.getEditor().textProperty().addListener((obs, old, text) -> {
+      purpose.getEditor().textProperty().addListener((_, _, text) -> {
         character.setPurpose(text);
         onEdited.run();
       });
-      purpose.getSelectionModel().selectedIndexProperty().addListener((obs, old, index) -> {
+      purpose.getSelectionModel().selectedIndexProperty().addListener((_, _, index) -> {
         if (index.intValue() >= 0) {
           onChanged.run();
         }

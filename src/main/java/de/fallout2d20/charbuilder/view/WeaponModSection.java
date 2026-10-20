@@ -64,7 +64,7 @@ final class WeaponModSection {
       }
       Button editSlots = new Button("Edit slots");
       editSlots.setGraphic(new FontIcon("fas-sliders-h"));
-      editSlots.setOnAction(event -> ModSlotsDialog.show(window(editSlots), custom.name(), custom.modSlots())
+      editSlots.setOnAction(_ -> ModSlotsDialog.show(window(editSlots), custom.name(), custom.modSlots())
           .ifPresent(chosen -> {
             if (confirmRemoval(editSlots, weapon, chosen)) {
               character.gear().setCustomWeaponModSlots(index, chosen);
@@ -109,7 +109,7 @@ final class WeaponModSection {
     Button edit = new Button();
     edit.setGraphic(new FontIcon("fas-wrench"));
     edit.setTooltip(new Tooltip("Change the " + slot.displayName() + " mod"));
-    edit.setOnAction(event -> {
+    edit.setOnAction(_ -> {
       CatalogRef ref = weapon.mods().get(slot);
       WeaponModData current = ref == null ? null : WeaponCatalog.modById(ref.id()).orElse(null);
       WeaponModDialog.show(window(edit), character, weapon.displayName(), slot,
