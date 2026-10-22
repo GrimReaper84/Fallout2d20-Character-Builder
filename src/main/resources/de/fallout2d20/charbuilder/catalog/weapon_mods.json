@@ -4562,5 +4562,2310 @@
         "rank": 2
       }
     ]
+  },
+  {
+    "id": "assaultron-head-capacitor-mk-iii",
+    "name": "Capacitor Mk III",
+    "table": "assaultron-head",
+    "tableName": "Unique Assaultron Head mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 66
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Mk III",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 3 shots per attack"
+      }
+    ],
+    "cost": 4,
+    "perks": [
+      {
+        "perk": "robotics-expert",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "assaultron-head-capacitor-mk-iv",
+    "name": "Capacitor Mk IV",
+    "table": "assaultron-head",
+    "tableName": "Unique Assaultron Head mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 66
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Mk IV",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 4 shots per attack"
+      }
+    ],
+    "weight": 1,
+    "cost": 8,
+    "perks": [
+      {
+        "perk": "robotics-expert",
+        "rank": 1
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "assaultron-head-capacitor-mk-v",
+    "name": "Capacitor Mk V",
+    "table": "assaultron-head",
+    "tableName": "Unique Assaultron Head mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 66
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Mk V",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 5 shots per attack"
+      }
+    ],
+    "weight": 1,
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "robotics-expert",
+        "rank": 1
+      },
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "assaultron-head-capacitor-mk-vi",
+    "name": "Capacitor Mk VI",
+    "table": "assaultron-head",
+    "tableName": "Unique Assaultron Head mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 66
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Mk VI",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 4
+      },
+      {
+        "type": "SPECIAL",
+        "text": "Uses 6 shots per attack"
+      }
+    ],
+    "weight": 2,
+    "cost": 16,
+    "perks": [
+      {
+        "perk": "robotics-expert",
+        "rank": 1
+      },
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "fifty-cal-machine-gun-heavy-barrel",
+    "name": "Heavy Barrel",
+    "table": "fifty-cal-machine-gun",
+    "tableName": "Unique .50 Cal Machine Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 68
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 3,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "auto-grenade-launcher-heavy-barrel",
+    "name": "Heavy Barrel",
+    "table": "auto-grenade-launcher",
+    "tableName": "Unique Auto Grenade Launcher mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 68
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 3,
+    "cost": 135,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "auto-grenade-launcher-long-barrel",
+    "name": "Long Barrel",
+    "table": "auto-grenade-launcher",
+    "tableName": "Unique Auto Grenade Launcher mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 68
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 45,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "auto-grenade-launcher-25mm-grenade-receiver",
+    "name": "25mm Grenade Receiver",
+    "table": "auto-grenade-launcher",
+    "tableName": "Unique Auto Grenade Launcher mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 68
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 4
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "25mm-grenade"
+      }
+    ],
+    "weight": -3,
+    "cost": 135,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-gun-speedy-receiver",
+    "name": "Speedy Receiver",
+    "table": "gatling-gun",
+    "tableName": "Unique Gatling Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 69
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gatling-gun-long-barrel",
+    "name": "Long Barrel",
+    "table": "gatling-gun",
+    "tableName": "Unique Gatling Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 69
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "REPAIR",
+    "namePrefix": "Long",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 2,
+    "cost": 158,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-gun-comfort-grip",
+    "name": "Comfort Grip",
+    "table": "gatling-gun",
+    "tableName": "Unique Gatling Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 69
+      }
+    ],
+    "slot": "GRIP",
+    "skill": "REPAIR",
+    "namePrefix": "Comfort Grip",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Recoil (6)"
+      }
+    ],
+    "weight": 3,
+    "cost": 90,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-gun-extra-large-magazine",
+    "name": "Extra-Large Magazine",
+    "table": "gatling-gun",
+    "tableName": "Unique Gatling Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 69
+      }
+    ],
+    "slot": "MAGAZINE",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Unreliable"
+      }
+    ],
+    "weight": 2,
+    "cost": 28,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-gun-front-sight-ring",
+    "name": "Front Sight Ring",
+    "table": "gatling-gun",
+    "tableName": "Unique Gatling Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 69
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Sighted",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 2,
+    "cost": 158,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-gun-large-bayonet",
+    "name": "Large Bayonet",
+    "table": "gatling-gun",
+    "tableName": "Unique Gatling Gun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 69
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "REPAIR",
+    "namePrefix": "Bayoneted",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "Can be used as a melee weapon dealing 5 CD Piercing 1 Physical damage"
+      }
+    ],
+    "weight": 5,
+    "cost": 18,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-plasma-ported-barrel",
+    "name": "Ported Barrel",
+    "table": "gatling-plasma",
+    "tableName": "Unique Gatling Plasma mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 70
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Ported",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 6,
+    "cost": 81,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-plasma-comfort-grip",
+    "name": "Comfort Grip",
+    "table": "gatling-plasma",
+    "tableName": "Unique Gatling Plasma mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 70
+      }
+    ],
+    "slot": "GRIP",
+    "skill": "SCIENCE",
+    "namePrefix": "Comfort Grip",
+    "effects": [
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Recoil (6)"
+      }
+    ],
+    "weight": 3,
+    "cost": 90,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-plasma-reflex-sight",
+    "name": "Reflex Sight",
+    "table": "gatling-plasma",
+    "tableName": "Unique Gatling Plasma mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 70
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Sighted",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "May re-roll the hit location die"
+      }
+    ],
+    "weight": 2,
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "gatling-plasma-beam-splitter",
+    "name": "Beam Splitter",
+    "table": "gatling-plasma",
+    "tableName": "Unique Gatling Plasma mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 70
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Scattered",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      }
+    ],
+    "weight": 3,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-plasma-beam-focuser",
+    "name": "Beam Focuser",
+    "table": "gatling-plasma",
+    "tableName": "Unique Gatling Plasma mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 70
+      }
+    ],
+    "slot": "NOZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Focused",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 4,
+    "cost": 41,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gauss-minigun-tri-barrel",
+    "name": "Tri-Barrel",
+    "table": "gauss-minigun",
+    "tableName": "Unique Gauss Minigun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 71
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Triple Barrel",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 4,
+    "cost": 91,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "gauss-minigun-penta-barrel",
+    "name": "Penta-Barrel",
+    "table": "gauss-minigun",
+    "tableName": "Unique Gauss Minigun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 71
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Penta Barrel",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "RANGE",
+        "value": -1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      }
+    ],
+    "weight": 12,
+    "cost": 182,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "gauss-minigun-tesla-coil-capacitor",
+    "name": "Tesla Coil Capacitor",
+    "table": "gauss-minigun",
+    "tableName": "Unique Gauss Minigun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 71
+      }
+    ],
+    "slot": "TESLA_COIL",
+    "skill": "SCIENCE",
+    "namePrefix": "Tesla Capacitor",
+    "effects": [
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "weight": 8,
+    "cost": 91,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "gauss-minigun-tesla-coil-dynamo",
+    "name": "Tesla Coil Dynamo",
+    "table": "gauss-minigun",
+    "tableName": "Unique Gauss Minigun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 71
+      }
+    ],
+    "slot": "TESLA_COIL",
+    "skill": "SCIENCE",
+    "namePrefix": "Tesla Dynamo",
+    "effects": [
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 12,
+    "cost": 136,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "gauss-minigun-gunner-sight",
+    "name": "Gunner Sight",
+    "table": "gauss-minigun",
+    "tableName": "Unique Gauss Minigun mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 71
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SCIENCE",
+    "namePrefix": "Tactical",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "May re-roll the hit location die"
+      }
+    ],
+    "weight": 1,
+    "cost": 5
+  },
+  {
+    "id": "plasma-caster-calibrated-capacitor",
+    "name": "Calibrated Capacitor",
+    "table": "plasma-caster",
+    "tableName": "Unique Plasma Caster mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 72
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 3,
+    "cost": 140,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "plasma-caster-pulse-capacitor",
+    "name": "Pulse Capacitor",
+    "table": "plasma-caster",
+    "tableName": "Unique Plasma Caster mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 72
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Pulse",
+    "effects": [
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Surge"
+      }
+    ],
+    "weight": 3,
+    "cost": 70,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "plasma-caster-high-speed-electrode",
+    "name": "High Speed Electrode",
+    "table": "plasma-caster",
+    "tableName": "Unique Plasma Caster mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 72
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Rapid",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 3,
+    "cost": 105,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "plasma-caster-long-barrel",
+    "name": "Long Barrel",
+    "table": "plasma-caster",
+    "tableName": "Unique Plasma Caster mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 72
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 5,
+    "cost": 128,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "bow-compound-frame",
+    "name": "Compound Frame",
+    "table": "bow",
+    "tableName": "Unique Bow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "FRAME",
+    "skill": "SURVIVAL",
+    "namePrefix": "Compound",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -1
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Recoil (6)"
+      }
+    ],
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "bow-iron-sights",
+    "name": "Iron Sights",
+    "table": "bow",
+    "tableName": "Unique Bow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SURVIVAL",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "bow-glow-sights",
+    "name": "Glow Sights",
+    "table": "bow",
+    "tableName": "Unique Bow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "SURVIVAL",
+    "namePrefix": "Glow-Sighted",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "crossbow-iron-sights",
+    "name": "Iron Sights",
+    "table": "crossbow",
+    "tableName": "Unique Crossbow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "crossbow-glow-sights",
+    "name": "Glow Sights",
+    "table": "crossbow",
+    "tableName": "Unique Crossbow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "SIGHTS",
+    "skill": "REPAIR",
+    "namePrefix": "Glow-Sighted",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "crossbow-heavy-frame",
+    "name": "Heavy Frame",
+    "table": "crossbow",
+    "tableName": "Unique Crossbow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "FRAME",
+    "skill": "REPAIR",
+    "namePrefix": "Heavy",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "crossbow-repeating-frame",
+    "name": "Repeating Frame",
+    "table": "crossbow",
+    "tableName": "Unique Crossbow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "FRAME",
+    "skill": "REPAIR",
+    "namePrefix": "Repeating",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Slow Load"
+      }
+    ],
+    "weight": 2,
+    "cost": 75,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "crossbow-multiple-launch-frame",
+    "name": "Multiple Launch Frame",
+    "table": "crossbow",
+    "tableName": "Unique Crossbow mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 74
+      }
+    ],
+    "slot": "FRAME",
+    "skill": "REPAIR",
+    "namePrefix": "Peppered",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Ammo-Hungry (3)"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      }
+    ],
+    "weight": 4,
+    "cost": 60,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "assaultron-blade-electrified-blade",
+    "name": "Electrified Blade",
+    "table": "assaultron-blade",
+    "tableName": "Unique Assaultron Blade mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 76
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Electrified",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "auto-axe-electrified",
+    "name": "Electrified",
+    "table": "auto-axe",
+    "tableName": "Unique Auto-Axe mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 76
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Electrified",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "auto-axe-burning",
+    "name": "Burning",
+    "table": "auto-axe",
+    "tableName": "Unique Auto-Axe mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 76
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Burning",
+    "effects": [
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "auto-axe-poisoned",
+    "name": "Poisoned",
+    "table": "auto-axe",
+    "tableName": "Unique Auto-Axe mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 76
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Toxic",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent (Poison)"
+      }
+    ],
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "auto-axe-turbo",
+    "name": "Turbo",
+    "table": "auto-axe",
+    "tableName": "Unique Auto-Axe mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 76
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Turbo",
+    "effects": [
+      {
+        "type": "SPECIAL",
+        "text": "Extra damage bought with AP: +2 CD per AP instead of +1 CD"
+      }
+    ],
+    "weight": 2,
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      },
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "chainsaw-dual-bar",
+    "name": "Dual Bar",
+    "table": "chainsaw",
+    "tableName": "Unique Chainsaw mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 78
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Dual",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "chainsaw-bow-bar",
+    "name": "Bow Bar",
+    "table": "chainsaw",
+    "tableName": "Unique Chainsaw mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 78
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Bow bar",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "weight": 2,
+    "cost": 45,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "chainsaw-long-bow-bar",
+    "name": "Long Bow Bar",
+    "table": "chainsaw",
+    "tableName": "Unique Chainsaw mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 78
+      }
+    ],
+    "slot": "UPGRADE",
+    "skill": "REPAIR",
+    "namePrefix": "Long bow bar",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 3,
+    "cost": 60,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "chainsaw-flamer",
+    "name": "Flamer",
+    "table": "chainsaw",
+    "tableName": "Unique Chainsaw mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 78
+      }
+    ],
+    "slot": "ADD_ON",
+    "skill": "REPAIR",
+    "namePrefix": "Flaming",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "SET_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "weight": 2,
+    "cost": 90,
+    "perks": [
+      {
+        "perk": "blacksmith",
+        "rank": 3
+      },
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-armor-piercing-receiver",
+    "name": "Armor Piercing Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Armor Piercing",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      }
+    ],
+    "cost": 3,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "small-guns-armor-piercing-automatic-receiver",
+    "name": "Armor Piercing Automatic Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "AP Auto",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 40,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "small-guns-hardened-automatic-receiver",
+    "name": "Hardened Automatic Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Hardened Auto",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 2,
+    "cost": 58,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "small-guns-rapid-automatic-receiver",
+    "name": "Rapid Automatic Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Rapid",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": -1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 3
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 2,
+    "cost": 63,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-calibrated-powerful-receiver",
+    "name": "Calibrated Powerful Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Calibrated Powerful",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 3,
+    "cost": 68,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-powerful-automatic-receiver",
+    "name": "Powerful Automatic Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Powerful Auto",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 4,
+    "cost": 88,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-hardened-piercing-auto-receiver",
+    "name": "Hardened Piercing Auto Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "Hardened AP Auto",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 1"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 3,
+    "cost": 78,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "small-guns-9mm-receiver",
+    "name": "9mm Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": "9mm",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "9mm"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": -1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "small-guns-357-receiver",
+    "name": ".357 Receiver",
+    "table": "small-guns",
+    "tableName": "Small Guns mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 81
+      }
+    ],
+    "slot": "RECEIVER",
+    "skill": "REPAIR",
+    "namePrefix": ".357",
+    "effects": [
+      {
+        "type": "SET_DAMAGE",
+        "value": 5
+      },
+      {
+        "type": "SET_AMMUNITION",
+        "text": "357-magnum"
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 1,
+    "cost": 35,
+    "perks": [
+      {
+        "perk": "gun-nut",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-gamma-wave-emitter",
+    "name": "Gamma Wave Emitter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Fiery",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 1,
+    "cost": 14,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-maximized-capacitor",
+    "name": "Maximized Capacitor",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Maximized",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 1,
+    "cost": 17,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-boosted-photon-agitator",
+    "name": "Boosted Photon Agitator",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Boosted Agitated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 1,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-boosted-gamma-wave-emitter",
+    "name": "Boosted Gamma Wave Emitter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Boosted Fiery",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 1,
+    "cost": 23,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-overcharged-capacitor",
+    "name": "Overcharged Capacitor",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Overcharged",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      }
+    ],
+    "weight": 1,
+    "cost": 42,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-improved-long-barrel",
+    "name": "Improved Long Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Long",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-improved-automatic-barrel",
+    "name": "Improved Automatic Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Automatic",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Burst"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": 1
+      }
+    ],
+    "weight": 1,
+    "cost": 18,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-improved-sniper-barrel",
+    "name": "Improved Sniper Barrel",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Charging",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Close Quarters"
+      },
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -1
+      }
+    ],
+    "weight": 1,
+    "cost": 21,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-improved-splitter",
+    "name": "Improved Splitter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "BARREL",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Scattergun",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-amplified-beam-splitter",
+    "name": "Amplified Beam Splitter",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Scattered",
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Spread"
+      },
+      {
+        "type": "FIRE_RATE",
+        "value": -1
+      },
+      {
+        "type": "RANGE",
+        "value": -1
+      }
+    ],
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-fine-tuned-beam-focuser",
+    "name": "Fine-Tuned Beam Focuser",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Focused",
+    "effects": [
+      {
+        "type": "RANGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Accurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 18,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "energy-weapons-quantum-gyro-compensating-lens",
+    "name": "Quantum Gyro-Compensating Lens",
+    "table": "energy-weapons",
+    "tableName": "Energy Weapons mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 83
+      }
+    ],
+    "slot": "MUZZLE",
+    "skill": "SCIENCE",
+    "namePrefix": "Improved Targeting",
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 2
+      },
+      {
+        "type": "REMOVE_QUALITY",
+        "text": "Inaccurate"
+      }
+    ],
+    "weight": 1,
+    "cost": 21,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-gamma-wave-emitter",
+    "name": "Gamma Wave Emitter",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 84
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Fiery",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 1
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 3,
+    "cost": 169,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-maximized-capacitor",
+    "name": "Maximized Capacitor",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 84
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Maximized",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "weight": 3,
+    "cost": 207,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-boosted-photon-agitator",
+    "name": "Boosted Photon Agitator",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 84
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Boosted Agitated",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      }
+    ],
+    "weight": 5,
+    "cost": 244,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-boosted-gamma-wave-emitter",
+    "name": "Boosted Gamma Wave Emitter",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 84
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Boosted Fiery",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent"
+      }
+    ],
+    "weight": 5,
+    "cost": 282,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "gatling-laser-overcharged-capacitor",
+    "name": "Overcharged Capacitor",
+    "table": "gatling-laser",
+    "tableName": "Unique Gatling Laser mods",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 84
+      }
+    ],
+    "slot": "CAPACITOR",
+    "skill": "SCIENCE",
+    "namePrefix": "Overcharged",
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 3
+      }
+    ],
+    "weight": 5,
+    "cost": 319,
+    "perks": [
+      {
+        "perk": "science",
+        "rank": 4
+      }
+    ]
   }
 ]

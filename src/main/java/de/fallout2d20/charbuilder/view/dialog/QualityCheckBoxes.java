@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.view.DisplayConverter;
 import de.fallout2d20.charbuilder.view.Layouts;
+import de.fallout2d20.charbuilder.view.WholeNumber;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
@@ -21,9 +22,10 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * The qualities of a custom weapon as check boxes (CRB p. 90), each with its short description as tooltip:
- * Thrown with a Close/Medium choice, Accurate/Inaccurate and Reliable/Unreliable untick each other (a weapon
- * can not have both), and a text field keeps qualities outside the book (e.g. from older files).
+ * The qualities of a custom weapon as check boxes (CRB p. 90, WG pp. 56–57), each with its short description and
+ * source as tooltip: Thrown with a Close/Medium choice, the rated qualities (Ammo-Hungry, Delay, Recoil) with a
+ * number field (empty: no number, Delay then reads "(X)"), Accurate/Inaccurate and Reliable/Unreliable untick each
+ * other (a weapon can not have both), and a text field keeps qualities outside the books (e.g. from older files).
  */
 final class QualityCheckBoxes {
 
@@ -32,6 +34,7 @@ final class QualityCheckBoxes {
   private final @NonNull Map<WeaponQuality, CheckBox> boxes = new EnumMap<>(WeaponQuality.class);
   private final @NonNull ComboBox<WeaponRange> thrownRange =
       new ComboBox<>(FXCollections.observableArrayList(WeaponRange.CLOSE, WeaponRange.MEDIUM));
+  private final @NonNull Map<WeaponQuality, TextField> ratings = new EnumMap<>(WeaponQuality.class);
   private final @NonNull TextField other = new TextField();
   private final @NonNull MigPane pane = Layouts.wideTable(COLUMNS);
 
@@ -44,8 +47,16 @@ final class QualityCheckBoxes {
     for (WeaponQuality quality : WeaponQuality.values()) {
       CheckBox box = new CheckBox(quality.displayName());
       box.setSelected(current.qualities().contains(quality));
-      box.setTooltip(new Tooltip(quality.summary() + " (" + WeaponQuality.SOURCE + ")"));
+      box.setTooltip(new Tooltip(quality.summary() + " (" + quality.source() + ")"));
       boxes.put(quality, box);
+      if (quality.isRated()) {
+        Integer rating = current.ratings().get(quality);
+        TextField number = new TextField(rating == null ? "" : rating.toString());
+        number.setPrefColumnCount(2);
+        number.setPromptText("X");
+        number.disableProperty().bind(box.selectedProperty().not());
+        ratings.put(quality, number);
+      }
     }
     boxes.forEach((quality, box) -> quality.opposite().ifPresent(opposite -> box.selectedProperty()
         .addListener((_, _, selected) -> {
@@ -56,7 +67,14 @@ final class QualityCheckBoxes {
     thrownRange.disableProperty().bind(box(WeaponQuality.THROWN).selectedProperty().not());
     for (WeaponQuality quality : WeaponQuality.values()) {
       CheckBox box = box(quality);
-      pane.add(quality == WeaponQuality.THROWN ? new HBox(Layouts.GAP, box, thrownRange) : box);
+      TextField number = ratings.get(quality);
+      if (quality == WeaponQuality.THROWN) {
+        pane.add(new HBox(Layouts.GAP, box, thrownRange));
+      } else if (number != null) {
+        pane.add(new HBox(Layouts.GAP, box, number));
+      } else {
+        pane.add(box);
+      }
     }
     other.setText(current.other());
     other.setPromptText("Qualities not in the book, comma-separated");
@@ -84,6 +102,13 @@ final class QualityCheckBoxes {
     if (ticked.contains(WeaponQuality.THROWN)) {
       range = Objects.requireNonNullElse(thrownRange.getValue(), WeaponRange.CLOSE);
     }
-    return new QualitySelection(ticked, range, other.getText()).text();
+    Map<WeaponQuality, Integer> numbers = new EnumMap<>(WeaponQuality.class);
+    ratings.forEach((quality, field) -> {
+      Integer number = WholeNumber.atLeast(field.getText(), 1);
+      if (ticked.contains(quality) && number != null) {
+        numbers.put(quality, number);
+      }
+    });
+    return new QualitySelection(ticked, range, numbers, other.getText()).text();
   }
 }

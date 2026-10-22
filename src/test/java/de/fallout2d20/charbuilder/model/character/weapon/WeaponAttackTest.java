@@ -164,4 +164,28 @@ class WeaponAttackTest {
     assertEquals("Hardened 10mm Pistol", attack.moddedName());
     assertEquals(9, attack.targetNumber());
   }
+
+  /** WG p. 57: Recoil (7) is marked at STR 6, not at STR 7. */
+  @Test
+  void recoilAgainstStrength() {
+    PlayerCharacter weak = PlayerCharacter.createNew();
+    weak.chooseOrigin(CatalogRef.of("survivor"));
+    weak.abilities().setAttributeAllocation(Attribute.STRENGTH, 1);
+    CarriedWeapon pistol = CarriedWeapon.of(CatalogRef.of("12-7mm-pistol"));
+    assertEquals(7, WeaponAttack.of(weak, pistol).unmetRecoil());
+    weak.abilities().setAttributeAllocation(Attribute.STRENGTH, 2);
+    assertNull(WeaponAttack.of(weak, pistol).unmetRecoil());
+    assertNull(WeaponAttack.of(weak, CarriedWeapon.of(CatalogRef.of("10mm-pistol"))).unmetRecoil());
+  }
+
+  /** WG p. 78: the Chainsaw gets no melee bonus, even at STR 9; WG p. 79: Flash Bang damage is "Special". */
+  @Test
+  void chainsawAndSpecialDamage() {
+    WeaponAttack chainsaw = WeaponAttack.of(character(), CarriedWeapon.of(CatalogRef.of("chainsaw")));
+    assertEquals(0, chainsaw.meleeBonus());
+    assertEquals("6 CD", chainsaw.damageText());
+    WeaponAttack flashBang = WeaponAttack.of(character(), CarriedWeapon.of(CatalogRef.of("flash-bang")));
+    assertEquals("Special", flashBang.damageText());
+    assertEquals("", flashBang.damageType(), "no damage type, the rule says what it does");
+  }
 }

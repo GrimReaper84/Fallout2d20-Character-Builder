@@ -39,8 +39,12 @@ class WeaponCatalogTest {
         List.of("10mm automatic pistol", "10mm Auto Pistol"), List.of("small-guns-calibrated", "small-guns-hardened",
             "small-guns-automatic", "small-guns-hair-trigger", "small-guns-powerful", "small-guns-advanced",
             "small-guns-long", "small-guns-ported", "small-guns-comfort-grip", "small-guns-sharpshooters-grip",
-            "small-guns-reflex-sight", "small-guns-recon-scope", "small-guns-compensator", "small-guns-suppressor"),
-        null, false, null), pistol);
+            "small-guns-reflex-sight", "small-guns-recon-scope", "small-guns-compensator", "small-guns-suppressor",
+            "small-guns-armor-piercing-receiver", "small-guns-armor-piercing-automatic-receiver",
+            "small-guns-hardened-automatic-receiver", "small-guns-rapid-automatic-receiver",
+            "small-guns-calibrated-powerful-receiver", "small-guns-powerful-automatic-receiver",
+            "small-guns-hardened-piercing-auto-receiver"),
+        null, false, null, false, false), pistol);
     assertTrue(WeaponCatalog.byName("Pipe rifle").isEmpty(), "pack wordings are not legacy names");
     assertEquals("pipe-gun", WeaponCatalog.byNameOrAlias("Pipe rifle").orElseThrow().id());
   }
@@ -75,12 +79,17 @@ class WeaponCatalogTest {
     assertTrue(WeaponCatalog.byName("Alien Blaster").isEmpty());
   }
 
-  /** Every gun of the Small Guns, Energy Weapons and Big Guns tables names its ammunition, except the Junk Jet. */
+  /**
+   * Every gun of the Small Guns, Energy Weapons, Big Guns and Bows tables (bows: Athletics, WG p. 73) names its
+   * ammunition, except the Junk Jet; the Ballistic Fist is the only other weapon that uses ammunition (WG p. 77).
+   */
   @Test
   void gunsHaveAmmunitionAndRange() {
     for (WeaponData weapon : WeaponCatalog.all()) {
-      boolean gun = EnumSet.of(Skill.SMALL_GUNS, Skill.ENERGY_WEAPONS, Skill.BIG_GUNS).contains(weapon.skill());
-      assertEquals(gun && !weapon.id().equals("junk-jet"), !weapon.ammunition().isEmpty(), weapon.id());
+      boolean gun = EnumSet.of(Skill.SMALL_GUNS, Skill.ENERGY_WEAPONS, Skill.BIG_GUNS, Skill.ATHLETICS)
+          .contains(weapon.skill());
+      assertEquals((gun && !weapon.id().equals("junk-jet")) || weapon.id().equals("ballistic-fist"),
+          !weapon.ammunition().isEmpty(), weapon.id());
       assertEquals(gun || weapon.id().equals("self-destruct"), weapon.range() != null, weapon.id());
       assertEquals(gun, weapon.fireRate() != null, weapon.id());
     }
@@ -104,7 +113,7 @@ class WeaponCatalogTest {
         List.of("Debilitating", "Inaccurate"), "6", 156, 4, List.of("cryo-cell"), List.of(), null,
         List.of("protectron"), List.of(), List.of("cryojet-liquid-nitrogen", "cryojet-compressed-tubing",
             "cryojet-large-tank", "cryojet-huge-tank", "cryojet-wide-diffusion", "cryojet-aerosolizer",
-            "cryojet-bladed-exhaust"), null, false, null), cryojet);
+            "cryojet-bladed-exhaust"), null, false, null, false, false), cryojet);
     AmmunitionData cell = WeaponCatalog.ammunitionById("cryo-cell").orElseThrow();
     assertNull(cell.quantityFound());
     assertNull(cell.rarity());
@@ -135,5 +144,33 @@ class WeaponCatalogTest {
     WeaponData selfDestruct = WeaponCatalog.byId("self-destruct").orElseThrow();
     assertTrue(selfDestruct.isOfferedTo("protectron") && selfDestruct.isOfferedTo("assaultron"));
     assertFalse(laser.isOfferedTo("protectron"));
+  }
+
+  /** WG pp. 57–80: the Wanderer's Guide weapons and ammunition, spot checks against the tables. */
+  @Test
+  void wandererWeapons() {
+    assertEquals(56, WeaponCatalog.all().stream()
+        .filter(weapon -> weapon.sources().getFirst().book() == Book.WG && weapon.origins().isEmpty()).count());
+    WeaponData revolver = WeaponCatalog.byId("357-magnum-revolver").orElseThrow();
+    assertEquals(List.of(5, 1), List.of(revolver.damage(), revolver.fireRate()));
+    assertEquals(List.of("Vicious"), revolver.damageEffects());
+    assertEquals(List.of("357-magnum"), revolver.ammunition());
+    assertEquals(List.of("Inaccurate", "Recoil (7)", "Two-Handed"),
+        WeaponCatalog.byId("12-7mm-smg").orElseThrow().qualities());
+    WeaponData gatlingPlasma = WeaponCatalog.byId("gatling-plasma").orElseThrow();
+    assertEquals(List.of(DamageType.PHYSICAL, DamageType.ENERGY), gatlingPlasma.damageTypes());
+    assertEquals(List.of("plasma-cartridge", "plasma-core"), gatlingPlasma.ammunition());
+    WeaponData bow = WeaponCatalog.byId("bow").orElseThrow();
+    assertEquals(Skill.ATHLETICS, bow.skill());
+    assertEquals(Attribute.AGILITY, bow.attackAttribute());
+    assertEquals(7, bow.ammunition().size(), "arrows and the six arrow types");
+    assertTrue(WeaponCatalog.byId("chainsaw").orElseThrow().noMeleeBonus());
+    WeaponData flashBang = WeaponCatalog.byId("flash-bang").orElseThrow();
+    assertTrue(flashBang.specialDamage());
+    assertTrue(flashBang.damageTypes().isEmpty());
+    AmmunitionData cryoArrow = WeaponCatalog.ammunitionById("cryo-arrow").orElseThrow();
+    assertEquals(List.of(10, 4), List.of(cryoArrow.cost(), cryoArrow.rarity()), "Arrow 2/1 + Cryo +8/+3 (WG p. 59)");
+    assertTrue(cryoArrow.special() != null && cryoArrow.special().contains("Freeze"));
+    assertNull(WeaponCatalog.ammunitionById("electron-charge-pack").orElseThrow().cost(), "named only (WG p. 65)");
   }
 }

@@ -46,6 +46,9 @@ import org.jspecify.annotations.Nullable;
  * @param gripOrStock whether the weapon takes a Grip or a Stock mod, not both (CRB p. 98: Pipe Bolt-Action)
  * @param special a rule of the weapon that no other field covers, in own words (Assaultron Head Laser: shots per
  *     attack, WG p. 11); {@code null} for none
+ * @param noMeleeBonus whether the melee damage bonus does not apply (Chainsaw, WG p. 78)
+ * @param specialDamage whether the damage is "Special" (Flash Bang, Smoke Grenade, Detonator, WG pp. 79–81): it
+ *     works by its rule, not by Combat Dice, so damage rating and type mean nothing
  */
 public record WeaponData(
     @JsonProperty(required = true) @NonNull String id,
@@ -69,14 +72,17 @@ public record WeaponData(
     @NonNull List<String> mods,
     @Nullable String stockName,
     boolean gripOrStock,
-    @Nullable String special) {
+    @Nullable String special,
+    boolean noMeleeBonus,
+    boolean specialDamage) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;
 
   public WeaponData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()
-        || skill == null || damageTypes == null || damageTypes.isEmpty() || (weight != null && weight.isBlank())) {
+        || skill == null || damageTypes == null || (damageTypes.isEmpty() && !specialDamage)
+        || (weight != null && weight.isBlank())) {
       throw new IllegalArgumentException("Weapon needs id, name, source, skill and damage type: " + id);
     }
     if (damage < 0 || (cost != null && cost < 0) || (rarity != null && rarity < 0)

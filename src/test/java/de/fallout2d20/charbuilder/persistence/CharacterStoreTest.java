@@ -514,8 +514,8 @@ class CharacterStoreTest {
     Path file = dir.resolve("future.json");
     store.save(character, file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
-    ((ObjectNode) node.get("weapons").get(0)).putObject("mods").putObject("MAGAZINE").put("id", "small-guns-drum");
-    ((ObjectNode) node.get("weapons").get(1).get("custom")).putArray("modSlots").add("MAGAZINE").add("BARREL");
+    ((ObjectNode) node.get("weapons").get(0)).putObject("mods").putObject("DRUM").put("id", "small-guns-drum");
+    ((ObjectNode) node.get("weapons").get(1).get("custom")).putArray("modSlots").add("DRUM").add("BARREL");
     JSON.writeValue(file.toFile(), node);
 
     List<CarriedWeapon> loaded = store.load(file).character().gear().getWeapons();

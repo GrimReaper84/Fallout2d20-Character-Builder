@@ -83,7 +83,14 @@
       "small-guns-reflex-sight",
       "small-guns-recon-scope",
       "small-guns-compensator",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-armor-piercing-automatic-receiver",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-rapid-automatic-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-powerful-automatic-receiver",
+      "small-guns-hardened-piercing-auto-receiver"
     ]
   },
   {
@@ -160,7 +167,14 @@
       "small-guns-long-night-vision-scope",
       "small-guns-recon-scope",
       "small-guns-compensator",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-armor-piercing-automatic-receiver",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-rapid-automatic-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-powerful-automatic-receiver",
+      "small-guns-hardened-piercing-auto-receiver"
     ]
   },
   {
@@ -211,7 +225,14 @@
       "small-guns-recon-scope",
       "small-guns-bayonet",
       "small-guns-compensator",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-armor-piercing-automatic-receiver",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-rapid-automatic-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-powerful-automatic-receiver",
+      "small-guns-hardened-piercing-auto-receiver"
     ]
   },
   {
@@ -299,7 +320,9 @@
       "small-guns-long-night-vision-scope",
       "small-guns-recon-scope",
       "small-guns-bayonet",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-calibrated-powerful-receiver"
     ]
   },
   {
@@ -339,7 +362,9 @@
       "small-guns-reflex-sight",
       "small-guns-compensator",
       "small-guns-muzzle-break",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-9mm-receiver"
     ]
   },
   {
@@ -392,7 +417,11 @@
       "small-guns-bayonet",
       "small-guns-compensator",
       "small-guns-muzzle-break",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-rapid-automatic-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-powerful-automatic-receiver"
     ]
   },
   {
@@ -490,7 +519,8 @@
       "small-guns-bayonet",
       "small-guns-compensator",
       "small-guns-muzzle-break",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-calibrated-powerful-receiver"
     ],
     "stockName": "Pipe Bolt-Action Rifle",
     "gripOrStock": true
@@ -546,7 +576,15 @@
       "small-guns-bayonet",
       "small-guns-compensator",
       "small-guns-muzzle-break",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-armor-piercing-automatic-receiver",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-rapid-automatic-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-powerful-automatic-receiver",
+      "small-guns-hardened-piercing-auto-receiver",
+      "small-guns-9mm-receiver"
     ],
     "stockName": "Pipe Rifle"
   },
@@ -597,7 +635,9 @@
       "small-guns-bayonet",
       "small-guns-compensator",
       "small-guns-muzzle-break",
-      "small-guns-suppressor"
+      "small-guns-suppressor",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-357-receiver"
     ],
     "stockName": "Pipe Revolver Rifle"
   },
@@ -727,7 +767,17 @@
       "energy-weapons-recon-scope",
       "energy-weapons-beam-splitter",
       "energy-weapons-beam-focuser",
-      "energy-weapons-gyro-compensating-lens"
+      "energy-weapons-gyro-compensating-lens",
+      "energy-weapons-gamma-wave-emitter",
+      "energy-weapons-maximized-capacitor",
+      "energy-weapons-boosted-photon-agitator",
+      "energy-weapons-boosted-gamma-wave-emitter",
+      "energy-weapons-overcharged-capacitor",
+      "energy-weapons-improved-long-barrel",
+      "energy-weapons-improved-automatic-barrel",
+      "energy-weapons-amplified-beam-splitter",
+      "energy-weapons-fine-tuned-beam-focuser",
+      "energy-weapons-quantum-gyro-compensating-lens"
     ],
     "stockName": "Institute Laser Rifle"
   },
@@ -831,7 +881,18 @@
       "energy-weapons-recon-scope",
       "energy-weapons-beam-splitter",
       "energy-weapons-beam-focuser",
-      "energy-weapons-gyro-compensating-lens"
+      "energy-weapons-gyro-compensating-lens",
+      "energy-weapons-gamma-wave-emitter",
+      "energy-weapons-maximized-capacitor",
+      "energy-weapons-boosted-photon-agitator",
+      "energy-weapons-boosted-gamma-wave-emitter",
+      "energy-weapons-overcharged-capacitor",
+      "energy-weapons-improved-long-barrel",
+      "energy-weapons-improved-automatic-barrel",
+      "energy-weapons-improved-sniper-barrel",
+      "energy-weapons-amplified-beam-splitter",
+      "energy-weapons-fine-tuned-beam-focuser",
+      "energy-weapons-quantum-gyro-compensating-lens"
     ],
     "stockName": "Laser Rifle"
   },
@@ -879,7 +940,16 @@
       "energy-weapons-long-scope",
       "energy-weapons-short-night-vision-scope",
       "energy-weapons-long-night-vision-scope",
-      "energy-weapons-recon-scope"
+      "energy-weapons-recon-scope",
+      "energy-weapons-gamma-wave-emitter",
+      "energy-weapons-maximized-capacitor",
+      "energy-weapons-boosted-photon-agitator",
+      "energy-weapons-boosted-gamma-wave-emitter",
+      "energy-weapons-overcharged-capacitor",
+      "energy-weapons-improved-long-barrel",
+      "energy-weapons-improved-automatic-barrel",
+      "energy-weapons-improved-sniper-barrel",
+      "energy-weapons-improved-splitter"
     ],
     "stockName": "Plasma Rifle"
   },
@@ -1032,7 +1102,12 @@
       "gatling-laser-photon-agitator",
       "gatling-laser-charging-barrels",
       "gatling-laser-reflex-sight",
-      "gatling-laser-beam-focuser"
+      "gatling-laser-beam-focuser",
+      "gatling-laser-gamma-wave-emitter",
+      "gatling-laser-maximized-capacitor",
+      "gatling-laser-boosted-photon-agitator",
+      "gatling-laser-boosted-gamma-wave-emitter",
+      "gatling-laser-overcharged-capacitor"
     ]
   },
   {
@@ -2312,5 +2387,1783 @@
       "Shock Hand",
       "Protectron Shock Hands"
     ]
+  },
+  {
+    "id": "357-magnum-revolver",
+    "name": ".357 Magnum Revolver",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Reliable"
+    ],
+    "weight": "2",
+    "cost": 110,
+    "rarity": 2,
+    "ammunition": [
+      "357-magnum"
+    ],
+    "mods": [
+      "small-guns-hair-trigger",
+      "small-guns-long"
+    ]
+  },
+  {
+    "id": "12-7mm-pistol",
+    "name": "12.7mm Pistol",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 6,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Recoil (7)"
+    ],
+    "weight": "4",
+    "cost": 400,
+    "rarity": 4,
+    "ammunition": [
+      "12-7mm"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-comfort-grip",
+      "small-guns-sharpshooters-grip",
+      "small-guns-reflex-sight",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "12-7mm-smg",
+    "name": "12.7mm SMG",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 3,
+    "range": "CLOSE",
+    "qualities": [
+      "Inaccurate",
+      "Recoil (7)",
+      "Two-Handed"
+    ],
+    "weight": "5",
+    "cost": 510,
+    "rarity": 4,
+    "ammunition": [
+      "12-7mm"
+    ],
+    "mods": [
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-armor-piercing-receiver",
+      "small-guns-full-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "25mm-grenade-apw",
+    "name": "25mm Grenade APW",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "LONG",
+    "qualities": [
+      "Blast",
+      "Two-Handed"
+    ],
+    "weight": "8",
+    "cost": 420,
+    "rarity": 4,
+    "ammunition": [
+      "25mm-grenade"
+    ],
+    "mods": [
+      "small-guns-hair-trigger",
+      "small-guns-long"
+    ]
+  },
+  {
+    "id": "9mm-pistol",
+    "name": "9mm Pistol",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Concealed",
+      "Reliable"
+    ],
+    "weight": "2",
+    "cost": 50,
+    "rarity": 2,
+    "ammunition": [
+      "9mm"
+    ],
+    "mods": [
+      "small-guns-automatic",
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-hair-trigger",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-comfort-grip",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "anti-materiel-rifle",
+    "name": "Anti-Materiel Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 8,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "LONG",
+    "qualities": [
+      "Reliable",
+      "Two-Handed",
+      "Recoil (8)"
+    ],
+    "weight": "20",
+    "cost": 560,
+    "rarity": 4,
+    "ammunition": [
+      "50"
+    ],
+    "mods": [
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-hair-trigger",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-recon-scope",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "battle-rifle",
+    "name": "Battle Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "MEDIUM",
+    "qualities": [
+      "Reliable",
+      "Two-Handed"
+    ],
+    "weight": "10",
+    "cost": 150,
+    "rarity": 3,
+    "ammunition": [
+      "308"
+    ],
+    "mods": [
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-hair-trigger",
+      "small-guns-long",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-bayonet"
+    ]
+  },
+  {
+    "id": "black-powder-blunderbuss",
+    "name": "Black Powder Blunderbuss",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Inaccurate",
+      "Recoil (7)",
+      "Slow Load"
+    ],
+    "weight": "3",
+    "cost": 90,
+    "rarity": 3,
+    "ammunition": [
+      "50-ball"
+    ]
+  },
+  {
+    "id": "black-powder-pistol",
+    "name": "Black Powder Pistol",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "qualities": [
+      "Recoil (7)",
+      "Slow Load"
+    ],
+    "weight": "3",
+    "cost": 60,
+    "rarity": 3,
+    "ammunition": [
+      "50-ball"
+    ]
+  },
+  {
+    "id": "black-powder-rifle",
+    "name": "Black Powder Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 8,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Recoil (7)",
+      "Slow Load"
+    ],
+    "weight": "6",
+    "cost": 60,
+    "rarity": 3,
+    "ammunition": [
+      "50-ball"
+    ],
+    "mods": [
+      "small-guns-bayonet"
+    ]
+  },
+  {
+    "id": "gauss-pistol",
+    "name": "Gauss Pistol",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 8,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "MEDIUM",
+    "weight": "6",
+    "cost": 334,
+    "rarity": 5,
+    "ammunition": [
+      "2mm-ec"
+    ],
+    "mods": [
+      "small-guns-reflex-sight"
+    ]
+  },
+  {
+    "id": "gauss-shotgun",
+    "name": "Gauss Shotgun",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Piercing 1",
+      "Spread"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "qualities": [
+      "Ammo-Hungry (10)",
+      "Two-Handed"
+    ],
+    "weight": "14",
+    "cost": 400,
+    "rarity": 5,
+    "ammunition": [
+      "2mm-ec"
+    ]
+  },
+  {
+    "id": "lever-action-rifle",
+    "name": "Lever-Action Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "weight": "9",
+    "cost": 201,
+    "rarity": 3,
+    "ammunition": [
+      "308"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-357-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-full-stock",
+      "small-guns-marksmans-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "light-machine-gun",
+    "name": "Light Machine Gun",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 4,
+    "range": "MEDIUM",
+    "qualities": [
+      "Inaccurate",
+      "Recoil (8)",
+      "Two-Handed"
+    ],
+    "weight": "15",
+    "cost": 150,
+    "rarity": 3,
+    "ammunition": [
+      "5-56mm"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-308-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-vented",
+      "small-guns-full-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-compensator",
+      "small-guns-muzzle-break"
+    ]
+  },
+  {
+    "id": "pump-action-shotgun",
+    "name": "Pump-Action Shotgun",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 5,
+    "damageEffects": [
+      "Spread"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 1,
+    "range": "CLOSE",
+    "qualities": [
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "11",
+    "cost": 70,
+    "rarity": 1,
+    "ammunition": [
+      "shotgun-shell"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hair-trigger",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-advanced",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-full-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-bayonet",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "radium-rifle",
+    "name": "Radium Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 4,
+    "damageEffects": [
+      "Radioactive"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 3,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "11",
+    "cost": 110,
+    "rarity": 3,
+    "ammunition": [
+      "45"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-automatic",
+      "small-guns-hair-trigger",
+      "small-guns-powerful",
+      "small-guns-hardened-automatic-receiver",
+      "small-guns-rapid-automatic-receiver",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-long",
+      "small-guns-ported",
+      "small-guns-full-stock",
+      "small-guns-marksmans-stock",
+      "small-guns-recoil-compensating-stock",
+      "small-guns-reflex-sight",
+      "small-guns-short-scope",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-compensator",
+      "small-guns-muzzle-break",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "sniper-rifle",
+    "name": "Sniper Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 60
+      }
+    ],
+    "skill": "SMALL_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "LONG",
+    "qualities": [
+      "Accurate",
+      "Two-Handed"
+    ],
+    "weight": "10",
+    "cost": 300,
+    "rarity": 4,
+    "ammunition": [
+      "308"
+    ],
+    "mods": [
+      "small-guns-calibrated",
+      "small-guns-hardened",
+      "small-guns-powerful",
+      "small-guns-calibrated-powerful-receiver",
+      "small-guns-long-scope",
+      "small-guns-short-night-vision-scope",
+      "small-guns-long-night-vision-scope",
+      "small-guns-suppressor"
+    ]
+  },
+  {
+    "id": "alien-atomizer",
+    "name": "Alien Atomizer",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 6,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 3,
+    "range": "CLOSE",
+    "qualities": [
+      "Close Quarters",
+      "Reliable"
+    ],
+    "weight": "3",
+    "cost": 1536,
+    "rarity": 5,
+    "ammunition": [
+      "alien-power-cells"
+    ]
+  },
+  {
+    "id": "alien-disintegrator",
+    "name": "Alien Disintegrator",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 8,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 2,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed",
+      "Reliable"
+    ],
+    "weight": "7",
+    "cost": 921,
+    "rarity": 5,
+    "ammunition": [
+      "alien-power-cells"
+    ]
+  },
+  {
+    "id": "arc-welder",
+    "name": "Arc Welder",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 3,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 4,
+    "range": "CLOSE",
+    "qualities": [
+      "Surge",
+      "Two-Handed"
+    ],
+    "weight": "15",
+    "cost": 370,
+    "rarity": 4,
+    "ammunition": [
+      "electron-charge-pack"
+    ]
+  },
+  {
+    "id": "assaultron-head",
+    "name": "Assaultron Head",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "weight": "8",
+    "cost": 500,
+    "rarity": 3,
+    "ammunition": [
+      "fusion-cell"
+    ],
+    "mods": [
+      "assaultron-head-capacitor-mk-iii",
+      "assaultron-head-capacitor-mk-iv",
+      "assaultron-head-capacitor-mk-v",
+      "assaultron-head-capacitor-mk-vi"
+    ],
+    "special": "Uses 2 shots per attack (Capacitor mods raise both damage and shots); each shot fewer lowers the damage by 1 CD (at least 4 CD and 1 shot)."
+  },
+  {
+    "id": "microwave-emitter",
+    "name": "Microwave Emitter",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 6,
+    "damageEffects": [
+      "Persistent",
+      "Piercing 3"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 1,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "8",
+    "cost": 500,
+    "rarity": 5,
+    "ammunition": [
+      "fusion-cell"
+    ]
+  },
+  {
+    "id": "tesla-rifle",
+    "name": "Tesla Rifle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Arc"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 2,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "8",
+    "cost": 180,
+    "rarity": 4,
+    "ammunition": [
+      "fusion-cell"
+    ],
+    "mods": [
+      "energy-weapons-automatic-barrel",
+      "energy-weapons-splitter",
+      "energy-weapons-improved-barrel",
+      "energy-weapons-amplified-beam-splitter",
+      "energy-weapons-fine-tuned-beam-focuser",
+      "energy-weapons-quantum-gyro-compensating-lens",
+      "energy-weapons-reflex-sight"
+    ]
+  },
+  {
+    "id": "50-cal-machine-gun",
+    "name": ".50 Cal Machine Gun",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 7,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 3,
+    "range": "MEDIUM",
+    "qualities": [
+      "Two-Handed",
+      "Recoil (9)"
+    ],
+    "weight": "31",
+    "cost": 350,
+    "rarity": 3,
+    "ammunition": [
+      "50"
+    ],
+    "mods": [
+      "fifty-cal-machine-gun-heavy-barrel"
+    ]
+  },
+  {
+    "id": "auto-grenade-launcher",
+    "name": "Auto Grenade Launcher",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 6,
+    "damageEffects": [
+      "Breaking"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "LONG",
+    "qualities": [
+      "Bombard",
+      "Inaccurate"
+    ],
+    "weight": "30",
+    "cost": 450,
+    "rarity": 4,
+    "ammunition": [
+      "40mm-grenade"
+    ],
+    "mods": [
+      "auto-grenade-launcher-heavy-barrel",
+      "auto-grenade-launcher-long-barrel",
+      "auto-grenade-launcher-25mm-grenade-receiver"
+    ]
+  },
+  {
+    "id": "drone-cannon",
+    "name": "Drone Cannon",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 8,
+    "damageEffects": [
+      "Breaking"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Ammo-Hungry (20)",
+      "Blast",
+      "Inaccurate",
+      "Slow Load"
+    ],
+    "weight": "18",
+    "cost": 600,
+    "rarity": 5,
+    "ammunition": [
+      "alien-power-module"
+    ]
+  },
+  {
+    "id": "gatling-gun",
+    "name": "Gatling Gun",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 3,
+    "damageEffects": [
+      "Burst",
+      "Spread"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 3,
+    "range": "MEDIUM",
+    "qualities": [
+      "Gatling",
+      "Inaccurate",
+      "Recoil (6)",
+      "Two-Handed"
+    ],
+    "weight": "20",
+    "cost": 350,
+    "rarity": 1,
+    "ammunition": [
+      "5mm"
+    ],
+    "mods": [
+      "gatling-gun-speedy-receiver",
+      "gatling-gun-long-barrel",
+      "gatling-gun-comfort-grip",
+      "gatling-gun-extra-large-magazine",
+      "gatling-gun-front-sight-ring",
+      "gatling-gun-large-bayonet"
+    ]
+  },
+  {
+    "id": "gatling-plasma",
+    "name": "Gatling Plasma",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 4,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL",
+      "ENERGY"
+    ],
+    "fireRate": 4,
+    "range": "MEDIUM",
+    "qualities": [
+      "Gatling",
+      "Inaccurate",
+      "Two-Handed"
+    ],
+    "weight": "24",
+    "cost": 1000,
+    "rarity": 4,
+    "ammunition": [
+      "plasma-cartridge",
+      "plasma-core"
+    ],
+    "mods": [
+      "gatling-plasma-ported-barrel",
+      "gatling-plasma-comfort-grip",
+      "gatling-plasma-reflex-sight",
+      "gatling-plasma-beam-splitter",
+      "gatling-plasma-beam-focuser"
+    ]
+  },
+  {
+    "id": "gauss-minigun",
+    "name": "Gauss Minigun",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 6,
+    "damageEffects": [
+      "Burst",
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 3,
+    "range": "LONG",
+    "qualities": [
+      "Gatling",
+      "Two-Handed"
+    ],
+    "weight": "38",
+    "cost": 912,
+    "rarity": 6,
+    "ammunition": [
+      "2mm-ec"
+    ],
+    "mods": [
+      "gauss-minigun-tri-barrel",
+      "gauss-minigun-penta-barrel",
+      "gauss-minigun-tesla-coil-capacitor",
+      "gauss-minigun-tesla-coil-dynamo",
+      "gauss-minigun-gunner-sight"
+    ]
+  },
+  {
+    "id": "plasma-caster",
+    "name": "Plasma Caster",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 8,
+    "damageEffects": [
+      "Burst"
+    ],
+    "damageTypes": [
+      "PHYSICAL",
+      "ENERGY"
+    ],
+    "fireRate": 3,
+    "range": "MEDIUM",
+    "qualities": [
+      "Inaccurate",
+      "Recoil (8)",
+      "Two-Handed"
+    ],
+    "weight": "30",
+    "cost": 700,
+    "rarity": 5,
+    "ammunition": [
+      "plasma-cartridge"
+    ],
+    "mods": [
+      "plasma-caster-calibrated-capacitor",
+      "plasma-caster-pulse-capacitor",
+      "plasma-caster-high-speed-electrode",
+      "plasma-caster-long-barrel"
+    ]
+  },
+  {
+    "id": "tesla-cannon",
+    "name": "Tesla Cannon",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 67
+      }
+    ],
+    "skill": "BIG_GUNS",
+    "damage": 8,
+    "damageEffects": [
+      "Arc",
+      "Piercing 2"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 0,
+    "range": "LONG",
+    "qualities": [
+      "Accurate",
+      "Ammo-Hungry (5)",
+      "Surge",
+      "Two-Handed"
+    ],
+    "weight": "24",
+    "cost": 870,
+    "rarity": 5,
+    "ammunition": [
+      "fusion-cell"
+    ]
+  },
+  {
+    "id": "bow",
+    "name": "Bow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 73
+      }
+    ],
+    "skill": "ATHLETICS",
+    "damage": 3,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 2,
+    "range": "MEDIUM",
+    "qualities": [
+      "Suppressed",
+      "Recoil (6)",
+      "Two-Handed"
+    ],
+    "weight": "3",
+    "cost": 44,
+    "rarity": 1,
+    "ammunition": [
+      "arrow",
+      "cryo-arrow",
+      "explosive-arrow",
+      "flaming-arrow",
+      "serrated-arrow",
+      "plasma-arrow",
+      "poison-arrow"
+    ],
+    "attribute": "AGILITY",
+    "mods": [
+      "bow-compound-frame",
+      "bow-iron-sights",
+      "bow-glow-sights"
+    ],
+    "special": "Bows are rolled with AGI + Athletics and cannot be used in Power Armor."
+  },
+  {
+    "id": "crossbow",
+    "name": "Crossbow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 73
+      }
+    ],
+    "skill": "ATHLETICS",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "fireRate": 0,
+    "range": "MEDIUM",
+    "qualities": [
+      "Suppressed",
+      "Two-Handed",
+      "Slow Load"
+    ],
+    "weight": "3",
+    "cost": 44,
+    "rarity": 2,
+    "ammunition": [
+      "crossbow-bolt",
+      "cryo-bolt",
+      "explosive-bolt",
+      "flaming-bolt",
+      "serrated-bolt",
+      "plasma-bolt",
+      "poison-bolt"
+    ],
+    "attribute": "AGILITY",
+    "mods": [
+      "crossbow-iron-sights",
+      "crossbow-glow-sights",
+      "crossbow-heavy-frame",
+      "crossbow-repeating-frame",
+      "crossbow-multiple-launch-frame"
+    ],
+    "special": "Bows are rolled with AGI + Athletics and cannot be used in Power Armor."
+  },
+  {
+    "id": "assaultron-blade",
+    "name": "Assaultron Blade",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "3",
+    "cost": 50,
+    "rarity": 3,
+    "mods": [
+      "assaultron-blade-electrified-blade"
+    ]
+  },
+  {
+    "id": "auto-axe",
+    "name": "Auto-Axe",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "20",
+    "cost": 100,
+    "rarity": 3,
+    "mods": [
+      "auto-axe-electrified",
+      "auto-axe-burning",
+      "auto-axe-poisoned",
+      "auto-axe-turbo"
+    ]
+  },
+  {
+    "id": "ballistic-fist",
+    "name": "Ballistic Fist",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 6,
+    "damageEffects": [
+      "Stun",
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Slow Load"
+    ],
+    "weight": "6",
+    "cost": 150,
+    "rarity": 4,
+    "ammunition": [
+      "shotgun-shell"
+    ],
+    "special": "Uses a shotgun shell per attack; without one it is a normal unarmed attack."
+  },
+  {
+    "id": "bumper-sword",
+    "name": "Bumper Sword",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 6,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Recoil (7)",
+      "Two-Handed"
+    ],
+    "weight": "12",
+    "cost": 125,
+    "rarity": 2
+  },
+  {
+    "id": "cattle-prod",
+    "name": "Cattle Prod",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 7,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "weight": "3",
+    "cost": 90,
+    "rarity": 4
+  },
+  {
+    "id": "chainsaw",
+    "name": "Chainsaw",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 6,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "12",
+    "cost": 140,
+    "rarity": 3,
+    "mods": [
+      "chainsaw-dual-bar",
+      "chainsaw-bow-bar",
+      "chainsaw-long-bow-bar",
+      "chainsaw-flamer"
+    ],
+    "special": "The melee damage bonus does not apply; the Flamer mod goes in addition to another mod.",
+    "noMeleeBonus": true
+  },
+  {
+    "id": "death-tambo",
+    "name": "Death Tambo",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "1",
+    "cost": 40,
+    "rarity": 2,
+    "special": "+1 complication range on sneak attacks with it, because of the noise."
+  },
+  {
+    "id": "displacer-glove",
+    "name": "Displacer Glove",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 6,
+    "damageEffects": [
+      "Piercing 1",
+      "Stun"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "weight": "6",
+    "cost": 175,
+    "rarity": 4
+  },
+  {
+    "id": "guitar-sword",
+    "name": "Guitar Sword",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Parry"
+    ],
+    "weight": "3",
+    "cost": 45,
+    "rarity": 3,
+    "special": "+1 complication range on sneak attacks with it, because of the noise."
+  },
+  {
+    "id": "mr-handy-buzz-blade",
+    "name": "Mr Handy Buzz Blade",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 4,
+    "damageEffects": [
+      "Vicious"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "10",
+    "cost": 50,
+    "rarity": 2
+  },
+  {
+    "id": "multi-purpose-axe",
+    "name": "Multi-Purpose Axe",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "4",
+    "cost": 40,
+    "rarity": 2
+  },
+  {
+    "id": "proton-axe",
+    "name": "Proton Axe",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Surge"
+    ],
+    "weight": "8",
+    "cost": 175,
+    "rarity": 5
+  },
+  {
+    "id": "war-drum",
+    "name": "War Drum",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 75
+      }
+    ],
+    "skill": "MELEE_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Stun"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Two-Handed"
+    ],
+    "weight": "20",
+    "cost": 115,
+    "rarity": 3,
+    "special": "+1 complication range on sneak attacks with it, because of the noise."
+  },
+  {
+    "id": "cryogenic-grenade",
+    "name": "Cryogenic Grenade",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageEffects": [
+      "Freeze"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 50,
+    "rarity": 3
+  },
+  {
+    "id": "cryo-mine",
+    "name": "Cryo Mine",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageEffects": [
+      "Freeze"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "qualities": [
+      "Blast",
+      "Mine"
+    ],
+    "weight": "1",
+    "cost": 50,
+    "rarity": 3
+  },
+  {
+    "id": "detonator",
+    "name": "Detonator",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 0,
+    "damageTypes": [],
+    "weight": "1",
+    "cost": 75,
+    "rarity": 3,
+    "special": "Sets off Placed explosives linked to it as a minor action within Long range; removes their Delay.",
+    "specialDamage": true
+  },
+  {
+    "id": "dynamite",
+    "name": "Dynamite",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 5,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "<1",
+    "cost": 25,
+    "rarity": 2,
+    "special": "Goes off the turn it is thrown; a longer fuse (PER + Explosives, difficulty 1) gives Delay (X)."
+  },
+  {
+    "id": "dynamite-bundle",
+    "name": "Dynamite Bundle",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 9,
+    "damageEffects": [
+      "Breaking"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Delay (X)",
+      "Placed"
+    ],
+    "weight": "2",
+    "cost": 150,
+    "rarity": 3,
+    "special": "The Delay rating is chosen when the bundle is placed."
+  },
+  {
+    "id": "flash-bang",
+    "name": "Flash Bang",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 0,
+    "damageTypes": [],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 40,
+    "rarity": 2,
+    "special": "On a hit, everyone in the blast is stunned as by Stun; a miss has no effect.",
+    "specialDamage": true
+  },
+  {
+    "id": "frag-grenade-mirv",
+    "name": "Frag Grenade MIRV",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 5,
+    "damageEffects": [
+      "Spread"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 75,
+    "rarity": 4
+  },
+  {
+    "id": "plastic-explosives",
+    "name": "Plastic Explosives",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 10,
+    "damageEffects": [
+      "Breaking",
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Delay (X)",
+      "Placed"
+    ],
+    "weight": "2",
+    "cost": 200,
+    "rarity": 4,
+    "special": "The Delay rating is chosen when the explosives are placed."
+  },
+  {
+    "id": "powder-charge",
+    "name": "Powder Charge",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Mine"
+    ],
+    "weight": "1",
+    "cost": 25,
+    "rarity": 1,
+    "special": "Can trade Mine for Delay (X) and Placed with a PER + Explosives test (difficulty 1)."
+  },
+  {
+    "id": "smoke-grenade",
+    "name": "Smoke Grenade",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 79
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 0,
+    "damageTypes": [],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "cost": 40,
+    "rarity": 2,
+    "special": "Fills the zone with smoke: no sight into, out of or through it, +2 difficulty to attacks and PER tests in it; it clears once Effects are rolled at the end of a round.",
+    "specialDamage": true
   }
 ]

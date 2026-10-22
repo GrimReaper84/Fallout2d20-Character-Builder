@@ -214,4 +214,30 @@ class ModdedWeaponTest {
   private static ModdedWeapon modded(CarriedWeapon weapon, ModSlot slot, String modId) {
     return ModdedWeapon.of(WeaponMods.install(weapon, slot, WeaponCatalog.modById(modId).orElseThrow())).orElseThrow();
   }
+
+  /** WG p. 69: the Gatling Gun's Comfort Grip removes Recoil (6). */
+  @Test
+  void comfortGripRemovesRecoil() {
+    ModdedWeapon gun = modded(CarriedWeapon.of(CatalogRef.of("gatling-gun")), ModSlot.GRIP, "gatling-gun-comfort-grip");
+    assertEquals(List.of("Gatling", "Inaccurate", "Two-Handed"), gun.qualities());
+  }
+
+  /** WG p. 68: the 25mm Grenade Receiver: 4 CD, +2 Fire Rate, 25mm grenades. */
+  @Test
+  void grenadeReceiver() {
+    ModdedWeapon launcher = modded(CarriedWeapon.of(CatalogRef.of("auto-grenade-launcher")), ModSlot.RECEIVER,
+        "auto-grenade-launcher-25mm-grenade-receiver");
+    assertEquals(4, launcher.damage());
+    assertEquals(4, launcher.fireRate());
+    assertEquals(List.of("25mm-grenade"), launcher.ammunition());
+  }
+
+  /** WG p. 74: the Repeating Frame removes Slow Load and adds +1 Fire Rate. */
+  @Test
+  void repeatingFrame() {
+    ModdedWeapon crossbow = modded(CarriedWeapon.of(CatalogRef.of("crossbow")), ModSlot.FRAME,
+        "crossbow-repeating-frame");
+    assertEquals(1, crossbow.fireRate());
+    assertFalse(crossbow.qualities().contains("Slow Load"));
+  }
 }

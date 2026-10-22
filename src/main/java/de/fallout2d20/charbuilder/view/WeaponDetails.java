@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.view;
 
 import static de.fallout2d20.charbuilder.view.OverviewParts.detailRow;
 
+import de.fallout2d20.charbuilder.catalog.weapon.DamageEffect;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
@@ -95,15 +96,16 @@ final class WeaponDetails {
       @Nullable Node editQualities) {
     detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values,
         modded -> modded.damage() + " CD"));
-    detailRow(rows, "Effects", withBase(text(attack.effects()), base, values,
-        modded -> String.join(", ", modded.damageEffects())));
+    detailRow(rows, "Effects", withSummaries(withBase(text(attack.effects()), base, values,
+        modded -> String.join(", ", modded.damageEffects())), attack.effects(),
+        effect -> DamageEffect.of(effect).map(known -> known.summary() + " (" + known.source() + ")")));
     detailRow(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
     detailRow(rows, "Fire rate", withBase(new Label(OverviewParts.orDash(attack.fireRate())),
         base, values, modded -> OverviewParts.orDash(modded.fireRate())));
     detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
         modded -> modded.range() == null ? "–" : modded.range().displayName()));
     Label qualities = withSummaries(withRemoved(withBase(text(attack.qualities()), base, values,
-        modded -> String.join(", ", modded.qualities())), values), attack.qualities());
+        modded -> String.join(", ", modded.qualities())), values), attack.qualities(), WeaponQuality::summaryOf);
     if (editQualities == null) {
       detailRow(rows, "Qualities", qualities);
     } else {
@@ -111,6 +113,14 @@ final class WeaponDetails {
       row.add(qualities, Layouts.cell().growX());
       row.add(editQualities);
       detailRow(rows, "Qualities", row);
+    }
+    Integer recoil = attack.unmetRecoil();
+    if (recoil != null) {
+      Label warning = new Label("STR " + character.abilities().attributeValue(Attribute.STRENGTH) + " < Recoil ("
+          + recoil + ")");
+      warning.setStyle(OverviewParts.HINT_STYLE);
+      warning.setTooltip(new Tooltip(WeaponQuality.RECOIL.summary() + " (" + WeaponQuality.RECOIL.source() + ")"));
+      detailRow(rows, "Recoil", warning);
     }
     detailRow(rows, "Ammunition", withBase(new Label(ammunitionText(character, attack)), base, values,
         modded -> String.join(", ", modded.ammunition())));
@@ -175,10 +185,17 @@ final class WeaponDetails {
     return label;
   }
 
-  /** Puts the short description of each book quality on top of the label's tooltip (CRB p. 90). */
-  private static @NonNull Label withSummaries(@NonNull Label label, @NonNull String qualities) {
-    List<String> lines = Arrays.stream(qualities.split(",", -1)).map(String::strip)
-        .flatMap(quality -> WeaponQuality.summaryOf(quality).map(summary -> quality + ": " + summary).stream())
+  /**
+   * Puts the short description of each listed damage effect (CRB p. 30, WG p. 56) or quality (CRB p. 90, WG pp.
+   * 56–57) the books know on top of the label's tooltip.
+   *
+   * @param listed the effects or qualities as shown, comma-separated
+   * @param summaryOf the short description of one listed entry; empty if the books do not know it
+   */
+  private static @NonNull Label withSummaries(@NonNull Label label, @NonNull String listed,
+      @NonNull Function<String, Optional<String>> summaryOf) {
+    List<String> lines = Arrays.stream(listed.split(",", -1)).map(String::strip)
+        .flatMap(entry -> summaryOf.apply(entry).map(summary -> entry + ": " + summary).stream())
         .toList();
     if (lines.isEmpty()) {
       return label;

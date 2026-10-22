@@ -11,13 +11,14 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/** The weapon mod catalog (CRB pp. 100–119, WOA p. 23). */
+/** The weapon mod catalog (CRB pp. 100–119, WOA p. 23, WG pp. 66–84). */
 class WeaponModCatalogTest {
 
   @Test
   void loadsEveryTable() {
-    assertEquals(150, WeaponCatalog.mods().size());
-    assertEquals(47, WeaponCatalog.all().stream().filter(weapon -> !weapon.mods().isEmpty()).count());
+    assertEquals(221, WeaponCatalog.mods().size());
+    assertEquals(150, WeaponCatalog.mods().stream().filter(mod -> mod.sources().getFirst().book() != Book.WG).count());
+    assertEquals(74, WeaponCatalog.all().stream().filter(weapon -> !weapon.mods().isEmpty()).count());
   }
 
   /** CRB p. 100: Hardened receiver. */
@@ -57,7 +58,8 @@ class WeaponModCatalogTest {
       for (ModPerk perk : mod.perks()) {
         assertTrue(PerkCatalog.byId(perk.perk()).isPresent(), mod.id() + " " + perk.perk());
       }
-      boolean melee = mod.slot() == ModSlot.UPGRADE;
+      // The Chainsaw's Flamer is a melee add-on (WG p. 78).
+      boolean melee = mod.slot() == ModSlot.UPGRADE || mod.slot() == ModSlot.ADD_ON;
       assertTrue(WeaponCatalog.all().stream().filter(weapon -> weapon.mods().contains(mod.id()))
           .allMatch(weapon -> melee == (weapon.skill() == Skill.MELEE_WEAPONS || weapon.skill() == Skill.UNARMED)),
           mod.id());

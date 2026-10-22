@@ -66,7 +66,8 @@ public final class AddWeaponDialog {
     CatalogPage<WeaponData> page = new CatalogPage<>(weapons, WeaponData::name, categoryOf, categories,
         AddWeaponDialog::details);
     page.addColumn("Skill", weapon -> weapon.skill().displayName());
-    page.addNumberColumn("Damage", WeaponData::damage, weapon -> weapon.damage() + " CD");
+    page.addNumberColumn("Damage", WeaponData::damage,
+        weapon -> weapon.specialDamage() ? WeaponAttack.SPECIAL_DAMAGE : weapon.damage() + " CD");
     page.addColumn("Range", AddWeaponDialog::rangeText);
     page.addNumberColumn("Weight", weapon -> Weight.pounds(weapon.weight()),
         weapon -> weapon.weight() == null ? "–" : weapon.weight());

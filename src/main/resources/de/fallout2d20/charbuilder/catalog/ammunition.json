@@ -287,5 +287,354 @@
         "page": 23
       }
     ]
+  },
+  {
+    "id": "357-magnum",
+    "name": ".357 Magnum",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "6+3 CD",
+    "weight": "<1",
+    "cost": 2,
+    "rarity": 1
+  },
+  {
+    "id": "12-7mm",
+    "name": "12.7mm",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "6+3 CD",
+    "weight": "<1",
+    "cost": 2,
+    "rarity": 2
+  },
+  {
+    "id": "9mm",
+    "name": "9mm",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "10+5 CD",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 0
+  },
+  {
+    "id": "50-ball",
+    "name": ".50 Ball",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 1,
+    "rarity": 3,
+    "special": "The black powder it needs is assumed to be found with it."
+  },
+  {
+    "id": "25mm-grenade",
+    "name": "25mm Grenade",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "2+1 CD",
+    "weight": "<1",
+    "cost": 8,
+    "rarity": 4
+  },
+  {
+    "id": "40mm-grenade",
+    "name": "40mm Grenade",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "2+1 CD",
+    "weight": "<1",
+    "cost": 20,
+    "rarity": 4,
+    "special": "Scavenger adds only +1 CD per rank when finding it."
+  },
+  {
+    "id": "alien-power-cells",
+    "name": "Alien Power Cells",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 5,
+    "rarity": 5
+  },
+  {
+    "id": "alien-power-module",
+    "name": "Alien Power Module",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "3+1 CD",
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 6
+  },
+  {
+    "id": "arrow",
+    "name": "Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 2,
+    "rarity": 1,
+    "special": "Can often be recovered after the fight."
+  },
+  {
+    "id": "crossbow-bolt",
+    "name": "Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 3,
+    "rarity": 2,
+    "special": "Can often be recovered after the fight."
+  },
+  {
+    "id": "plasma-core",
+    "name": "Plasma Core",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 57
+      }
+    ],
+    "quantityFound": "1",
+    "weight": "4",
+    "cost": 200,
+    "rarity": 5,
+    "special": "Holds 500 shots for the Gatling Plasma; Scrounger cannot find more of them."
+  },
+  {
+    "id": "cryo-arrow",
+    "name": "Cryo Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 4,
+    "special": "The weapon gains Freeze."
+  },
+  {
+    "id": "explosive-arrow",
+    "name": "Explosive Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 8,
+    "rarity": 3,
+    "special": "The weapon loses Suppressed and gains Blast."
+  },
+  {
+    "id": "flaming-arrow",
+    "name": "Flaming Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 4,
+    "rarity": 2,
+    "special": "The weapon gains Persistent (Energy)."
+  },
+  {
+    "id": "serrated-arrow",
+    "name": "Serrated Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 6,
+    "rarity": 2,
+    "special": "The weapon gains Persistent (Physical) and Piercing 1."
+  },
+  {
+    "id": "plasma-arrow",
+    "name": "Plasma Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 11,
+    "rarity": 5,
+    "special": "+2 CD; deals Physical and Energy damage, reduced by the lower of the two DR."
+  },
+  {
+    "id": "poison-arrow",
+    "name": "Poison Arrow",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "6+4 CD",
+    "weight": "<1",
+    "cost": 5,
+    "rarity": 2,
+    "special": "The weapon gains Persistent (Poison)."
+  },
+  {
+    "id": "cryo-bolt",
+    "name": "Cryo Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 11,
+    "rarity": 5,
+    "special": "The weapon gains Freeze."
+  },
+  {
+    "id": "explosive-bolt",
+    "name": "Explosive Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 9,
+    "rarity": 4,
+    "special": "The weapon loses Suppressed and gains Blast."
+  },
+  {
+    "id": "flaming-bolt",
+    "name": "Flaming Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 5,
+    "rarity": 3,
+    "special": "The weapon gains Persistent (Energy)."
+  },
+  {
+    "id": "serrated-bolt",
+    "name": "Serrated Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 7,
+    "rarity": 3,
+    "special": "The weapon gains Persistent (Physical) and Piercing 1."
+  },
+  {
+    "id": "plasma-bolt",
+    "name": "Plasma Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 12,
+    "rarity": 6,
+    "special": "+2 CD; deals Physical and Energy damage, reduced by the lower of the two DR."
+  },
+  {
+    "id": "poison-bolt",
+    "name": "Poison Crossbow Bolt",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+4 CD",
+    "weight": "<1",
+    "cost": 6,
+    "rarity": 3,
+    "special": "The weapon gains Persistent (Poison)."
+  },
+  {
+    "id": "electron-charge-pack",
+    "name": "Electron Charge Packs",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ]
   }
 ]

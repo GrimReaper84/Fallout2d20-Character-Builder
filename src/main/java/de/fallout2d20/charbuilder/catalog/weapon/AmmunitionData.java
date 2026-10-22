@@ -21,6 +21,8 @@ import org.jspecify.annotations.Nullable;
  *     {@code null} without table row
  * @param cost cost per shot in caps; {@code null} if it varies (Syringer ammo) or without table row
  * @param rarity rarity 0–6; {@code null} without table row
+ * @param special what the ammunition changes on the weapon, in own words (arrow and bolt types, WG p. 59);
+ *     {@code null} for plain ammunition
  */
 public record AmmunitionData(
     @JsonProperty(required = true) @NonNull String id,
@@ -29,7 +31,8 @@ public record AmmunitionData(
     @Nullable String quantityFound,
     @Nullable String weight,
     @Nullable Integer cost,
-    @Nullable Integer rarity) {
+    @Nullable Integer rarity,
+    @Nullable String special) {
 
   public AmmunitionData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()
@@ -38,6 +41,9 @@ public record AmmunitionData(
       throw new IllegalArgumentException("Invalid ammunition: " + id);
     }
     sources = List.copyOf(sources);
+    if (special != null && special.isBlank()) {
+      special = null;
+    }
   }
 
   /** Whether one of the books describing the ammunition is enabled. */

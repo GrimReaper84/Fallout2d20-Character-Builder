@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.Source;
+import java.util.EnumSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -68,5 +72,29 @@ class WeaponQualityTest {
       QualitySelection selection = WeaponQuality.parse(String.join(", ", weapon.qualities()));
       assertEquals("", selection.other(), weapon.id());
     }
+  }
+
+  /** WG pp. 56–57: rated qualities keep their number; Delay without one reads "(X)". */
+  @Test
+  void ratedQualities() {
+    QualitySelection selection = WeaponQuality.parse("Two-Handed, recoil (7), Ammo-Hungry (20), Delay (X), Surge");
+    assertEquals(EnumSet.of(WeaponQuality.TWO_HANDED, WeaponQuality.RECOIL, WeaponQuality.AMMO_HUNGRY,
+        WeaponQuality.DELAY, WeaponQuality.SURGE), selection.qualities());
+    assertEquals(Map.of(WeaponQuality.RECOIL, 7, WeaponQuality.AMMO_HUNGRY, 20), selection.ratings());
+    assertEquals("Ammo-Hungry (20), Delay (X), Recoil (7), Surge, Two-Handed", selection.text());
+    assertEquals(selection, WeaponQuality.parse(selection.text()));
+    assertEquals(Optional.of(WeaponQuality.RECOIL.summary()), WeaponQuality.summaryOf("Recoil (8)"));
+    assertEquals(new Source(Book.WG, 57), WeaponQuality.SLOW_LOAD.source());
+    assertThrows(IllegalArgumentException.class, () -> new QualitySelection(EnumSet.of(WeaponQuality.BLAST), null,
+        Map.of(WeaponQuality.BLAST, 2), ""));
+    assertEquals("Ammo-Hungry (X)", WeaponQuality.parse("Ammo-Hungry").text(), "a rating set at the table");
+  }
+
+  /** A typo in a custom weapon's qualities stays text instead of failing (rating 0, too big for a number). */
+  @Test
+  void invalidRatingsStayText() {
+    QualitySelection selection = WeaponQuality.parse("Recoil (0), Delay (99999999999), Two-Handed");
+    assertEquals(EnumSet.of(WeaponQuality.TWO_HANDED), selection.qualities());
+    assertEquals("Recoil (0), Delay (99999999999)", selection.other());
   }
 }

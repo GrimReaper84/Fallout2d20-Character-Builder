@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -24,6 +25,7 @@ import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
+import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +64,7 @@ final class SampleCharacters {
     samples.put("protectron.json", SampleCharacters::protectron);
     samples.put("child-of-atom.json", SampleCharacters::childOfAtom);
     samples.put("tribal-gifted.json", SampleCharacters::tribalGifted);
+    samples.put("wg-outcast.json", SampleCharacters::wandererOutcast);
     samples.put("in-creation.json", SampleCharacters::inCreation);
     samples.put("level-up-pending.json", SampleCharacters::levelUpPending);
     samples.put("veteran-overflow.json", SampleCharacters::veteranOverflow);
@@ -141,6 +144,32 @@ final class SampleCharacters {
     tags(character, Skill.MELEE_WEAPONS, Skill.SURVIVAL, Skill.THROWING);
     finish(character, List.of(Skill.MELEE_WEAPONS, Skill.SURVIVAL, Skill.THROWING, Skill.SNEAK), List.of());
     return complete(character);
+  }
+
+  /**
+   * A Brotherhood Outcast showing the Wanderer's Guide content: the Junk Shield perk with junk carried, a Tesla
+   * Rifle with a WG muzzle mod, a 12.7mm Pistol whose Recoil (7) is too much for STR 6, and a Bow with plain and
+   * cryo arrows. No pack yet (WG packs come with F4).
+   */
+  static PlayerCharacter wandererOutcast() {
+    PlayerCharacter character = start("Sela Voss", "brotherhood-outcast");
+    character.chooseOriginTagSkill(Skill.ENERGY_WEAPONS);
+    special(character, 1, 1, 0, 0, 1, 0, 2);
+    tags(character, Skill.SMALL_GUNS, Skill.REPAIR, Skill.ATHLETICS);
+    finish(character, List.of(Skill.ENERGY_WEAPONS, Skill.SMALL_GUNS, Skill.REPAIR, Skill.ATHLETICS),
+        List.of("junk-shield"));
+    complete(character);
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("tesla-rifle")));
+    character.gear().setWeaponMod(0, ModSlot.MUZZLE,
+        WeaponCatalog.modById("energy-weapons-amplified-beam-splitter").orElseThrow());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("12-7mm-pistol")));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("bow")));
+    character.gear().setAmmunition("fusion-cell", 30);
+    character.gear().setAmmunition("12-7mm", 12);
+    character.gear().setAmmunition("arrow", 10);
+    character.gear().setAmmunition("cryo-arrow", 4);
+    character.gear().setMaterials(new Materials(10, 0, 2, 0));
+    return character;
   }
 
   /** A Survivor halfway through creation: origin, one trait, part of S.P.E.C.I.A.L. and Tags; open hints. */

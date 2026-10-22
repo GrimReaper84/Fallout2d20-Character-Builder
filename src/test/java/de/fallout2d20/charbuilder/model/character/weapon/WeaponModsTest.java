@@ -107,4 +107,23 @@ class WeaponModsTest {
   private static WeaponModData mod(String id) {
     return WeaponCatalog.modById(id).orElseThrow();
   }
+
+  /** WG p. 69: the Gatling Gun takes a Magazine mod; WG p. 78: the Chainsaw's Flamer goes in addition. */
+  @Test
+  void wandererSlots() {
+    assertEquals(List.of(ModSlot.RECEIVER, ModSlot.BARREL, ModSlot.GRIP, ModSlot.MAGAZINE, ModSlot.SIGHTS,
+        ModSlot.MUZZLE), WeaponMods.slots(CarriedWeapon.of(CatalogRef.of("gatling-gun"))));
+    assertEquals(List.of(ModSlot.UPGRADE, ModSlot.ADD_ON),
+        WeaponMods.slots(CarriedWeapon.of(CatalogRef.of("chainsaw"))));
+  }
+
+  /** WG p. 82: the 10mm Pistol takes the Armor Piercing Receiver, but only with the Wanderer's Guide enabled. */
+  @Test
+  void wandererModsOnCoreWeaponsNeedTheBook() {
+    CarriedWeapon pistol = CarriedWeapon.of(CatalogRef.of("10mm-pistol"));
+    assertTrue(WeaponMods.options(pistol, ModSlot.RECEIVER, ALL_BOOKS)
+        .contains(mod("small-guns-armor-piercing-receiver")));
+    assertFalse(WeaponMods.options(pistol, ModSlot.RECEIVER, EnumSet.of(Book.CRB))
+        .contains(mod("small-guns-armor-piercing-receiver")));
+  }
 }

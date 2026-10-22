@@ -26,7 +26,8 @@ final class AmmunitionSection {
     MigPane rows = Layouts.amountList();
     for (String id : shown) {
       Label name = new Label(ammunitionName(id));
-      WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip("Found: "
+      WeaponCatalog.ammunitionById(id).ifPresent(data -> name.setTooltip(new Tooltip(
+          (data.special() == null ? "" : data.special() + "\n") + "Found: "
           + OverviewParts.orDash(data.quantityFound()) + ", rarity " + OverviewParts.orDash(data.rarity())
           + " (" + data.sources().getFirst() + ")")));
       rows.add(name);
