@@ -79,4 +79,31 @@ class ModdedApparelTest {
     assertEquals(5, values.values().physical());
     assertTrue(plate.values().isPresent());
   }
+
+  /** WG p. 93: Shrouded weighs −1, doubled on the Wood Armor Chest Piece (4 lbs., 25 caps): 2 lbs., 45 caps. */
+  @Test
+  void shroudedMakesWoodArmorLighter() {
+    ModdedApparel chest = values(modded("wood-armor-chest-piece", ApparelModSlot.MATERIAL, "wood-shrouded"));
+    assertEquals("2", chest.weight());
+    assertEquals(45, chest.cost());
+    assertTrue(chest.shadowed());
+  }
+
+  /** WG p. 90: Marine Welded adds +1 to every resistance, radiation included (Marine Armor Arm 4/4/2). */
+  @Test
+  void marineMaterialAddsRadiation() {
+    ModdedApparel arm = values(modded("marine-armor-arm", ApparelModSlot.MATERIAL, "marine-welded"));
+    assertEquals(List.of(5, 5, 3), List.of(arm.values().physical(), arm.values().energy(), arm.values().radiation()));
+  }
+
+  /** WG p. 87: a Lining on the Underarmor Suit (30 caps) is not doubled although it covers the torso. */
+  @Test
+  void liningOnUnderarmorSuit() {
+    ModdedApparel suit = values(modded("underarmor-suit", ApparelModSlot.LINING, "lining-protective-lining"));
+    assertEquals(List.of(2, 2, 1), List.of(suit.values().physical(), suit.values().energy(),
+        suit.values().radiation()));
+    assertEquals(54, suit.cost());
+    assertEquals("1", suit.weight());
+    assertEquals(1, suit.specials().size());
+  }
 }

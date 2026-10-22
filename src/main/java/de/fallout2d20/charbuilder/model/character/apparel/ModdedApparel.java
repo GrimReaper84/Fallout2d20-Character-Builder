@@ -13,7 +13,8 @@ import org.jspecify.annotations.Nullable;
  * resistances add to the piece's own; the higher value of clothing and armor on a location (CRB p. 130) is then
  * taken from these modded values ({@link ArmorResistances}). A radiation-immune piece stays immune. Weight and cost
  * add the mods' printed values, each counted {@link ApparelMods#factor} times (doubled on torso armor, CRB pp.
- * 133–135); a {@code <1} piece stays {@code <1} unless the mods add weight; a custom piece has no weight or cost of
+ * 133–135); a {@code <1} piece stays {@code <1} unless the mods change the weight, which never drops below 0 (WG
+ * p. 93: Shrouded weighs −1); a custom piece has no weight or cost of
  * its own, only its mods'.
  *
  * @param values kind, resistances and carry weight change with the mods
@@ -81,7 +82,7 @@ public record ModdedApparel(
     ApparelValues modded = new ApparelValues(values.kind(), physical, energy,
         values.radiationImmune() ? 0 : radiation, values.radiationImmune(), values.carryWeight());
     String newWeight = weightChange == null || weightChange == 0 ? weight
-        : Integer.toString(Weight.pounds(weight) + weightChange);
+        : Integer.toString(Math.max(0, Weight.pounds(weight) + weightChange));
     Integer newCost = costChange == null ? cost : (cost == null ? 0 : cost) + costChange;
     return new ModdedApparel(modded, newWeight, newCost, modSpecials, modShadowed);
   }

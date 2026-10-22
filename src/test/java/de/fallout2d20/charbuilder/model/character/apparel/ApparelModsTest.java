@@ -113,4 +113,27 @@ class ApparelModsTest {
     assertThrows(IllegalStateException.class, () -> character.gear().setCustomApparelModTable(1, null),
         "only a custom piece chooses its table");
   }
+
+  /**
+   * WG pp. 87–93: Legion armor takes Material + Upgrade, its helmets only Material (user decision 2026-10-22); Wood
+   * armor only Material (user decision 2026-10-22); the Scout mask nothing; the Underarmor Suit a Lining; the
+   * Brotherhood Battlecoat Ballistic Weave.
+   */
+  @Test
+  void wanderersGuideSlots() {
+    assertEquals(List.of(ApparelModSlot.MATERIAL, ApparelModSlot.UPGRADE),
+        ApparelMods.slots(piece("legionary-chest-piece")));
+    assertEquals(List.of(ApparelModSlot.MATERIAL), ApparelMods.slots(piece("legatus-helmet")));
+    assertEquals(List.of(ApparelModSlot.MATERIAL), ApparelMods.slots(piece("wood-armor-chest-piece")));
+    assertEquals(List.of(), ApparelMods.slots(piece("scout-armor-mask")));
+    assertEquals(List.of(ApparelModSlot.LINING), ApparelMods.slots(piece("underarmor-suit")));
+    assertEquals(List.of(ApparelModSlot.BALLISTIC_WEAVE), ApparelMods.slots(piece("brotherhood-armored-battlecoat")));
+    Set<Book> wanderer = Set.of(Book.CRB, Book.WG);
+    assertEquals(List.of("marine-welded", "marine-tempered", "marine-hardened", "marine-buttressed"),
+        ApparelMods.options(piece("marine-armor-leg"), ApparelModSlot.MATERIAL, wanderer).stream()
+            .map(ApparelModData::id).toList());
+    assertEquals(List.of(), ApparelMods.options(piece("marine-armor-leg"), ApparelModSlot.MATERIAL, CORE),
+        "WG mods need the book");
+    assertTrue(ApparelMods.fits(piece("robot-armor-arm"), ApparelModSlot.UPGRADE, mod("upgrade-brawling")));
+  }
 }

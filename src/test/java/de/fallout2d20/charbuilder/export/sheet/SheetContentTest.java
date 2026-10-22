@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
@@ -131,5 +133,20 @@ class SheetContentTest {
     assertTrue(sheet.weapons().get(1).effects().startsWith("Piercing 1; Uses 2 shots"), "the Head Laser's rule");
     assertTrue(sheet.weapons().stream().allMatch(row -> row.weight().equals("–")));
     assertEquals(List.of("Fusion Cell"), sheet.ammunition());
+  }
+
+  /** WG p. 87: the Underarmor Suit's note, own rule and Lining rule are printed as one line on the notes page. */
+  @Test
+  void apparelRulesGoToTheNotes() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("underarmor-suit")));
+    character.gear().setApparelNotes(0, "Forest pattern");
+    character.gear().setApparelMod(0, ApparelModSlot.LINING,
+        ApparelCatalog.modById("lining-shielded-lining").orElseThrow());
+    SheetContent sheet = SheetContent.of(character);
+    List<String> lines = sheet.notes().stream().filter(note -> note.startsWith("Underarmor Suit: ")).toList();
+    assertEquals(1, lines.size());
+    assertTrue(lines.getFirst().startsWith("Underarmor Suit: Forest pattern – Re-roll"), lines.getFirst());
+    assertTrue(lines.getFirst().contains("STR or PER test per scene. Shielded Lining: "), lines.getFirst());
   }
 }

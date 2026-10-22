@@ -19,12 +19,13 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Which mods fit a piece of apparel. CRB p. 87: an armor piece takes one Material and one Upgrade mod, clothing a
- * single mod. The Material mods come from the table of the piece's armor type (CRB pp. 133–135); Metal, Combat and
- * Synth helmets take only a Material mod (CRB pp. 134–135); the Armor Upgrades fit every armor type with a table
- * (not Vault-Tec Security armor) by location: all locations, torso only, arms only, legs only (CRB p. 136). The
- * clothing the book names takes Ballistic Weave (CRB pp. 125–128). A custom piece uses the table chosen for it (user
- * decision 2026-10-22). Mods on torso armor weigh and cost double; the torso-only rows already show doubled values
- * (CRB pp. 133–135).
+ * single mod. The Material mods come from the table of the piece's armor type (CRB pp. 133–135, WG pp. 90–93);
+ * helmets take only a Material mod (CRB pp. 134–135, WG pp. 90–92); the Armor Upgrades fit every armor type with a
+ * table that {@link ApparelModTable#takesUpgrades takes them} (not Vault-Tec Security armor, not Wood armor) by
+ * location: all locations, torso only, arms only, legs only (CRB p. 136). The clothing the books name takes
+ * Ballistic Weave (CRB pp. 125–128, WG p. 86), the Underarmor Suit a Lining (WG p. 87). A custom piece uses the
+ * table chosen for it (user decision 2026-10-22). Mods on torso armor weigh and cost double; the torso-only rows
+ * already show doubled values (CRB pp. 133–135).
  */
 public final class ApparelMods {
 
@@ -36,10 +37,11 @@ public final class ApparelMods {
     if (table == null) {
       return List.of();
     }
-    if (table.slot() == ApparelModSlot.BALLISTIC_WEAVE) {
-      return List.of(ApparelModSlot.BALLISTIC_WEAVE);
+    if (table.slot().isSingle()) {
+      return List.of(table.slot());
     }
-    return isHelmet(item) ? List.of(ApparelModSlot.MATERIAL) : List.of(ApparelModSlot.MATERIAL, ApparelModSlot.UPGRADE);
+    return isHelmet(item) || !table.takesUpgrades() ? List.of(ApparelModSlot.MATERIAL)
+        : List.of(ApparelModSlot.MATERIAL, ApparelModSlot.UPGRADE);
   }
 
   /** The mods that can go into a slot of the piece, of the enabled books, in catalog order. */
@@ -86,11 +88,12 @@ public final class ApparelMods {
 
   /**
    * How often the mod's printed weight and cost count on this piece: twice on a piece covering the torso (CRB pp.
-   * 133–135), except for the torso-only upgrades, whose rows are already doubled, and Ballistic Weave, whose table
-   * has no such rule (assumption confirmed by the user 2026-10-22).
+   * 133–135, WG pp. 90–93; assumed for Legion armor, whose text does not repeat it), except for the torso-only
+   * upgrades, whose rows are already doubled, and the single clothing mods (Ballistic Weave, Linings), whose tables
+   * have no such rule (assumption confirmed by the user 2026-10-22).
    */
   public static int factor(@NonNull WornApparel item, @NonNull ApparelModData mod) {
-    boolean doubled = reach(item).contains(HitLocation.TORSO) && mod.slot() != ApparelModSlot.BALLISTIC_WEAVE
+    boolean doubled = reach(item).contains(HitLocation.TORSO) && !mod.slot().isSingle()
         && mod.placement() != ModPlacement.TORSO;
     return doubled ? 2 : 1;
   }

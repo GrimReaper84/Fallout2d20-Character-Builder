@@ -873,5 +873,469 @@
         "rank": 2
       }
     ]
+  },
+  {
+    "id": "lining-treated-lining",
+    "name": "Treated Lining",
+    "table": "LINING",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 87
+      }
+    ],
+    "slot": "LINING",
+    "physical": 1,
+    "energy": 2,
+    "radiation": 1,
+    "cost": 9
+  },
+  {
+    "id": "lining-resistant-lining",
+    "name": "Resistant Lining",
+    "table": "LINING",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 87
+      }
+    ],
+    "slot": "LINING",
+    "physical": 2,
+    "energy": 2,
+    "radiation": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "lining-protective-lining",
+    "name": "Protective Lining",
+    "table": "LINING",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 87
+      }
+    ],
+    "slot": "LINING",
+    "physical": 2,
+    "energy": 2,
+    "radiation": 1,
+    "special": "The Underarmor Suit's STR or PER re-roll can be used twice per scene.",
+    "cost": 24,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "lining-shielded-lining",
+    "name": "Shielded Lining",
+    "table": "LINING",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 87
+      }
+    ],
+    "slot": "LINING",
+    "physical": 3,
+    "energy": 3,
+    "radiation": 1,
+    "special": "The Underarmor Suit's STR or PER re-roll can be used twice per scene.",
+    "cost": 36,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "legion-reinforced",
+    "name": "Reinforced",
+    "table": "LEGION",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 0,
+    "cost": 6
+  },
+  {
+    "id": "legion-shadowed",
+    "name": "Shadowed",
+    "table": "LEGION",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "shadowed": true,
+    "weight": 1,
+    "cost": 48,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "legion-treated",
+    "name": "Treated",
+    "table": "LEGION",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "legion-studded",
+    "name": "Studded",
+    "table": "LEGION",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "weight": 2,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "marine-welded",
+    "name": "Welded",
+    "table": "MARINE",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "radiation": 1,
+    "weight": 1,
+    "cost": 10
+  },
+  {
+    "id": "marine-tempered",
+    "name": "Tempered",
+    "table": "MARINE",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "radiation": 2,
+    "weight": 2,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "marine-hardened",
+    "name": "Hardened",
+    "table": "MARINE",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "radiation": 3,
+    "weight": 2,
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "marine-buttressed",
+    "name": "Buttressed",
+    "table": "MARINE",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 90
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "radiation": 4,
+    "weight": 3,
+    "cost": 75,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "scout-reinforced",
+    "name": "Reinforced",
+    "table": "SCOUT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 92
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 0,
+    "cost": 6
+  },
+  {
+    "id": "scout-shadowed",
+    "name": "Shadowed",
+    "table": "SCOUT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 92
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "shadowed": true,
+    "weight": 1,
+    "cost": 48,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "scout-fiberglass",
+    "name": "Fiberglass",
+    "table": "SCOUT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 92
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 0,
+    "cost": 18,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "scout-polymer",
+    "name": "Polymer",
+    "table": "SCOUT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 92
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "robot-painted-metal",
+    "name": "Painted Metal",
+    "table": "ROBOT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 93
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 10
+  },
+  {
+    "id": "robot-shadowed-metal",
+    "name": "Shadowed Metal",
+    "table": "ROBOT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 93
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "shadowed": true,
+    "weight": 2,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "robot-enameled-metal",
+    "name": "Enameled Metal",
+    "table": "ROBOT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 93
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 2,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "robot-alloyed-metal",
+    "name": "Alloyed Metal",
+    "table": "ROBOT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 93
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 3,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "robot-polished-metal",
+    "name": "Polished Metal",
+    "table": "ROBOT",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 93
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "weight": 4,
+    "cost": 40,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "wood-shrouded",
+    "name": "Shrouded",
+    "table": "WOOD",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 93
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 0,
+    "energy": 0,
+    "shadowed": true,
+    "weight": -1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
   }
 ]

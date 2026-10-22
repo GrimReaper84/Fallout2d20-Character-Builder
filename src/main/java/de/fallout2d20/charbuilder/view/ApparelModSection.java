@@ -110,7 +110,7 @@ final class ApparelModSection {
    */
   private static @NonNull Node tableChoice(@NonNull PlayerCharacter character, int index, @NonNull WornApparel item,
       @NonNull CustomApparel custom, @NonNull Runnable onChanged) {
-    ModTableChoice choice = new ModTableChoice(custom.kind(), custom.modTable());
+    ModTableChoice choice = new ModTableChoice(custom.kind(), custom.modTable(), character.getEnabledBooks());
     choice.node().setOnAction(_ -> {
       ApparelModTable chosen = choice.value();
       if (chosen == custom.modTable()) {

@@ -90,7 +90,8 @@ final class ArmorTab {
     List<HitLocation> body = character.hitLocations();
     add.setOnAction(_ -> AddApparelDialog.show(window(add), offered(character),
         data -> ApparelTree.group(WornApparel.of(CatalogRef.of(data.id())), body).displayName(),
-        Arrays.stream(ApparelGroup.values()).map(ApparelGroup::displayName).toList(), body, defaultKind, item -> {
+        Arrays.stream(ApparelGroup.values()).map(ApparelGroup::displayName).toList(), body, defaultKind,
+        character.getEnabledBooks(), item -> {
           character.gear().addApparel(item);
           return character.gear().getApparel().size() - 1;
         }).ifPresent(index -> {

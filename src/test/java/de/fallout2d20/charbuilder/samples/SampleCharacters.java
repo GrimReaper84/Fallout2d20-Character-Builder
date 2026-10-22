@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.samples;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmSlot;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
@@ -169,6 +170,9 @@ final class SampleCharacters {
     character.gear().setAmmunition("arrow", 10);
     character.gear().setAmmunition("cryo-arrow", 4);
     character.gear().setMaterials(new Materials(10, 0, 2, 0));
+    wearWithMod(character, "underarmor-suit", ApparelModSlot.LINING, "lining-treated-lining");
+    wearWithMod(character, "marine-armor-chest-piece", ApparelModSlot.MATERIAL, "marine-welded");
+    wearWithMod(character, "marine-armor-helmet", ApparelModSlot.MATERIAL, "marine-tempered");
     return character;
   }
 
@@ -304,6 +308,12 @@ final class SampleCharacters {
     if (pack.trinket()) {
       character.startingGear().setTrinket("A dented harmonica");
     }
+  }
+
+  private static void wearWithMod(PlayerCharacter character, String apparel, ApparelModSlot slot, String mod) {
+    character.gear().addApparel(WornApparel.of(CatalogRef.of(apparel)));
+    character.gear().setApparelMod(character.gear().getApparel().size() - 1, slot,
+        ApparelCatalog.modById(mod).orElseThrow());
   }
 
   /**

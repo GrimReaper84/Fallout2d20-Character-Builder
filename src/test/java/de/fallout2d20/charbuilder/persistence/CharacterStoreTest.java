@@ -566,7 +566,7 @@ class CharacterStoreTest {
     Path file = dir.resolve("apparel-unknown.json");
     store.save(character, file);
     ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
-    ((ObjectNode) node.get("apparel").get(0)).putObject("mods").putObject("LINING").put("id", "metal-painted-metal");
+    ((ObjectNode) node.get("apparel").get(0)).putObject("mods").putObject("POCKETS").put("id", "metal-painted-metal");
     ((ObjectNode) node.get("apparel").get(1).get("custom")).put("modTable", "POWER_ARMOR");
     JSON.writeValue(file.toFile(), node);
     List<WornApparel> loaded = store.load(file).character().gear().getApparel();

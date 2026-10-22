@@ -10,11 +10,11 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * One armor or clothing mod (CRB p. 126 Ballistic Weave, pp. 133–135 Material mods, p. 136 Armor Upgrades), all
- * installed with Repair. Weight and cost are the printed values; the doubling on torso armor (CRB pp. 133–135) is
- * applied by the model, the torso-only upgrade rows already show doubled values. Names repeat across tables (the
- * all-location upgrades Laminated, Resin and Microcarbon equal the first Synth materials, as printed), so the id
- * names the table.
+ * One armor or clothing mod (CRB p. 126 Ballistic Weave, pp. 133–135 Material mods, p. 136 Armor Upgrades; WG p. 87
+ * Linings, pp. 90–93 Material mods). Weight and cost are the printed values; the doubling on torso armor (CRB pp.
+ * 133–135) is applied by the model, the torso-only upgrade rows already show doubled values. Names repeat across
+ * tables (the all-location upgrades Laminated, Resin and Microcarbon equal the first Synth materials, as printed;
+ * Welded, Shadowed and others recur in WG tables), so the id names the table.
  *
  * @param id stable catalog id, {@code <table>-<name>} ({@code upgrade-<name>} for upgrades), referenced by save files
  * @param name name as printed
@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  * @param radiation radiation damage resistance added
  * @param special a rule that changes no value, in own words; {@code null} for none
  * @param shadowed whether the mod makes the piece Shadowed (CRB p. 133 sidebar)
- * @param weight lbs. added as printed; {@code null} for "–"
+ * @param weight lbs. added as printed, negative for a lighter piece (WG p. 93: Shrouded); {@code null} for "–"
  * @param cost caps added as printed; {@code null} for "–"
  * @param perks perk ranks needed to install it (information only); empty for none
  */
@@ -56,7 +56,7 @@ public record ApparelModData(
     if (upgrade != (table == null) || upgrade != (placement != null) || (table != null && table.slot() != slot)) {
       throw new IllegalArgumentException("Apparel mod " + id + ": an upgrade has a placement, other mods a table of their slot");
     }
-    if (physical < 0 || energy < 0 || radiation < 0 || (weight != null && weight < 0) || (cost != null && cost < 0)) {
+    if (physical < 0 || energy < 0 || radiation < 0 || (cost != null && cost < 0)) {
       throw new IllegalArgumentException("Invalid values for apparel mod " + id);
     }
     if (special != null && special.isBlank()) {

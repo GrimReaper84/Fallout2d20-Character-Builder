@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * One clothing, outfit, headgear, armor or robot armor row from the catalog (CRB p. 124–125, 130–132,
- * 146–147), with the values of the table; mods are not included, only the table of the mods it takes.
+ * 146–147; WG pp. 85–93), with the values of the table; mods are not included, only the table of the mods it takes.
  *
  * @param id stable catalog id, referenced by save files
  * @param name name as printed (robot armor rows repeat the name per location; the id tells them apart)
@@ -35,6 +35,10 @@ import org.jspecify.annotations.Nullable;
  *     Super Mutants and Nightkin may wear
  * @param countsAsArmor whether an outfit counts as armor for perks such as Ironclad and Sturdy Frame (WG pp. 45, 48):
  *     Cage Armor and Spike Armor, outfits the book names armor (CRB p. 124; user decision 2026-10-22)
+ * @param special a rule of the piece that changes no value, in own words, e.g. a re-roll (WG pp. 86–93); {@code null}
+ *     for none
+ * @param shadowedPieces how many Shadowed pieces the piece counts as without a mod (WG pp. 85–86: Hunter's Pelt
+ *     Outfit 4, Hunter's Hood 1); 0 for none
  */
 public record ApparelData(
     @JsonProperty(required = true) @NonNull String id,
@@ -54,7 +58,9 @@ public record ApparelData(
     @NonNull List<String> aliases,
     @Nullable ApparelModTable modTable,
     boolean superMutantFit,
-    boolean countsAsArmor) {
+    boolean countsAsArmor,
+    @Nullable String special,
+    int shadowedPieces) {
 
   public ApparelData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()
@@ -62,7 +68,7 @@ public record ApparelData(
       throw new IllegalArgumentException("Apparel needs id, name, source, kind and coverage: " + id);
     }
     if (physical < 0 || energy < 0 || radiation < 0 || (radiationImmune && radiation != 0)
-        || (cost != null && cost < 0) || (rarity != null && rarity < 0)) {
+        || (cost != null && cost < 0) || (rarity != null && rarity < 0) || shadowedPieces < 0) {
       throw new IllegalArgumentException("Invalid values for apparel " + id);
     }
     if (modTable != null && !modTable.fits(kind)) {
@@ -71,6 +77,9 @@ public record ApparelData(
     sources = List.copyOf(sources);
     coverage = List.copyOf(coverage);
     aliases = aliases == null ? List.of() : List.copyOf(aliases);
+    if (special != null && special.isBlank()) {
+      special = null;
+    }
   }
 
   /** Whether one of the books describing the item is enabled. */

@@ -81,6 +81,10 @@ final class ApparelDetails {
       if (catalog.perk() != null) {
         detailRow(rows, "Needs perk", new Label(catalog.perk()));
       }
+      String special = catalog.special();
+      if (special != null) {
+        detailRow(rows, "Special", OverviewParts.wrappingInCell(new Label(special)));
+      }
     });
     OverviewParts.notesRow(rows, item.notes(), text -> {
       character.gear().setApparelNotes(index, text);

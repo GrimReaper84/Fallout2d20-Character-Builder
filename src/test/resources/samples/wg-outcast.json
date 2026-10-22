@@ -175,6 +175,34 @@
     "arrow" : 10,
     "cryo-arrow" : 4
   },
+  "apparel" : [ {
+    "ref" : {
+      "id" : "underarmor-suit"
+    },
+    "mods" : {
+      "LINING" : {
+        "id" : "lining-treated-lining"
+      }
+    }
+  }, {
+    "ref" : {
+      "id" : "marine-armor-chest-piece"
+    },
+    "mods" : {
+      "MATERIAL" : {
+        "id" : "marine-welded"
+      }
+    }
+  }, {
+    "ref" : {
+      "id" : "marine-armor-helmet"
+    },
+    "mods" : {
+      "MATERIAL" : {
+        "id" : "marine-tempered"
+      }
+    }
+  } ],
   "materials" : {
     "junk" : 10,
     "common" : 0,

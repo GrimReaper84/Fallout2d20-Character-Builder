@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.view.dialog;
 
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
@@ -48,10 +49,12 @@ final class CustomApparelForm {
   /**
    * @param locations the character's hit locations
    * @param defaultKind the preselected kind (robot armor for a Mister Handy)
+   * @param books the character's enabled books, for the mod tables on offer
    */
-  CustomApparelForm(@NonNull List<HitLocation> locations, @NonNull ApparelKind defaultKind) {
+  CustomApparelForm(@NonNull List<HitLocation> locations, @NonNull ApparelKind defaultKind,
+      @NonNull Set<Book> books) {
     this.defaultKind = defaultKind;
-    this.modTable = new ModTableChoice(defaultKind, null);
+    this.modTable = new ModTableChoice(defaultKind, null, books);
     kind.setConverter(new DisplayConverter<>(ApparelKind::displayName));
     kind.setValue(defaultKind);
     FlowPane locationBoxes = new FlowPane(Layouts.GAP, Layouts.ROW_GAP);

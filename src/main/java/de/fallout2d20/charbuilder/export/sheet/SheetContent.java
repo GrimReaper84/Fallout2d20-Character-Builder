@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.export.sheet;
 
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModData;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
@@ -48,8 +49,8 @@ import org.jspecify.annotations.Nullable;
  *
  * @param luckPointsMax maximum Luck points, printed as a small caption next to the empty Luck box
  * @param weapons all weapons, also those that do not fit on page 1 (the renderer moves them on)
- * @param notes free lines for the notes page: origin choices, Mister Handy arms, trinket and the typed
- *     notes of the character, its weapons, apparel and items
+ * @param notes free lines for the notes page: origin choices, Mister Handy arms, trinket, the typed notes of the
+ *     character, its weapons, apparel and items, and the rules of the apparel and its mods
  */
 public record SheetContent(
     @NonNull String name,
@@ -274,7 +275,9 @@ public record SheetContent(
       addNote(notes, weapon.displayName(), weapon.notes());
     }
     for (WornApparel apparel : character.gear().getApparel()) {
-      addNote(notes, apparel.displayName(), apparel.notes());
+      String rules = String.join(" ", apparelRules(apparel));
+      String note = apparel.notes().strip();
+      addNote(notes, apparel.displayName(), note.isEmpty() || rules.isEmpty() ? note + rules : note + " – " + rules);
     }
     for (CarriedItem item : character.gear().getItems()) {
       addNote(notes, item.displayName(), item.notes());
@@ -284,6 +287,17 @@ public record SheetContent(
       notes.add(inventory.strip());
     }
     return notes;
+  }
+
+  /**
+   * The rules of a piece no sheet column covers, each as a sentence: its own special (WG pp. 86–93), then its mods'
+   * ("Mod: rule").
+   */
+  private static @NonNull List<String> apparelRules(@NonNull WornApparel apparel) {
+    List<String> rules = new ArrayList<>();
+    apparel.data().map(ApparelData::special).ifPresent(rules::add);
+    ModdedApparel.of(apparel).ifPresent(modded -> rules.addAll(modded.specials()));
+    return rules.stream().map(rule -> rule.endsWith(".") ? rule : rule + ".").toList();
   }
 
   private static void addNote(@NonNull List<String> notes, @NonNull String name, @NonNull String note) {

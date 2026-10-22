@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.view.dialog;
 
+import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.apparel.Coverage;
@@ -11,6 +12,7 @@ import de.fallout2d20.charbuilder.view.Layouts;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
@@ -46,12 +48,13 @@ public final class AddApparelDialog {
    * @param categories the Armor tree groups in tree order
    * @param locations the character's hit locations, offered for a custom item
    * @param defaultKind the preselected kind of a custom item (robot armor for a Mister Handy)
+   * @param books the character's enabled books, for the mod tables of a custom item
    * @param onAdd enters a piece and returns its index
    * @return the index of the last added piece; empty if none was added
    */
   public static @NonNull OptionalInt show(@Nullable Window owner, @NonNull List<ApparelData> items,
       @NonNull Function<ApparelData, String> categoryOf, @NonNull List<String> categories,
-      @NonNull List<HitLocation> locations, @NonNull ApparelKind defaultKind,
+      @NonNull List<HitLocation> locations, @NonNull ApparelKind defaultKind, @NonNull Set<Book> books,
       @NonNull ToIntFunction<WornApparel> onAdd) {
     CatalogPage<ApparelData> page = new CatalogPage<>(items, ApparelData::name, categoryOf, categories,
         _ -> "");
@@ -64,7 +67,7 @@ public final class AddApparelDialog {
         item -> item.radiationImmune() ? "Immune" : Integer.toString(item.radiation()));
     page.addColumn("Source", item -> item.sources().getFirst().toString());
     Tab catalog = new Tab("Catalog", page.node());
-    CustomApparelForm form = new CustomApparelForm(locations, defaultKind);
+    CustomApparelForm form = new CustomApparelForm(locations, defaultKind, books);
     Tab custom = new Tab("Custom item", form.node());
     TabPane tabs = new TabPane(catalog, custom);
     tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
