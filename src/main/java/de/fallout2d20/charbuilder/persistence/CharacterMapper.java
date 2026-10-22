@@ -1,6 +1,8 @@
 package de.fallout2d20.charbuilder.persistence;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
@@ -328,9 +330,11 @@ final class CharacterMapper {
     CustomApparel custom = item.custom();
     CustomApparelData customData = custom == null ? null : new CustomApparelData(custom.name(), custom.kind(),
         custom.locations().stream().sorted().toList(), custom.physical(), custom.energy(), custom.radiation(),
-        custom.radiationImmune(), custom.carryWeight());
+        custom.radiationImmune(), custom.carryWeight(), custom.modTable() == null ? null : custom.modTable().name());
+    Map<String, CatalogRefData> mods = new LinkedHashMap<>();
+    item.mods().forEach((slot, mod) -> mods.put(slot.name(), toData(mod)));
     return new WornApparelData(ref == null ? null : toData(ref), customData, item.location(), blankToNull(item.notes()),
-        item.carried() ? Boolean.TRUE : null, toData(item.startingSource()));
+        item.carried() ? Boolean.TRUE : null, toData(item.startingSource()), mods.isEmpty() ? null : mods);
   }
 
   private static @NonNull List<WornApparel> apparel(@Nullable List<WornApparelData> entries) throws SaveFormatException {
@@ -339,16 +343,27 @@ final class CharacterMapper {
       CatalogRefData ref = entry.ref();
       CustomApparelData custom = entry.custom();
       String notes = entry.notes();
+      Map<ApparelModSlot, CatalogRef> mods = new EnumMap<>(ApparelModSlot.class);
+      for (Map.Entry<String, CatalogRefData> mod : orEmpty(entry.mods()).entrySet()) {
+        Optional<ApparelModSlot> slot = apparelModSlot(mod.getKey());
+        if (slot.isPresent()) {
+          mods.put(slot.get(), toModel(mod.getValue()));
+        }
+      }
       apparel.add(new WornApparel(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
           entry.location(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.carried()),
-          startingSource(entry.startingSource())));
+          startingSource(entry.startingSource()), mods));
     }
     return apparel;
   }
 
+  /** A custom item; an unknown mod table name, or one not fitting the kind (hand-edited file), is read as none. */
   private static @NonNull CustomApparel toModel(@NonNull CustomApparelData data) {
+    String tableName = data.modTable();
+    ApparelModTable table = tableName == null ? null : Arrays.stream(ApparelModTable.values())
+        .filter(candidate -> candidate.name().equals(tableName) && candidate.fits(data.kind())).findFirst().orElse(null);
     return new CustomApparel(data.name(), data.kind(), Set.copyOf(data.locations()), data.physical(), data.energy(),
-        data.radiation(), data.radiationImmune(), data.carryWeight());
+        data.radiation(), data.radiationImmune(), data.carryWeight(), table);
   }
 
   private static @Nullable String toData(@Nullable StartingSource source) {
@@ -557,5 +572,9 @@ final class CharacterMapper {
   /** A mod slot by its saved name; empty for a name this version does not know (a newer file). */
   private static @NonNull Optional<ModSlot> modSlot(@NonNull String name) {
     return Arrays.stream(ModSlot.values()).filter(slot -> slot.name().equals(name)).findFirst();
+  }
+
+  private static @NonNull Optional<ApparelModSlot> apparelModSlot(@NonNull String name) {
+    return Arrays.stream(ApparelModSlot.values()).filter(slot -> slot.name().equals(name)).findFirst();
   }
 }

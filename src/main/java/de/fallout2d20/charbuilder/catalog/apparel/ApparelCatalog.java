@@ -10,10 +10,15 @@ import java.util.Optional;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
 
-/** The apparel catalog: the only place clothing, armor and robot armor are loaded (once, on first use). */
+/**
+ * The apparel catalog: the only place clothing, armor, robot armor and the apparel mods are loaded (once, on
+ * first use).
+ */
 public final class ApparelCatalog {
 
   private static final @NonNull String RESOURCE = "/de/fallout2d20/charbuilder/catalog/apparel.json";
+  private static final @NonNull String MODS = "/de/fallout2d20/charbuilder/catalog/apparel_mods.json";
+  private static final @NonNull Map<String, ApparelModData> MODS_BY_ID = loadMods();
   private static final @NonNull Map<String, ApparelData> BY_ID = load();
 
   private ApparelCatalog() {}
@@ -39,6 +44,25 @@ public final class ApparelCatalog {
         .filter(item -> CatalogNames.normalize(item.name()).equals(key)
             || item.aliases().stream().anyMatch(alias -> CatalogNames.normalize(alias).equals(key)))
         .findFirst();
+  }
+
+  /** All apparel mods in catalog (table) order. */
+  public static @NonNull List<ApparelModData> mods() {
+    return List.copyOf(MODS_BY_ID.values());
+  }
+
+  public static @NonNull Optional<ApparelModData> modById(@NonNull String id) {
+    return Optional.ofNullable(MODS_BY_ID.get(id));
+  }
+
+  private static @NonNull Map<String, ApparelModData> loadMods() {
+    Map<String, ApparelModData> byId = new LinkedHashMap<>();
+    for (ApparelModData mod : CatalogReader.readList(MODS, ApparelModData.class)) {
+      if (byId.put(mod.id(), mod) != null) {
+        throw new IllegalStateException("Duplicate apparel mod id in " + MODS + ": " + mod.id());
+      }
+    }
+    return byId;
   }
 
   private static @NonNull Map<String, ApparelData> load() {

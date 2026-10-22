@@ -3,7 +3,9 @@ package de.fallout2d20.charbuilder.model.character.apparel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
@@ -162,5 +164,23 @@ class ArmorResistancesTest {
     assertEquals(245, DerivedStats.of(protectron).carryWeight());
     protectron.gear().setApparelLocation(1, HitLocation.RIGHT_ARM);
     assertEquals(255, DerivedStats.of(protectron).carryWeight());
+  }
+
+  /**
+   * CRB p. 130 with mods: Casual Clothing with Ballistic Weave Mk V (6/6, CRB p. 126) under a Metal Chest Piece
+   * (2/1) – the higher modded value counts per type.
+   */
+  @Test
+  void moddedClothingUnderArmor() {
+    PlayerCharacter survivor = character("survivor");
+    wear(survivor, "casual-clothing", null);
+    wear(survivor, "metal-chest-piece", null);
+    survivor.gear().setApparelMod(0, ApparelModSlot.BALLISTIC_WEAVE,
+        ApparelCatalog.modById("ballistic-weave-mk-v").orElseThrow());
+    survivor.gear().setApparelMod(1, ApparelModSlot.MATERIAL, ApparelCatalog.modById("metal-polished-metal").orElseThrow());
+    LocationResistance torso = at(survivor, HitLocation.TORSO);
+    assertEquals(Resistance.of(6), torso.physical(), "Metal Chest Piece 2 + 4 = 6, weave 6");
+    assertEquals(Resistance.of(6), torso.energy(), "weave 6 beats 1 + 4");
+    assertEquals(Resistance.of(6), at(survivor, HitLocation.LEFT_LEG).physical(), "only the clothing there");
   }
 }

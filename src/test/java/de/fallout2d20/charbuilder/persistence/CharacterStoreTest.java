@@ -12,7 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
@@ -531,6 +534,44 @@ class CharacterStoreTest {
     Path file = dir.resolve("apparel.json");
     store.save(character, file);
     assertEquals(character.gear().getApparel(), store.load(file).character().gear().getApparel());
+  }
+
+  /** Armor mods (D4): catalog piece with Material and Upgrade, custom piece with mod table and weave. */
+  @Test
+  void roundTripsApparelMods() throws Exception {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("metal-arm")).withLocation(HitLocation.RIGHT_ARM));
+    character.gear().setApparelMod(0, ApparelModSlot.MATERIAL, ApparelCatalog.modById("metal-alloyed-metal").orElseThrow());
+    character.gear().setApparelMod(0, ApparelModSlot.UPGRADE, ApparelCatalog.modById("upgrade-brawling").orElseThrow());
+    character.gear().addApparel(WornApparel.of(new CustomApparel("Duster", ApparelKind.OUTFIT,
+        Set.of(HitLocation.TORSO, HitLocation.LEFT_ARM, HitLocation.RIGHT_ARM), 1, 1, 0, false, 0,
+        ApparelModTable.BALLISTIC_WEAVE)));
+    character.gear().setApparelMod(1, ApparelModSlot.BALLISTIC_WEAVE,
+        ApparelCatalog.modById("ballistic-weave").orElseThrow());
+    Path file = dir.resolve("apparel-mods.json");
+    store.save(character, file);
+    assertEquals(character.gear().getApparel(), store.load(file).character().gear().getApparel());
+    JsonNode saved = JSON.readTree(file.toFile()).get("apparel");
+    assertEquals("upgrade-brawling", saved.get(0).get("mods").get("UPGRADE").get("id").asText());
+    assertEquals("BALLISTIC_WEAVE", saved.get(1).get("custom").get("modTable").asText());
+  }
+
+  /** Unknown slot and table names (a newer version's) are skipped on load. */
+  @Test
+  void skipsUnknownApparelModSlotsAndTables() throws Exception {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("metal-arm")));
+    character.gear().addApparel(WornApparel.of(new CustomApparel("Plate", ApparelKind.ARMOR,
+        Set.of(HitLocation.TORSO), 1, 1, 0, false, 0, ApparelModTable.METAL)));
+    Path file = dir.resolve("apparel-unknown.json");
+    store.save(character, file);
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    ((ObjectNode) node.get("apparel").get(0)).putObject("mods").putObject("LINING").put("id", "metal-painted-metal");
+    ((ObjectNode) node.get("apparel").get(1).get("custom")).put("modTable", "POWER_ARMOR");
+    JSON.writeValue(file.toFile(), node);
+    List<WornApparel> loaded = store.load(file).character().gear().getApparel();
+    assertTrue(loaded.getFirst().mods().isEmpty());
+    assertNull(loaded.get(1).custom().modTable());
   }
 
   @Test

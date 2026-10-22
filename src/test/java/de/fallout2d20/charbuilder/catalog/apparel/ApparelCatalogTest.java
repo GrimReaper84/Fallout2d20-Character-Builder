@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.catalog.weapon.ModPerk;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,7 @@ class ApparelCatalogTest {
   void raiderChestPiece() {
     assertEquals(new ApparelData("raider-chest-piece", "Raider Chest Piece", List.of(new Source(Book.CRB, 130)),
         ApparelKind.ARMOR, List.of(Coverage.TORSO), 1, 1, 0, false, "7", 18, 0, 0, null,
-        List.of("Raider armor chest piece", "Raider armor torso")),
+        List.of("Raider armor chest piece", "Raider armor torso"), ApparelModTable.RAIDER),
         ApparelCatalog.byId("raider-chest-piece").orElseThrow());
     assertTrue(ApparelCatalog.byId("raider-arm").orElseThrow().needsLocation());
   }
@@ -54,5 +56,42 @@ class ApparelCatalogTest {
     assertEquals("Brotherhood Scribe’s Hat", ApparelCatalog.byId("brotherhood-scribes-hat").orElseThrow().name());
     assertTrue(ApparelCatalog.byId("casual-hat").orElseThrow().isHat());
     assertFalse(ApparelCatalog.byId("army-helmet").orElseThrow().isHat());
+  }
+
+  /** CRB p. 126 (5 Ballistic Weave), pp. 133–135 (22 Material mods), p. 136 (15 Armor Upgrades). */
+  @Test
+  void containsAllCoreArmorMods() {
+    Map<ApparelModSlot, Long> perSlot = ApparelCatalog.mods().stream()
+        .collect(Collectors.groupingBy(ApparelModData::slot, Collectors.counting()));
+    assertEquals(Map.of(ApparelModSlot.BALLISTIC_WEAVE, 5L, ApparelModSlot.MATERIAL, 22L, ApparelModSlot.UPGRADE, 15L),
+        perSlot);
+    ApparelModData polished = ApparelCatalog.modById("metal-polished-metal").orElseThrow();
+    assertEquals(List.of(4, 4, 0, 4, 40), List.of(polished.physical(), polished.energy(), polished.radiation(),
+        polished.weight(), polished.cost()));
+    assertEquals(List.of(new ModPerk("armorer", 2)), polished.perks());
+    ApparelModData bioCommMesh = ApparelCatalog.modById("upgrade-biocommmesh").orElseThrow();
+    assertEquals(ModPlacement.TORSO, bioCommMesh.placement());
+    assertEquals(List.of(new ModPerk("armorer", 4), new ModPerk("science", 2)), bioCommMesh.perks());
+    assertTrue(ApparelCatalog.modById("combat-shadowed").orElseThrow().shadowed());
+    assertNull(ApparelCatalog.modById("ballistic-weave-mk-v").orElseThrow().weight());
+  }
+
+  /**
+   * Every piece of the five armor types takes its own table, Vault-Tec Security armor none (CRB pp. 133–136); the
+   * clothing the book names takes Ballistic Weave (CRB pp. 125–128).
+   */
+  @Test
+  void modTables() {
+    for (ApparelData item : ApparelCatalog.all()) {
+      ApparelModTable table = item.modTable();
+      if (item.kind() == ApparelKind.ARMOR && !item.id().startsWith("vault-tec")) {
+        assertTrue(table != null && item.id().contains(table.name().toLowerCase(Locale.ROOT)), item.id());
+      }
+    }
+    assertNull(ApparelCatalog.byId("vault-tec-security-armor").orElseThrow().modTable());
+    assertNull(ApparelCatalog.byId("vault-tec-security-helmet").orElseThrow().modTable());
+    assertEquals(List.of("casual-clothing", "military-fatigues", "formal-clothing", "heavy-coat", "lab-coat",
+        "formal-hat"), ApparelCatalog.all().stream().filter(item -> item.modTable() == ApparelModTable.BALLISTIC_WEAVE)
+        .map(ApparelData::id).toList());
   }
 }

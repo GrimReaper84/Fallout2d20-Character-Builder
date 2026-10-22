@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
@@ -102,5 +103,15 @@ class CarryLoadTest {
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     character.gear().setWeaponMod(0, ModSlot.RECEIVER, WeaponCatalog.modById("small-guns-powerful").orElseThrow());
     assertEquals(5, CarryLoad.of(character).carried());
+  }
+
+  /** Mods add their weight, doubled on torso armor (CRB pp. 133–134): Metal Chest Piece 6 + Polished Metal 2 × 4. */
+  @Test
+  void apparelModsAddWeight() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("metal-chest-piece")));
+    assertEquals(6, CarryLoad.of(character).carried());
+    character.gear().setApparelMod(0, ApparelModSlot.MATERIAL, ApparelCatalog.modById("metal-polished-metal").orElseThrow());
+    assertEquals(14, CarryLoad.of(character).carried());
   }
 }

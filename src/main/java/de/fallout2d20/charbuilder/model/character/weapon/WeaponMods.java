@@ -118,10 +118,7 @@ public final class WeaponMods {
    * a block (user decision 2026-10-17).
    */
   public static @NonNull List<ModPerk> missingPerks(@NonNull PlayerCharacter character, @NonNull WeaponModData mod) {
-    return mod.perks().stream()
-        .filter(needed -> character.getPerks().stream()
-            .noneMatch(perk -> perk.perk().id().equals(needed.perk()) && perk.rank() >= needed.rank()))
-        .toList();
+    return mod.perks().stream().filter(perk -> !character.hasPerkRank(perk.perk(), perk.rank())).toList();
   }
 
   /** A needed perk rank as shown to the player, e.g. "Gun Nut 2". */

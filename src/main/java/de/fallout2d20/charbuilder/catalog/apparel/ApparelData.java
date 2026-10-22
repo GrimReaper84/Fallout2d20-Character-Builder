@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * One clothing, outfit, headgear, armor or robot armor row from the catalog (CRB p. 124–125, 130–132,
- * 146–147), with the values of the table; mods are not included.
+ * 146–147), with the values of the table; mods are not included, only the table of the mods it takes.
  *
  * @param id stable catalog id, referenced by save files
  * @param name name as printed (robot armor rows repeat the name per location; the id tells them apart)
@@ -27,6 +27,10 @@ import org.jspecify.annotations.Nullable;
  * @param carryWeight change of a robot's carry weight in lbs.; 0 for none
  * @param perk perk needed to install the robot armor, e.g. {@code Armorer 1}; {@code null} for none
  * @param aliases other names the item is found by, e.g. wordings of equipment packs
+ * @param modTable the table of its Material or Ballistic Weave mods: the armor type of a Raider, Leather, Metal,
+ *     Combat or Synth piece (CRB pp. 133–135), Ballistic Weave for the clothing the book names (CRB pp. 125–128);
+ *     {@code null} for apparel without mods, e.g. Vault-Tec Security armor (no table, excluded from the upgrades,
+ *     CRB p. 136)
  */
 public record ApparelData(
     @JsonProperty(required = true) @NonNull String id,
@@ -43,7 +47,8 @@ public record ApparelData(
     @Nullable Integer rarity,
     int carryWeight,
     @Nullable String perk,
-    @NonNull List<String> aliases) {
+    @NonNull List<String> aliases,
+    @Nullable ApparelModTable modTable) {
 
   public ApparelData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()
@@ -53,6 +58,9 @@ public record ApparelData(
     if (physical < 0 || energy < 0 || radiation < 0 || (radiationImmune && radiation != 0)
         || (cost != null && cost < 0) || (rarity != null && rarity < 0)) {
       throw new IllegalArgumentException("Invalid values for apparel " + id);
+    }
+    if (modTable != null && !modTable.fits(kind)) {
+      throw new IllegalArgumentException("Apparel " + id + " cannot take " + modTable.displayName() + " mods");
     }
     sources = List.copyOf(sources);
     coverage = List.copyOf(coverage);

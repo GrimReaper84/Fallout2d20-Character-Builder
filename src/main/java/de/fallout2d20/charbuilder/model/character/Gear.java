@@ -1,7 +1,11 @@
 package de.fallout2d20.charbuilder.model.character;
 
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModData;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
+import de.fallout2d20.charbuilder.model.character.apparel.ApparelMods;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
@@ -237,9 +241,28 @@ public final class Gear {
     apparel.set(index, apparel.get(index).withLocation(location));
   }
 
-  /** Free note of the piece at the index, e.g. installed mods. */
+  /** Free note of the piece at the index. */
   public void setApparelNotes(int index, @Nullable String notes) {
     apparel.set(index, apparel.get(index).withNotes(notes));
+  }
+
+  /**
+   * Installs {@code mod} in the slot of the piece at the index; {@code null} removes it.
+   *
+   * @throws IllegalArgumentException if the mod does not fit the slot of this piece ({@link ApparelMods#fits})
+   */
+  public void setApparelMod(int index, @NonNull ApparelModSlot slot, @Nullable ApparelModData mod) {
+    apparel.set(index, ApparelMods.install(apparel.get(index), slot, mod));
+  }
+
+  /**
+   * Chooses the mod table of the custom piece at the index (user decision 2026-10-22); installed mods that no
+   * longer fit are removed.
+   *
+   * @throws IllegalStateException if the piece at the index is a catalog piece
+   */
+  public void setCustomApparelModTable(int index, @Nullable ApparelModTable table) {
+    apparel.set(index, apparel.get(index).withCustomModTable(table));
   }
 
   public @NonNull List<WornApparel> getApparel() {

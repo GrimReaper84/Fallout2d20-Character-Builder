@@ -27,7 +27,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * The form of a custom piece of apparel (homebrew, books not catalogued yet): name, kind, the covered hit
- * locations of the character's body, resistances and the carry weight a robot's armor adds.
+ * locations of the character's body, resistances, the carry weight a robot's armor adds and the mod table the
+ * piece takes its mods from (only tables fitting the kind; user decision 2026-10-22).
  */
 final class CustomApparelForm {
 
@@ -41,6 +42,7 @@ final class CustomApparelForm {
   private final @NonNull TextField radiation = numberField();
   private final @NonNull CheckBox immune = new CheckBox("Immune to radiation");
   private final @NonNull TextField carryWeight = new TextField("0");
+  private final @NonNull ModTableChoice modTable;
   private final @NonNull MigPane form = Layouts.dialogForm();
 
   /**
@@ -49,6 +51,7 @@ final class CustomApparelForm {
    */
   CustomApparelForm(@NonNull List<HitLocation> locations, @NonNull ApparelKind defaultKind) {
     this.defaultKind = defaultKind;
+    this.modTable = new ModTableChoice(defaultKind, null);
     kind.setConverter(new DisplayConverter<>(ApparelKind::displayName));
     kind.setValue(defaultKind);
     FlowPane locationBoxes = new FlowPane(Layouts.GAP, Layouts.ROW_GAP);
@@ -65,6 +68,8 @@ final class CustomApparelForm {
     addRow("Radiation", radiation);
     addRow("", immune);
     addRow("Carry weight (robots)", carryWeight);
+    addRow("Mod table", modTable.node());
+    kind.valueProperty().addListener((_, _, chosen) -> modTable.fitTo(chosen == null ? defaultKind : chosen));
   }
 
   @NonNull Node node() {
@@ -74,7 +79,8 @@ final class CustomApparelForm {
   /** What {@link #apparel()} depends on, for the bindings of the dialog. */
   @NonNull List<Observable> dependencies() {
     List<Observable> dependencies = new ArrayList<>(List.of(name.textProperty(), physical.textProperty(),
-        energy.textProperty(), radiation.textProperty(), immune.selectedProperty(), carryWeight.textProperty()));
+        energy.textProperty(), radiation.textProperty(), immune.selectedProperty(), carryWeight.textProperty(),
+        modTable.node().valueProperty()));
     covered.values().forEach(box -> dependencies.add(box.selectedProperty()));
     return dependencies;
   }
@@ -92,7 +98,7 @@ final class CustomApparelForm {
     }
     ApparelKind chosenKind = kind.getValue();
     return new CustomApparel(name.getText(), chosenKind == null ? defaultKind : chosenKind, locations, physicalDr,
-        energyDr, radiationDr, immune.isSelected(), carry.getAsInt());
+        energyDr, radiationDr, immune.isSelected(), carry.getAsInt(), modTable.value());
   }
 
   private @NonNull Set<HitLocation> selectedLocations() {

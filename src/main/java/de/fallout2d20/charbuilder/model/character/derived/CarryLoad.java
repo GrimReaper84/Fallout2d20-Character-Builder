@@ -1,9 +1,9 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
-import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
+import de.fallout2d20.charbuilder.model.character.apparel.ModdedApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -15,7 +15,7 @@ import org.jspecify.annotations.NonNull;
  * The weight a character carries against their carry weight, computed on every call (never stored).
  *
  * <p>Counted: weapons × quantity except those built into the character ({@link CarriedWeapon#isIntegrated()},
- * user decision 2026-10-16), worn apparel (its table weight; robot items have none), items ×
+ * user decision 2026-10-16), worn apparel (its table weight with its mods', {@link ModdedApparel}; robot items have none), items ×
  * quantity, ammunition with a whole-pound weight per unit × count, junk and materials (CRB p. 208).
  * {@code <1} items count nothing (CRB p. 87). Weapons count with their mods' weight ({@link ModdedWeapon}); custom
  * weapons have no weight of their own, only their mods', custom apparel has none.
@@ -43,7 +43,7 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
       carried += ModdedWeapon.of(weapon).map(ModdedWeapon::weight).map(Weight::pounds).orElse(0) * weapon.quantity();
     }
     for (WornApparel item : character.gear().getApparel()) {
-      carried += item.data().map(ApparelData::weight).map(Weight::pounds).orElse(0);
+      carried += ModdedApparel.of(item).map(ModdedApparel::weight).map(Weight::pounds).orElse(0);
     }
     for (CarriedItem item : character.gear().getItems()) {
       carried += Weight.pounds(item.printedWeight()) * item.quantity();

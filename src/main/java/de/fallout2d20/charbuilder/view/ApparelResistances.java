@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ArmorResistances;
 import de.fallout2d20.charbuilder.model.character.apparel.LocationResistance;
+import de.fallout2d20.charbuilder.model.character.apparel.ShadowedArmor;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
 import javafx.scene.control.Label;
@@ -12,8 +13,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * The top of the Armor tab's right side: the damage resistance per hit location of the whole character
- * ({@link ArmorResistances}, CRB p. 130, 146: worn apparel plus innate) and the tab's hints (the apparel hints
- * collected once by the character view).
+ * ({@link ArmorResistances}, CRB p. 130, 146: worn apparel plus innate), the Sneak bonus of worn Shadowed armor
+ * ({@link ShadowedArmor}, CRB p. 133) and the tab's hints (the apparel hints collected once by the character view).
  */
 final class ApparelResistances {
 
@@ -34,6 +35,13 @@ final class ApparelResistances {
     }
     Tooltip.install(table, new Tooltip("Worn apparel plus innate resistances from origin and perks."));
     pane.add(table);
+    int shadowed = ShadowedArmor.count(character);
+    if (shadowed > 0) {
+      Label line = new Label("Shadowed armor (" + shadowed + (shadowed == 1 ? " piece" : " pieces") + "): "
+          + ShadowedArmor.effect(shadowed));
+      line.setTooltip(new Tooltip("CRB p. 133: a torso piece counts as two; worn pieces only."));
+      pane.add(OverviewParts.wrappingInCell(line), Layouts.spaced(Layouts.cell().growX()));
+    }
     if (!hints.isEmpty()) {
       pane.add(OverviewParts.wrappingInCell(OverviewParts.hintLabel(hints)), Layouts.spaced(Layouts.cell().growX()));
     }

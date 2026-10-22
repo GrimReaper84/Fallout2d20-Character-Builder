@@ -1,0 +1,877 @@
+[
+  {
+    "id": "ballistic-weave",
+    "name": "Ballistic Weave",
+    "table": "BALLISTIC_WEAVE",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 126
+      }
+    ],
+    "slot": "BALLISTIC_WEAVE",
+    "physical": 2,
+    "energy": 2,
+    "cost": 20
+  },
+  {
+    "id": "ballistic-weave-mk-ii",
+    "name": "Ballistic Weave Mk II",
+    "table": "BALLISTIC_WEAVE",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 126
+      }
+    ],
+    "slot": "BALLISTIC_WEAVE",
+    "physical": 3,
+    "energy": 3,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "ballistic-weave-mk-iii",
+    "name": "Ballistic Weave Mk III",
+    "table": "BALLISTIC_WEAVE",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 126
+      }
+    ],
+    "slot": "BALLISTIC_WEAVE",
+    "physical": 4,
+    "energy": 4,
+    "cost": 40,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "ballistic-weave-mk-iv",
+    "name": "Ballistic Weave Mk IV",
+    "table": "BALLISTIC_WEAVE",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 126
+      }
+    ],
+    "slot": "BALLISTIC_WEAVE",
+    "physical": 5,
+    "energy": 5,
+    "cost": 50,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "ballistic-weave-mk-v",
+    "name": "Ballistic Weave Mk V",
+    "table": "BALLISTIC_WEAVE",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 126
+      }
+    ],
+    "slot": "BALLISTIC_WEAVE",
+    "physical": 6,
+    "energy": 6,
+    "cost": 60,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "raider-welded",
+    "name": "Welded",
+    "table": "RAIDER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 3
+  },
+  {
+    "id": "raider-tempered",
+    "name": "Tempered",
+    "table": "RAIDER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 1,
+    "cost": 6
+  },
+  {
+    "id": "raider-hardened",
+    "name": "Hardened",
+    "table": "RAIDER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 2,
+    "cost": 9,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "raider-buttressed",
+    "name": "Buttressed",
+    "table": "RAIDER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "weight": 3,
+    "cost": 12,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "leather-boiled-leather",
+    "name": "Boiled Leather",
+    "table": "LEATHER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 5
+  },
+  {
+    "id": "leather-girded-leather",
+    "name": "Girded Leather",
+    "table": "LEATHER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 1,
+    "cost": 10
+  },
+  {
+    "id": "leather-treated-leather",
+    "name": "Treated Leather",
+    "table": "LEATHER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "leather-shadowed-leather",
+    "name": "Shadowed Leather",
+    "table": "LEATHER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "shadowed": true,
+    "weight": 1,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "leather-studded-leather",
+    "name": "Studded Leather",
+    "table": "LEATHER",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 133
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "weight": 2,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "metal-painted-metal",
+    "name": "Painted Metal",
+    "table": "METAL",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 10
+  },
+  {
+    "id": "metal-enameled-metal",
+    "name": "Enameled Metal",
+    "table": "METAL",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 2,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "metal-shadowed-metal",
+    "name": "Shadowed Metal",
+    "table": "METAL",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "shadowed": true,
+    "weight": 2,
+    "cost": 25,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "metal-alloyed-metal",
+    "name": "Alloyed Metal",
+    "table": "METAL",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 3,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "metal-polished-metal",
+    "name": "Polished Metal",
+    "table": "METAL",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "weight": 4,
+    "cost": 40,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "combat-reinforced",
+    "name": "Reinforced",
+    "table": "COMBAT",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 15
+  },
+  {
+    "id": "combat-shadowed",
+    "name": "Shadowed",
+    "table": "COMBAT",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "shadowed": true,
+    "weight": 1,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "combat-fiberglass",
+    "name": "Fiberglass",
+    "table": "COMBAT",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 1,
+    "cost": 30,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "combat-polymer",
+    "name": "Polymer",
+    "table": "COMBAT",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 134
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 2,
+    "cost": 45,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "synth-laminated",
+    "name": "Laminated",
+    "table": "SYNTH",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 135
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 5
+  },
+  {
+    "id": "synth-resin",
+    "name": "Resin",
+    "table": "SYNTH",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 135
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "synth-microcarbon",
+    "name": "Microcarbon",
+    "table": "SYNTH",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 135
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 2,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "synth-nanofilament",
+    "name": "Nanofilament",
+    "table": "SYNTH",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 135
+      }
+    ],
+    "slot": "MATERIAL",
+    "physical": 4,
+    "energy": 4,
+    "weight": 3,
+    "cost": 20,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-laminated",
+    "name": "Laminated",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ALL",
+    "physical": 1,
+    "energy": 1,
+    "weight": 1,
+    "cost": 5
+  },
+  {
+    "id": "upgrade-resin",
+    "name": "Resin",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ALL",
+    "physical": 2,
+    "energy": 2,
+    "weight": 1,
+    "cost": 10,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-microcarbon",
+    "name": "Microcarbon",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ALL",
+    "physical": 3,
+    "energy": 3,
+    "weight": 2,
+    "cost": 15,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-padded",
+    "name": "Padded",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "TORSO",
+    "physical": 0,
+    "energy": 0,
+    "special": "+2 to every damage resistance against Blast weapons",
+    "weight": 4,
+    "cost": 1
+  },
+  {
+    "id": "upgrade-asbestos-lining",
+    "name": "Asbestos Lining",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "TORSO",
+    "physical": 0,
+    "energy": 3,
+    "special": "The Persistent damage effect deals no Energy damage to the wearer",
+    "weight": 4,
+    "cost": 3,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-dense",
+    "name": "Dense",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "TORSO",
+    "physical": 0,
+    "energy": 0,
+    "special": "+4 to every damage resistance against Blast weapons",
+    "weight": 4,
+    "cost": 7,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "upgrade-biocommmesh",
+    "name": "BioCommMesh",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "TORSO",
+    "physical": 0,
+    "energy": 0,
+    "special": "Chem effects stay active for double their duration (CRB p. 164)",
+    "weight": 2,
+    "cost": 9,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 4
+      },
+      {
+        "perk": "science",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "upgrade-pneumatic",
+    "name": "Pneumatic",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "TORSO",
+    "physical": 0,
+    "energy": 0,
+    "special": "The Stun damage effect needs 2 or more Effects rolled to affect the wearer",
+    "weight": 2,
+    "cost": 9,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "upgrade-brawling",
+    "name": "Brawling",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ARMS",
+    "physical": 0,
+    "energy": 0,
+    "special": "Unarmed attacks deal +1 CD damage",
+    "weight": 1,
+    "cost": 1,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-braced",
+    "name": "Braced",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ARMS",
+    "physical": 0,
+    "energy": 0,
+    "special": "+2 to every damage resistance against melee attacks",
+    "weight": 1,
+    "cost": 1,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-stabilized",
+    "name": "Stabilized",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ARMS",
+    "physical": 0,
+    "energy": 0,
+    "special": "Aimed ranged attacks deal +1 CD damage",
+    "weight": 1,
+    "cost": 1,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  },
+  {
+    "id": "upgrade-aerodynamic",
+    "name": "Aerodynamic",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ARMS",
+    "physical": 0,
+    "energy": 0,
+    "special": "Up to 4 AP can be spent on bonus damage for melee attacks",
+    "cost": 1,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 3
+      }
+    ]
+  },
+  {
+    "id": "upgrade-weighted",
+    "name": "Weighted",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "ARMS",
+    "physical": 0,
+    "energy": 0,
+    "special": "Piercing 1 on melee and unarmed attacks",
+    "weight": 1,
+    "cost": 3,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 4
+      }
+    ]
+  },
+  {
+    "id": "upgrade-cushioned",
+    "name": "Cushioned",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "LEGS",
+    "physical": 0,
+    "energy": 0,
+    "special": "+2 physical damage resistance against falling damage",
+    "cost": 1,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 1
+      }
+    ]
+  },
+  {
+    "id": "upgrade-muffled",
+    "name": "Muffled",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 136
+      }
+    ],
+    "slot": "UPGRADE",
+    "placement": "LEGS",
+    "physical": 0,
+    "energy": 0,
+    "special": "One d20 can be re-rolled on Sneak tests (printed as Stealth)",
+    "cost": 2,
+    "perks": [
+      {
+        "perk": "armorer",
+        "rank": 2
+      }
+    ]
+  }
+]

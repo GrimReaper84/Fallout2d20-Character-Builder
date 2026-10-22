@@ -1,7 +1,10 @@
 package de.fallout2d20.charbuilder.view.dialog;
 
-import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import org.jspecify.annotations.Nullable;
 
-/** A row of the mod dialog and its result: a mod, or {@code null} for "No mod". */
-public record ModChoice(@Nullable WeaponModData mod) {}
+/**
+ * A row of a mod dialog and its result: a mod, or {@code null} for "No mod".
+ *
+ * @param <T> the mod type (weapon or apparel mod)
+ */
+public record ModChoice<T>(@Nullable T mod) {}

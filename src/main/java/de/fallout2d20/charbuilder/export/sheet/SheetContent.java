@@ -1,6 +1,6 @@
 package de.fallout2d20.charbuilder.export.sheet;
 
-import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelModData;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
@@ -15,8 +15,10 @@ import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.TraitSelection;
+import de.fallout2d20.charbuilder.model.character.apparel.ApparelMods;
 import de.fallout2d20.charbuilder.model.character.apparel.ArmorResistances;
 import de.fallout2d20.charbuilder.model.character.apparel.LocationResistance;
+import de.fallout2d20.charbuilder.model.character.apparel.ModdedApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
@@ -182,8 +184,11 @@ public record SheetContent(
       rows.add(new GearRow(withQuantity(name, item.quantity()), pounds(item.printedWeight(), item.quantity())));
     }
     for (WornApparel apparel : character.gear().getApparel()) {
-      String name = apparel.carried() ? apparel.displayName() + " (carried)" : apparel.displayName();
-      rows.add(new GearRow(name, pounds(apparel.data().map(ApparelData::weight).orElse(null), 1)));
+      List<String> mods = ApparelMods.installedMods(apparel).stream().map(ApparelModData::name).toList();
+      String name = mods.isEmpty() ? apparel.displayName()
+          : apparel.displayName() + " (" + String.join(", ", mods) + ")";
+      rows.add(new GearRow(apparel.carried() ? name + " (carried)" : name,
+          pounds(ModdedApparel.of(apparel).map(ModdedApparel::weight).orElse(null), 1)));
     }
     Materials materials = character.gear().getMaterials();
     addMaterial(rows, "Junk", materials.junk(), Materials.JUNK_WEIGHT);

@@ -419,6 +419,11 @@ public class PlayerCharacter {
     return List.copyOf(perks);
   }
 
+  /** Whether the character has the perk with this id at {@code rank} or higher (e.g. needed to install a mod). */
+  public boolean hasPerkRank(@NonNull String perkId, int rank) {
+    return perks.stream().anyMatch(perk -> perk.perk().id().equals(perkId) && perk.rank() >= rank);
+  }
+
   /** The traits without a copy, for the parts. */
   @NonNull List<TraitSelection> traitList() {
     return Collections.unmodifiableList(traits);
