@@ -2,7 +2,6 @@ package de.fallout2d20.charbuilder.view;
 
 import static de.fallout2d20.charbuilder.view.OverviewParts.detailRow;
 
-import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
@@ -53,7 +52,7 @@ final class WeaponDetails {
     WeaponAttack attack = entry.attack();
     // From the model, not the entry: typed notes change the weapon without a rebuild of the tree's entries.
     CarriedWeapon weapon = entry.weapon() == null ? null : character.gear().getWeapons().get(entry.index());
-    Optional<WeaponData> data = weapon == null ? WeaponCatalog.byId(WeaponsTab.UNARMED_STRIKE_ID) : weapon.data();
+    Optional<WeaponData> data = weapon == null ? Optional.ofNullable(entry.fixed()) : weapon.data();
     ModdedWeapon values = weapon == null ? data.map(ModdedWeapon::of).orElse(null)
         : ModdedWeapon.of(weapon).orElse(null);
     ModdedWeapon base = weapon == null ? values : ModdedWeapon.unmodded(weapon).orElse(null);
@@ -72,9 +71,11 @@ final class WeaponDetails {
         : qualitiesButton(character, entry.index(), custom, callbacks.onChanged());
     addAttackValues(rows, character, attack, base, values, editQualities);
     if (values != null && (data.isPresent() || values.weight() != null)) {
-      addWeightAndCost(rows, weapon != null && weapon.isIntegrated(), base, values);
+      addWeightAndCost(rows, entry.isBuiltIn(), base, values);
     }
     data.ifPresent(weaponData -> detailRow(rows, "Rarity", new Label(OverviewParts.orDash(weaponData.rarity()))));
+    data.map(WeaponData::special).ifPresent(special ->
+        detailRow(rows, "Special", OverviewParts.wrappingInCell(new Label(special))));
     if (weapon != null) {
       addOwnValues(rows, character, weapon, entry.index(), callbacks);
     }

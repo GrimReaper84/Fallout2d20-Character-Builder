@@ -26,7 +26,8 @@
     "poisonImmune": true,
     "attributeModifiers": {"STRENGTH": 2, "ENDURANCE": 2},
     "attributeMaximums": {"STRENGTH": 12, "ENDURANCE": 12, "INTELLIGENCE": 6, "CHARISMA": 6},
-    "skillRankCap": 4
+    "skillRankCap": 4,
+    "superMutantArmor": true
   },
   {
     "id": "mister-handy",
@@ -95,7 +96,8 @@
     "fixedCarryWeight": 150,
     "robot": true,
     "radiationImmune": true,
-    "poisonImmune": true
+    "poisonImmune": true,
+    "innateWeapons": ["assaultron-claws", "assaultron-head-laser", "self-destruct"]
   },
   {
     "id": "brotherhood-outcast",
@@ -103,7 +105,12 @@
     "sources": [{"book": "WG", "page": 12}],
     "traitName": "The Chain that Breaks",
     "traitSummary": "One extra Tag skill (Energy Weapons, Science or Repair) and extra junk and loot at the start; you left the Brotherhood to follow your own goals.",
-    "extraTagSkill": {"options": ["ENERGY_WEAPONS", "SCIENCE", "REPAIR"]}
+    "extraTagSkill": {"options": ["ENERGY_WEAPONS", "SCIENCE", "REPAIR"]},
+    "startingRolls": [
+      "1d20 junk",
+      "Up to 3 Uncommon materials, 1 AP each",
+      "1 extra roll on the loot table, no AP needed"
+    ]
   },
   {
     "id": "nightkin",
@@ -115,7 +122,8 @@
     "poisonImmune": true,
     "attributeModifiers": {"STRENGTH": 2, "ENDURANCE": 2},
     "attributeMaximums": {"STRENGTH": 12, "ENDURANCE": 12, "INTELLIGENCE": 8, "CHARISMA": 8},
-    "skillRankCap": 4
+    "skillRankCap": 4,
+    "superMutantArmor": true
   },
   {
     "id": "tribal",

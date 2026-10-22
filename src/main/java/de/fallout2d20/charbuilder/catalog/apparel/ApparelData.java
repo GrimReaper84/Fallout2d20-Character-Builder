@@ -31,6 +31,8 @@ import org.jspecify.annotations.Nullable;
  *     Combat or Synth piece (CRB pp. 133–135), Ballistic Weave for the clothing the book names (CRB pp. 125–128);
  *     {@code null} for apparel without mods, e.g. Vault-Tec Security armor (no table, excluded from the upgrades,
  *     CRB p. 136)
+ * @param superMutantFit whether the armor is made to fit a super mutant (CRB p. 122: Raider armor), the only armor
+ *     Super Mutants and Nightkin may wear
  */
 public record ApparelData(
     @JsonProperty(required = true) @NonNull String id,
@@ -48,7 +50,8 @@ public record ApparelData(
     int carryWeight,
     @Nullable String perk,
     @NonNull List<String> aliases,
-    @Nullable ApparelModTable modTable) {
+    @Nullable ApparelModTable modTable,
+    boolean superMutantFit) {
 
   public ApparelData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()

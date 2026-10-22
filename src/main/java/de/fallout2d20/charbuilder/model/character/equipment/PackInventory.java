@@ -55,9 +55,12 @@ public final class PackInventory {
 
   /**
    * The entries of one part of the starting equipment, each marked with {@code source}. The Tag skills' part
-   * also names the d20 caps of Barter (CRB p. 81) as an amount to roll.
+   * also names the d20 caps of Barter (CRB p. 81) as an amount to roll; the origin's part is only amounts to roll.
    */
   public static @NonNull PackItems resolve(@NonNull PlayerCharacter character, @NonNull StartingSource source) {
+    if (source == StartingSource.ORIGIN) {
+      return new PackItems(List.of(), List.of(), List.of(), StartingEquipmentItems.lines(character, source));
+    }
     List<CarriedWeapon> weapons = new ArrayList<>();
     List<WornApparel> apparel = new ArrayList<>();
     List<CarriedItem> items = new ArrayList<>();

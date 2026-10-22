@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.InnateWeapons;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import de.fallout2d20.charbuilder.view.dialog.AddWeaponDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
@@ -47,7 +48,7 @@ final class WeaponsTab {
     ScrollPane details = MasterDetail.right(WeaponDetails.build(character, current, callbacks), selection);
     RemoveButton remove = new RemoveButton(() -> {
       Integer index = selection.current(character.gear().getWeapons().size());
-      if (index == null || index == UNARMED_STRIKE_INDEX) {
+      if (index == null || index < 0) {
         return;
       }
       CarriedWeapon weapon = character.gear().getWeapons().get(index);
@@ -82,11 +83,19 @@ final class WeaponsTab {
     return MasterDetail.layout(MasterDetail.left(left, selection), details);
   }
 
-  /** The Unarmed Strike and every carried weapon with its list index. */
+  /**
+   * The Unarmed Strike, the weapons of the origin's trait (indices below the Unarmed Strike's) and every carried
+   * weapon with its list index.
+   */
   private static @NonNull List<WeaponEntry> entries(@NonNull PlayerCharacter character) {
     List<WeaponEntry> entries = new ArrayList<>();
     WeaponCatalog.byId(UNARMED_STRIKE_ID).ifPresent(strike -> entries.add(
-        new WeaponEntry(UNARMED_STRIKE_INDEX, WeaponAttack.of(character, strike), null)));
+        new WeaponEntry(UNARMED_STRIKE_INDEX, WeaponAttack.of(character, strike), null, strike)));
+    List<WeaponData> innate = InnateWeapons.of(character);
+    for (int i = 0; i < innate.size(); i++) {
+      entries.add(new WeaponEntry(UNARMED_STRIKE_INDEX - 1 - i, WeaponAttack.of(character, innate.get(i)), null,
+          innate.get(i)));
+    }
     List<CarriedWeapon> weapons = character.gear().getWeapons();
     for (int i = 0; i < weapons.size(); i++) {
       entries.add(new WeaponEntry(i, WeaponAttack.of(character, weapons.get(i)), weapons.get(i)));
@@ -100,8 +109,9 @@ final class WeaponsTab {
     Button add = new Button("Add weapon");
     add.setGraphic(new FontIcon("fas-plus"));
     CatalogRef origin = character.getOrigin();
+    List<WeaponData> innate = InnateWeapons.of(character);
     List<WeaponData> offered = WeaponCatalog.offered(origin == null ? null : origin.id(), character.getEnabledBooks())
-        .stream().filter(data -> !data.id().equals(UNARMED_STRIKE_ID)).toList();
+        .stream().filter(data -> !data.id().equals(UNARMED_STRIKE_ID) && !innate.contains(data)).toList();
     add.setOnAction(_ -> AddWeaponDialog.show(window(add), offered, data -> group(data).displayName(),
         Arrays.stream(RangeGroup.values()).map(RangeGroup::displayName).toList(), pick -> {
           String ammunition = pick.ammunitionId();
@@ -126,7 +136,8 @@ final class WeaponsTab {
     if (entry == null) {
       remove.update(false, "Select a carried weapon to remove it.");
     } else if (entry.weapon() == null) {
-      remove.update(false, "Every character has the Unarmed Strike; it cannot be removed.");
+      remove.update(false, entry.isBuiltIn() ? "Built in by the origin's trait; it cannot be removed."
+          : "Every character has the Unarmed Strike; it cannot be removed.");
     } else {
       remove.update(true, "Remove " + entry.attack().name());
     }

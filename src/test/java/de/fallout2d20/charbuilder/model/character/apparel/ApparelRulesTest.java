@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import java.util.List;
+import java.util.Set;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -122,5 +123,23 @@ class ApparelRulesTest {
     wear(protectron, "casual-hat", null);
     assertEquals(List.of("Robots like the Protectron wear robot plating and armor; Casual Hat only with GM "
         + "permission."), hints(protectron));
+  }
+
+  /** CRB p. 122, WG p. 14: Super Mutants and Nightkin only in armor made for super mutants; clothing is fine. */
+  @Test
+  void mutantsOnlyInRaiderArmor() {
+    for (String origin : List.of("super-mutant", "nightkin")) {
+      PlayerCharacter mutant = character(origin);
+      wear(mutant, "raider-arm", HitLocation.LEFT_ARM);
+      wear(mutant, "tough-clothing", null);
+      assertTrue(hints(mutant).stream().noneMatch(hint -> hint.contains("super mutant")), origin);
+      wear(mutant, "metal-arm", HitLocation.RIGHT_ARM);
+      mutant.gear().addApparel(WornApparel.of(new CustomApparel("Scrap plate", ApparelKind.ARMOR,
+          Set.of(HitLocation.TORSO), 1, 1, 0, false, 0)));
+      assertEquals(1, hints(mutant).stream().filter(hint -> hint.contains("super mutant")).count(), origin);
+    }
+    PlayerCharacter survivor = character("survivor");
+    wear(survivor, "metal-arm", HitLocation.RIGHT_ARM);
+    assertTrue(hints(survivor).stream().noneMatch(hint -> hint.contains("super mutant")));
   }
 }

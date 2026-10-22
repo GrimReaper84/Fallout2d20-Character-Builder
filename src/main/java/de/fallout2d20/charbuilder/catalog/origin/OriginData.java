@@ -46,6 +46,12 @@ import org.jspecify.annotations.Nullable;
  *     (Protectron, WOA p. 21)
  * @param maxRadiationPoints most Radiation Points the character can store (Child of Atom Rad Sponge: 5,
  *     WOA p. 25, WG p. 13); 0 for origins without them
+ * @param innateWeapons ids of the weapons the origin's trait gives every character, shown without being carried
+ *     (Assaultron Claws, Head Laser and Self-Destruct, WG p. 11; user decision 2026-10-22)
+ * @param startingRolls amounts the origin adds to the starting equipment, to roll at the table, in own words
+ *     (Brotherhood Outcast junk, materials and loot roll, WG p. 12)
+ * @param superMutantArmor whether the character can only wear armor made to fit a super mutant (Super Mutant
+ *     CRB p. 122: Raider armor; Nightkin WG p. 14)
  */
 public record OriginData(
     @JsonProperty(required = true) @NonNull String id,
@@ -66,7 +72,10 @@ public record OriginData(
     @NonNull List<String> traitLists,
     int extraPerks,
     @NonNull List<String> purposeSuggestions,
-    int maxRadiationPoints) {
+    int maxRadiationPoints,
+    @NonNull List<String> innateWeapons,
+    @NonNull List<String> startingRolls,
+    boolean superMutantArmor) {
 
   /** CRB p. 58: no attribute may exceed 10 unless the origin changes the maximum. */
   public static final int DEFAULT_ATTRIBUTE_MAXIMUM = 10;
@@ -84,6 +93,8 @@ public record OriginData(
     attributeMaximums = attributeMaximums == null ? Map.of() : Map.copyOf(attributeMaximums);
     traitLists = traitLists == null ? List.of() : List.copyOf(traitLists);
     purposeSuggestions = purposeSuggestions == null ? List.of() : List.copyOf(purposeSuggestions);
+    innateWeapons = innateWeapons == null ? List.of() : List.copyOf(innateWeapons);
+    startingRolls = startingRolls == null ? List.of() : List.copyOf(startingRolls);
     if (attributeModifiers.values().stream().anyMatch(value -> value < -2 || value > 2)
         || attributeMaximums.values().stream().anyMatch(value -> value < 1 || value > 12)
         || (skillRankCap != null && (skillRankCap < 1 || skillRankCap > 6)) || extraPerks < 0

@@ -44,6 +44,8 @@ import org.jspecify.annotations.Nullable;
  * @param stockName the weapon's name with a Stock mod where the book renames it (e.g. Laser Gun → Laser
  *     Rifle, CRB p. 103); {@code null} otherwise
  * @param gripOrStock whether the weapon takes a Grip or a Stock mod, not both (CRB p. 98: Pipe Bolt-Action)
+ * @param special a rule of the weapon that no other field covers, in own words (Assaultron Head Laser: shots per
+ *     attack, WG p. 11); {@code null} for none
  */
 public record WeaponData(
     @JsonProperty(required = true) @NonNull String id,
@@ -66,7 +68,8 @@ public record WeaponData(
     @NonNull List<String> aliases,
     @NonNull List<String> mods,
     @Nullable String stockName,
-    boolean gripOrStock) {
+    boolean gripOrStock,
+    @Nullable String special) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;
@@ -89,6 +92,9 @@ public record WeaponData(
     origins = origins == null ? List.of() : List.copyOf(origins);
     aliases = aliases == null ? List.of() : List.copyOf(aliases);
     mods = mods == null ? List.of() : List.copyOf(mods);
+    if (special != null && special.isBlank()) {
+      special = null;
+    }
   }
 
   /** The attribute the attack is rolled with: {@link #attribute()} or else the skill's governing attribute. */

@@ -8,6 +8,7 @@ import de.fallout2d20.charbuilder.catalog.trait.TraitCatalog;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
@@ -27,11 +28,11 @@ import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.InnateWeapons;
 import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -134,36 +135,45 @@ public record SheetContent(
     return character.getOriginData().map(OriginData::name).orElseGet(origin::displayName);
   }
 
+  /** The weapons of the origin's trait (built in, WG p. 11), then the carried weapons. */
   private static @NonNull List<WeaponRow> weapons(@NonNull PlayerCharacter character) {
     List<WeaponRow> rows = new ArrayList<>();
+    for (WeaponData innate : InnateWeapons.of(character)) {
+      rows.add(row(character, WeaponAttack.of(character, innate), 1, "–", innate.special()));
+    }
     for (CarriedWeapon weapon : character.gear().getWeapons()) {
-      WeaponAttack attack = WeaponAttack.of(character, weapon);
-      Skill skill = attack.skill();
       String weight = weapon.isIntegrated() ? "–"
           : ModdedWeapon.of(weapon).map(ModdedWeapon::weight).orElse("");
-      rows.add(new WeaponRow(
-          withQuantity(attack.moddedName(), weapon.quantity()),
-          skill == null ? "" : skill.displayName(),
-          attack.targetNumber() == null ? "" : attack.targetNumber().toString(),
-          skill != null && character.abilities().isTagged(skill),
-          attack.damageText(),
-          attack.effects(),
-          attack.damageType(),
-          attack.fireRate() == null ? "–" : attack.fireRate().toString(),
-          attack.range() == null ? "–" : attack.range().code(),
-          attack.qualities(),
-          String.join(", ", attack.ammunition().stream().map(SheetContent::ammunitionName).toList()),
-          weight));
+      rows.add(row(character, WeaponAttack.of(character, weapon), weapon.quantity(), weight,
+          weapon.data().map(WeaponData::special).orElse(null)));
     }
     return rows;
   }
 
-  /** Ammunition types of the carried weapons, then any other type the character has shots of. */
+  /** One weapon row; a rule of the weapon no column covers ({@link WeaponData#special()}) follows its effects. */
+  private static @NonNull WeaponRow row(@NonNull PlayerCharacter character, @NonNull WeaponAttack attack,
+      int quantity, @NonNull String weight, @Nullable String special) {
+    Skill skill = attack.skill();
+    String effects = special == null ? attack.effects()
+        : attack.effects().isEmpty() ? special : attack.effects() + "; " + special;
+    return new WeaponRow(
+        withQuantity(attack.moddedName(), quantity),
+        skill == null ? "" : skill.displayName(),
+        attack.targetNumber() == null ? "" : attack.targetNumber().toString(),
+        skill != null && character.abilities().isTagged(skill),
+        attack.damageText(),
+        effects,
+        attack.damageType(),
+        attack.fireRate() == null ? "–" : attack.fireRate().toString(),
+        attack.range() == null ? "–" : attack.range().code(),
+        attack.qualities(),
+        String.join(", ", attack.ammunition().stream().map(SheetContent::ammunitionName).toList()),
+        weight);
+  }
+
+  /** Ammunition types of the carried and innate weapons, then any other type the character has shots of. */
   private static @NonNull List<String> ammunition(@NonNull PlayerCharacter character) {
-    Set<String> ids = new LinkedHashSet<>();
-    for (CarriedWeapon weapon : character.gear().getWeapons()) {
-      ids.addAll(WeaponAttack.of(character, weapon).ammunition());
-    }
+    Set<String> ids = InnateWeapons.ammunitionUsed(character);
     character.gear().getAmmunition().forEach((id, shots) -> {
       if (shots > 0) {
         ids.add(id);

@@ -180,4 +180,16 @@ class StartingEquipmentSyncTest {
     character.startingGear().setTrinket("A dented harmonica");
     return character;
   }
+
+  /** WG p. 12: entering the starting equipment writes the origin's amounts as [Origin] roll lines. */
+  @Test
+  void entersTheOriginRolls() {
+    PlayerCharacter outcast = PlayerCharacter.createNew();
+    outcast.chooseOrigin(CatalogRef.of("brotherhood-outcast"));
+    outcast.startingGear().choosePack(CatalogRef.of("settler"));
+    outcast.startingGear().chooseOption(0, "Pipe wrench");
+    apply(outcast);
+    assertTrue(outcast.gear().getNotes().contains("[Origin] Roll: 1d20 junk"), outcast.gear().getNotes());
+    assertTrue(outcast.gear().getNotes().contains("[Origin] Roll: 1 extra roll on the loot table, no AP needed"));
+  }
 }

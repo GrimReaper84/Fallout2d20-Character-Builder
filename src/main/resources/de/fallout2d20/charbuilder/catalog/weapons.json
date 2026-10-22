@@ -2212,6 +2212,10 @@
       {
         "book": "WOA",
         "page": 22
+      },
+      {
+        "book": "WG",
+        "page": 11
       }
     ],
     "skill": "EXPLOSIVES",
@@ -2225,11 +2229,67 @@
       "Blast"
     ],
     "origins": [
-      "protectron"
+      "protectron",
+      "assaultron"
     ],
     "legacyNames": [
       "Protectron Self-Destruct"
     ]
+  },
+  {
+    "id": "assaultron-claws",
+    "name": "Claws",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 11
+      }
+    ],
+    "skill": "UNARMED",
+    "damage": 4,
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "origins": [
+      "assaultron"
+    ],
+    "aliases": [
+      "Assaultron Claws"
+    ]
+  },
+  {
+    "id": "assaultron-head-laser",
+    "name": "Head Laser",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 11
+      },
+      {
+        "book": "WG",
+        "page": 65
+      }
+    ],
+    "skill": "ENERGY_WEAPONS",
+    "damage": 5,
+    "damageEffects": [
+      "Piercing 1"
+    ],
+    "damageTypes": [
+      "ENERGY"
+    ],
+    "fireRate": 0,
+    "range": "CLOSE",
+    "ammunition": [
+      "fusion-cell"
+    ],
+    "origins": [
+      "assaultron"
+    ],
+    "aliases": [
+      "Assaultron Head Laser"
+    ],
+    "special": "Uses 2 shots per attack; each shot fewer lowers the damage by 1 CD (at least 4 CD and 1 shot)."
   },
   {
     "id": "shock-hands",

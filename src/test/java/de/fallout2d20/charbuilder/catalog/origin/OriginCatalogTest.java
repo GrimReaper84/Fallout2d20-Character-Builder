@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.EnumSet;
@@ -136,5 +137,17 @@ class OriginCatalogTest {
   private static Set<String> idsWhere(Predicate<OriginData> condition) {
     return OriginCatalog.all().stream().filter(condition).map(OriginData::id)
         .collect(Collectors.toSet());
+  }
+
+  /** WG pp. 11–14, CRB p. 122: innate weapons, start rolls and the mutant armor rule. */
+  @Test
+  void wandererOriginRules() {
+    OriginData assaultron = OriginCatalog.byId("assaultron").orElseThrow();
+    assertEquals(List.of("assaultron-claws", "assaultron-head-laser", "self-destruct"), assaultron.innateWeapons());
+    OriginCatalog.all().forEach(origin -> origin.innateWeapons().forEach(id ->
+        assertTrue(WeaponCatalog.byId(id).isPresent(), origin.id() + " names unknown weapon " + id)));
+    assertEquals(3, OriginCatalog.byId("brotherhood-outcast").orElseThrow().startingRolls().size());
+    assertEquals(Set.of("super-mutant", "nightkin"), OriginCatalog.all().stream().filter(OriginData::superMutantArmor)
+        .map(OriginData::id).collect(Collectors.toSet()));
   }
 }

@@ -119,4 +119,17 @@ class SheetContentTest {
     assertEquals("1", perk.rank());
     assertTrue(perk.effect().startsWith("After aiming"));
   }
+
+  /** WG p. 11: the Assaultron's trait weapons are on the sheet without being carried, with their ammunition. */
+  @Test
+  void assaultronInnateWeapons() {
+    PlayerCharacter assaultron = PlayerCharacter.createNew();
+    assaultron.chooseOrigin(CatalogRef.of("assaultron"));
+    SheetContent sheet = SheetContent.of(assaultron);
+    assertEquals(List.of("Claws", "Head Laser", "Self-Destruct"),
+        sheet.weapons().stream().map(WeaponRow::name).toList());
+    assertTrue(sheet.weapons().get(1).effects().startsWith("Piercing 1; Uses 2 shots"), "the Head Laser's rule");
+    assertTrue(sheet.weapons().stream().allMatch(row -> row.weight().equals("–")));
+    assertEquals(List.of("Fusion Cell"), sheet.ammunition());
+  }
 }

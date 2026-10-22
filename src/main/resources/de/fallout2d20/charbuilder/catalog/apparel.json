@@ -637,7 +637,8 @@
       "Raider armor chest piece",
       "Raider armor torso"
     ],
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "raider-leg",
@@ -660,7 +661,8 @@
     "aliases": [
       "Raider armor leg"
     ],
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "raider-arm",
@@ -683,7 +685,8 @@
     "aliases": [
       "Raider armor arm"
     ],
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "sturdy-raider-chest-piece",
@@ -703,7 +706,8 @@
     "weight": "12",
     "cost": 33,
     "rarity": 1,
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "sturdy-raider-leg",
@@ -723,7 +727,8 @@
     "weight": "7",
     "cost": 13,
     "rarity": 1,
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "sturdy-raider-arm",
@@ -743,7 +748,8 @@
     "weight": "7",
     "cost": 8,
     "rarity": 1,
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "heavy-raider-chest-piece",
@@ -763,7 +769,8 @@
     "weight": "17",
     "cost": 48,
     "rarity": 2,
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "heavy-raider-leg",
@@ -783,7 +790,8 @@
     "weight": "10",
     "cost": 18,
     "rarity": 2,
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "heavy-raider-arm",
@@ -803,7 +811,8 @@
     "weight": "10",
     "cost": 15,
     "rarity": 2,
-    "modTable": "RAIDER"
+    "modTable": "RAIDER",
+    "superMutantFit": true
   },
   {
     "id": "leather-chest-piece",

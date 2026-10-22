@@ -53,14 +53,24 @@ class WeaponTreeTest {
     return RangeGroup.of(WeaponAttack.effectiveRange(data), data.skill());
   }
 
+  /** Entries below the Unarmed Strike are the origin's trait weapons (WG p. 11), labelled as built in. */
+  @Test
+  void innateEntriesAreBuiltIn() {
+    WeaponData claws = WeaponCatalog.byId("assaultron-claws").orElseThrow();
+    WeaponEntry innate = new WeaponEntry(WeaponsTab.UNARMED_STRIKE_INDEX - 1, WeaponAttack.of(character, claws), null,
+        claws);
+    assertEquals("Claws (built in)", innate.label());
+    assertEquals("Unarmed Strike", strike().label());
+  }
+
   private WeaponEntry carried(int index, String id) {
     CarriedWeapon weapon = CarriedWeapon.of(CatalogRef.of(id));
     return new WeaponEntry(index, WeaponAttack.of(character, weapon), weapon);
   }
 
   private WeaponEntry strike() {
-    return new WeaponEntry(WeaponsTab.UNARMED_STRIKE_INDEX,
-        WeaponAttack.of(character, WeaponCatalog.byId("unarmed-strike").orElseThrow()), null);
+    WeaponData strike = WeaponCatalog.byId("unarmed-strike").orElseThrow();
+    return new WeaponEntry(WeaponsTab.UNARMED_STRIKE_INDEX, WeaponAttack.of(character, strike), null, strike);
   }
 
   private static List<String> names(List<WeaponEntry> entries) {

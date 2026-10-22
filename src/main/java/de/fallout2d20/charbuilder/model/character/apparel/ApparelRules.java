@@ -15,8 +15,9 @@ import org.jspecify.annotations.NonNull;
  * Hints about worn apparel, in every mode; soft only, the values are computed anyway (user decision): armor
  * over an outfit (CRB p. 130), two items of one layer on the same location, human apparel on a Mister Handy
  * (only hats, without effect, CRB p. 146) or on a humanoid robot such as the Protectron (house rule: it
- * wears robot plating and armor, user decision 2026-10-16), robot armor on anyone else, single-limb pieces without a fitting limb, and
- * items outside the catalog.
+ * wears robot plating and armor, user decision 2026-10-16), robot armor on anyone else, armor not made for a
+ * super mutant on a Super Mutant or Nightkin (CRB p. 122, WG p. 14; user decision 2026-10-22), single-limb pieces
+ * without a fitting limb, and items outside the catalog.
  */
 public final class ApparelRules {
 
@@ -86,6 +87,7 @@ public final class ApparelRules {
             "\"" + item.displayName() + "\" is not an item of the supported books.")));
     List<WornApparel> worn = character.gear().getWornApparel();
     boolean robot = isRobot(character);
+    boolean superMutantArmor = character.getOriginData().map(OriginData::superMutantArmor).orElse(false);
     List<HitLocation> body = character.hitLocations();
     if (has(worn, ApparelKind.OUTFIT) && has(worn, ApparelKind.ARMOR)) {
       problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, "Armor cannot be worn over an outfit (CRB p. 130)."));
@@ -106,6 +108,9 @@ public final class ApparelRules {
       if (kind.isPresent() && !robot && !suits(character, kind.get(), hat)) {
         problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, item.displayName() + " is made for robots."));
       }
+      if (superMutantArmor) {
+        superMutantHint(character, item).ifPresent(problems::add);
+      }
       for (int j = i + 1; j < worn.size(); j++) {
         WornApparel other = worn.get(j);
         sharedLocation(item, other, body).ifPresent(location ->
@@ -114,6 +119,21 @@ public final class ApparelRules {
       }
     }
     return problems;
+  }
+
+  /**
+   * CRB p. 122, WG p. 14: a Super Mutant or Nightkin wears only armor made to fit a super mutant; catalog armor
+   * without that fit gets a hint (custom armor and other kinds none).
+   */
+  private static @NonNull Optional<CreationProblem> superMutantHint(@NonNull PlayerCharacter character,
+      @NonNull WornApparel item) {
+    boolean armor = item.values().map(ApparelValues::kind).filter(ApparelKind.ARMOR::equals).isPresent();
+    if (!armor || item.data().map(ApparelData::superMutantFit).orElse(true)) {
+      return Optional.empty();
+    }
+    String origin = character.getOriginData().map(OriginData::name).orElse("");
+    return Optional.of(new CreationProblem(HintArea.ARMOR, TOPIC, origin + " characters can only wear armor made to "
+        + "fit a super mutant, such as Raider armor (CRB p. 122, WG p. 14); " + item.displayName() + " is not."));
   }
 
   /** Items of one layer cannot be worn on top of each other; clothing and outfits share a layer. */

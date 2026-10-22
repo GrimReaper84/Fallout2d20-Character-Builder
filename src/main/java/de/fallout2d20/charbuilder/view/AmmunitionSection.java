@@ -3,9 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
-import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
-import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
-import java.util.LinkedHashSet;
+import de.fallout2d20.charbuilder.model.character.weapon.InnateWeapons;
 import java.util.List;
 import java.util.Set;
 import javafx.scene.control.ComboBox;
@@ -15,7 +13,7 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * The shots per ammunition type (CRB p. 91), below the weapon tree: one row per type a carried weapon uses
+ * The shots per ammunition type (CRB p. 91), below the weapon tree: one row per type a carried or innate weapon uses
  * or that has shots, with an editable number of shots; a combo box adds another type.
  */
 final class AmmunitionSection {
@@ -23,10 +21,7 @@ final class AmmunitionSection {
   private AmmunitionSection() {}
 
   static @NonNull MigPane build(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
-    Set<String> shown = new LinkedHashSet<>();
-    for (CarriedWeapon weapon : character.gear().getWeapons()) {
-      shown.addAll(WeaponAttack.of(character, weapon).ammunition());
-    }
+    Set<String> shown = InnateWeapons.ammunitionUsed(character);
     shown.addAll(character.gear().getAmmunition().keySet());
     MigPane rows = Layouts.amountList();
     for (String id : shown) {

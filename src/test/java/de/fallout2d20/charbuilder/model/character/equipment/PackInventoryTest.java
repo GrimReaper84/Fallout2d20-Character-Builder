@@ -125,4 +125,19 @@ class PackInventoryTest {
   private static List<String> apparelIds(PackItems added) {
     return added.apparel().stream().map(WornApparel::apparel).map(ref -> ref == null ? "custom" : ref.id()).toList();
   }
+
+  /** WG p. 12: the Brotherhood Outcast's extra junk, materials and loot roll are only amounts to roll. */
+  @Test
+  void outcastStartRolls() {
+    PlayerCharacter outcast = PlayerCharacter.createNew();
+    outcast.chooseOrigin(CatalogRef.of("brotherhood-outcast"));
+    PackItems origin = PackInventory.resolve(outcast, StartingSource.ORIGIN);
+    assertEquals(List.of("1d20 junk", "Up to 3 Uncommon materials, 1 AP each",
+        "1 extra roll on the loot table, no AP needed"), origin.rolls());
+    assertTrue(origin.weapons().isEmpty() && origin.apparel().isEmpty() && origin.items().isEmpty());
+    assertTrue(StartingEquipmentItems.lines(outcast).containsAll(origin.rolls()), "listed in the starting equipment");
+    PlayerCharacter survivor = PlayerCharacter.createNew();
+    survivor.chooseOrigin(CatalogRef.of("survivor"));
+    assertEquals(PackItems.NONE.rolls(), PackInventory.resolve(survivor, StartingSource.ORIGIN).rolls());
+  }
 }

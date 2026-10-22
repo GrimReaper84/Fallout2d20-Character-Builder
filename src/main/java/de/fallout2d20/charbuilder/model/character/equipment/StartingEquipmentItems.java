@@ -5,6 +5,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.model.character.Advancement;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -49,11 +50,18 @@ public final class StartingEquipmentItems {
   public static @NonNull List<String> lines(@NonNull PlayerCharacter character) {
     List<String> lines = new ArrayList<>(lines(character, StartingSource.PACK));
     lines.addAll(lines(character, StartingSource.TAG_SKILL));
+    lines.addAll(lines(character, StartingSource.ORIGIN));
     return lines;
   }
 
-  /** The lines of one part of the starting equipment: the pack's (items, choices, arms, trinket) or the Tag skills'. */
+  /**
+   * The lines of one part of the starting equipment: the pack's (items, choices, arms, trinket), the Tag skills' or
+   * the origin's amounts to roll ({@link OriginData#startingRolls()}).
+   */
   public static @NonNull List<String> lines(@NonNull PlayerCharacter character, @NonNull StartingSource source) {
+    if (source == StartingSource.ORIGIN) {
+      return character.getOriginData().map(OriginData::startingRolls).orElse(List.of());
+    }
     StartingEquipment selection = character.startingGear().getSelection();
     List<String> lines = new ArrayList<>();
     if (source == StartingSource.TAG_SKILL) {

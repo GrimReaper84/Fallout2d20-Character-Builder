@@ -40,7 +40,7 @@ class WeaponCatalogTest {
             "small-guns-automatic", "small-guns-hair-trigger", "small-guns-powerful", "small-guns-advanced",
             "small-guns-long", "small-guns-ported", "small-guns-comfort-grip", "small-guns-sharpshooters-grip",
             "small-guns-reflex-sight", "small-guns-recon-scope", "small-guns-compensator", "small-guns-suppressor"),
-        null, false), pistol);
+        null, false, null), pistol);
     assertTrue(WeaponCatalog.byName("Pipe rifle").isEmpty(), "pack wordings are not legacy names");
     assertEquals("pipe-gun", WeaponCatalog.byNameOrAlias("Pipe rifle").orElseThrow().id());
   }
@@ -104,7 +104,7 @@ class WeaponCatalogTest {
         List.of("Debilitating", "Inaccurate"), "6", 156, 4, List.of("cryo-cell"), List.of(), null,
         List.of("protectron"), List.of(), List.of("cryojet-liquid-nitrogen", "cryojet-compressed-tubing",
             "cryojet-large-tank", "cryojet-huge-tank", "cryojet-wide-diffusion", "cryojet-aerosolizer",
-            "cryojet-bladed-exhaust"), null, false), cryojet);
+            "cryojet-bladed-exhaust"), null, false, null), cryojet);
     AmmunitionData cell = WeaponCatalog.ammunitionById("cryo-cell").orElseThrow();
     assertNull(cell.quantityFound());
     assertNull(cell.rarity());
@@ -116,5 +116,24 @@ class WeaponCatalogTest {
     assertEquals("protectron-claws", WeaponCatalog.byName("Claws").orElseThrow().id());
     assertEquals(WeaponCatalog.available(EnumSet.of(Book.CRB, Book.WOA)).size() - 4,
         WeaponCatalog.offered("survivor", EnumSet.of(Book.CRB, Book.WOA)).size());
+  }
+
+  /**
+   * WG p. 11: the Assaultron's trait weapons; range and fire rate of the Head Laser from the hand-held Assaultron
+   * Head (WG p. 65).
+   */
+  @Test
+  void assaultronWeapons() {
+    WeaponData claws = WeaponCatalog.byId("assaultron-claws").orElseThrow();
+    assertEquals(List.of(Skill.UNARMED, 4), List.of(claws.skill(), claws.damage()));
+    WeaponData laser = WeaponCatalog.byId("assaultron-head-laser").orElseThrow();
+    assertEquals(List.of(5, 0), List.of(laser.damage(), laser.fireRate()));
+    assertEquals(List.of("Piercing 1"), laser.damageEffects());
+    assertEquals(WeaponRange.CLOSE, laser.range());
+    assertEquals(List.of("fusion-cell"), laser.ammunition());
+    assertTrue(laser.special() != null && laser.special().contains("2 shots"));
+    WeaponData selfDestruct = WeaponCatalog.byId("self-destruct").orElseThrow();
+    assertTrue(selfDestruct.isOfferedTo("protectron") && selfDestruct.isOfferedTo("assaultron"));
+    assertFalse(laser.isOfferedTo("protectron"));
   }
 }
