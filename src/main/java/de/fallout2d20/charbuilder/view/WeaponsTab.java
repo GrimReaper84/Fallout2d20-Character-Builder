@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import de.fallout2d20.charbuilder.view.dialog.AddWeaponDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -101,12 +102,23 @@ final class WeaponsTab {
     CatalogRef origin = character.getOrigin();
     List<WeaponData> offered = WeaponCatalog.offered(origin == null ? null : origin.id(), character.getEnabledBooks())
         .stream().filter(data -> !data.id().equals(UNARMED_STRIKE_ID)).toList();
-    add.setOnAction(_ -> AddWeaponDialog.show(window(add), offered).ifPresent(weapon -> {
-      character.gear().addWeapon(weapon);
-      selection.select(character.gear().getWeapons().size() - 1);
-      onChanged.run();
-    }));
+    add.setOnAction(_ -> AddWeaponDialog.show(window(add), offered, data -> group(data).displayName(),
+        Arrays.stream(RangeGroup.values()).map(RangeGroup::displayName).toList(), pick -> {
+          String ammunition = pick.ammunitionId();
+          if (ammunition != null) {
+            character.gear().addAmmunition(ammunition, pick.rounds());
+          }
+          return character.gear().addWeaponStacked(pick.weapon());
+        }).ifPresent(index -> {
+          selection.select(index);
+          onChanged.run();
+        }));
     return add;
+  }
+
+  /** The tree group a catalog weapon lands in once carried. */
+  private static @NonNull RangeGroup group(@NonNull WeaponData data) {
+    return RangeGroup.of(WeaponAttack.effectiveRange(data), data.skill());
   }
 
   /** Every carried weapon can be removed; the Unarmed Strike, a group or no selection cannot. */

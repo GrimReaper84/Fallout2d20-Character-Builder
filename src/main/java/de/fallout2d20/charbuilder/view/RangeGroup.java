@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The groups of the weapon tree, from near to far: melee weapons, the four ranges of ranged weapons (CRB
@@ -29,7 +30,11 @@ enum RangeGroup implements WeaponTreeNode {
 
   /** The group of an attack by its effective range; melee and unarmed weapons without one are Melee. */
   static @NonNull RangeGroup of(@NonNull WeaponAttack attack) {
-    WeaponRange range = attack.effectiveRange();
+    return of(attack.effectiveRange(), attack.skill());
+  }
+
+  /** The group of a weapon by its effective range ({@link WeaponAttack#effectiveRange}) and attack skill. */
+  static @NonNull RangeGroup of(@Nullable WeaponRange range, @Nullable Skill skill) {
     if (range != null) {
       return switch (range) {
         case CLOSE -> CLOSE;
@@ -38,6 +43,6 @@ enum RangeGroup implements WeaponTreeNode {
         case EXTREME -> EXTREME;
       };
     }
-    return attack.skill() == Skill.MELEE_WEAPONS || attack.skill() == Skill.UNARMED ? MELEE : NO_RANGE;
+    return skill == Skill.MELEE_WEAPONS || skill == Skill.UNARMED ? MELEE : NO_RANGE;
   }
 }

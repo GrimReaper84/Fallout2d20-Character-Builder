@@ -68,6 +68,16 @@ public record WeaponAttack(
    * mines that are only placed).
    */
   public @Nullable WeaponRange effectiveRange() {
+    return effectiveRange(range, qualities);
+  }
+
+  /** {@link #effectiveRange()} of a catalog row, e.g. for the add dialog. */
+  public static @Nullable WeaponRange effectiveRange(@NonNull WeaponData weapon) {
+    return effectiveRange(weapon.range(), String.join(", ", weapon.qualities()));
+  }
+
+  /** {@link #effectiveRange()} of a weapon with this table range and these qualities. */
+  public static @Nullable WeaponRange effectiveRange(@Nullable WeaponRange range, @NonNull String qualities) {
     if (range != null) {
       return range;
     }

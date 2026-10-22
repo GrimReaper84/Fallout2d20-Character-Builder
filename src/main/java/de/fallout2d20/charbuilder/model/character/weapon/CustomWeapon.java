@@ -65,6 +65,12 @@ public record CustomWeapon(
         modSlots);
   }
 
+  /** The same weapon with other qualities (text as stored, e.g. from {@code QualitySelection}). */
+  public @NonNull CustomWeapon withQualities(@NonNull String newQualities) {
+    return new CustomWeapon(name, skill, damage, effects, damageType, fireRate, range, newQualities, ammunition,
+        modSlots);
+  }
+
   /** The same weapon with other mod slots. */
   public @NonNull CustomWeapon withModSlots(@NonNull Set<ModSlot> newSlots) {
     return new CustomWeapon(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, newSlots);

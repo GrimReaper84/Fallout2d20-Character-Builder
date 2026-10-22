@@ -16,6 +16,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -444,6 +445,21 @@ class CharacterStoreTest {
     PlayerCharacter loaded = store.load(file).character();
     assertEquals(character.gear().getWeapons(), loaded.gear().getWeapons());
     assertEquals(Map.of("10mm", 34), loaded.gear().getAmmunition());
+  }
+
+  /** G3: qualities picked for a custom weapon are stored as the same text (format unchanged). */
+  @Test
+  void pickedQualitiesOfACustomWeaponRoundTripAsText() throws Exception {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Boomerang", Skill.THROWING, 3, "", "Physical",
+        null, null, "", null)));
+    character.gear().setCustomWeaponQualities(0, WeaponQuality.parse("thrown (m), Parry, Homing").text());
+    Path file = dir.resolve("qualities.json");
+    store.save(character, file);
+
+    JsonNode written = JSON.readTree(file.toFile()).get("weapons").get(0).get("custom");
+    assertEquals("Parry, Thrown (M), Homing", written.get("qualities").asText());
+    assertEquals(character.gear().getWeapons(), store.load(file).character().gear().getWeapons());
   }
 
   /** D4: installed mods, custom mod slots and an unknown mod id survive a round trip; older files have none. */

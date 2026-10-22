@@ -7,6 +7,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.StartingEquipmentAllowance;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,23 @@ class PlayerCharacterInventoryTest {
     assertEquals(2, character.gear().getItems().size());
     Gear gear = character.gear();
     assertThrows(IllegalArgumentException.class, () -> gear.setItemQuantity(0, 0));
+  }
+
+  /** User decision 2026-10-20: catalog items picked by hand join a plain stack. */
+  @Test
+  void itemsJoinAPlainStack() {
+    Gear gear = PlayerCharacter.createNew().gear();
+    gear.addItem(CarriedItem.of(CatalogRef.of("stimpak")).withStartingSource(StartingSource.PACK));
+    assertEquals(1, gear.addItemStacked(CarriedItem.of(CatalogRef.of("stimpak")).withQuantity(2)));
+    assertEquals(1, gear.addItemStacked(CarriedItem.of(CatalogRef.of("stimpak"))));
+    assertEquals(3, gear.getItems().get(1).quantity());
+    assertEquals(1, gear.getItems().getFirst().quantity(), "the pack's stimpak is never stacked onto");
+    assertEquals(2, gear.addItemStacked(CarriedItem.of(CatalogRef.of("grognak-the-barbarian"))));
+    gear.setItemIssue(2, "Fatherless Cur!");
+    assertEquals(3, gear.addItemStacked(CarriedItem.of(CatalogRef.of("grognak-the-barbarian"))),
+        "an issue keeps it apart");
+    assertEquals(4, gear.addItemStacked(CarriedItem.of(new CustomItem("Teddy bear", 1, ""))));
+    assertEquals(5, gear.addItemStacked(CarriedItem.of(new CustomItem("Teddy bear", 1, ""))), "custom never stacks");
   }
 
   /** A magazine without a known issue shows the publication's perk. */

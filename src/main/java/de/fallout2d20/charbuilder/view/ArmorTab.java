@@ -3,12 +3,15 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
+import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.view.dialog.AddApparelDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
+import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -84,10 +87,14 @@ final class ArmorTab {
     Button add = new Button("Add apparel");
     add.setGraphic(new FontIcon("fas-plus"));
     ApparelKind defaultKind = ApparelRules.isRobot(character) ? ApparelKind.ROBOT_ARMOR : ApparelKind.ARMOR;
-    add.setOnAction(_ -> AddApparelDialog.show(window(add), offered(character), character.hitLocations(),
-        defaultKind).ifPresent(item -> {
+    List<HitLocation> body = character.hitLocations();
+    add.setOnAction(_ -> AddApparelDialog.show(window(add), offered(character),
+        data -> ApparelTree.group(WornApparel.of(CatalogRef.of(data.id())), body).displayName(),
+        Arrays.stream(ApparelGroup.values()).map(ApparelGroup::displayName).toList(), body, defaultKind, item -> {
           character.gear().addApparel(item);
-          selection.select(character.gear().getApparel().size() - 1);
+          return character.gear().getApparel().size() - 1;
+        }).ifPresent(index -> {
+          selection.select(index);
           onChanged.run();
         }));
     return add;

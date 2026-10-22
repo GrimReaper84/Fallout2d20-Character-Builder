@@ -3,25 +3,29 @@ package de.fallout2d20.charbuilder.view.dialog;
 import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
- * One line of the item catalog list: an item or a publication, with the category it is filtered by.
+ * One row of the item catalog table: an item or a publication.
  *
  * @param id catalog id
  * @param name name as printed
- * @param category category shown and filtered by, e.g. {@code Chem}, {@code Book/Magazine}
- * @param description list text after the name, e.g. the effect and the source
+ * @param weight weight as printed, e.g. {@code <1}; {@code null} where the table has none
+ * @param effect the effect in short, or the number of issues of a publication; empty for none
+ * @param source where the entry is described, e.g. {@code CRB p. 154}
  */
-record ItemChoice(@NonNull String id, @NonNull String name, @NonNull String category, @NonNull String description) {
+record ItemChoice(@NonNull String id, @NonNull String name, @Nullable String weight, @NonNull String effect,
+    @NonNull String source) {
 
   static @NonNull ItemChoice of(@NonNull ItemData item) {
     String effects = item.effects();
-    return new ItemChoice(item.id(), item.name(), item.category().displayName(),
-        (effects == null ? "" : effects + " – ") + item.sources().getFirst());
+    return new ItemChoice(item.id(), item.name(), item.weight(), effects == null ? "" : effects,
+        item.sources().getFirst().toString());
   }
 
   static @NonNull ItemChoice of(@NonNull MagazineData magazine) {
-    return new ItemChoice(magazine.id(), magazine.name(), MagazineData.CATEGORY,
-        (magazine.issues().isEmpty() ? "" : magazine.issues().size() + " issues – ") + magazine.sources().getFirst());
+    return new ItemChoice(magazine.id(), magazine.name(), MagazineData.WEIGHT,
+        magazine.issues().isEmpty() ? magazine.summary() : magazine.issues().size() + " issues (chosen in the Gear tab)",
+        magazine.sources().getFirst().toString());
   }
 }

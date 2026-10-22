@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Gear;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -125,5 +126,44 @@ class PlayerCharacterWeaponsTest {
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
     Gear gear = character.gear();
     assertThrows(IllegalStateException.class, () -> gear.setCustomWeaponModSlots(1, Set.of()));
+  }
+
+  /** User decision 2026-10-20: counted catalog weapons picked by hand join a plain stack. */
+  @Test
+  void countedWeaponsJoinAPlainStack() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    Gear gear = character.gear();
+    gear.addWeapon(CarriedWeapon.of(CatalogRef.of("frag-grenade")).withStartingSource(StartingSource.PACK));
+    assertEquals(1, gear.addWeaponStacked(CarriedWeapon.of(CatalogRef.of("frag-grenade")).withQuantity(2)));
+    assertEquals(1, gear.addWeaponStacked(CarriedWeapon.of(CatalogRef.of("frag-grenade"))));
+    assertEquals(3, gear.getWeapons().get(1).quantity());
+    assertEquals(1, gear.getWeapons().getFirst().quantity(), "the pack's grenade is never stacked onto");
+    assertEquals(2, gear.addWeaponStacked(CarriedWeapon.of(CatalogRef.of("10mm-pistol"))));
+    assertEquals(3, gear.addWeaponStacked(CarriedWeapon.of(CatalogRef.of("10mm-pistol"))), "pistols are not counted");
+    gear.setWeaponNotes(1, "Sticky");
+    assertEquals(4, gear.addWeaponStacked(CarriedWeapon.of(CatalogRef.of("frag-grenade"))), "notes keep it apart");
+    assertEquals(5, gear.addWeaponStacked(CarriedWeapon.of(BLASTER)));
+  }
+
+  @Test
+  void ammunitionIsAddedToTheCount() {
+    Gear gear = PlayerCharacter.createNew().gear();
+    gear.addAmmunition("10mm", 0);
+    assertEquals(Map.of(), gear.getAmmunition());
+    gear.addAmmunition("10mm", 12);
+    gear.addAmmunition("10mm", 8);
+    assertEquals(20, gear.ammunition("10mm"));
+    assertThrows(IllegalArgumentException.class, () -> gear.addAmmunition("10mm", -1));
+  }
+
+  @Test
+  void customWeaponQualities() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addWeapon(CarriedWeapon.of(BLASTER));
+    character.gear().setCustomWeaponQualities(0, "Accurate, Thrown (C)");
+    assertEquals("Accurate, Thrown (C)", character.gear().getWeapons().getFirst().custom().qualities());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")));
+    Gear gear = character.gear();
+    assertThrows(IllegalStateException.class, () -> gear.setCustomWeaponQualities(1, "Accurate"));
   }
 }

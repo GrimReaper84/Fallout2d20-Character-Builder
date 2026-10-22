@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
@@ -35,6 +36,21 @@ class WeaponTreeTest {
     List<WeaponEntry> entries = List.of(carried(0, "throwing-knives"), carried(1, "10mm-pistol"));
 
     assertEquals(List.of("10mm Pistol", "Throwing Knives"), names(WeaponTree.grouped(entries).get(RangeGroup.CLOSE)));
+  }
+
+  /** The add dialog groups catalog rows like the tree: table range, else Thrown (X), else melee or none. */
+  @Test
+  void catalogRowsGroupLikeTheTree() {
+    assertEquals(RangeGroup.LONG, group("gauss-rifle"));
+    assertEquals(RangeGroup.MEDIUM, group("frag-grenade"));
+    assertEquals(RangeGroup.CLOSE, group("throwing-knives"));
+    assertEquals(RangeGroup.MELEE, group("combat-knife"));
+    assertEquals(RangeGroup.NO_RANGE, group("bottlecap-mine"));
+  }
+
+  private static RangeGroup group(String id) {
+    WeaponData data = WeaponCatalog.byId(id).orElseThrow();
+    return RangeGroup.of(WeaponAttack.effectiveRange(data), data.skill());
   }
 
   private WeaponEntry carried(int index, String id) {

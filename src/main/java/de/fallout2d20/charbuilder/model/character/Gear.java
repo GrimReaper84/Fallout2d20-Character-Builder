@@ -74,6 +74,34 @@ public final class Gear {
   }
 
   /**
+   * Adds a weapon picked by hand: a counted catalog weapon (grenades, thrown weapons, mines) the character
+   * already carries as a plain stack raises that stack's quantity, anything else is added (user decision
+   * 2026-10-20). Starting equipment is never stacked onto, as choosing another pack replaces it.
+   *
+   * @return the index of the stack or of the new weapon
+   */
+  public int addWeaponStacked(@NonNull CarriedWeapon weapon) {
+    CatalogRef ref = weapon.weapon();
+    if (ref != null && isPlainCatalogStack(weapon) && weapon.skill().map(Skill::isCountedWeapon).orElse(false)) {
+      for (int i = 0; i < weapons.size(); i++) {
+        CarriedWeapon carried = weapons.get(i);
+        CatalogRef carriedRef = carried.weapon();
+        if (carriedRef != null && isPlainCatalogStack(carried) && carriedRef.id().equals(ref.id())) {
+          weapons.set(i, carried.withQuantity(carried.quantity() + weapon.quantity()));
+          return i;
+        }
+      }
+    }
+    weapons.add(weapon);
+    return weapons.size() - 1;
+  }
+
+  private static boolean isPlainCatalogStack(@NonNull CarriedWeapon weapon) {
+    return weapon.weapon() != null && weapon.notes().isEmpty() && weapon.mods().isEmpty() && !weapon.builtIn()
+        && weapon.startingSource() == null;
+  }
+
+  /**
    * Removes the carried weapon at the index.
    *
    * @throws IndexOutOfBoundsException if there is no weapon at the index
@@ -85,6 +113,15 @@ public final class Gear {
   /** Free note of the weapon at the index, e.g. installed mods. */
   public void setWeaponNotes(int index, @Nullable String notes) {
     weapons.set(index, weapons.get(index).withNotes(notes));
+  }
+
+  /**
+   * Chooses the qualities of the custom weapon at the index, as text (e.g. from the quality picker).
+   *
+   * @throws IllegalStateException if the weapon at the index is a catalog weapon
+   */
+  public void setCustomWeaponQualities(int index, @NonNull String qualities) {
+    weapons.set(index, weapons.get(index).withCustomQualities(qualities));
   }
 
   /**
@@ -146,6 +183,18 @@ public final class Gear {
     }
   }
 
+  /**
+   * Adds shots to an ammunition type, e.g. bought or found together with a weapon; 0 changes nothing.
+   *
+   * @throws IllegalArgumentException if the id is blank or the shots are negative
+   */
+  public void addAmmunition(@NonNull String ammunitionId, int shots) {
+    if (shots < 0) {
+      throw new IllegalArgumentException("Shots to add must not be negative");
+    }
+    setAmmunition(ammunitionId, Math.addExact(ammunition(ammunitionId), shots));
+  }
+
   /** Shots of the ammunition type; 0 if none. */
   public int ammunition(@NonNull String ammunitionId) {
     return ammunition.getOrDefault(ammunitionId, 0);
@@ -200,6 +249,33 @@ public final class Gear {
   /** Adds an item to the inventory. */
   public void addItem(@NonNull CarriedItem item) {
     items.add(item);
+  }
+
+  /**
+   * Adds an item picked by hand: a catalog item or publication the character already carries as a plain
+   * stack (no issue, no note, not starting equipment) raises that stack's quantity, anything else is added
+   * (user decision 2026-10-20).
+   *
+   * @return the index of the stack or of the new item
+   */
+  public int addItemStacked(@NonNull CarriedItem item) {
+    CatalogRef ref = item.item();
+    if (ref != null && isPlainCatalogStack(item)) {
+      for (int i = 0; i < items.size(); i++) {
+        CarriedItem carried = items.get(i);
+        CatalogRef carriedRef = carried.item();
+        if (carriedRef != null && isPlainCatalogStack(carried) && carriedRef.id().equals(ref.id())) {
+          items.set(i, carried.withQuantity(carried.quantity() + item.quantity()));
+          return i;
+        }
+      }
+    }
+    items.add(item);
+    return items.size() - 1;
+  }
+
+  private static boolean isPlainCatalogStack(@NonNull CarriedItem item) {
+    return item.item() != null && item.issue() == null && item.notes().isEmpty() && item.startingSource() == null;
   }
 
   /**

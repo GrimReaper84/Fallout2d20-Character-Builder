@@ -106,6 +106,18 @@ public record CarriedWeapon(
     return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn, mods, startingSource);
   }
 
+  /**
+   * The custom weapon with other qualities.
+   *
+   * @throws IllegalStateException for a catalog weapon, whose qualities are fixed by the book
+   */
+  public @NonNull CarriedWeapon withCustomQualities(@NonNull String qualities) {
+    if (custom == null) {
+      throw new IllegalStateException("Only a custom weapon has choosable qualities");
+    }
+    return new CarriedWeapon(null, custom.withQualities(qualities), quantity, notes, builtIn, mods, startingSource);
+  }
+
   public @NonNull CarriedWeapon withQuantity(int newQuantity) {
     return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn, mods, startingSource);
   }

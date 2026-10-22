@@ -4,22 +4,29 @@ import static de.fallout2d20.charbuilder.view.OverviewParts.detailRow;
 
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
+import de.fallout2d20.charbuilder.view.dialog.QualitiesDialog;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
@@ -60,7 +67,10 @@ final class WeaponDetails {
     }
     detailRow(rows, "Attack", entry.needsSkill() ? skillChoice(character, entry.index(), callbacks.onChanged())
         : attackLabel(character, attack));
-    addAttackValues(rows, character, attack, base, values);
+    CustomWeapon custom = weapon == null ? null : weapon.custom();
+    Node editQualities = custom == null ? null
+        : qualitiesButton(character, entry.index(), custom, callbacks.onChanged());
+    addAttackValues(rows, character, attack, base, values, editQualities);
     if (values != null && (data.isPresent() || values.weight() != null)) {
       addWeightAndCost(rows, weapon != null && weapon.isIntegrated(), base, values);
     }
@@ -75,9 +85,13 @@ final class WeaponDetails {
     return pane;
   }
 
-  /** Damage to ammunition, each marked when the mods changed it. */
+  /**
+   * Damage to ammunition, each marked when the mods changed it; the qualities with their short descriptions
+   * as tooltip and, for a custom weapon, {@code editQualities} next to them.
+   */
   private static void addAttackValues(@NonNull MigPane rows, @NonNull PlayerCharacter character,
-      @NonNull WeaponAttack attack, @Nullable ModdedWeapon base, @Nullable ModdedWeapon values) {
+      @NonNull WeaponAttack attack, @Nullable ModdedWeapon base, @Nullable ModdedWeapon values,
+      @Nullable Node editQualities) {
     detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values,
         modded -> modded.damage() + " CD"));
     detailRow(rows, "Effects", withBase(text(attack.effects()), base, values,
@@ -87,8 +101,16 @@ final class WeaponDetails {
         base, values, modded -> OverviewParts.orDash(modded.fireRate())));
     detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
         modded -> modded.range() == null ? "–" : modded.range().displayName()));
-    detailRow(rows, "Qualities", withRemoved(withBase(text(attack.qualities()), base, values,
-        modded -> String.join(", ", modded.qualities())), values));
+    Label qualities = withSummaries(withRemoved(withBase(text(attack.qualities()), base, values,
+        modded -> String.join(", ", modded.qualities())), values), attack.qualities());
+    if (editQualities == null) {
+      detailRow(rows, "Qualities", qualities);
+    } else {
+      MigPane row = Layouts.row();
+      row.add(qualities, Layouts.cell().growX());
+      row.add(editQualities);
+      detailRow(rows, "Qualities", row);
+    }
     detailRow(rows, "Ammunition", withBase(new Label(ammunitionText(character, attack)), base, values,
         modded -> String.join(", ", modded.ammunition())));
   }
@@ -150,6 +172,34 @@ final class WeaponDetails {
     String removed = String.join("\n", values.removedQualities());
     label.setTooltip(new Tooltip(tooltip == null ? removed : tooltip.getText() + "\n" + removed));
     return label;
+  }
+
+  /** Puts the short description of each book quality on top of the label's tooltip (CRB p. 90). */
+  private static @NonNull Label withSummaries(@NonNull Label label, @NonNull String qualities) {
+    List<String> lines = Arrays.stream(qualities.split(",", -1)).map(String::strip)
+        .flatMap(quality -> WeaponQuality.summaryOf(quality).map(summary -> quality + ": " + summary).stream())
+        .toList();
+    if (lines.isEmpty()) {
+      return label;
+    }
+    Tooltip tooltip = label.getTooltip();
+    String summaries = String.join("\n", lines);
+    label.setTooltip(new Tooltip(tooltip == null ? summaries : summaries + "\n\n" + tooltip.getText()));
+    return label;
+  }
+
+  /** Opens the quality picker of a custom weapon ({@link QualitiesDialog}). */
+  private static @NonNull Button qualitiesButton(@NonNull PlayerCharacter character, int index,
+      @NonNull CustomWeapon custom, @NonNull Runnable onChanged) {
+    Button edit = new Button();
+    edit.setGraphic(new FontIcon("fas-wrench"));
+    edit.setTooltip(new Tooltip("Choose the qualities of " + custom.name()));
+    edit.setOnAction(_ -> QualitiesDialog.show(edit.getScene() == null ? null : edit.getScene().getWindow(),
+        custom.name(), custom.qualities()).ifPresent(chosen -> {
+          character.gear().setCustomWeaponQualities(index, chosen);
+          onChanged.run();
+        }));
+    return edit;
   }
 
   /** Target number and critical range, with the attribute and skill as tooltip. */

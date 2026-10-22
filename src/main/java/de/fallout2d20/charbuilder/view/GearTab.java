@@ -11,6 +11,7 @@ import de.fallout2d20.charbuilder.model.character.item.Holotape;
 import de.fallout2d20.charbuilder.view.dialog.AddItemDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import de.fallout2d20.charbuilder.view.dialog.EquipmentPackDialog;
+import java.util.Arrays;
 import java.util.List;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -171,9 +172,11 @@ final class GearTab {
     add.setGraphic(new FontIcon("fas-plus"));
     MenuItem item = new MenuItem("Item…");
     item.setOnAction(_ -> AddItemDialog.show(window(add), ItemCatalog.available(character.getEnabledBooks()),
-        ItemCatalog.availableMagazines(character.getEnabledBooks())).ifPresent(carried -> {
-          character.gear().addItem(carried);
-          selection.select(character.gear().getItems().size() - 1);
+        ItemCatalog.availableMagazines(character.getEnabledBooks()),
+        id -> ItemGroup.of(CarriedItem.of(CatalogRef.of(id))).displayName(),
+        Arrays.stream(ItemGroup.values()).map(ItemGroup::displayName).toList(),
+        carried -> character.gear().addItemStacked(carried)).ifPresent(index -> {
+          selection.select(index);
           onChanged.run();
         }));
     MenuItem holotape = new MenuItem("Holotape");
