@@ -132,7 +132,7 @@
   "traits" : [ ],
   "perks" : [ {
     "ref" : {
-      "id" : "dogmeat"
+      "id" : "smooth-talker"
     },
     "rank" : 1,
     "importedRanks" : 0,

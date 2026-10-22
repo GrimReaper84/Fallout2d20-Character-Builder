@@ -16,20 +16,31 @@ import org.jspecify.annotations.Nullable;
  * @param notRobot whether robots cannot take the perk
  * @param excludedPerks ids of perks that cannot be held together with this one (Cautious Nature and
  *     Daring Nature, CRB p. 62)
+ * @param excludedOrigins ids of origins that cannot take the perk (Ghoulish: not a ghoul, WG p. 47)
+ * @param notRadiationImmune whether characters immune to radiation cannot take the perk (Radicool, Overly
+ *     Generous, WG pp. 48–49)
+ * @param firstRankLevelWaivedFor ids of origins that ignore the level requirement of the first rank (Cannibal:
+ *     super mutants, i.e. Super Mutant and Nightkin, WG p. 47)
  */
 public record PerkRequirements(
     @NonNull Map<Attribute, Integer> attributes,
     @Nullable Integer level,
     @Nullable Integer levelIncreasePerRank,
     boolean notRobot,
-    @NonNull List<String> excludedPerks) {
+    @NonNull List<String> excludedPerks,
+    @NonNull List<String> excludedOrigins,
+    boolean notRadiationImmune,
+    @NonNull List<String> firstRankLevelWaivedFor) {
 
   /** No requirements at all ("None" in the book). */
-  public static final @NonNull PerkRequirements NONE = new PerkRequirements(Map.of(), null, null, false, List.of());
+  public static final @NonNull PerkRequirements NONE = new PerkRequirements(Map.of(), null, null, false, List.of(),
+      List.of(), false, List.of());
 
   public PerkRequirements {
     attributes = attributes == null ? Map.of() : Map.copyOf(attributes);
     excludedPerks = excludedPerks == null ? List.of() : List.copyOf(excludedPerks);
+    excludedOrigins = excludedOrigins == null ? List.of() : List.copyOf(excludedOrigins);
+    firstRankLevelWaivedFor = firstRankLevelWaivedFor == null ? List.of() : List.copyOf(firstRankLevelWaivedFor);
     if (attributes.values().stream().anyMatch(value -> value < 1 || value > 12)
         || (level != null && level < 1) || (levelIncreasePerRank != null && levelIncreasePerRank < 1)) {
       throw new IllegalArgumentException("Invalid perk requirements");

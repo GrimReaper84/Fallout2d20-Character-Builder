@@ -1,7 +1,10 @@
 package de.fallout2d20.charbuilder.model.character.apparel;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
+import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
+import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
+import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import java.util.ArrayList;
@@ -19,14 +22,23 @@ import org.jspecify.annotations.NonNull;
  * resistances (perks such as Toughness, origin immunities) are added on every location (assumption,
  * legacy behavior: the perks name all locations); poison comes only from them, apparel has no poison
  * value. An item covering a location with radiation immunity (Hazmat Suit, CRB p. 124) makes it immune.
+ *
+ * <p>Perks of the Wanderer's Guide that need the worn gear add Physical and Energy DR on every location here (not in
+ * {@link DerivedStats}, which {@link CarryLoad} uses): Evasive by AGI unless over-encumbered (WG p. 51), Ironclad
+ * per rank while a worn piece is armor ({@link WornApparel#isArmor()}, WG p. 48), Junk Shield per 5 junk carried up
+ * to its rank (WG p. 52). Their Power Armor exception does not arise yet (D3).
  */
 public final class ArmorResistances {
+
+  /** WG p. 52: Junk Shield gives +1 DR for every 5 junk carried. */
+  private static final int JUNK_PER_DR = 5;
 
   private ArmorResistances() {}
 
   /** One entry per hit location of the character, in location order. */
   public static @NonNull List<LocationResistance> of(@NonNull PlayerCharacter character) {
     DerivedStats innate = DerivedStats.of(character);
+    int perkDr = perkDr(character);
     List<LocationResistance> result = new ArrayList<>();
     List<HitLocation> body = character.hitLocations();
     for (HitLocation location : body) {
@@ -38,12 +50,37 @@ public final class ArmorResistances {
       }
       boolean immune = worn.stream().anyMatch(ApparelValues::radiationImmune);
       result.add(new LocationResistance(location,
-          add(apparel(worn, ApparelValues::physical), innate.physical()),
-          add(apparel(worn, ApparelValues::energy), innate.energy()),
+          add(apparel(worn, ApparelValues::physical) + perkDr, innate.physical()),
+          add(apparel(worn, ApparelValues::energy) + perkDr, innate.energy()),
           immune ? Resistance.IMMUNITY : add(apparel(worn, ApparelValues::radiation), innate.radiation()),
           innate.poison()));
     }
     return result;
+  }
+
+  /** Physical and Energy DR of Evasive, Ironclad and Junk Shield (the same for both types on every location). */
+  private static int perkDr(@NonNull PlayerCharacter character) {
+    int dr = 0;
+    if (character.perkEffect(perk -> perk.drByAgility() ? 1 : 0) > 0 && !CarryLoad.of(character).isOverEncumbered()) {
+      dr += evasive(character.abilities().attributeValue(Attribute.AGILITY));
+    }
+    if (character.gear().getWornApparel().stream().anyMatch(WornApparel::isArmor)) {
+      dr += character.perkEffect(PerkDefinition::wornArmorDrPerRank);
+    }
+    dr += Math.min(character.perkEffect(PerkDefinition::junkDrPerRank),
+        character.gear().getMaterials().junk() / JUNK_PER_DR);
+    return dr;
+  }
+
+  /** WG p. 51: +1 at AGI 7–8, +2 at 9–10, +3 at 11 or more. */
+  private static int evasive(int agility) {
+    if (agility >= 11) {
+      return 3;
+    }
+    if (agility >= 9) {
+      return 2;
+    }
+    return agility >= 7 ? 1 : 0;
   }
 
   /** The apparel value of one type: the highest robot plating plus the highest robot armor, or else the highest item. */

@@ -1012,5 +1012,641 @@
     },
     "summary": "+1 physical DR on all locations per rank.",
     "physicalDrPerRank": 1
+  },
+  {
+    "id": "blocker",
+    "name": "Blocker",
+    "sources": [{"book": "WG", "page": 44}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 1,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Against melee attacks, the DR matching the attack's damage type (Physical or Energy) counts +1 per rank."
+  },
+  {
+    "id": "bullet-shield",
+    "name": "Bullet Shield",
+    "sources": [{"book": "WG", "page": 44}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 8},
+      "level": 8,
+      "levelIncreasePerRank": 6
+    },
+    "summary": "While wielding a big gun, +2 DR; +3 at rank 2, +4 at rank 3."
+  },
+  {
+    "id": "gladiator",
+    "name": "Gladiator",
+    "sources": [{"book": "WG", "page": 44}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 2,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "One-handed melee weapons deal +1 CD damage per rank."
+  },
+  {
+    "id": "incisor",
+    "name": "Incisor",
+    "sources": [{"book": "WG", "page": 44}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 2,
+      "levelIncreasePerRank": 9
+    },
+    "summary": "Melee weapons gain Piercing 1 per rank, or that much more on an existing Piercing rating."
+  },
+  {
+    "id": "lock-and-load",
+    "name": "Lock and Load",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 7},
+      "level": 7,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Big guns with Fire Rate 2 or more get +1 Fire Rate per rank."
+  },
+  {
+    "id": "martial-artist",
+    "name": "Martial Artist",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 8
+    },
+    "summary": "After a melee attack, another melee attack as extra major action costs 1 AP instead of 2."
+  },
+  {
+    "id": "pack-rat",
+    "name": "Pack Rat",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 6},
+      "level": 4
+    },
+    "summary": "Carried junk counts half its weight.",
+    "junkWeightHalved": true
+  },
+  {
+    "id": "scattershot",
+    "name": "Scattershot",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"STRENGTH": 7},
+      "level": 10
+    },
+    "summary": "After a ranged attack with a shotgun, another attack with the same shotgun as extra major action costs 1 AP instead of 2."
+  },
+  {
+    "id": "sturdy-frame",
+    "name": "Sturdy Frame",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"STRENGTH": 8},
+      "level": 5,
+      "levelIncreasePerRank": 8
+    },
+    "summary": "Worn armor (not Power Armor) counts three quarters of its weight, half at rank 2, a quarter at rank 3.",
+    "armorWeightQuartersPerRank": 1
+  },
+  {
+    "id": "archer",
+    "name": "Archer",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"PERCEPTION": 6},
+      "level": 1,
+      "levelIncreasePerRank": 7
+    },
+    "summary": "Bows and crossbows deal +1 CD damage per rank."
+  },
+  {
+    "id": "bow-before-me",
+    "name": "Bow Before Me",
+    "sources": [{"book": "WG", "page": 45}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8},
+      "level": 4
+    },
+    "summary": "Bows and crossbows gain Piercing 1, or +1 on an existing Piercing rating."
+  },
+  {
+    "id": "butchers-bounty",
+    "name": "Butcher’s Bounty",
+    "sources": [{"book": "WG", "page": 46}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8},
+      "level": 3,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "When you butcher an animal, roll 1 CD per rank for extra portions of meat."
+  },
+  {
+    "id": "crack-shot",
+    "name": "Crack Shot",
+    "sources": [{"book": "WG", "page": 46}],
+    "ranks": 2,
+    "requirements": {
+      "attributes": {"PERCEPTION": 7},
+      "level": 7,
+      "levelIncreasePerRank": 7
+    },
+    "summary": "Aimed attacks with one-handed ranged weapons reach one range step further; at rank 2 the weapon is also Accurate."
+  },
+  {
+    "id": "fire-in-the-hole",
+    "name": "Fire in the Hole",
+    "sources": [{"book": "WG", "page": 46}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8},
+      "level": 8
+    },
+    "summary": "Attacks with thrown Blast weapons have a base difficulty of 1 instead of 2."
+  },
+  {
+    "id": "glow-sight",
+    "name": "Glow Sight",
+    "sources": [{"book": "WG", "page": 46}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8},
+      "level": 3,
+      "levelIncreasePerRank": 8
+    },
+    "summary": "+1 CD damage per rank against Glowing enemies."
+  },
+  {
+    "id": "night-eyes",
+    "name": "Night Eyes",
+    "sources": [{"book": "WG", "page": 46}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"PERCEPTION": 8},
+      "level": 7
+    },
+    "summary": "Poor light and darkness do not raise the difficulty of tests to hide or avoid notice."
+  },
+  {
+    "id": "cannibal",
+    "name": "Cannibal",
+    "sources": [{"book": "WG", "page": 47}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 8},
+      "level": 10,
+      "levelIncreasePerRank": 9,
+      "notRobot": true,
+      "firstRankLevelWaivedFor": ["super-mutant", "nightkin"]
+    },
+    "summary": "Butcher dead humans (END + Survival, difficulty 0) for flesh that heals 4 HP but is irradiated; ghouls from rank 2, super mutants from rank 3. Can become an addiction; super mutants need no level for rank 1."
+  },
+  {
+    "id": "cola-nut",
+    "name": "Cola Nut",
+    "sources": [{"book": "WG", "page": 47}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "level": 14,
+      "notRobot": true
+    },
+    "summary": "Nuka-Cola beverages restore twice the usual HP."
+  },
+  {
+    "id": "dromedary",
+    "name": "Dromedary",
+    "sources": [{"book": "WG", "page": 47}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 3,
+      "notRobot": true
+    },
+    "summary": "Beverages move your thirst one step further towards quenched."
+  },
+  {
+    "id": "fireproof",
+    "name": "Fireproof",
+    "sources": [{"book": "WG", "page": 47}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "level": 7,
+      "levelIncreasePerRank": 7
+    },
+    "summary": "+1 Energy DR per rank against fire-based weapons and weapons with Blast."
+  },
+  {
+    "id": "ghoulish",
+    "name": "Ghoulish",
+    "sources": [{"book": "WG", "page": 47}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 9},
+      "level": 7,
+      "levelIncreasePerRank": 8,
+      "notRobot": true,
+      "excludedOrigins": ["ghoul"]
+    },
+    "summary": "Radiation damage heals you 1 HP per 4 points (per 3 at rank 2, per 2 at rank 3); your maximum HP is still reduced."
+  },
+  {
+    "id": "ironclad",
+    "name": "Ironclad",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 5,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "+1 Physical and Energy DR per rank while you wear armor (not Power Armor); robot armor does not count.",
+    "wornArmorDrPerRank": 1
+  },
+  {
+    "id": "natural-resistance",
+    "name": "Natural Resistance",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 10
+    },
+    "summary": "Toxic fumes and sleeping rough no longer risk catching a disease."
+  },
+  {
+    "id": "radicool",
+    "name": "Radicool",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 6},
+      "level": 12,
+      "notRadiationImmune": true
+    },
+    "summary": "With radiation damage of a quarter, half or three quarters of your maximum HP: re-roll 1, 2 or 3 d20 on STR tests and +1, +2 or +3 CD melee damage."
+  },
+  {
+    "id": "revenant",
+    "name": "Revenant",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 8},
+      "level": 12
+    },
+    "summary": "When revived, your attacks deal +2 CD damage for the rest of the scene or until you drop to 0 HP again."
+  },
+  {
+    "id": "slow-metabolizer",
+    "name": "Slow Metabolizer",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 5,
+      "notRobot": true
+    },
+    "summary": "Food moves your hunger one step further towards full."
+  },
+  {
+    "id": "thirst-quencher",
+    "name": "Thirst Quencher",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 6
+    },
+    "summary": "Dirty water no longer risks catching a disease."
+  },
+  {
+    "id": "vaccinated",
+    "name": "Vaccinated",
+    "sources": [{"book": "WG", "page": 48}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"ENDURANCE": 7},
+      "level": 16
+    },
+    "summary": "Claw and bite damage from mammals, lizards and insects no longer risks catching a disease."
+  },
+  {
+    "id": "bloodsucker",
+    "name": "Bloodsucker",
+    "sources": [{"book": "WG", "page": 49}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 6},
+      "level": 11
+    },
+    "summary": "Blood packs heal twice the HP and quench thirst by one step; Irradiated Blood rolls only 1 CD for radiation."
+  },
+  {
+    "id": "responder",
+    "name": "Responder",
+    "sources": [{"book": "WG", "page": 49}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"CHARISMA": 8, "INTELLIGENCE": 7},
+      "level": 9,
+      "levelIncreasePerRank": 7
+    },
+    "summary": "Stabilizing a dying ally in combat wakes them without AP and heals them 2 HP next turn (4 HP for two turns at rank 2, 6 HP for three turns at rank 3)."
+  },
+  {
+    "id": "field-surgeon",
+    "name": "Field Surgeon",
+    "sources": [{"book": "WG", "page": 49}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 8, "INTELLIGENCE": 8},
+      "level": 15
+    },
+    "summary": "In a First Aid action, Stimpaks heal 3 HP per AP and RadAway removes 1 more radiation damage per AP."
+  },
+  {
+    "id": "happy-go-lucky",
+    "name": "Happy Go Lucky",
+    "sources": [{"book": "WG", "page": 49}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 9},
+      "level": 17,
+      "levelIncreasePerRank": 6
+    },
+    "summary": "Your first alcoholic beverage in a scene restores 1 Luck point."
+  },
+  {
+    "id": "healing-hands",
+    "name": "Healing Hands",
+    "sources": [{"book": "WG", "page": 49}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 8, "INTELLIGENCE": 7},
+      "level": 18
+    },
+    "summary": "Stabilizing a dying ally in combat also removes radiation damage equal to your Medicine rank."
+  },
+  {
+    "id": "overly-generous",
+    "name": "Overly Generous",
+    "sources": [{"book": "WG", "page": 49}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"CHARISMA": 7},
+      "level": 12,
+      "notRadiationImmune": true
+    },
+    "summary": "With radiation damage of a quarter of your maximum HP or more, your melee attacks gain Radioactive."
+  },
+  {
+    "id": "spiritual-healer",
+    "name": "Spiritual Healer",
+    "sources": [{"book": "WG", "page": 50}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"CHARISMA": 7},
+      "level": 6,
+      "levelIncreasePerRank": 9
+    },
+    "summary": "Stabilizing a dying ally heals you 1 HP; at rank 2 2 HP now and next turn, at rank 3 3 HP now and on your next two turns."
+  },
+  {
+    "id": "suppressor",
+    "name": "Suppressor",
+    "sources": [{"book": "WG", "page": 50}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"CHARISMA": 6},
+      "level": 10,
+      "levelIncreasePerRank": 10
+    },
+    "summary": "After a successful attack, spend 1 AP: the enemy deals 1 CD less damage per rank until the end of its next turn."
+  },
+  {
+    "id": "tenderizer",
+    "name": "Tenderizer",
+    "sources": [{"book": "WG", "page": 50}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"CHARISMA": 7},
+      "level": 8,
+      "levelIncreasePerRank": 10
+    },
+    "summary": "After a hit, spend 1 AP: attacks against the enemy deal +1 CD damage per rank until the end of its next turn."
+  },
+  {
+    "id": "licensed-plumber",
+    "name": "Licensed Plumber",
+    "sources": [{"book": "WG", "page": 50}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 6},
+      "level": 5
+    },
+    "summary": "Pipe weapons you use are not Unreliable."
+  },
+  {
+    "id": "power-patcher",
+    "name": "Power Patcher",
+    "sources": [{"book": "WG", "page": 50}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 6},
+      "level": 5,
+      "levelIncreasePerRank": 7
+    },
+    "summary": "Repairing Power Armor restores 2 more HP (3 at rank 2, 4 at rank 3)."
+  },
+  {
+    "id": "power-user",
+    "name": "Power User",
+    "sources": [{"book": "WG", "page": 50}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 9},
+      "level": 10,
+      "levelIncreasePerRank": 10
+    },
+    "summary": "Your fusion cores hold 3 more charges (6 at rank 2, 10 at rank 3)."
+  },
+  {
+    "id": "stabilized",
+    "name": "Stabilized",
+    "sources": [{"book": "WG", "page": 51}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"INTELLIGENCE": 7},
+      "level": 16
+    },
+    "summary": "In Power Armor, re-roll 1d20 on Big Guns attacks, and big guns gain Piercing 1 (or +1 on an existing rating)."
+  },
+  {
+    "id": "born-survivor",
+    "name": "Born Survivor",
+    "sources": [{"book": "WG", "page": 51}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"AGILITY": 8},
+      "level": 3,
+      "levelIncreasePerRank": 8
+    },
+    "summary": "When damage would drop you below a quarter of your maximum HP, use a Stimpak automatically, once per scene per rank."
+  },
+  {
+    "id": "dead-man-sprinting",
+    "name": "Dead Man Sprinting",
+    "sources": [{"book": "WG", "page": 51}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 7},
+      "level": 8
+    },
+    "summary": "Below half your maximum HP, spend 1 AP to move one more zone when you Sprint."
+  },
+  {
+    "id": "escape-artist",
+    "name": "Escape Artist",
+    "sources": [{"book": "WG", "page": 51}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 8},
+      "level": 15
+    },
+    "summary": "Unseen at the start of your turn in combat, hide with AGI + Sneak (difficulty: enemies within Medium range); sprinting gives enemies no bonus to find you."
+  },
+  {
+    "id": "evasive",
+    "name": "Evasive",
+    "sources": [{"book": "WG", "page": 51}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"AGILITY": 7},
+      "level": 7
+    },
+    "summary": "+1 Physical and Energy DR on all locations at AGI 7–8, +2 at 9–10, +3 at 11+; not while encumbered or in Power Armor.",
+    "drByAgility": true
+  },
+  {
+    "id": "goat-legs",
+    "name": "Goat Legs",
+    "sources": [{"book": "WG", "page": 51}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"AGILITY": 7},
+      "level": 7,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "+2 Physical DR per rank against falling damage."
+  },
+  {
+    "id": "modern-renegade",
+    "name": "Modern Renegade",
+    "sources": [{"book": "WG", "page": 52}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"AGILITY": 7},
+      "level": 8,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Successful unaimed attacks with one-handed ranged weapons give 1 extra AP per rank, which cannot be saved."
+  },
+  {
+    "id": "secret-agent",
+    "name": "Secret Agent",
+    "sources": [{"book": "WG", "page": 52}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"AGILITY": 9},
+      "level": 7,
+      "levelIncreasePerRank": 5
+    },
+    "summary": "Stealth Boys last 1 more turn per rank."
+  },
+  {
+    "id": "dry-nurse",
+    "name": "Dry Nurse",
+    "sources": [{"book": "WG", "page": 52}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 8},
+      "level": 13
+    },
+    "summary": "When you stabilize a dying ally with a Stimpak, roll 1 CD: on an Effect the Stimpak is not used up."
+  },
+  {
+    "id": "junk-shield",
+    "name": "Junk Shield",
+    "sources": [{"book": "WG", "page": 52}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"LUCK": 7},
+      "level": 1,
+      "levelIncreasePerRank": 8
+    },
+    "summary": "+1 Physical and Energy DR for every 5 junk you carry, at most your rank; not in Power Armor.",
+    "junkDrPerRank": 1
+  },
+  {
+    "id": "mysterious-savior",
+    "name": "Mysterious Savior",
+    "sources": [{"book": "WG", "page": 53}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 7},
+      "level": 1
+    },
+    "summary": "At the start of combat, spend 1 Luck point: the first time you are dying, the GM may have a stranger revive you with 4 HP (the point comes back if not)."
+  },
+  {
+    "id": "psychopath",
+    "name": "Psychopath",
+    "sources": [{"book": "WG", "page": 53}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"LUCK": 8},
+      "level": 11,
+      "levelIncreasePerRank": 6
+    },
+    "summary": "When you kill an enemy, roll 1 CD per rank; each Effect restores 1 Luck point."
+  },
+  {
+    "id": "serendipity",
+    "name": "Serendipity",
+    "sources": [{"book": "WG", "page": 53}],
+    "ranks": 3,
+    "requirements": {
+      "attributes": {"LUCK": 7},
+      "level": 5,
+      "levelIncreasePerRank": 6
+    },
+    "summary": "Below a third of your maximum HP, spend 1 Luck point before an attack on you is rolled to make it miss, up to your rank times per scene."
+  },
+  {
+    "id": "storm-chaser",
+    "name": "Storm Chaser",
+    "sources": [{"book": "WG", "page": 53}],
+    "ranks": 1,
+    "requirements": {
+      "attributes": {"LUCK": 6},
+      "level": 15
+    },
+    "summary": "In rain or a rad storm, regain 1 HP at the start of each combat turn; outside combat, half your Luck (rounded up) per hour of rain."
   }
 ]

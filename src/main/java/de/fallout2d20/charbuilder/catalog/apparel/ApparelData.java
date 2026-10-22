@@ -33,6 +33,8 @@ import org.jspecify.annotations.Nullable;
  *     CRB p. 136)
  * @param superMutantFit whether the armor is made to fit a super mutant (CRB p. 122: Raider armor), the only armor
  *     Super Mutants and Nightkin may wear
+ * @param countsAsArmor whether an outfit counts as armor for perks such as Ironclad and Sturdy Frame (WG pp. 45, 48):
+ *     Cage Armor and Spike Armor, outfits the book names armor (CRB p. 124; user decision 2026-10-22)
  */
 public record ApparelData(
     @JsonProperty(required = true) @NonNull String id,
@@ -51,7 +53,8 @@ public record ApparelData(
     @Nullable String perk,
     @NonNull List<String> aliases,
     @Nullable ApparelModTable modTable,
-    boolean superMutantFit) {
+    boolean superMutantFit,
+    boolean countsAsArmor) {
 
   public ApparelData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || sources == null || sources.isEmpty()

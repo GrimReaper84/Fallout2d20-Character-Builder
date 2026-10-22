@@ -220,7 +220,8 @@
     "energy": 4,
     "weight": "33",
     "cost": 110,
-    "rarity": 3
+    "rarity": 3,
+    "countsAsArmor": true
   },
   {
     "id": "drifter-outfit",
@@ -395,7 +396,8 @@
     "energy": 2,
     "weight": "17",
     "cost": 65,
-    "rarity": 2
+    "rarity": 2,
+    "countsAsArmor": true
   },
   {
     "id": "utility-coveralls",

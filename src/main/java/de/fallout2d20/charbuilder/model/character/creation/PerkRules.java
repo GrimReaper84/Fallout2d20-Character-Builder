@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.creation;
 
+import de.fallout2d20.charbuilder.catalog.origin.OriginCatalog;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
@@ -71,14 +72,16 @@ public final class PerkRules {
 
   /**
    * Whether the perk is impossible for the character whatever its attributes or level (user requests
-   * 2026-10-19: own "Not possible" group in the perk grid): the origin is a robot and the perk excludes robots,
-   * or a chosen perk excludes it (Cautious Nature and Daring Nature, CRB p. 62), in either direction.
+   * 2026-10-19: own "Not possible" group in the perk grid): the origin is a robot and the perk excludes robots, the
+   * perk excludes the origin (Ghoulish, WG p. 47) or characters immune to radiation (Radicool, Overly Generous,
+   * WG pp. 48–49), or a chosen perk excludes it (Cautious Nature and Daring Nature, CRB p. 62), in either direction.
    */
   public static boolean isImpossible(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk) {
-    if (perk.requirements().notRobot() && character.getOriginData().map(OriginData::robot).orElse(false)) {
-      return true;
-    }
-    if (perk.requirements().excludedPerks().stream().anyMatch(excluded -> rank(character, excluded) > 0)) {
+    PerkRequirements requirements = perk.requirements();
+    boolean robot = character.getOriginData().map(OriginData::robot).orElse(false);
+    if ((requirements.notRobot() && robot) || excludesOrigin(character, requirements)
+        || (requirements.notRadiationImmune() && isRadiationImmune(character))
+        || requirements.excludedPerks().stream().anyMatch(excluded -> rank(character, excluded) > 0)) {
       return true;
     }
     return character.getPerks().stream().map(selection -> PerkCatalog.byId(selection.perk().id()))
@@ -175,12 +178,22 @@ public final class PerkRules {
             character.abilities().attributeValue(attribute) >= minimum);
       }
     }
-    int level = requirements.levelForRank(rank);
+    // WG p. 47: Cannibal – super mutants need no level for the first rank.
+    boolean waived = rank == 1 && requirements.firstRankLevelWaivedFor().contains(originId(character));
+    int level = waived ? 1 : requirements.levelForRank(rank);
     if (level > 1) {
       status.put("level " + level, character.advancement().getLevel() >= level);
     }
     if (requirements.notRobot()) {
       status.put("no robot", !character.getOriginData().map(OriginData::robot).orElse(false));
+    }
+    if (!requirements.excludedOrigins().isEmpty()) {
+      List<String> names = requirements.excludedOrigins().stream()
+          .map(id -> OriginCatalog.byId(id).map(OriginData::name).orElse(id)).toList();
+      status.put("not " + String.join(" or ", names), !excludesOrigin(character, requirements));
+    }
+    if (requirements.notRadiationImmune()) {
+      status.put("not immune to radiation", !isRadiationImmune(character));
     }
     for (String excluded : requirements.excludedPerks()) {
       status.put("not with " + PerkCatalog.byId(excluded).map(PerkDefinition::name).orElse(excluded),
@@ -292,5 +305,19 @@ public final class PerkRules {
             + " cannot be a Tag skill with " + forbidding.get().name() + "."));
       }
     }
+  }
+
+  private static boolean excludesOrigin(@NonNull PlayerCharacter character, @NonNull PerkRequirements requirements) {
+    return requirements.excludedOrigins().contains(originId(character));
+  }
+
+  /** The origin's id; empty while no origin is chosen. */
+  private static @NonNull String originId(@NonNull PlayerCharacter character) {
+    return character.getOriginData().map(OriginData::id).orElse("");
+  }
+
+  /** Immune to radiation damage by origin (Ghoul, Super Mutant, robots …), the immunity WG pp. 48–49 refer to. */
+  private static boolean isRadiationImmune(@NonNull PlayerCharacter character) {
+    return character.getOriginData().map(OriginData::radiationImmune).orElse(false);
   }
 }

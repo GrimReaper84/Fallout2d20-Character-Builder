@@ -206,7 +206,8 @@ class PerkRulesTest {
     PerkDefinition fromWg = new PerkDefinition(base.id(), base.name(), List.of(new Source(Book.WG, 50)),
         base.ranks(), base.requirements(), base.choice(), base.summary(), base.legacyNames(),
         base.carryWeightPerRank(), base.physicalDrPerRank(), base.energyDrPerRank(), base.radiationDrPerRank(),
-        base.poisonDrPerRank(), base.maxHpPerEndurance(), base.physicalDrByStrength(), base.skillPointsPerRank());
+        base.poisonDrPerRank(), base.maxHpPerEndurance(), base.physicalDrByStrength(), base.skillPointsPerRank(),
+        false, 0, 0, 0, false);
     PlayerCharacter crbOnly = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("vault-dweller"))
         .enabledBooks(EnumSet.of(Book.CRB)).build();
 
@@ -243,5 +244,37 @@ class PerkRulesTest {
 
   private static List<String> messages(PlayerCharacter character) {
     return PerkRules.problems(character).stream().map(CreationProblem::message).toList();
+  }
+
+  /** WG p. 47: Ghoulish is not for ghouls (or robots). */
+  @Test
+  void ghoulishIsImpossibleForAGhoul() {
+    PerkDefinition ghoulish = def("ghoulish");
+    assertTrue(PerkRules.isImpossible(character("ghoul", 7, Map.of(), List.of(), List.of()), ghoulish));
+    assertTrue(PerkRules.isImpossible(character("mister-handy", 7, Map.of(), List.of(), List.of()), ghoulish));
+    assertFalse(PerkRules.isImpossible(character("survivor", 7, Map.of(), List.of(), List.of()), ghoulish));
+    assertTrue(PerkRules.requirementStatus(character("ghoul", 7, Map.of(), List.of(), List.of()), ghoulish, 1)
+        .containsKey("not Ghoul"));
+  }
+
+  /** WG pp. 48–49: Radicool and Overly Generous need a character that is not immune to radiation. */
+  @Test
+  void radiationPerksAreImpossibleWhenImmune() {
+    assertTrue(PerkRules.isImpossible(character("super-mutant", 12, Map.of(), List.of(), List.of()), def("radicool")));
+    assertTrue(PerkRules.isImpossible(character("ghoul", 12, Map.of(), List.of(), List.of()), def("overly-generous")));
+    assertFalse(PerkRules.isImpossible(character("survivor", 12, Map.of(), List.of(), List.of()), def("radicool")));
+  }
+
+  /** WG p. 47: super mutants (Super Mutant, Nightkin) need no level for the first rank of Cannibal, later ranks do. */
+  @Test
+  void cannibalWaivesTheFirstLevelForSuperMutants() {
+    PerkDefinition cannibal = def("cannibal");
+    for (String origin : List.of("super-mutant", "nightkin")) {
+      PlayerCharacter mutant = character(origin, 1, Map.of(Attribute.ENDURANCE, 1), List.of(), List.of());
+      assertEquals(List.of(), PerkRules.unmetRequirements(mutant, cannibal, 1), origin);
+      assertEquals(List.of("Requirement not met: level 19."), PerkRules.unmetRequirements(mutant, cannibal, 2));
+    }
+    PlayerCharacter survivor = character("survivor", 1, Map.of(Attribute.ENDURANCE, 3), List.of(), List.of());
+    assertEquals(List.of("Requirement not met: level 10."), PerkRules.unmetRequirements(survivor, cannibal, 1));
   }
 }

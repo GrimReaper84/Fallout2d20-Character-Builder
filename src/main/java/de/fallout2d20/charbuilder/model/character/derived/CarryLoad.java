@@ -1,11 +1,13 @@
 package de.fallout2d20.charbuilder.model.character.derived;
 
+import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.apparel.ModdedApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
+import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
 import java.util.Map;
@@ -15,10 +17,14 @@ import org.jspecify.annotations.NonNull;
  * The weight a character carries against their carry weight, computed on every call (never stored).
  *
  * <p>Counted: weapons × quantity except those built into the character ({@link CarriedWeapon#isIntegrated()},
- * user decision 2026-10-16), worn apparel (its table weight with its mods', {@link ModdedApparel}; robot items have none), items ×
- * quantity, ammunition with a whole-pound weight per unit × count, junk and materials (CRB p. 208).
- * {@code <1} items count nothing (CRB p. 87). Weapons count with their mods' weight ({@link ModdedWeapon}); custom
- * weapons have no weight of their own, only their mods', custom apparel has none.
+ * user decision 2026-10-16), worn and carried apparel (its table weight plus its mods', {@link ModdedApparel}; robot
+ * items have none), items × quantity, ammunition with a whole-pound weight per unit × count, junk and materials
+ * (CRB p. 208). {@code <1} items count nothing (CRB p. 87). Weapons count with their mods' weight
+ * ({@link ModdedWeapon}); custom weapons and custom apparel have no weight of their own, only their mods'.
+ *
+ * <p>Wanderer's Guide perks: Sturdy Frame lets a quarter of the weight of worn armor ({@link WornApparel#isArmor()})
+ * stop counting per rank, rounded down once (WG p. 45); Pack Rat halves the weight of junk (WG p. 45). The book's
+ * Power Armor exception does not arise yet (D3).
  *
  * <p>CRB p. 87: above the carry weight, STR and AGI tests get +1 difficulty, Sprint is not possible and
  * Initiative drops by 1; 50 lbs. or more over adds 1 to both, and so on per further 50 lbs. At twice the carry weight the character
@@ -33,6 +39,7 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
 
   /** CRB p. 87: every further 50 lbs. over the carry weight raises the penalty by 1. */
   static final int STEP = 50;
+  private static final int QUARTERS = 4;
 
   public static @NonNull CarryLoad of(@NonNull PlayerCharacter character) {
     int carried = 0;
@@ -42,9 +49,18 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
       }
       carried += ModdedWeapon.of(weapon).map(ModdedWeapon::weight).map(Weight::pounds).orElse(0) * weapon.quantity();
     }
+    int wornArmor = 0;
     for (WornApparel item : character.gear().getApparel()) {
-      carried += ModdedApparel.of(item).map(ModdedApparel::weight).map(Weight::pounds).orElse(0);
+      int pounds = ModdedApparel.of(item).map(ModdedApparel::weight).map(Weight::pounds).orElse(0);
+      if (item.isArmor() && !item.carried()) {
+        wornArmor += pounds;
+      } else {
+        carried += pounds;
+      }
     }
+    // At most three quarters stop counting (Sturdy Frame rank 3, WG p. 45).
+    int quartersOff = Math.min(QUARTERS - 1, character.perkEffect(PerkDefinition::armorWeightQuartersPerRank));
+    carried += wornArmor * (QUARTERS - quartersOff) / QUARTERS;
     for (CarriedItem item : character.gear().getItems()) {
       carried += Weight.pounds(item.printedWeight()) * item.quantity();
     }
@@ -52,7 +68,12 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
       carried += WeaponCatalog.ammunitionById(ammunition.getKey()).map(AmmunitionData::weight).map(Weight::pounds)
           .orElse(0) * ammunition.getValue();
     }
-    carried += character.gear().getMaterials().weight();
+    Materials materials = character.gear().getMaterials();
+    carried += materials.weight();
+    if (character.perkEffect(perk -> perk.junkWeightHalved() ? 1 : 0) > 0) {
+      // WG p. 45 Pack Rat: junk counts half (2 lbs. each, CRB p. 208, so exactly 1 lb.).
+      carried -= materials.junk() * Materials.JUNK_WEIGHT / 2;
+    }
     return of(carried, DerivedStats.of(character).carryWeight());
   }
 

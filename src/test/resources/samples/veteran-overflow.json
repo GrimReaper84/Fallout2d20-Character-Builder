@@ -141,7 +141,7 @@
   } ],
   "perks" : [ {
     "ref" : {
-      "id" : "dodger"
+      "id" : "life-giver"
     },
     "rank" : 2,
     "importedRanks" : 0,
@@ -150,7 +150,7 @@
     "stagedRanks" : 0
   }, {
     "ref" : {
-      "id" : "moving-target"
+      "id" : "ghost"
     },
     "rank" : 1,
     "importedRanks" : 0,
@@ -159,7 +159,7 @@
     "stagedRanks" : 0
   }, {
     "ref" : {
-      "id" : "fast-metabolism"
+      "id" : "gun-nut"
     },
     "rank" : 3,
     "importedRanks" : 0,
@@ -168,16 +168,7 @@
     "stagedRanks" : 0
   }, {
     "ref" : {
-      "id" : "hunter"
-    },
-    "rank" : 1,
-    "importedRanks" : 0,
-    "attributeChoices" : [ ],
-    "skillChoices" : [ ],
-    "stagedRanks" : 0
-  }, {
-    "ref" : {
-      "id" : "strong-back"
+      "id" : "blocker"
     },
     "rank" : 3,
     "importedRanks" : 0,
@@ -186,16 +177,16 @@
     "stagedRanks" : 0
   }, {
     "ref" : {
-      "id" : "cap-collector"
+      "id" : "incisor"
     },
-    "rank" : 1,
+    "rank" : 2,
     "importedRanks" : 0,
     "attributeChoices" : [ ],
     "skillChoices" : [ ],
     "stagedRanks" : 0
   }, {
     "ref" : {
-      "id" : "fortune-finder"
+      "id" : "pyromaniac"
     },
     "rank" : 1,
     "importedRanks" : 0,

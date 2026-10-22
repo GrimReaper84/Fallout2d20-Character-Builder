@@ -12,12 +12,15 @@ import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /** Carried weight and encumbrance (CRB p. 87). */
@@ -113,5 +116,39 @@ class CarryLoadTest {
     assertEquals(6, CarryLoad.of(character).carried());
     character.gear().setApparelMod(0, ApparelModSlot.MATERIAL, ApparelCatalog.modById("metal-polished-metal").orElseThrow());
     assertEquals(14, CarryLoad.of(character).carried());
+  }
+
+  private static PlayerCharacter withPerk(String perk, int rank) {
+    return PlayerCharacter.builder().origin(CatalogRef.of("survivor"))
+        .perks(List.of(new PerkSelection(CatalogRef.of(perk), rank, 0, List.of(), List.of()))).build();
+  }
+
+  /** WG p. 45 Sturdy Frame rank 2: worn armor counts half; carried armor and clothing count fully. */
+  @Test
+  void sturdyFrameLightensWornArmor() {
+    PlayerCharacter character = withPerk("sturdy-frame", 2);
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("metal-chest-piece")));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("metal-leg")).withLocation(HitLocation.LEFT_LEG));
+    assertEquals(4, CarryLoad.of(character).carried(), "(6 + 3) / 2, rounded down");
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("tough-clothing")));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("raider-chest-piece")));
+    assertTrue(character.gear().getApparel().getLast().carried(), "a second chest piece starts carried");
+    assertEquals(4 + 3 + 7, CarryLoad.of(character).carried());
+  }
+
+  /** Cage Armor is an outfit, but counts as armor for Sturdy Frame (user decision 2026-10-22). */
+  @Test
+  void sturdyFrameCountsArmorOutfits() {
+    PlayerCharacter character = withPerk("sturdy-frame", 3);
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("cage-armor")));
+    assertEquals(33 / 4, CarryLoad.of(character).carried(), "a quarter of 33 lbs., rounded down");
+  }
+
+  /** WG p. 45 Pack Rat: junk (2 lbs. each, CRB p. 208) counts half. */
+  @Test
+  void packRatHalvesJunk() {
+    PlayerCharacter character = withPerk("pack-rat", 1);
+    character.gear().setMaterials(new Materials(4, 1, 0, 0));
+    assertEquals(4 + 1, CarryLoad.of(character).carried());
   }
 }

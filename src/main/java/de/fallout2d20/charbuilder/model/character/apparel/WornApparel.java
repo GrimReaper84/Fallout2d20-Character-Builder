@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character.apparel;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
+import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.apparel.Coverage;
@@ -72,6 +73,16 @@ public record WornApparel(
   /** Kind, resistances and carry weight change with the installed mods; empty for an id outside the catalog. */
   public @NonNull Optional<ApparelValues> values() {
     return ModdedApparel.of(this).map(ModdedApparel::values);
+  }
+
+  /**
+   * Whether the piece is armor for perks that ask for worn armor (Ironclad, Sturdy Frame): armor pieces and the
+   * outfits that count as armor ({@link ApparelData#countsAsArmor()}); not clothing, headgear or robot armor (user
+   * decision 2026-10-22). Whether it is worn is up to the caller.
+   */
+  public boolean isArmor() {
+    return values().map(ApparelValues::kind).filter(ApparelKind.ARMOR::equals).isPresent()
+        || data().map(ApparelData::countsAsArmor).orElse(false);
   }
 
   public @NonNull String displayName() {

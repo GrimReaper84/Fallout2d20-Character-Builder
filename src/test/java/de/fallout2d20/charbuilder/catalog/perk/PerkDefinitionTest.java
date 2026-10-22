@@ -37,7 +37,7 @@ class PerkDefinitionTest {
     assertThrows(IllegalArgumentException.class, () -> perk(sources, 0));
     assertThrows(IllegalArgumentException.class, () -> perk(List.of(), 1));
     assertThrows(IllegalArgumentException.class,
-        () -> new PerkRequirements(Map.of(), 0, null, false, List.of()));
+        () -> new PerkRequirements(Map.of(), 0, null, false, List.of(), List.of(), false, List.of()));
   }
 
   @Test
@@ -47,6 +47,6 @@ class PerkDefinitionTest {
 
   private static PerkDefinition perk(List<Source> sources, int ranks) {
     return new PerkDefinition("test", "Test", sources, ranks, null, null, "Summary.", null,
-        0, 0, 0, 0, 0, 0, false, 0);
+        0, 0, 0, 0, 0, 0, false, 0, false, 0, 0, 0, false);
   }
 }

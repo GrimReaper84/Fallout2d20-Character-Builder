@@ -132,7 +132,7 @@
   "traits" : [ ],
   "perks" : [ {
     "ref" : {
-      "id" : "can-do"
+      "id" : "fortune-finder"
     },
     "rank" : 1,
     "importedRanks" : 0,
@@ -150,7 +150,7 @@
     "stagedRanks" : 0
   }, {
     "ref" : {
-      "id" : "moving-target"
+      "id" : "action-boy-girl"
     },
     "rank" : 1,
     "importedRanks" : 0,

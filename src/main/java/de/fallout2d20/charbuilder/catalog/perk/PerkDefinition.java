@@ -31,6 +31,15 @@ import org.jspecify.annotations.Nullable;
  * @param maxHpPerEndurance maximum HP per rank as a multiple of END (Life Giver: 1, CRB p. 66)
  * @param physicalDrByStrength physical DR from the STR tiers of the melee bonus (Barbarian, CRB p. 60)
  * @param skillPointsPerRank skill ranks to distribute per rank (Skilled: 2, CRB p. 71)
+ * @param drByAgility physical and energy DR on all locations from AGI: +1 at 7–8, +2 at 9–10, +3 at 11+, not while
+ *     over-encumbered (Evasive, WG p. 51)
+ * @param wornArmorDrPerRank physical and energy DR on all locations per rank while armor is worn (Ironclad: 1,
+ *     WG p. 48)
+ * @param junkDrPerRank physical and energy DR for every 5 junk carried, at most this value per rank (Junk Shield:
+ *     1, WG p. 52)
+ * @param armorWeightQuartersPerRank quarters of the worn armor's weight that stop counting per rank (Sturdy Frame:
+ *     1, so ¾, ½, ¼ remain, WG p. 45)
+ * @param junkWeightHalved whether carried junk counts half its weight (Pack Rat, WG p. 45)
  */
 public record PerkDefinition(
     @JsonProperty(required = true) @NonNull String id,
@@ -48,7 +57,12 @@ public record PerkDefinition(
     int poisonDrPerRank,
     int maxHpPerEndurance,
     boolean physicalDrByStrength,
-    int skillPointsPerRank) {
+    int skillPointsPerRank,
+    boolean drByAgility,
+    int wornArmorDrPerRank,
+    int junkDrPerRank,
+    int armorWeightQuartersPerRank,
+    boolean junkWeightHalved) {
 
   /** CRB p. 59: perks with ranks go up to 10 (Intense Training, Skilled). */
   private static final int MAX_RANKS = 10;
@@ -59,7 +73,7 @@ public record PerkDefinition(
     }
     if (ranks < 1 || ranks > MAX_RANKS || carryWeightPerRank < 0 || physicalDrPerRank < 0
         || energyDrPerRank < 0 || radiationDrPerRank < 0 || poisonDrPerRank < 0 || maxHpPerEndurance < 0
-        || skillPointsPerRank < 0) {
+        || skillPointsPerRank < 0 || wornArmorDrPerRank < 0 || junkDrPerRank < 0 || armorWeightQuartersPerRank < 0) {
       throw new IllegalArgumentException("Invalid ranks or effect values for perk " + id);
     }
     sources = List.copyOf(sources);

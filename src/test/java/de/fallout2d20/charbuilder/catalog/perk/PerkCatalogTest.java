@@ -12,21 +12,46 @@ import org.junit.jupiter.api.Test;
 
 class PerkCatalogTest {
 
-  /** CRB p. 59–73: 94 perks, all from the Core Rulebook. */
+  /** CRB p. 59–73: 94 perks; WG pp. 44–53: 54 more, each from one book and page. */
   @Test
-  void loadsAllCorePerks() {
+  void loadsAllCoreAndWandererPerks() {
     List<PerkDefinition> perks = PerkCatalog.all();
-    assertEquals(94, perks.size());
+    assertEquals(148, perks.size());
     assertEquals("action-boy-girl", perks.getFirst().id());
     assertEquals("toughness", perks.get(93).id());
     for (PerkDefinition perk : perks) {
       assertEquals(1, perk.sources().size(), perk.id());
-      assertEquals(Book.CRB, perk.sources().getFirst().book(), perk.id());
+      Book book = perk.sources().getFirst().book();
       int page = perk.sources().getFirst().page();
-      assertTrue(page >= 59 && page <= 73, perk.id());
+      assertTrue(book == Book.CRB ? page >= 59 && page <= 73 : book == Book.WG && page >= 44 && page <= 53, perk.id());
     }
     assertEquals(94, PerkCatalog.available(EnumSet.of(Book.CRB)).size());
+    assertEquals(54, PerkCatalog.available(EnumSet.of(Book.WG)).size());
     assertEquals(0, PerkCatalog.available(EnumSet.of(Book.WOA)).size());
+  }
+
+  /** WG pp. 44–53: spot checks of ranks, requirements and the new requirement kinds. */
+  @Test
+  void wandererPerks() {
+    PerkDefinition blocker = perk("blocker");
+    assertEquals(3, blocker.ranks());
+    assertEquals(Map.of(Attribute.STRENGTH, 6), blocker.requirements().attributes());
+    assertEquals(List.of(1, 6, 11), List.of(blocker.requirements().levelForRank(1),
+        blocker.requirements().levelForRank(2), blocker.requirements().levelForRank(3)));
+    PerkDefinition cannibal = perk("cannibal");
+    assertTrue(cannibal.requirements().notRobot());
+    assertEquals(19, cannibal.requirements().levelForRank(2));
+    assertEquals(List.of("super-mutant", "nightkin"), cannibal.requirements().firstRankLevelWaivedFor());
+    assertEquals(List.of("ghoul"), perk("ghoulish").requirements().excludedOrigins());
+    assertTrue(perk("radicool").requirements().notRadiationImmune());
+    assertEquals(Map.of(Attribute.CHARISMA, 8, Attribute.INTELLIGENCE, 7),
+        perk("responder").requirements().attributes());
+    assertTrue(perk("evasive").drByAgility());
+    assertEquals(1, perk("ironclad").wornArmorDrPerRank());
+    assertEquals(1, perk("junk-shield").junkDrPerRank());
+    assertEquals(1, perk("sturdy-frame").armorWeightQuartersPerRank());
+    assertTrue(perk("pack-rat").junkWeightHalved());
+    assertEquals("Butcher’s Bounty", perk("butchers-bounty").name(), "apostrophe as printed");
   }
 
   /** CRB p. 62: Cautious Nature and Daring Nature exclude each other; ids must exist. */

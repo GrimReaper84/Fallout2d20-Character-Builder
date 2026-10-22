@@ -132,7 +132,7 @@
   "traits" : [ ],
   "perks" : [ {
     "ref" : {
-      "id" : "comprehension"
+      "id" : "moving-target"
     },
     "rank" : 1,
     "importedRanks" : 0,
