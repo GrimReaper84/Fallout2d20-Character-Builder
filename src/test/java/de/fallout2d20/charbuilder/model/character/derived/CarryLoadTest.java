@@ -151,4 +151,16 @@ class CarryLoadTest {
     character.gear().setMaterials(new Materials(4, 1, 0, 0));
     assertEquals(4 + 1, CarryLoad.of(character).carried());
   }
+
+  /** WG p. 45 Pack Rat also halves the junk items of WG pp. 120–125 (user decision), their half rounded down. */
+  @Test
+  void packRatHalvesJunkItems() {
+    PlayerCharacter character = withPerk("pack-rat", 1);
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("bowling-ball")));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("paint")));
+    assertEquals((8 + 5) / 2, CarryLoad.of(character).carried(), "13 lbs. of junk items count 6");
+    PlayerCharacter without = withPerk("toughness", 1);
+    without.gear().addItem(CarriedItem.of(CatalogRef.of("bowling-ball")));
+    assertEquals(8, CarryLoad.of(without).carried());
+  }
 }

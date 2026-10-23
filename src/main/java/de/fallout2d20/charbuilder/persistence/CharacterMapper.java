@@ -94,6 +94,7 @@ final class CharacterMapper {
                 attributeIds(p.attributeChoices()), p.skillChoices().stream().map(Skill::id).toList(),
                 p.stagedRanks()))
             .toList(),
+        character.getUnlockedRarePerks().isEmpty() ? null : List.copyOf(character.getUnlockedRarePerks()),
         new ProgressionData(progression.pendingSkillRanks(), progression.pendingPerks()),
         vitalsData(character.session().getVitals()),
         toData(character.startingGear().getSelection()),
@@ -156,6 +157,7 @@ final class CharacterMapper {
           .skills(skills(data.skills()))
           .traits(traits(data.traits()))
           .perks(perks(data.perks()))
+          .unlockedRarePerks(data.unlockedRarePerks() == null ? Set.of() : Set.copyOf(data.unlockedRarePerks()))
           .progression(progression(data.progression()))
           .vitals(vitals(data.vitals()))
           .legacyBaseline(toModel(data.legacyBaseline()))

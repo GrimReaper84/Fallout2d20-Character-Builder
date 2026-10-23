@@ -122,6 +122,12 @@ class DerivedStatsTest {
     assertEquals(Resistance.of(2), stats.poison());
   }
 
+  /** WG p. 113: What Rads? gives +5 Radiation damage resistance. */
+  @Test
+  void whatRads() {
+    assertEquals(Resistance.of(5), DerivedStats.of(builder().perk("What Rads?", 1).build()).radiation());
+  }
+
   /** CRB p. 53: the STR/END +2 of a new Super Mutant feeds HP, carry weight and melee bonus. */
   @Test
   void superMutantModifiersReachTheDerivedStatistics() {

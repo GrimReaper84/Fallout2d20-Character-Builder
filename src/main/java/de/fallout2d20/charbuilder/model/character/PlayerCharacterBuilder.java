@@ -30,6 +30,7 @@ public final class PlayerCharacterBuilder {
   @NonNull Map<Skill, SkillState> skills = Map.of();
   @NonNull List<TraitSelection> traits = List.of();
   @NonNull List<PerkSelection> perks = List.of();
+  @NonNull Set<String> unlockedRarePerks = Set.of();
   @NonNull Progression progression = Progression.NONE;
   @NonNull Vitals vitals = Vitals.FULL;
   @Nullable LegacyBaseline legacyBaseline;
@@ -99,6 +100,12 @@ public final class PlayerCharacterBuilder {
 
   public @NonNull PlayerCharacterBuilder traits(@NonNull List<TraitSelection> traits) {
     this.traits = traits;
+    return this;
+  }
+
+  /** Ids of the rare perks the character has access to (WG p. 108). */
+  public @NonNull PlayerCharacterBuilder unlockedRarePerks(@NonNull Set<String> unlockedRarePerks) {
+    this.unlockedRarePerks = unlockedRarePerks;
     return this;
   }
 

@@ -303,6 +303,20 @@ class CharacterStoreTest {
     assertEquals("[\"CRB\",\"WOA\"]", JSON.readTree(file.toFile()).get("books").toString());
   }
 
+  /** WG p. 108: the unlocked rare perks are saved; files without the field have none. */
+  @Test
+  void roundTripsUnlockedRarePerks() throws Exception {
+    Path file = dir.resolve("rare.json");
+    PlayerCharacter character = PlayerCharacter.createNew();
+    store.save(character, file);
+    assertFalse(JSON.readTree(file.toFile()).has("unlockedRarePerks"));
+    character.setRarePerkUnlocked("what-rads", true);
+    character.setRarePerkUnlocked("ammo-factory", true);
+    store.save(character, file);
+    assertEquals("[\"ammo-factory\",\"what-rads\"]", JSON.readTree(file.toFile()).get("unlockedRarePerks").toString());
+    assertEquals(Set.of("ammo-factory", "what-rads"), store.load(file).character().getUnlockedRarePerks());
+  }
+
   /** Files written before the books field existed enable all books. */
   @Test
   void enablesAllBooksWhenTheFieldIsMissing() throws Exception {

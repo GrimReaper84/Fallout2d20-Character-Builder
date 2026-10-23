@@ -7,18 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-/** Spot checks of the item and magazine catalogs against CRB pp. 149–187. */
+/** Spot checks of the item and magazine catalogs against CRB pp. 149–187 and WG pp. 108–125. */
 class ItemCatalogTest {
 
   @Test
   void containsEveryTableRow() {
-    Map<ItemCategory, Long> perCategory = ItemCatalog.all().stream()
+    Map<ItemCategory, Long> perCategory = ItemCatalog.available(EnumSet.of(Book.CRB)).stream()
         .collect(Collectors.groupingBy(ItemData::category, Collectors.counting()));
     assertEquals(Map.of(ItemCategory.FOOD, 75L, ItemCategory.BEVERAGE, 22L, ItemCategory.CHEM, 32L,
         ItemCategory.OTHER_CONSUMABLE, 3L, ItemCategory.TOOL, 19L, ItemCategory.ROBOT_MODULE, 13L), perCategory);
@@ -77,5 +78,37 @@ class ItemCatalogTest {
     assertEquals(5, ItemCatalog.magazineById("tumblers-today").orElseThrow().issues().size());
     assertTrue(ItemCatalog.magazineById("la-fantoma").orElseThrow().issues().isEmpty());
     assertTrue(ItemCatalog.byId("la-fantoma").isEmpty(), "magazines are not items");
+  }
+
+  /**
+   * WG pp. 108–125: 20 rare books (each naming a rare perk of the catalog), 2 perk chems, 34 irradiated food rows,
+   * 123 junk items (rows in two tables once).
+   */
+  @Test
+  void wanderersGuideItems() {
+    Map<ItemCategory, Long> perCategory = ItemCatalog.available(EnumSet.of(Book.WG)).stream()
+        .collect(Collectors.groupingBy(ItemData::category, Collectors.counting()));
+    assertEquals(Map.of(ItemCategory.RARE_BOOK, 20L, ItemCategory.CHEM, 2L, ItemCategory.FOOD, 34L,
+        ItemCategory.JUNK, 123L), perCategory);
+    for (ItemData item : ItemCatalog.all()) {
+      String perk = item.rarePerk();
+      boolean rareBook = item.category() == ItemCategory.RARE_BOOK;
+      boolean junk = item.category() == ItemCategory.JUNK;
+      assertEquals(rareBook, perk != null, item.id());
+      assertTrue(perk == null || PerkCatalog.byId(perk).map(found -> found.requirements().rare()).orElse(false),
+          item.id());
+      assertEquals(junk, item.components() != null, item.id());
+      assertEquals(junk, !item.junkTables().isEmpty(), item.id());
+    }
+    assertEquals(List.of("guns-and-bullets-annual"), ItemCatalog.rareBooksFor("ammo-factory").stream()
+        .map(ItemData::id).toList());
+    assertTrue(ItemCatalog.rareBooksFor("master-infiltrator").isEmpty());
+    assertEquals(2, ItemCatalog.byId("radrat-meat").orElseThrow().radiationDice());
+    assertEquals(1, ItemCatalog.byId("gecko-meat").orElseThrow().radiationDice());
+    assertEquals(0, ItemCatalog.byId("gecko-kebab").orElseThrow().radiationDice());
+    assertNull(ItemCatalog.byId("hermit-crab-meat").orElseThrow().cost());
+    ItemData radio = ItemCatalog.byId("junk-radio").orElseThrow();
+    assertEquals(List.of("Household Items 3", "Science and Technology"), radio.junkTables());
+    assertEquals("1 Circuitry, 1 Copper, 2 Plastic, 2 Rubber", radio.components());
   }
 }

@@ -173,6 +173,9 @@ final class SampleCharacters {
     wearWithMod(character, "underarmor-suit", ApparelModSlot.LINING, "lining-treated-lining");
     wearWithMod(character, "marine-armor-chest-piece", ApparelModSlot.MATERIAL, "marine-welded");
     wearWithMod(character, "marine-armor-helmet", ApparelModSlot.MATERIAL, "marine-tempered");
+    List.of("guns-and-bullets-annual", "radrat-meat", "duct-tape", "high-tech-gadget")
+        .forEach(id -> character.gear().addItem(CarriedItem.of(CatalogRef.of(id))));
+    character.setRarePerkUnlocked("ammo-factory", true);
     return character;
   }
 
@@ -261,7 +264,9 @@ final class SampleCharacters {
       character.addPerkRank(CatalogRef.of(perk.id()), null, null);
     }
     // Shuffled with the name as seed: varied, but the same perks on every run.
-    List<PerkDefinition> perks = new ArrayList<>(PerkCatalog.available(character.getEnabledBooks()));
+    // Rare perks (WG p. 108) are left out, so the samples do not change with them.
+    List<PerkDefinition> perks = new ArrayList<>(PerkCatalog.available(character.getEnabledBooks()).stream()
+        .filter(perk -> !perk.requirements().rare()).toList());
     Collections.shuffle(perks, new Random(character.getName().hashCode()));
     for (PerkDefinition perk : perks) {
       while (PerkRules.perksLeft(character) > 0 && perk.choice() == null && PerkRules.canAdd(character, perk)) {

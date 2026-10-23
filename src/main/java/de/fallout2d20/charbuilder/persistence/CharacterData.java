@@ -17,7 +17,8 @@ import org.jspecify.annotations.Nullable;
  * {@code startingLevel} is written only for a complete character whose starting level is known;
  * {@code startingTagSkills} (skill ids) only for a complete character. {@code ammunition} maps ammunition
  * ids to shots. {@code items}, {@code caps} and {@code materials} hold the inventory (written only when not
- * empty or 0).
+ * empty or 0). {@code unlockedRarePerks} lists the ids of the rare perks the character has access to (WG p. 108;
+ * written only when not empty, added in 1.4.0 as an optional field).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CharacterData(
@@ -38,6 +39,7 @@ public record CharacterData(
     @JsonProperty(required = true) Map<String, SkillData> skills,
     @Nullable List<TraitData> traits,
     @Nullable List<PerkData> perks,
+    @Nullable List<String> unlockedRarePerks,
     @Nullable ProgressionData progression,
     @Nullable VitalsData vitals,
     @Nullable StartingEquipmentData startingEquipment,

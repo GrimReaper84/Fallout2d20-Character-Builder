@@ -358,6 +358,14 @@ public final class Gear {
     return materials;
   }
 
+  /**
+   * The pieces of junk carried: the junk counter (CRB p. 208) plus the junk items of the WG tables (WG pp. 120–125)
+   * with their quantity (user decision 2026-10-22: both count for Junk Shield, WG p. 45).
+   */
+  public int junkCount() {
+    return materials.junk() + items.stream().filter(CarriedItem::isJunk).mapToInt(CarriedItem::quantity).sum();
+  }
+
   public void setMaterials(@NonNull Materials materials) {
     this.materials = materials;
   }

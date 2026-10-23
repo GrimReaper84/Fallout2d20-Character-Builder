@@ -150,7 +150,158 @@
     ],
     "quantityFound": "4+2 CD",
     "weight": "<1",
-    "rarity": 2
+    "rarity": 2,
+    "special": "Unspecified darts; the types are listed separately (CRB p. 93). No dart effect applies twice to one target at the same time."
+  },
+  {
+    "id": "syringer-berserk",
+    "name": "Berserk",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 50,
+    "rarity": 2,
+    "special": "If the damage roll shows an Effect, the target goes berserk and attacks the nearest living creature for the rest of the scene."
+  },
+  {
+    "id": "syringer-bleed-out",
+    "name": "Bleed-Out",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 17,
+    "rarity": 2,
+    "special": "The weapon gains Persistent."
+  },
+  {
+    "id": "syringer-bloatfly-larva",
+    "name": "Bloatfly Larva",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 10,
+    "rarity": 2,
+    "special": "If the damage roll shows an Effect, a bloatfly bursts from the target when it dies."
+  },
+  {
+    "id": "syringer-endangerol",
+    "name": "Endangerol",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 60,
+    "rarity": 2,
+    "special": "If the damage roll shows an Effect, the target's Physical damage resistance drops by 2 for the rest of the scene."
+  },
+  {
+    "id": "syringer-lock-joint",
+    "name": "Lock Joint",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 40,
+    "rarity": 2,
+    "special": "The weapon gains Stun."
+  },
+  {
+    "id": "syringer-mind-cloud",
+    "name": "Mind Cloud",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 73,
+    "rarity": 2,
+    "special": "If the damage roll shows an Effect, the target is confused: +2 difficulty on PER tests for one round per Effect."
+  },
+  {
+    "id": "syringer-pax",
+    "name": "Pax",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 39,
+    "rarity": 2,
+    "special": "If the damage roll shows an Effect, the target takes no hostile actions for one round per Effect."
+  },
+  {
+    "id": "syringer-radscorpion-venom",
+    "name": "Radscorpion Venom",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 65,
+    "rarity": 2,
+    "special": "+1 CD damage; the weapon gains Persistent (Poison)."
+  },
+  {
+    "id": "syringer-yellow-belly",
+    "name": "Yellow Belly",
+    "sources": [
+      {
+        "book": "CRB",
+        "page": 93
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 55,
+    "rarity": 2,
+    "special": "If the damage roll shows an Effect, the target spends an action each turn fleeing from all enemies, for one round per Effect."
+  },
+  {
+    "id": "syringer-cazadores-sting",
+    "name": "Cazadores Sting",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 59
+      }
+    ],
+    "quantityFound": "4+2 CD",
+    "weight": "<1",
+    "cost": 75,
+    "rarity": 2,
+    "special": "+2 CD damage; the weapon gains Persistent (Poison)."
   },
   {
     "id": "44-magnum",

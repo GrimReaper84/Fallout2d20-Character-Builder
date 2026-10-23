@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
+import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Materials;
 import java.util.List;
 import java.util.Map;
@@ -253,5 +254,16 @@ class ArmorResistancesTest {
     assertEquals(Resistance.of(2), at(character, HitLocation.TORSO).energy());
     character.gear().setMaterials(new Materials(30, 0, 0, 0));
     assertEquals(Resistance.of(2), at(character, HitLocation.TORSO).physical(), "capped at rank 2");
+  }
+
+  /** WG p. 52 Junk Shield counts the junk items of WG pp. 120–125 with the junk counter (user decision). */
+  @Test
+  void junkShieldCountsJunkItems() {
+    PlayerCharacter character = withPerk("junk-shield", 2, 0);
+    character.gear().setMaterials(new Materials(3, 0, 0, 0));
+    character.gear().addItem(CarriedItem.of(CatalogRef.of("duct-tape")));
+    character.gear().setItemQuantity(0, 2);
+    assertEquals(5, character.gear().junkCount());
+    assertEquals(Resistance.of(1), at(character, HitLocation.TORSO).physical());
   }
 }

@@ -707,7 +707,17 @@
     "cost": 132,
     "rarity": 2,
     "ammunition": [
-      "syringer-ammo"
+      "syringer-ammo",
+      "syringer-berserk",
+      "syringer-bleed-out",
+      "syringer-bloatfly-larva",
+      "syringer-endangerol",
+      "syringer-lock-joint",
+      "syringer-mind-cloud",
+      "syringer-pax",
+      "syringer-radscorpion-venom",
+      "syringer-yellow-belly",
+      "syringer-cazadores-sting"
     ],
     "mods": [
       "small-guns-long",
@@ -4165,5 +4175,29 @@
     "rarity": 2,
     "special": "Fills the zone with smoke: no sight into, out of or through it, +2 difficulty to attacks and PER tests in it; it clears once Effects are rolled at the end of a round.",
     "specialDamage": true
+  },
+  {
+    "id": "lightweight-mini-nuke",
+    "name": "Lightweight Mini-Nuke",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 112
+      }
+    ],
+    "skill": "EXPLOSIVES",
+    "damage": 6,
+    "damageEffects": [
+      "Radioactive"
+    ],
+    "damageTypes": [
+      "PHYSICAL"
+    ],
+    "qualities": [
+      "Blast",
+      "Thrown (M)"
+    ],
+    "weight": "1",
+    "special": "Made with Nuclear Proliferator; becomes useless within hours."
   }
 ]

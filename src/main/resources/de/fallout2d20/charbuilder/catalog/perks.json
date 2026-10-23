@@ -1648,5 +1648,249 @@
       "level": 15
     },
     "summary": "In rain or a rad storm, regain 1 HP at the start of each combat turn; outside combat, half your Luck (rounded up) per hour of rain."
+  },
+  {
+    "id": "ammo-factory",
+    "name": "Ammo Factory",
+    "sources": [{"book": "WG", "page": 109}],
+    "ranks": 1,
+    "requirements": {
+      "level": 5,
+      "rare": true
+    },
+    "summary": "Crafting ammunition yields twice the amount."
+  },
+  {
+    "id": "arms-breaking",
+    "name": "Arms Breaking",
+    "sources": [{"book": "WG", "page": 109}],
+    "ranks": 3,
+    "requirements": {
+      "level": 7,
+      "levelIncreasePerRank": 6,
+      "rare": true
+    },
+    "summary": "After a successful melee attack in Power Armor or as a super mutant, spend 3 AP to break the target's weapon until it is repaired; 2 AP at rank 2, 1 AP at rank 3."
+  },
+  {
+    "id": "blood-sacrifice",
+    "name": "Blood Sacrifice!",
+    "sources": [{"book": "WG", "page": 109}],
+    "ranks": 3,
+    "requirements": {
+      "level": 6,
+      "levelIncreasePerRank": 6,
+      "rare": true
+    },
+    "summary": "When you drop to 0 HP, all allies and companions regain 4 HP and gain +2 Physical and Energy DR; rank 2: 2 HP more; rank 3: +3 DR each and 2 HP more again."
+  },
+  {
+    "id": "botany-buddy",
+    "name": "Botany Buddy",
+    "sources": [{"book": "WG", "page": 109}],
+    "ranks": 1,
+    "requirements": {
+      "level": 6,
+      "rare": true
+    },
+    "summary": "When foraging for food, spend 1 Luck point: you and your allies regain 4 HP and gain +2 Physical DR until the end of the next scene."
+  },
+  {
+    "id": "brawling-chemist",
+    "name": "Brawling Chemist",
+    "sources": [{"book": "WG", "page": 109}],
+    "ranks": 3,
+    "requirements": {
+      "level": 11,
+      "levelIncreasePerRank": 5,
+      "rare": true
+    },
+    "summary": "You know the recipe for Super Chem Mk I; a dose spoils 6 hours after it is made, 12 at rank 2, 24 at rank 3."
+  },
+  {
+    "id": "collateral-damage",
+    "name": "Collateral Damage",
+    "sources": [{"book": "WG", "page": 110}],
+    "ranks": 1,
+    "requirements": {
+      "level": 9,
+      "rare": true
+    },
+    "summary": "Kill an enemy with a melee weapon and spend 1 Luck point to make it explode: roll CD equal to half the weapon's damage rating; per Effect one creature within Close range takes the total as Physical damage."
+  },
+  {
+    "id": "detonation-contagion",
+    "name": "Detonation Contagion",
+    "sources": [{"book": "WG", "page": 110}],
+    "ranks": 1,
+    "requirements": {
+      "level": 9,
+      "rare": true
+    },
+    "summary": "Kill an enemy with a thrown explosive and spend 1 Luck point to make it explode: roll CD equal to half the explosive's damage rating; per Effect one creature within Close range takes the total as Physical damage."
+  },
+  {
+    "id": "electric-absorption",
+    "name": "Electric Absorption",
+    "sources": [{"book": "WG", "page": 110}],
+    "ranks": 3,
+    "requirements": {
+      "level": 9,
+      "levelIncreasePerRank": 9,
+      "rare": true
+    },
+    "summary": "As a robot or in Power Armor, once per scene per rank spend 1 Luck point to absorb an Energy attack: no damage, regain HP (Power Armor: armor HP of the location) equal to the Effects rolled, and Power Armor regains one fusion core charge."
+  },
+  {
+    "id": "exploding-palm",
+    "name": "Exploding Palm",
+    "sources": [{"book": "WG", "page": 111}],
+    "ranks": 3,
+    "requirements": {
+      "level": 9,
+      "levelIncreasePerRank": 9,
+      "rare": true
+    },
+    "summary": "After a successful unarmed melee attack, spend 1 AP: per Effect rolled one enemy within Close range of the target takes 3 CD Physical damage; 4 CD at rank 2, 5 CD at rank 3."
+  },
+  {
+    "id": "far-flung-fireworks",
+    "name": "Far-Flung Fireworks",
+    "sources": [{"book": "WG", "page": 111}],
+    "ranks": 1,
+    "requirements": {
+      "level": 9,
+      "rare": true
+    },
+    "summary": "Kill an enemy with a ranged weapon and spend 1 Luck point to make it explode: roll CD equal to half the weapon's damage rating; per Effect one creature within Close range takes the total as Physical damage."
+  },
+  {
+    "id": "follow-through",
+    "name": "Follow-Through",
+    "sources": [{"book": "WG", "page": 111}],
+    "ranks": 3,
+    "requirements": {
+      "level": 8,
+      "levelIncreasePerRank": 8,
+      "rare": true
+    },
+    "summary": "After a successful ranged sneak attack, all attacks against that enemy deal +1 CD damage until the start of your next turn; +2 CD at rank 2, +3 CD at rank 3."
+  },
+  {
+    "id": "funky-duds",
+    "name": "Funky Duds",
+    "sources": [{"book": "WG", "page": 111}],
+    "ranks": 3,
+    "requirements": {
+      "level": 7,
+      "levelIncreasePerRank": 7,
+      "rare": true
+    },
+    "summary": "Wearing a full set of one armor type on every location it covers gives +5 Poison DR; +8 at rank 2, +10 at rank 3."
+  },
+  {
+    "id": "hack-and-slash",
+    "name": "Hack and Slash",
+    "sources": [{"book": "WG", "page": 111}],
+    "ranks": 3,
+    "requirements": {
+      "level": 8,
+      "levelIncreasePerRank": 8,
+      "rare": true
+    },
+    "summary": "After a successful melee attack, spend AP equal to another enemy's Defense to deal the full damage to it too (within Reach); up to two enemies at rank 2, three at rank 3 with the AP cost reduced by 1 (minimum 1)."
+  },
+  {
+    "id": "master-infiltrator",
+    "name": "Master Infiltrator",
+    "sources": [{"book": "WG", "page": 111}],
+    "ranks": 3,
+    "requirements": {
+      "level": 8,
+      "levelIncreasePerRank": 8,
+      "rare": true
+    },
+    "summary": "On a Lockpick test to open a lock or a Science test to hack a terminal, spend 1 Luck point to succeed automatically at difficulty 1 or lower; 2 at rank 2, 3 at rank 3. In no rare book: access only by the GM."
+  },
+  {
+    "id": "nuclear-proliferator",
+    "name": "Nuclear Proliferator",
+    "sources": [{"book": "WG", "page": 112}],
+    "ranks": 3,
+    "requirements": {
+      "level": 11,
+      "levelIncreasePerRank": 6,
+      "rare": true
+    },
+    "summary": "You know the plans for the Lightweight Mini-Nuke; a device becomes useless 6 hours after it is made, 12 at rank 2, 24 at rank 3."
+  },
+  {
+    "id": "power-armor-reboot",
+    "name": "Power Armor Reboot",
+    "sources": [{"book": "WG", "page": 112}],
+    "ranks": 1,
+    "requirements": {
+      "level": 10,
+      "rare": true
+    },
+    "summary": "Once per day, when you drop to 0 HP in Power Armor, spend 1 Luck point to be revived at full HP; the Power Armor regains half the HP it lost."
+  },
+  {
+    "id": "power-sprinter",
+    "name": "Power Sprinter",
+    "sources": [{"book": "WG", "page": 112}],
+    "ranks": 1,
+    "requirements": {
+      "level": 8,
+      "rare": true
+    },
+    "summary": "In Power Armor, moving through difficult terrain or over obstacles costs 2 AP less (minimum 0)."
+  },
+  {
+    "id": "retribution",
+    "name": "Retribution",
+    "sources": [{"book": "WG", "page": 113}],
+    "ranks": 3,
+    "requirements": {
+      "level": 12,
+      "levelIncreasePerRank": 6,
+      "rare": true
+    },
+    "summary": "While you take the Defend action, each enemy melee attack that misses you lets you regain 2 HP and adds 1 AP to the group pool; 3 HP and 2 AP at rank 2, 4 HP and 3 AP at rank 3."
+  },
+  {
+    "id": "sizzling-style",
+    "name": "Sizzling Style",
+    "sources": [{"book": "WG", "page": 113}],
+    "ranks": 1,
+    "requirements": {
+      "level": 7,
+      "rare": true
+    },
+    "summary": "Wearing a full set of one armor type on every location it covers gives +5 Energy DR against fire (Flamers, Persistent damage of incendiary attacks)."
+  },
+  {
+    "id": "survival-shortcut",
+    "name": "Survival Shortcut",
+    "sources": [{"book": "WG", "page": 113}],
+    "ranks": 3,
+    "requirements": {
+      "level": 11,
+      "levelIncreasePerRank": 5,
+      "rare": true
+    },
+    "summary": "You know the recipe for the Survival Syringe; a dose spoils 6 hours after it is made, 12 at rank 2, 24 at rank 3."
+  },
+  {
+    "id": "what-rads",
+    "name": "What Rads?",
+    "sources": [{"book": "WG", "page": 113}],
+    "ranks": 1,
+    "requirements": {
+      "level": 9,
+      "rare": true
+    },
+    "summary": "+5 Radiation DR; you also heal 1 Radiation damage whenever you heal HP.",
+    "radiationDrPerRank": 5
   }
 ]

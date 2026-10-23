@@ -21,6 +21,8 @@ import org.jspecify.annotations.Nullable;
  *     Generous, WG pp. 48–49)
  * @param firstRankLevelWaivedFor ids of origins that ignore the level requirement of the first rank (Cannibal:
  *     super mutants, i.e. Super Mutant and Nightkin, WG p. 47)
+ * @param rare whether the perk is a rare perk, open only to characters with access to it (WG p. 108: through its rare
+ *     book; written "Rare book" or "Rare perk" in the requirements)
  */
 public record PerkRequirements(
     @NonNull Map<Attribute, Integer> attributes,
@@ -30,11 +32,12 @@ public record PerkRequirements(
     @NonNull List<String> excludedPerks,
     @NonNull List<String> excludedOrigins,
     boolean notRadiationImmune,
-    @NonNull List<String> firstRankLevelWaivedFor) {
+    @NonNull List<String> firstRankLevelWaivedFor,
+    boolean rare) {
 
   /** No requirements at all ("None" in the book). */
   public static final @NonNull PerkRequirements NONE = new PerkRequirements(Map.of(), null, null, false, List.of(),
-      List.of(), false, List.of());
+      List.of(), false, List.of(), false);
 
   public PerkRequirements {
     attributes = attributes == null ? Map.of() : Map.copyOf(attributes);

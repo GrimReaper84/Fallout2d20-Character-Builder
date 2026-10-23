@@ -13,6 +13,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.ToIntFunction;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -39,6 +40,8 @@ public class PlayerCharacter {
   private final @NonNull Set<Book> enabledBooks;
   private final @NonNull List<TraitSelection> traits;
   private final @NonNull List<PerkSelection> perks;
+  /** Rare perks the character has access to (WG p. 108: through a rare book or the GM). */
+  private final @NonNull Set<String> unlockedRarePerks;
   private final @Nullable LegacyBaseline legacyBaseline;
   private final @Nullable LegacyImport legacyImport;
   /** Tag skills at completion (CRB p. 81 Tag skill items); null while in creation or when not stored. */
@@ -63,6 +66,7 @@ public class PlayerCharacter {
     this.enabledBooks.addAll(parts.enabledBooks);
     this.traits = new ArrayList<>(parts.traits);
     this.perks = new ArrayList<>(parts.perks);
+    this.unlockedRarePerks = new TreeSet<>(parts.unlockedRarePerks);
     this.legacyBaseline = parts.legacyBaseline;
     this.legacyImport = parts.legacyImport;
     this.completedTagSkills = parts.startingTagSkills == null ? null : Set.copyOf(parts.startingTagSkills);
@@ -417,6 +421,33 @@ public class PlayerCharacter {
 
   public @NonNull List<PerkSelection> getPerks() {
     return List.copyOf(perks);
+  }
+
+  /** Whether the character may take the perk as far as rare perks go: not rare, or unlocked (WG p. 108). */
+  public boolean hasRarePerkAccess(@NonNull PerkDefinition perk) {
+    return !perk.requirements().rare() || unlockedRarePerks.contains(perk.id());
+  }
+
+  /** The ids of the rare perks the character has access to (WG p. 108), sorted. */
+  public @NonNull Set<String> getUnlockedRarePerks() {
+    return Collections.unmodifiableSet(unlockedRarePerks);
+  }
+
+  /**
+   * Grants or takes back access to a rare perk (WG p. 108: reading its rare book; Master Infiltrator only by the
+   * GM). Access to a perk the character has taken cannot be taken back.
+   *
+   * @throws IllegalStateException when locking a perk the character has a rank of
+   */
+  public void setRarePerkUnlocked(@NonNull String perkId, boolean unlocked) {
+    if (unlocked) {
+      unlockedRarePerks.add(perkId);
+    } else {
+      if (hasPerkRank(perkId, 1)) {
+        throw new IllegalStateException("A taken rare perk stays unlocked: " + perkId);
+      }
+      unlockedRarePerks.remove(perkId);
+    }
   }
 
   /** Whether the character has the perk with this id at {@code rank} or higher (e.g. needed to install a mod). */

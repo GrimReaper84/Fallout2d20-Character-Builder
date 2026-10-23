@@ -23,7 +23,8 @@ import org.jspecify.annotations.NonNull;
  * ({@link ModdedWeapon}); custom weapons and custom apparel have no weight of their own, only their mods'.
  *
  * <p>Wanderer's Guide perks: Sturdy Frame lets a quarter of the weight of worn armor ({@link WornApparel#isArmor()})
- * stop counting per rank, rounded down once (WG p. 45); Pack Rat halves the weight of junk (WG p. 45). The book's
+ * stop counting per rank, rounded down once (WG p. 45); Pack Rat halves the weight of junk, the junk counter and the
+ * junk items of the WG tables alike (WG p. 45; user decision 2026-10-22), the items' half rounded down once. The book's
  * Power Armor exception does not arise yet (D3).
  *
  * <p>CRB p. 87: above the carry weight, STR and AGI tests get +1 difficulty, Sprint is not possible and
@@ -61,8 +62,14 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
     // At most three quarters stop counting (Sturdy Frame rank 3, WG p. 45).
     int quartersOff = Math.min(QUARTERS - 1, character.perkEffect(PerkDefinition::armorWeightQuartersPerRank));
     carried += wornArmor * (QUARTERS - quartersOff) / QUARTERS;
+    int junkItems = 0;
     for (CarriedItem item : character.gear().getItems()) {
-      carried += Weight.pounds(item.printedWeight()) * item.quantity();
+      int pounds = Weight.pounds(item.printedWeight()) * item.quantity();
+      if (item.isJunk()) {
+        junkItems += pounds;
+      } else {
+        carried += pounds;
+      }
     }
     for (Map.Entry<String, Integer> ammunition : character.gear().getAmmunition().entrySet()) {
       carried += WeaponCatalog.ammunitionById(ammunition.getKey()).map(AmmunitionData::weight).map(Weight::pounds)
@@ -71,8 +78,12 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
     Materials materials = character.gear().getMaterials();
     carried += materials.weight();
     if (character.perkEffect(perk -> perk.junkWeightHalved() ? 1 : 0) > 0) {
-      // WG p. 45 Pack Rat: junk counts half (2 lbs. each, CRB p. 208, so exactly 1 lb.).
+      // WG p. 45 Pack Rat: junk counts half (2 lbs. each, CRB p. 208, so exactly 1 lb.); junk items half their
+      // total, rounded down.
       carried -= materials.junk() * Materials.JUNK_WEIGHT / 2;
+      carried += junkItems / 2;
+    } else {
+      carried += junkItems;
     }
     return of(carried, DerivedStats.of(character).carryWeight());
   }

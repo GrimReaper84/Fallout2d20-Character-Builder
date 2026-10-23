@@ -1,6 +1,8 @@
 package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.catalog.Source;
+import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
+import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkChoice;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -18,6 +20,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -75,6 +78,9 @@ final class PerkCard {
       Label stagedLabel = new Label(staged + " rank" + (staged == 1 ? "" : "s") + " staged, not applied yet");
       stagedLabel.setStyle("-fx-font-style: italic;");
       card.getChildren().add(stagedLabel);
+    }
+    if (perk.requirements().rare()) {
+      card.getChildren().add(rareAccess(character, perk, rank, onChanged));
     }
     if (editable) {
       card.getChildren().add(buttons(character, perk, blockers, card, onChanged));
@@ -151,6 +157,27 @@ final class PerkCard {
             }),
         StepButtons.plus(canAdd ? "Take a rank of " + perk.name() : addBlocked(character, blockers),
             canAdd, () -> add(character, perk, card, onChanged)));
+  }
+
+  /**
+   * The access switch of a rare perk (WG p. 108; user decision 2026-10-22): unlocking is always possible, as the GM
+   * grants access at any time (also after a rare perk was taken in GM mode); locking not while the perk has a rank.
+   * The tooltip names the rare book.
+   */
+  private static @NonNull CheckBox rareAccess(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
+      int rank, @NonNull Runnable onChanged) {
+    CheckBox unlocked = new CheckBox("Unlocked (rare book)");
+    unlocked.setSelected(character.hasRarePerkAccess(perk));
+    unlocked.setDisable(rank > 0 && unlocked.isSelected());
+    List<String> books = ItemCatalog.rareBooksFor(perk.id()).stream().map(ItemData::name).toList();
+    unlocked.setTooltip(new Tooltip(books.isEmpty()
+        ? "Rare perk without a rare book: access only by the GM."
+        : "Access by reading " + String.join(" or ", books) + "."));
+    unlocked.setOnAction(_ -> {
+      character.setRarePerkUnlocked(perk.id(), unlocked.isSelected());
+      onChanged.run();
+    });
+    return unlocked;
   }
 
   /** Filled stars for the ranks taken, empty ones for the rest. */

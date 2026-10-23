@@ -29,6 +29,11 @@ public final class PerkCatalog {
     return Optional.ofNullable(BY_ID.get(id));
   }
 
+  /** The perk's name as printed; the id itself for an id outside the catalog. */
+  public static @NonNull String nameOf(@NonNull String id) {
+    return byId(id).map(PerkDefinition::name).orElse(id);
+  }
+
   /** Perks of the enabled books, in catalog order. */
   public static @NonNull List<PerkDefinition> available(@NonNull Set<Book> books) {
     return BY_ID.values().stream().filter(perk -> perk.isAvailableWith(books)).toList();

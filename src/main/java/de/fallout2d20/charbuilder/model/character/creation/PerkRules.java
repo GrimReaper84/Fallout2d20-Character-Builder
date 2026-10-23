@@ -163,14 +163,17 @@ public final class PerkRules {
 
   /**
    * The requirements of the given rank in display order, each with whether the character meets it:
-   * attribute minimums ("STR 7"), the level for that rank if above 1 ("level 10"), the robot exclusion
-   * ("no robot") and excluded perks ("not with Daring Nature"). The one place requirements are listed,
-   * for the rules and for the perk grid.
+   * access to a rare perk ("rare book", WG p. 108), attribute minimums ("STR 7"), the level for that rank if
+   * above 1 ("level 10"), the robot exclusion ("no robot") and excluded perks ("not with Daring Nature"). The
+   * one place requirements are listed, for the rules and for the perk grid.
    */
   public static @NonNull Map<String, Boolean> requirementStatus(@NonNull PlayerCharacter character,
       @NonNull PerkDefinition perk, int rank) {
     PerkRequirements requirements = perk.requirements();
     Map<String, Boolean> status = new LinkedHashMap<>();
+    if (requirements.rare()) {
+      status.put("rare book", character.hasRarePerkAccess(perk));
+    }
     for (Attribute attribute : Attribute.values()) {
       Integer minimum = requirements.attributes().get(attribute);
       if (minimum != null) {
@@ -196,7 +199,7 @@ public final class PerkRules {
       status.put("not immune to radiation", !isRadiationImmune(character));
     }
     for (String excluded : requirements.excludedPerks()) {
-      status.put("not with " + PerkCatalog.byId(excluded).map(PerkDefinition::name).orElse(excluded),
+      status.put("not with " + PerkCatalog.nameOf(excluded),
           rank(character, excluded) == 0);
     }
     return status;

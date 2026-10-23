@@ -4,6 +4,7 @@ import de.fallout2d20.charbuilder.catalog.item.ChemDuration;
 import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineIssue;
+import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
@@ -81,6 +82,24 @@ final class ItemDetails {
         .ifPresent(entry -> OverviewParts.detailRow(rows, "Issue", issue(character, item, entry, index, onChanged)));
     OverviewParts.detailRow(rows, "Description",
         OverviewParts.wrappingInCell(new Label(OverviewParts.orDash(item.effects()))));
+    data.ifPresent(entry -> addCatalogDetails(rows, entry));
+  }
+
+  /** The rare perk of a rare book (WG p. 108) and the components and tables of a junk item (WG pp. 121–125). */
+  private static void addCatalogDetails(@NonNull MigPane rows, @NonNull ItemData item) {
+    String rarePerk = item.rarePerk();
+    if (rarePerk != null) {
+      OverviewParts.detailRow(rows, "Rare perk", OverviewParts.wrappingInCell(new Label(
+          PerkCatalog.nameOf(rarePerk)
+              + " – unlock it on its card in the Perks tab once the book is read.")));
+    }
+    String components = item.components();
+    if (components != null) {
+      OverviewParts.detailRow(rows, "Components", OverviewParts.wrappingInCell(new Label(components)));
+    }
+    if (!item.junkTables().isEmpty()) {
+      OverviewParts.detailRow(rows, "Junk table", new Label(String.join(", ", item.junkTables())));
+    }
   }
 
   /** Name (committed on Enter or when leaving the field, then the tree shows it) and the free label text. */
@@ -144,8 +163,9 @@ final class ItemDetails {
     if (hp != null) {
       type.append(", ").append(hp).append(" HP");
     }
-    if (item.irradiated()) {
-      type.append(", irradiated");
+    int radiationDice = item.radiationDice();
+    if (radiationDice > 0) {
+      type.append(", irradiated (").append(radiationDice).append(" CD)");
     }
     ChemDuration duration = item.duration();
     if (duration != null) {

@@ -2,6 +2,7 @@ package de.fallout2d20.charbuilder.model.character.creation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
@@ -20,6 +21,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class PerkRulesTest {
@@ -276,5 +278,35 @@ class PerkRulesTest {
     }
     PlayerCharacter survivor = character("survivor", 1, Map.of(Attribute.ENDURANCE, 3), List.of(), List.of());
     assertEquals(List.of("Requirement not met: level 10."), PerkRules.unmetRequirements(survivor, cannibal, 1));
+  }
+
+  /**
+   * WG p. 108: a rare perk needs access (user decision 2026-10-22: unlocked on its card), then its level requirement
+   * applies as usual; in GM mode the missing access is only a hint; a taken rare perk stays unlocked.
+   */
+  @Test
+  void rarePerksNeedAccess() {
+    PerkDefinition whatRads = def("what-rads");
+    PlayerCharacter character = character("survivor", 9, Map.of(), List.of(), List.of());
+    assertEquals(List.of("Requirement not met: rare book."), PerkRules.blockers(character, whatRads));
+    character.setRarePerkUnlocked("what-rads", true);
+    assertEquals(List.of(), PerkRules.blockers(character, whatRads));
+    PlayerCharacter low = character("survivor", 8, Map.of(), List.of(), List.of());
+    low.setRarePerkUnlocked("what-rads", true);
+    assertEquals(List.of("Requirement not met: level 9."), PerkRules.blockers(low, whatRads));
+
+    PlayerCharacter gm = character("survivor", 9, Map.of(), List.of(), List.of());
+    gm.setGmMode(true);
+    assertTrue(PerkRules.canAdd(gm, whatRads), "GM mode: requirements are hints only");
+    gm.addPerkRank(CatalogRef.of("what-rads"), null, null);
+    assertEquals(List.of("Requirement not met: rare book."), PerkRules.unmetForTakenRank(gm, whatRads));
+    gm.setRarePerkUnlocked("what-rads", true);
+    assertEquals(List.of(), PerkRules.unmetForTakenRank(gm, whatRads), "unlocking later clears the hint");
+
+    PlayerCharacter taken = character("survivor", 9, Map.of(), List.of(perk("what-rads", 1)), List.of());
+    taken.setRarePerkUnlocked("what-rads", true);
+    assertThrows(IllegalStateException.class, () -> taken.setRarePerkUnlocked("what-rads", false));
+    character.setRarePerkUnlocked("what-rads", false);
+    assertEquals(Set.of(), character.getUnlockedRarePerks());
   }
 }

@@ -12,21 +12,24 @@ import org.junit.jupiter.api.Test;
 
 class PerkCatalogTest {
 
-  /** CRB p. 59–73: 94 perks; WG pp. 44–53: 54 more, each from one book and page. */
+  /** CRB p. 59–73: 94 perks; WG pp. 44–53: 54 more and pp. 109–113: 21 rare perks, each from one book and page. */
   @Test
   void loadsAllCoreAndWandererPerks() {
     List<PerkDefinition> perks = PerkCatalog.all();
-    assertEquals(148, perks.size());
+    assertEquals(169, perks.size());
     assertEquals("action-boy-girl", perks.getFirst().id());
     assertEquals("toughness", perks.get(93).id());
     for (PerkDefinition perk : perks) {
       assertEquals(1, perk.sources().size(), perk.id());
       Book book = perk.sources().getFirst().book();
       int page = perk.sources().getFirst().page();
-      assertTrue(book == Book.CRB ? page >= 59 && page <= 73 : book == Book.WG && page >= 44 && page <= 53, perk.id());
+      boolean rare = perk.requirements().rare();
+      assertTrue(book == Book.CRB ? page >= 59 && page <= 73 && !rare
+          : book == Book.WG && (rare ? page >= 109 && page <= 113 : page >= 44 && page <= 53), perk.id());
     }
     assertEquals(94, PerkCatalog.available(EnumSet.of(Book.CRB)).size());
-    assertEquals(54, PerkCatalog.available(EnumSet.of(Book.WG)).size());
+    assertEquals(75, PerkCatalog.available(EnumSet.of(Book.WG)).size());
+    assertEquals(21, perks.stream().filter(perk -> perk.requirements().rare()).count());
     assertEquals(0, PerkCatalog.available(EnumSet.of(Book.WOA)).size());
   }
 

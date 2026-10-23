@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-/** Spot checks of the weapon and ammunition catalogs against CRB p. 91–120. */
+/** Spot checks of the weapon and ammunition catalogs against CRB p. 91–120 and WG. */
 class WeaponCatalogTest {
 
   @Test
@@ -24,8 +24,13 @@ class WeaponCatalogTest {
         .collect(Collectors.groupingBy(WeaponData::skill, Collectors.counting()));
     assertEquals(Map.of(Skill.SMALL_GUNS, 15L, Skill.ENERGY_WEAPONS, 5L, Skill.BIG_GUNS, 7L,
         Skill.MELEE_WEAPONS, 20L, Skill.UNARMED, 6L, Skill.THROWING, 3L, Skill.EXPLOSIVES, 11L), perSkill);
-    assertEquals(20, WeaponCatalog.ammunition().stream().filter(ammo -> ammo.isAvailableWith(EnumSet.of(Book.CRB)))
+    // 20 ammunition types (CRB p. 91) and the 9 syringer types (CRB p. 93).
+    assertEquals(29, WeaponCatalog.ammunition().stream().filter(ammo -> ammo.isAvailableWith(EnumSet.of(Book.CRB)))
         .count());
+    WeaponData syringer = WeaponCatalog.byId("syringer").orElseThrow();
+    assertEquals(11, syringer.ammunition().size());
+    assertTrue(syringer.ammunition().stream().allMatch(id -> WeaponCatalog.ammunitionById(id).isPresent()));
+    assertEquals(75, WeaponCatalog.ammunitionById("syringer-cazadores-sting").orElseThrow().cost());
     assertEquals(67, WeaponCatalog.available(EnumSet.of(Book.CRB)).size());
   }
 
@@ -146,10 +151,10 @@ class WeaponCatalogTest {
     assertFalse(laser.isOfferedTo("protectron"));
   }
 
-  /** WG pp. 57–80: the Wanderer's Guide weapons and ammunition, spot checks against the tables. */
+  /** WG pp. 57–80, 112: the Wanderer's Guide weapons (with the Lightweight Mini-Nuke) and ammunition. */
   @Test
   void wandererWeapons() {
-    assertEquals(56, WeaponCatalog.all().stream()
+    assertEquals(57, WeaponCatalog.all().stream()
         .filter(weapon -> weapon.sources().getFirst().book() == Book.WG && weapon.origins().isEmpty()).count());
     WeaponData revolver = WeaponCatalog.byId("357-magnum-revolver").orElseThrow();
     assertEquals(List.of(5, 1), List.of(revolver.damage(), revolver.fireRate()));

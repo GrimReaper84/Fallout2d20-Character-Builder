@@ -68,7 +68,7 @@ public final class ArmorResistances {
       dr += character.perkEffect(PerkDefinition::wornArmorDrPerRank);
     }
     dr += Math.min(character.perkEffect(PerkDefinition::junkDrPerRank),
-        character.gear().getMaterials().junk() / JUNK_PER_DR);
+        character.gear().junkCount() / JUNK_PER_DR);
     return dr;
   }
 

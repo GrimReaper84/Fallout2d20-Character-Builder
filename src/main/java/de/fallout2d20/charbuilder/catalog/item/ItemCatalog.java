@@ -46,6 +46,11 @@ public final class ItemCatalog {
         .findFirst();
   }
 
+  /** The rare books that give access to the rare perk (WG p. 108); empty for other perks and Master Infiltrator. */
+  public static @NonNull List<ItemData> rareBooksFor(@NonNull String perkId) {
+    return ITEMS_BY_ID.values().stream().filter(item -> perkId.equals(item.rarePerk())).toList();
+  }
+
   /** All publications in book order. */
   public static @NonNull List<MagazineData> magazines() {
     return List.copyOf(MAGAZINES_BY_ID.values());

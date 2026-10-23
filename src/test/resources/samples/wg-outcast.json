@@ -140,6 +140,7 @@
     "skillChoices" : [ ],
     "stagedRanks" : 0
   } ],
+  "unlockedRarePerks" : [ "ammo-factory" ],
   "progression" : {
     "pendingSkillRanks" : 0,
     "pendingPerks" : 0
@@ -202,6 +203,27 @@
         "id" : "marine-tempered"
       }
     }
+  } ],
+  "items" : [ {
+    "ref" : {
+      "id" : "guns-and-bullets-annual"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "radrat-meat"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "duct-tape"
+    },
+    "quantity" : 1
+  }, {
+    "ref" : {
+      "id" : "high-tech-gadget"
+    },
+    "quantity" : 1
   } ],
   "materials" : {
     "junk" : 10,

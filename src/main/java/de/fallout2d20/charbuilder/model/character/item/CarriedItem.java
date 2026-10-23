@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.item;
 
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
+import de.fallout2d20.charbuilder.catalog.item.ItemCategory;
 import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineIssue;
@@ -70,6 +71,11 @@ public record CarriedItem(
     }
     return data().map(ItemData::name).or(() -> magazine().map(MagazineData::name))
         .orElseGet(() -> item == null ? "" : item.displayName());
+  }
+
+  /** Whether the item is a catalog junk item (WG pp. 120–125), which counts as junk for perks such as Pack Rat. */
+  public boolean isJunk() {
+    return data().map(entry -> entry.category() == ItemCategory.JUNK).orElse(false);
   }
 
   /** Weight of one piece as printed ({@code <1} for magazines), {@code null} if none or unknown. */
