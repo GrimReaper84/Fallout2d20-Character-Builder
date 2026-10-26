@@ -6,8 +6,12 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.apparel.Coverage;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorLocation;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
+import de.fallout2d20.charbuilder.model.character.legendary.LegendaryRules;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -25,7 +29,8 @@ import org.jspecify.annotations.Nullable;
  * 2026-10-16: only worn pieces protect; all count toward the load) and the mods installed per slot (CRB p. 87;
  * which fit via {@link ApparelMods}, values via {@link ModdedApparel}). A mod id the catalog does not know is
  * kept but has no effect. {@code startingSource} marks a piece of the starting equipment ({@code null}: added by
- * hand).
+ * hand). {@code legendary} is the piece's legendary property (WG pp. 104–108; one per piece, which fit via
+ * {@link LegendaryRules}); an id the catalog does not know is kept and has no effect.
  */
 public record WornApparel(
     @Nullable CatalogRef apparel,
@@ -34,13 +39,21 @@ public record WornApparel(
     @NonNull String notes,
     boolean carried,
     @Nullable StartingSource startingSource,
-    @NonNull Map<ApparelModSlot, CatalogRef> mods) {
+    @NonNull Map<ApparelModSlot, CatalogRef> mods,
+    @Nullable CatalogRef legendary) {
 
   public WornApparel {
     if ((apparel == null) == (custom == null)) {
       throw new IllegalArgumentException("A worn item is either a catalog item or a custom one");
     }
     mods = mods.isEmpty() ? Map.of() : Collections.unmodifiableMap(new EnumMap<>(mods));
+  }
+
+  /** An item that is not legendary. */
+  public WornApparel(@Nullable CatalogRef apparel, @Nullable CustomApparel custom, @Nullable HitLocation location,
+      @NonNull String notes, boolean carried, @Nullable StartingSource startingSource,
+      @NonNull Map<ApparelModSlot, CatalogRef> mods) {
+    this(apparel, custom, location, notes, carried, startingSource, mods, null);
   }
 
   /** An item without mods. */
@@ -126,21 +139,52 @@ public record WornApparel(
     return covered;
   }
 
+  /** The item with another legendary property; {@code null} makes it an ordinary piece. */
+  public @NonNull WornApparel withLegendary(@Nullable CatalogRef property) {
+    return new WornApparel(apparel, custom, location, notes, carried, startingSource, mods, property);
+  }
+
+  /** The legendary property from the catalog; empty for an ordinary piece or an id outside the catalog. */
+  public @NonNull Optional<LegendaryArmorData> legendaryProperty() {
+    return legendary == null ? Optional.empty() : LegendaryCatalog.armorPropertyById(legendary.id());
+  }
+
+  /**
+   * The columns of the Legendary Armor table the piece can roll on (WG p. 104): those of every location it can cover
+   * (a single-limb piece counts its limb before one is chosen), in table order.
+   */
+  public @NonNull Set<LegendaryArmorLocation> legendaryLocations() {
+    Set<LegendaryArmorLocation> columns = EnumSet.noneOf(LegendaryArmorLocation.class);
+    if (custom != null) {
+      custom.locations().forEach(covered -> columns.add(LegendaryArmorLocation.of(covered)));
+    }
+    data().ifPresent(entry -> entry.coverage().forEach(coverage -> coverage.locations()
+        .forEach(covered -> columns.add(LegendaryArmorLocation.of(covered)))));
+    return columns;
+  }
+
+  /** The name with the star mark and the legendary property, e.g. {@code ★ Sentinel's Combat Armor Chest Piece}. */
+  public @NonNull String legendaryName() {
+    return legendaryProperty().map(property -> LegendaryRules.name(property.name(), displayName()))
+        .orElseGet(this::displayName);
+  }
+
   public @NonNull WornApparel withLocation(@Nullable HitLocation newLocation) {
-    return new WornApparel(apparel, custom, newLocation, notes, carried, startingSource, mods);
+    return new WornApparel(apparel, custom, newLocation, notes, carried, startingSource, mods, legendary);
   }
 
   public @NonNull WornApparel withNotes(@Nullable String newNotes) {
-    return new WornApparel(apparel, custom, location, newNotes == null ? "" : newNotes, carried, startingSource, mods);
+    return new WornApparel(apparel, custom, location, newNotes == null ? "" : newNotes, carried, startingSource, mods,
+        legendary);
   }
 
   public @NonNull WornApparel withCarried(boolean newCarried) {
-    return new WornApparel(apparel, custom, location, notes, newCarried, startingSource, mods);
+    return new WornApparel(apparel, custom, location, notes, newCarried, startingSource, mods, legendary);
   }
 
   /** The item marked as part of the starting equipment; {@code null} for one added by hand. */
   public @NonNull WornApparel withStartingSource(@Nullable StartingSource source) {
-    return new WornApparel(apparel, custom, location, notes, carried, source, mods);
+    return new WornApparel(apparel, custom, location, notes, carried, source, mods, legendary);
   }
 
   /**
@@ -155,7 +199,7 @@ public record WornApparel(
     } else {
       newMods.put(slot, mod);
     }
-    return new WornApparel(apparel, custom, location, notes, carried, startingSource, newMods);
+    return new WornApparel(apparel, custom, location, notes, carried, startingSource, newMods, legendary);
   }
 
   /** The custom item with another mod table; installed mods that no longer fit (or are unknown) are removed. */
@@ -164,7 +208,7 @@ public record WornApparel(
       throw new IllegalStateException("Only a custom item chooses its mod table");
     }
     WornApparel retabled = new WornApparel(null, custom.withModTable(table), location, notes, carried,
-        startingSource, Map.of());
+        startingSource, Map.of(), legendary);
     Map<ApparelModSlot, CatalogRef> kept = new EnumMap<>(ApparelModSlot.class);
     mods.forEach((slot, ref) -> {
       if (ApparelCatalog.modById(ref.id()).map(mod -> ApparelMods.fits(retabled, slot, mod)).orElse(false)) {
@@ -172,6 +216,6 @@ public record WornApparel(
       }
     });
     return kept.isEmpty() ? retabled : new WornApparel(null, retabled.custom(), location, notes, carried,
-        startingSource, kept);
+        startingSource, kept, legendary);
   }
 }

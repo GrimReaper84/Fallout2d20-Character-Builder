@@ -163,7 +163,8 @@
     "ref" : {
       "id" : "12-7mm-pistol"
     },
-    "quantity" : 1
+    "quantity" : 1,
+    "legendary" : "legendary-weapon-violent"
   }, {
     "ref" : {
       "id" : "bow"
@@ -193,7 +194,8 @@
       "MATERIAL" : {
         "id" : "marine-welded"
       }
-    }
+    },
+    "legendary" : "legendary-armor-bolstering"
   }, {
     "ref" : {
       "id" : "marine-armor-helmet"

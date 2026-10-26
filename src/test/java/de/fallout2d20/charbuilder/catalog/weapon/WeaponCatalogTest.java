@@ -49,7 +49,7 @@ class WeaponCatalogTest {
             "small-guns-hardened-automatic-receiver", "small-guns-rapid-automatic-receiver",
             "small-guns-calibrated-powerful-receiver", "small-guns-powerful-automatic-receiver",
             "small-guns-hardened-piercing-auto-receiver"),
-        null, false, null, false, false), pistol);
+        null, false, null, false, false, false), pistol);
     assertTrue(WeaponCatalog.byName("Pipe rifle").isEmpty(), "pack wordings are not legacy names");
     assertEquals("pipe-gun", WeaponCatalog.byNameOrAlias("Pipe rifle").orElseThrow().id());
   }
@@ -118,7 +118,7 @@ class WeaponCatalogTest {
         List.of("Debilitating", "Inaccurate"), "6", 156, 4, List.of("cryo-cell"), List.of(), null,
         List.of("protectron"), List.of(), List.of("cryojet-liquid-nitrogen", "cryojet-compressed-tubing",
             "cryojet-large-tank", "cryojet-huge-tank", "cryojet-wide-diffusion", "cryojet-aerosolizer",
-            "cryojet-bladed-exhaust"), null, false, null, false, false), cryojet);
+            "cryojet-bladed-exhaust"), null, false, null, false, false, false), cryojet);
     AmmunitionData cell = WeaponCatalog.ammunitionById("cryo-cell").orElseThrow();
     assertNull(cell.quantityFound());
     assertNull(cell.rarity());

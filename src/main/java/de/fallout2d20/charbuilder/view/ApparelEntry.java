@@ -15,6 +15,6 @@ record ApparelEntry(int index, @NonNull WornApparel item, @NonNull ApparelGroup 
   /** Name, with the chosen limb of a single-limb piece, e.g. "Leather Arm (Left Arm)". */
   @NonNull String label() {
     HitLocation location = item.location();
-    return item.displayName() + (location == null || needsLocation ? "" : " (" + location.displayName() + ")");
+    return item.legendaryName() + (location == null || needsLocation ? "" : " (" + location.displayName() + ")");
   }
 }

@@ -9,7 +9,9 @@ import org.jspecify.annotations.Nullable;
  * whether it is built in ({@code null} = no), the installed mods per slot name ({@code null} = none; added
  * 2026-10-17 as an optional field, format version stays 1; slot names this version does not know are
  * skipped on load), and the part of the starting equipment it comes from ({@code PACK}, {@code TAG_SKILL};
- * {@code null} = added by hand; added 2026-10-19, unknown values are read as added by hand).
+ * {@code null} = added by hand; added 2026-10-19, unknown values are read as added by hand), and the id of its
+ * legendary property ({@code null} = none; added 2026-10-23 as an optional field, format version stays 1; an id
+ * the catalog does not know is kept without effect).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record WeaponEntryData(
@@ -19,4 +21,5 @@ public record WeaponEntryData(
     @Nullable String notes,
     @Nullable Boolean builtIn,
     @Nullable Map<String, CatalogRefData> mods,
-    @Nullable String startingSource) {}
+    @Nullable String startingSource,
+    @Nullable String legendary) {}

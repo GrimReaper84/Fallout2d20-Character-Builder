@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.apparel;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModData;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
 import de.fallout2d20.charbuilder.model.character.derived.Weight;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +18,28 @@ import org.jspecify.annotations.Nullable;
  * p. 93: Shrouded weighs −1); a custom piece has no weight or cost of
  * its own, only its mods'.
  *
+ * <p>A legendary piece (WG p. 104) gets +1 Physical and +1 Energy DR and its property's Poison DR (Poisoner's); its
+ * base cost is multiplied by 5 (WG p. 96) before the mods' costs are added (assumption, plan F6d).
+ *
  * @param values kind, resistances and carry weight change with the mods
  * @param weight weight as printed ({@code 4}, {@code <1}); {@code null} for none
  * @param cost cost in caps; {@code null} for none
  * @param specials rules of the mods that change no value, each with the mod's name
  * @param shadowed whether a mod makes the piece Shadowed (CRB p. 133 sidebar)
+ * @param legendary the legendary property applied; {@code null} for none (or one outside the catalog)
  */
 public record ModdedApparel(
     @NonNull ApparelValues values,
     @Nullable String weight,
     @Nullable Integer cost,
     @NonNull List<String> specials,
-    boolean shadowed) {
+    boolean shadowed,
+    @Nullable LegendaryArmorData legendary) {
+
+  /** WG p. 104: every legendary piece adds 1 Physical and 1 Energy DR. */
+  private static final int LEGENDARY_DR = 1;
+  /** WG p. 96: a legendary item costs five times as much. */
+  private static final int LEGENDARY_COST_FACTOR = 5;
 
   public ModdedApparel {
     specials = List.copyOf(specials);
@@ -36,17 +47,18 @@ public record ModdedApparel(
 
   /** The piece with its installed mods that fit; empty for an id outside the catalog. */
   public static @NonNull Optional<ModdedApparel> of(@NonNull WornApparel item) {
-    return unmodded(item).map(base -> base.apply(item, ApparelMods.installedMods(item)));
+    return unmodded(item).map(base -> base.apply(item, ApparelMods.installedMods(item))
+        .legendary(item.legendaryProperty().orElse(null), base.cost()));
   }
 
   /** The piece's values without mods (also shown as the base value next to a changed one). */
   public static @NonNull Optional<ModdedApparel> unmodded(@NonNull WornApparel item) {
     CustomApparel custom = item.custom();
     if (custom != null) {
-      return Optional.of(new ModdedApparel(custom.values(), null, null, List.of(), false));
+      return Optional.of(new ModdedApparel(custom.values(), null, null, List.of(), false, null));
     }
     return item.data().map(data -> new ModdedApparel(ApparelValues.of(data), data.weight(), data.cost(), List.of(),
-        false));
+        false, null));
   }
 
   private @NonNull ModdedApparel apply(@NonNull WornApparel item, @NonNull List<ApparelModData> mods) {
@@ -80,10 +92,26 @@ public record ModdedApparel(
       modShadowed |= mod.shadowed();
     }
     ApparelValues modded = new ApparelValues(values.kind(), physical, energy,
-        values.radiationImmune() ? 0 : radiation, values.radiationImmune(), values.carryWeight());
+        values.radiationImmune() ? 0 : radiation, values.radiationImmune(), values.carryWeight(), values.poison());
     String newWeight = weightChange == null || weightChange == 0 ? weight
         : Integer.toString(Math.max(0, Weight.pounds(weight) + weightChange));
     Integer newCost = costChange == null ? cost : (cost == null ? 0 : cost) + costChange;
-    return new ModdedApparel(modded, newWeight, newCost, modSpecials, modShadowed);
+    return new ModdedApparel(modded, newWeight, newCost, modSpecials, modShadowed, null);
+  }
+
+  /**
+   * These values with the legendary property's; unchanged for {@code null}.
+   *
+   * @param baseCost the piece's cost without mods
+   */
+  private @NonNull ModdedApparel legendary(@Nullable LegendaryArmorData property, @Nullable Integer baseCost) {
+    if (property == null) {
+      return this;
+    }
+    ApparelValues legendaryValues = new ApparelValues(values.kind(), values.physical() + LEGENDARY_DR,
+        values.energy() + LEGENDARY_DR, values.radiation(), values.radiationImmune(), values.carryWeight(),
+        values.poison() + property.poison());
+    Integer newCost = baseCost == null ? cost : (cost == null ? 0 : cost) + baseCost * (LEGENDARY_COST_FACTOR - 1);
+    return new ModdedApparel(legendaryValues, weight, newCost, specials, shadowed, property);
   }
 }

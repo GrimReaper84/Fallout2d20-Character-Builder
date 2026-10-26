@@ -90,6 +90,22 @@ class SheetContentTest {
     assertTrue(sheet.notes().contains("Baseball Bat: Spiked"));
   }
 
+  /** F6d: legendary items carry the mark in their names; their rules go to the notes page. */
+  @Test
+  void legendaryWeaponAndArmor() {
+    PlayerCharacter character = survivor();
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("hunting-rifle"))
+        .withLegendary(CatalogRef.of("legendary-weapon-two-shot")));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("combat-chest-piece"))
+        .withLegendary(CatalogRef.of("legendary-armor-unyielding")));
+    SheetContent sheet = SheetContent.of(character);
+    assertEquals("★ Two-Shot Hunting Rifle", sheet.weapons().getFirst().name());
+    assertEquals("8 CD", sheet.weapons().getFirst().damage());
+    assertTrue(sheet.notes().stream().anyMatch(note -> note.startsWith("★ Two-Shot Hunting Rifle: Two-Shot: +2 CD")));
+    assertTrue(sheet.notes().stream().anyMatch(note -> note.startsWith(
+        "★ Unyielding Combat Chest Piece: Unyielding: Below 1/4")));
+  }
+
   @Test
   void gearWithQuantitiesWeightsAndCarryLoad() {
     PlayerCharacter character = survivor();

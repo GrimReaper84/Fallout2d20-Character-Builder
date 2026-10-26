@@ -8,6 +8,7 @@ import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
@@ -149,8 +150,8 @@ final class SampleCharacters {
 
   /**
    * A Brotherhood Outcast showing the Wanderer's Guide content: the Junk Shield perk with junk carried, a Tesla
-   * Rifle with a WG muzzle mod, a 12.7mm Pistol whose Recoil (7) is too much for STR 6, and a Bow with plain and
-   * cryo arrows. No pack yet (WG packs come with F4).
+   * Rifle with a WG muzzle mod, a legendary Violent 12.7mm Pistol whose Recoil (8) is too much for STR 6, a Bow with
+   * plain and cryo arrows, and a legendary Bolstering Marine chest piece. No pack yet (WG packs come with F4).
    */
   static PlayerCharacter wandererOutcast() {
     PlayerCharacter character = start("Sela Voss", "brotherhood-outcast");
@@ -164,6 +165,8 @@ final class SampleCharacters {
     character.gear().setWeaponMod(0, ModSlot.MUZZLE,
         WeaponCatalog.modById("energy-weapons-amplified-beam-splitter").orElseThrow());
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("12-7mm-pistol")));
+    character.gear().setWeaponLegendary(1,
+        LegendaryCatalog.weaponPropertyById("legendary-weapon-violent").orElseThrow());
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("bow")));
     character.gear().setAmmunition("fusion-cell", 30);
     character.gear().setAmmunition("12-7mm", 12);
@@ -172,6 +175,8 @@ final class SampleCharacters {
     character.gear().setMaterials(new Materials(10, 0, 2, 0));
     wearWithMod(character, "underarmor-suit", ApparelModSlot.LINING, "lining-treated-lining");
     wearWithMod(character, "marine-armor-chest-piece", ApparelModSlot.MATERIAL, "marine-welded");
+    character.gear().setApparelLegendary(1,
+        LegendaryCatalog.armorPropertyById("legendary-armor-bolstering").orElseThrow());
     wearWithMod(character, "marine-armor-helmet", ApparelModSlot.MATERIAL, "marine-tempered");
     List.of("guns-and-bullets-annual", "radrat-meat", "duct-tape", "high-tech-gadget")
         .forEach(id -> character.gear().addItem(CarriedItem.of(CatalogRef.of(id))));

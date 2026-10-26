@@ -20,6 +20,11 @@ public enum ModEffectType {
   REMOVE_EFFECT,
   /** Damage type changed to the {@link DamageType} named by {@code text}. */
   SET_DAMAGE_TYPE,
+  /**
+   * The {@link DamageType} named by {@code text} added to the weapon's types unless it has it (legendary Plasma
+   * Infused, WG p. 102: Physical and Energy).
+   */
+  ADD_DAMAGE_TYPE,
   /** Ammunition changed to the ammunition id {@code text}. */
   SET_AMMUNITION,
   /** The weapon may take a mod in the {@link ModSlot} named by {@code text} (Bracketed barrels: Muzzle). */

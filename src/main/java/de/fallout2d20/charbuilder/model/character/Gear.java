@@ -3,6 +3,8 @@ package de.fallout2d20.charbuilder.model.character;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelMods;
@@ -102,7 +104,7 @@ public final class Gear {
 
   private static boolean isPlainCatalogStack(@NonNull CarriedWeapon weapon) {
     return weapon.weapon() != null && weapon.notes().isEmpty() && weapon.mods().isEmpty() && !weapon.builtIn()
-        && weapon.startingSource() == null;
+        && weapon.startingSource() == null && weapon.legendary() == null;
   }
 
   /**
@@ -164,6 +166,14 @@ public final class Gear {
    */
   public void setCustomWeaponModSlots(int index, @NonNull Set<ModSlot> slots) {
     weapons.set(index, weapons.get(index).withCustomModSlots(slots));
+  }
+
+  /**
+   * Makes the weapon at the index legendary with this property (WG pp. 96–103), replacing its property; {@code null}
+   * makes it an ordinary weapon. Which properties fit is decided by {@code LegendaryRules.options}.
+   */
+  public void setWeaponLegendary(int index, @Nullable LegendaryWeaponData property) {
+    weapons.set(index, weapons.get(index).withLegendary(property == null ? null : CatalogRef.of(property.id())));
   }
 
   public @NonNull List<CarriedWeapon> getWeapons() {
@@ -263,6 +273,14 @@ public final class Gear {
    */
   public void setCustomApparelModTable(int index, @Nullable ApparelModTable table) {
     apparel.set(index, apparel.get(index).withCustomModTable(table));
+  }
+
+  /**
+   * Makes the piece at the index legendary with this property (WG pp. 104–108), replacing its property; {@code null}
+   * makes it an ordinary piece. Which properties fit is decided by {@code LegendaryRules.options}.
+   */
+  public void setApparelLegendary(int index, @Nullable LegendaryArmorData property) {
+    apparel.set(index, apparel.get(index).withLegendary(property == null ? null : CatalogRef.of(property.id())));
   }
 
   public @NonNull List<WornApparel> getApparel() {

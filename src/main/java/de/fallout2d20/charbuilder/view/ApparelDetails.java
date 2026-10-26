@@ -23,12 +23,12 @@ import org.jspecify.annotations.Nullable;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * The details of the piece selected in the Armor tab: source, whether it is worn (C5: only worn pieces
- * protect, carried ones only count toward the load), kind, the covered locations – a choice of the limb for a
- * single arm or leg piece (CRB p. 130; robot armor one arm, CRB p. 146) –, its resistances, weight and cost with
- * the mods (changed values bold with the value without mods as tooltip), rarity, the perk it needs, the note and
- * the mods ({@link ApparelModSection}). Typed notes go to {@code onEdited}; everything else to the model and then
- * to {@code onChanged}.
+ * The details of the piece selected in the Armor tab: source, whether it is worn (C5: only worn pieces protect, carried
+ * ones only count toward the load), kind, the covered locations – a choice of the limb for a single arm or leg piece
+ * (CRB p. 130; robot armor one arm, CRB p. 146) –, its resistances, weight and cost with the mods and the legendary
+ * property (changed values bold with the base value as tooltip), rarity, the perk it needs, the note, the legendary
+ * property ({@link LegendarySection}) and the mods ({@link ApparelModSection}). Typed notes go to {@code onEdited};
+ * everything else to the model and then to {@code onChanged}.
  */
 final class ApparelDetails {
 
@@ -50,7 +50,7 @@ final class ApparelDetails {
     ModdedApparel modded = ModdedApparel.of(item).orElse(null);
     ModdedApparel base = ModdedApparel.unmodded(item).orElse(null);
     Optional<ApparelValues> values = Optional.ofNullable(modded).map(ModdedApparel::values);
-    OverviewParts.sectionHeading(pane, item.displayName());
+    OverviewParts.sectionHeading(pane, item.legendaryName());
 
     MigPane rows = Layouts.details(0);
     detailRow(rows, "Source", new Label(data.map(catalog -> catalog.sources().getFirst().toString())
@@ -91,6 +91,7 @@ final class ApparelDetails {
       callbacks.onEdited().run();
     });
     pane.add(rows);
+    LegendarySection.addTo(pane, character, index, item, callbacks.onChanged());
     ApparelModSection.addTo(pane, character, index, item, modded, callbacks.onChanged());
     return pane;
   }
@@ -107,7 +108,8 @@ final class ApparelDetails {
     Label label = new Label(text.apply(modded));
     if (base != null && !text.apply(base).equals(text.apply(modded))) {
       label.setStyle("-fx-font-weight: bold;");
-      label.setTooltip(new Tooltip("Without mods: " + text.apply(base)));
+      label.setTooltip(new Tooltip((modded.legendary() == null ? "Without mods: "
+          : "Without mods and legendary property: ") + text.apply(base)));
     }
     return label;
   }

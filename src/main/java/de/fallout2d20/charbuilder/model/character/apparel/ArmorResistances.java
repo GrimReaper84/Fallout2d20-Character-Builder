@@ -16,12 +16,13 @@ import org.jspecify.annotations.NonNull;
  * Damage resistance per hit location, computed on every call (never stored); the one place combining
  * apparel and innate resistances.
  *
- * <p>Humanoids: armor worn over clothing uses the higher resistance of each type (CRB p. 130); two pieces
- * of one layer on a location (a hint of {@link ApparelRules}) count the same way, the higher value. Robots
- * (Mister Handy, Protectron): the plating covers every location and robot armor adds to it (CRB p. 146). Innate
- * resistances (perks such as Toughness, origin immunities) are added on every location (assumption,
- * legacy behavior: the perks name all locations); poison comes only from them, apparel has no poison
- * value. An item covering a location with radiation immunity (Hazmat Suit, CRB p. 124) makes it immune.
+ * <p>Humanoids: armor worn over clothing uses the higher resistance of each type (CRB p. 130); two pieces of one layer
+ * on a location (a hint of {@link ApparelRules}) count the same way, the higher value. Robots (Mister Handy,
+ * Protectron): the plating covers every location and robot armor adds to it (CRB p. 146). Innate resistances (perks such
+ * as Toughness, origin immunities) are added on every location (assumption, legacy behavior: the perks name all
+ * locations); apparel adds poison only through a legendary Poisoner's piece on the locations it covers (WG p. 107),
+ * combined like the other types. An item covering a location with radiation immunity (Hazmat Suit, CRB p. 124) makes it
+ * immune.
  *
  * <p>Perks of the Wanderer's Guide that need the worn gear add Physical and Energy DR on every location here (not in
  * {@link DerivedStats}, which {@link CarryLoad} uses): Evasive by AGI unless over-encumbered (WG p. 51), Ironclad
@@ -53,7 +54,7 @@ public final class ArmorResistances {
           add(apparel(worn, ApparelValues::physical) + perkDr, innate.physical()),
           add(apparel(worn, ApparelValues::energy) + perkDr, innate.energy()),
           immune ? Resistance.IMMUNITY : add(apparel(worn, ApparelValues::radiation), innate.radiation()),
-          innate.poison()));
+          add(apparel(worn, ApparelValues::poison), innate.poison())));
     }
     return result;
   }

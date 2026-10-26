@@ -90,6 +90,7 @@ class CharacterSheetPdfTest {
   @Test
   void charactersOutsideWinAnsiAreReplaced() throws IOException {
     assertEquals("-1 difficulty, >= 2 × 3 ?", PdfCanvas.printable("−1 difficulty, ≥ 2 × 3 \uD83D\uDE00"));
+    assertEquals("* Two-Shot Hunting Rifle", PdfCanvas.printable("★ Two-Shot Hunting Rifle"));
     PlayerCharacter character = survivor();
     character.setName("Zoë −1 中");
     character.gear().addItem(CarriedItem.of(new CustomItem("Lucky charm ●", 0, "")));

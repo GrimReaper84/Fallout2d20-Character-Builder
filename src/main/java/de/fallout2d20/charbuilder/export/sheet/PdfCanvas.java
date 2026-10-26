@@ -37,7 +37,8 @@ final class PdfCanvas implements AutoCloseable {
   private static final @NonNull Pattern SPACES = Pattern.compile(" +");
   private static final @NonNull Pattern WHITESPACE = Pattern.compile("[ \n]+");
   private static final @NonNull Map<Integer, String> REPLACEMENTS = Map.of(
-      0x2212, "-", 0x2011, "-", 0x2009, " ", 0x202F, " ", 0x2264, "<=", 0x2265, ">=", 0x2192, "->", 0x25CF, "•");
+      0x2212, "-", 0x2011, "-", 0x2009, " ", 0x202F, " ", 0x2264, "<=", 0x2265, ">=", 0x2192, "->", 0x25CF, "•",
+      0x2605, "*");
 
   private final @NonNull PDPageContentStream stream;
   private final float height;

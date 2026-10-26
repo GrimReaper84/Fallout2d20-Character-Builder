@@ -1,13 +1,19 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryCatalog;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponData;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponType;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
+import de.fallout2d20.charbuilder.model.character.legendary.LegendaryRules;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -22,7 +28,8 @@ import org.jspecify.annotations.Nullable;
  * weigh nothing against the carry weight (user decision 2026-10-16), and the mods installed per slot (CRB
  * p. 87: one per slot; values via {@link ModdedWeapon}, which mods fit via {@link WeaponMods}). A mod id the
  * catalog no longer knows is kept and has no effect. {@code startingSource} marks a weapon of the starting
- * equipment ({@code null}: added by hand).
+ * equipment ({@code null}: added by hand). {@code legendary} is the weapon's legendary property (WG pp. 96–103; one
+ * per weapon, which fit via {@link LegendaryRules}); an id the catalog does not know is kept and has no effect.
  */
 public record CarriedWeapon(
     @Nullable CatalogRef weapon,
@@ -31,7 +38,8 @@ public record CarriedWeapon(
     @NonNull String notes,
     boolean builtIn,
     @NonNull Map<ModSlot, CatalogRef> mods,
-    @Nullable StartingSource startingSource) {
+    @Nullable StartingSource startingSource,
+    @Nullable CatalogRef legendary) {
 
   public CarriedWeapon {
     if ((weapon == null) == (custom == null)) {
@@ -41,6 +49,12 @@ public record CarriedWeapon(
       throw new IllegalArgumentException("Quantity must be at least 1");
     }
     mods = mods.isEmpty() ? Map.of() : Collections.unmodifiableMap(new EnumMap<>(mods));
+  }
+
+  /** A weapon that is not legendary. */
+  public CarriedWeapon(@Nullable CatalogRef weapon, @Nullable CustomWeapon custom, int quantity, @NonNull String notes,
+      boolean builtIn, @NonNull Map<ModSlot, CatalogRef> mods, @Nullable StartingSource startingSource) {
+    this(weapon, custom, quantity, notes, builtIn, mods, startingSource, null);
   }
 
   /** A weapon added by hand. */
@@ -91,7 +105,8 @@ public record CarriedWeapon(
   }
 
   public @NonNull CarriedWeapon withNotes(@Nullable String newNotes) {
-    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn, mods, startingSource);
+    return new CarriedWeapon(weapon, custom, quantity, newNotes == null ? "" : newNotes, builtIn, mods, startingSource,
+        legendary);
   }
 
   /**
@@ -103,7 +118,7 @@ public record CarriedWeapon(
     if (custom == null) {
       throw new IllegalStateException("Only a custom weapon has a choosable skill");
     }
-    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn, mods, startingSource);
+    return new CarriedWeapon(null, custom.withSkill(skill), quantity, notes, builtIn, mods, startingSource, legendary);
   }
 
   /**
@@ -115,20 +130,21 @@ public record CarriedWeapon(
     if (custom == null) {
       throw new IllegalStateException("Only a custom weapon has choosable qualities");
     }
-    return new CarriedWeapon(null, custom.withQualities(qualities), quantity, notes, builtIn, mods, startingSource);
+    return new CarriedWeapon(null, custom.withQualities(qualities), quantity, notes, builtIn, mods, startingSource,
+        legendary);
   }
 
   public @NonNull CarriedWeapon withQuantity(int newQuantity) {
-    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn, mods, startingSource);
+    return new CarriedWeapon(weapon, custom, newQuantity, notes, builtIn, mods, startingSource, legendary);
   }
 
   /** The weapon marked as part of the starting equipment; {@code null} for one added by hand. */
   public @NonNull CarriedWeapon withStartingSource(@Nullable StartingSource source) {
-    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, mods, source);
+    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, mods, source, legendary);
   }
 
   public @NonNull CarriedWeapon withBuiltIn(boolean newBuiltIn) {
-    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn, mods, startingSource);
+    return new CarriedWeapon(weapon, custom, quantity, notes, newBuiltIn, mods, startingSource, legendary);
   }
 
   /**
@@ -143,7 +159,7 @@ public record CarriedWeapon(
     } else {
       newMods.put(slot, mod);
     }
-    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, newMods, startingSource);
+    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, newMods, startingSource, legendary);
   }
 
   /**
@@ -161,7 +177,38 @@ public record CarriedWeapon(
         kept.put(slot, mod);
       }
     });
-    return new CarriedWeapon(null, custom.withModSlots(slots), quantity, notes, builtIn, kept, startingSource);
+    return new CarriedWeapon(null, custom.withModSlots(slots), quantity, notes, builtIn, kept, startingSource,
+        legendary);
+  }
+
+  /** The weapon with another legendary property; {@code null} makes it an ordinary weapon. */
+  public @NonNull CarriedWeapon withLegendary(@Nullable CatalogRef property) {
+    return new CarriedWeapon(weapon, custom, quantity, notes, builtIn, mods, startingSource, property);
+  }
+
+  /** The legendary property from the catalog; empty for an ordinary weapon or an id outside the catalog. */
+  public @NonNull Optional<LegendaryWeaponData> legendaryProperty() {
+    return legendary == null ? Optional.empty() : LegendaryCatalog.weaponPropertyById(legendary.id());
+  }
+
+  /**
+   * The column of the Legendary Weapons tables the weapon rolls on (WG p. 96): by its skill, with the catalog's
+   * unusual weapons; empty for bows, explosives, throwing weapons and an unknown skill.
+   */
+  public @NonNull Optional<LegendaryWeaponType> legendaryType() {
+    if (custom != null) {
+      List<String> qualities = Arrays.stream(custom.qualities().split(",")).map(String::strip)
+          .filter(quality -> !quality.isEmpty()).toList();
+      return LegendaryWeaponType.of(custom.skill(), qualities, false);
+    }
+    return data().flatMap(entry -> LegendaryWeaponType.of(entry.skill(), entry.qualities(),
+        entry.legendaryAsSmallGun()));
+  }
+
+  /** The name with the legendary mark and property, e.g. {@code ★ Two-Shot Hunting Rifle}; else the name. */
+  public @NonNull String legendaryName() {
+    return legendaryProperty().map(property -> LegendaryRules.name(property.name(), displayName()))
+        .orElseGet(this::displayName);
   }
 
   /**

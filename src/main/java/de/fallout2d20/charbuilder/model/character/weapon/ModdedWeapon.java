@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.DamageType;
 import de.fallout2d20.charbuilder.catalog.weapon.ModEffect;
 import de.fallout2d20.charbuilder.catalog.weapon.ModEffectType;
@@ -8,6 +9,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.derived.Weight;
+import de.fallout2d20.charbuilder.model.character.legendary.LegendaryRules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -30,15 +32,24 @@ import org.jspecify.annotations.Nullable;
  * <p>Rules: replacing values (damage, damage type, ammunition) come first, then the changes in slot order.
  * CRB p. 88: a quality is not gained twice; Accurate and Inaccurate cancel each other (likewise Reliable and
  * Unreliable, which a weapon may not both have, CRB p. 90); every Piercing a mod gives raises the rating by 1. A
- * quality a mod removes stays removed, whichever slot gains it (house rule, user decision 2026-10-19: the book
- * does not say; e.g. a Grip removing Inaccurate beats a Beam Splitter gaining it); range moves in steps between Close and Extreme. Fire rate stays within 0–6
- * (CRB p. 89) and damage at 0 or more; these limits apply to the sum of all changes, so the order of the
- * mods does not matter for them. Gained qualities and gained and removed effects follow slot order. Weight and cost add the mods' values (user decision 2026-10-17); a
- * {@code <1} weapon stays {@code <1} unless the mods add weight. The modded name puts the mods' name prefixes
- * in slot order before the name, with a Stock mod the book's rifle name (CRB p. 87).
+ * quality a mod removes stays removed, whichever slot gains it (house rule, user decision 2026-10-19: the book does not
+ * say; e.g. a Grip removing Inaccurate beats a Beam Splitter gaining it); range moves in steps between Close and
+ * Extreme. Fire rate stays within 0–6 (CRB p. 89) and damage at 0 or more; these limits apply to the sum of all
+ * changes, so the order of the mods does not matter for them. Gained qualities and gained and removed effects follow
+ * slot order; every Piercing gained raises an existing rating by its own rating (a mod's Piercing 1 by 1, the legendary
+ * Penetrating by 2, WG p. 102). Weight and cost add the mods' values (user decision 2026-10-17); a {@code <1} weapon
+ * stays {@code <1} unless the mods add weight. The modded name puts the mods' name prefixes in slot order before the
+ * name, with a Stock mod the book's rifle name (CRB p. 87).
+ *
+ * <p>A legendary property (WG pp. 97–103) is applied after the mods: its damage, gained effects and qualities and
+ * added damage types; its fire rate (Rapid) is added after the 0–6 limit of the mods and may exceed 6 (WG p. 102). A
+ * gained quality the weapon already has is kept, except Recoil, whose rating rises by 1 (Violent, WG p. 103). The
+ * base cost is multiplied by 5 (WG p. 96) before the mods' costs are added (assumption, plan F6d), and the name gets
+ * the mark and the property before the mods' prefixes ({@link LegendaryRules#name}).
  *
  * @param name the weapon's own name
- * @param moddedName the name with the mods' prefixes; equals {@code name} without mods
+ * @param moddedName the name with the legendary mark and property and the mods' prefixes; equals {@code name} for an
+ *     ordinary weapon without mods
  * @param damage damage rating in CD
  * @param damageEffects damage effects, e.g. {@code Piercing 2}
  * @param damageType damage type(s) as text, e.g. {@code Physical/Energy}
@@ -51,6 +62,7 @@ import org.jspecify.annotations.Nullable;
  * @param specials rules of the mods that change no value, each with the mod's name
  * @param removedQualities the qualities mods removed or kept away, each with the mod's name, e.g.
  *     {@code Inaccurate (removed by Comfort Grip)}
+ * @param legendary the legendary property applied; {@code null} for none (or one outside the catalog)
  */
 public record ModdedWeapon(
     @NonNull String name,
@@ -65,11 +77,17 @@ public record ModdedWeapon(
     @Nullable String weight,
     @Nullable Integer cost,
     @NonNull List<String> specials,
-    @NonNull List<String> removedQualities) {
+    @NonNull List<String> removedQualities,
+    @Nullable LegendaryWeaponData legendary) {
 
   private static final int MAX_FIRE_RATE = 6;
   private static final @NonNull String LIGHT = "<1";
   private static final @NonNull Pattern PIERCING = Pattern.compile("Piercing (\\d+)", Pattern.CASE_INSENSITIVE);
+  /** A quality with a number, e.g. {@code Recoil (7)}. */
+  private static final @NonNull Pattern RATED = Pattern.compile("(.+?)\\s*\\((\\d+)\\)");
+  private static final @NonNull String RECOIL = "recoil";
+  /** WG p. 96: a legendary item costs five times as much. */
+  private static final int LEGENDARY_COST_FACTOR = 5;
   private static final @NonNull Map<String, String> OPPOSITES = Map.of("accurate", "inaccurate", "inaccurate", "accurate",
       "reliable", "unreliable", "unreliable", "reliable");
 
@@ -83,14 +101,15 @@ public record ModdedWeapon(
 
   /** The weapon with its known installed mods; empty for an id outside the catalog. */
   public static @NonNull Optional<ModdedWeapon> of(@NonNull CarriedWeapon weapon) {
-    return unmodded(weapon).map(base -> base.apply(WeaponMods.installedMods(weapon), stockName(weapon)));
+    return unmodded(weapon).map(base -> base.apply(WeaponMods.installedMods(weapon), stockName(weapon),
+        weapon.legendaryProperty().orElse(null)));
   }
 
   /** The values of a catalog row, e.g. of the Unarmed Strike every character has. */
   public static @NonNull ModdedWeapon of(@NonNull WeaponData data) {
     return new ModdedWeapon(data.name(), data.name(), data.damage(), data.damageEffects(),
         data.damageTypes().stream().map(DamageType::displayName).collect(Collectors.joining("/")), data.fireRate(),
-        data.range(), data.qualities(), data.ammunition(), data.weight(), data.cost(), List.of(), List.of());
+        data.range(), data.qualities(), data.ammunition(), data.weight(), data.cost(), List.of(), List.of(), null);
   }
 
   /**
@@ -99,7 +118,7 @@ public record ModdedWeapon(
    */
   public static @NonNull ModdedWeapon unknown(@NonNull String name) {
     return new ModdedWeapon(name, name, 0, List.of(), "", null, null, List.of(), List.of(), null, null, List.of(),
-        List.of());
+        List.of(), null);
   }
 
   /** The weapon's values without mods (also shown as the base value next to a changed one). */
@@ -109,7 +128,7 @@ public record ModdedWeapon(
       String ammunition = custom.ammunition();
       return Optional.of(new ModdedWeapon(custom.name(), custom.name(), custom.damage(), list(custom.effects()),
           custom.damageType(), custom.fireRate(), custom.range(), list(custom.qualities()),
-          ammunition == null ? List.of() : List.of(ammunition), null, null, List.of(), List.of()));
+          ammunition == null ? List.of() : List.of(ammunition), null, null, List.of(), List.of(), null));
     }
     return weapon.data().map(ModdedWeapon::of);
   }
@@ -118,7 +137,8 @@ public record ModdedWeapon(
     return weapon.data().map(WeaponData::stockName).orElse(null);
   }
 
-  private @NonNull ModdedWeapon apply(@NonNull List<WeaponModData> mods, @Nullable String stockName) {
+  private @NonNull ModdedWeapon apply(@NonNull List<WeaponModData> mods, @Nullable String stockName,
+      @Nullable LegendaryWeaponData property) {
     Changes changes = new Changes(this, removals(mods));
     for (WeaponModData mod : mods) {
       mod.effects().forEach(changes::replace);
@@ -128,6 +148,9 @@ public record ModdedWeapon(
         changes.change(mod, effect);
       }
     }
+    if (property != null) {
+      property.effects().forEach(changes::legendary);
+    }
     Integer weightChange = total(mods, WeaponModData::weight);
     String newWeight = weightChange == null ? weight : addWeight(weight, weightChange);
     Integer costChange = total(mods, WeaponModData::cost);
@@ -135,10 +158,14 @@ public record ModdedWeapon(
     if (costChange != null) {
       newCost = (cost == null ? 0 : cost) + costChange;
     }
+    if (property != null && cost != null) {
+      newCost = (newCost == null ? 0 : newCost) + cost * (LEGENDARY_COST_FACTOR - 1);
+    }
     WeaponRange newRange = range == null ? null : step(range, changes.rangeSteps);
-    return new ModdedWeapon(name, moddedName(mods, stockName), Math.max(0, changes.damage), changes.effects,
-        changes.damageType, changes.fireRate(fireRate), newRange, changes.qualities, changes.ammunition, newWeight,
-        newCost, changes.specials, changes.removed);
+    String newName = moddedName(mods, stockName);
+    return new ModdedWeapon(name, property == null ? newName : LegendaryRules.name(property.name(), newName),
+        Math.max(0, changes.damage), changes.effects, changes.damageType, changes.fireRate(fireRate), newRange,
+        changes.qualities, changes.ammunition, newWeight, newCost, changes.specials, changes.removed, property);
   }
 
   /** The qualities the mods remove, each with the first mod that removes it (house rule: removals win). */
@@ -169,8 +196,9 @@ public record ModdedWeapon(
 
   /**
    * The weapon's values while the mods' effects are applied: first the replacing values of all mods
-   * ({@link #replace}), then the changes in slot order ({@link #change}). Qualities the mods remove are taken
-   * off the base qualities up front and kept away from gains.
+   * ({@link #replace}), then the changes in slot order ({@link #change}), then a legendary property's
+   * ({@link #legendary}). Qualities the mods remove are taken off the base qualities up front and kept away from
+   * the mods' gains.
    */
   private static final class Changes {
 
@@ -179,6 +207,7 @@ public record ModdedWeapon(
     private @NonNull String damageType;
     private @NonNull List<String> ammunition;
     private int rateChange;
+    private int legendaryRate;
     private int rangeSteps;
     private final @NonNull List<String> effects;
     private final @NonNull List<String> qualities;
@@ -215,9 +244,44 @@ public record ModdedWeapon(
         case GAIN_EFFECT -> gainEffect(effect.text());
         case REMOVE_EFFECT -> removeEffect(effect.text());
         case SPECIAL -> specials.add(mod.name() + ": " + effect.text());
+        case ADD_DAMAGE_TYPE -> addDamageType(effect.text());
         case REMOVE_QUALITY, SET_DAMAGE, SET_DAMAGE_TYPE, SET_AMMUNITION, ALLOWS_SLOT -> {
           // removals were applied up front, replacing values by replace(); slots change no value
         }
+      }
+    }
+
+    /** A change of a legendary property (WG pp. 97–103); the catalog checks the kinds when it loads. */
+    void legendary(@NonNull ModEffect effect) {
+      switch (effect.type()) {
+        case DAMAGE -> damage += effect.number();
+        case FIRE_RATE -> legendaryRate += effect.number();
+        case GAIN_EFFECT -> gainEffect(effect.text());
+        case GAIN_QUALITY -> gainLegendaryQuality(effect.text());
+        case ADD_DAMAGE_TYPE -> addDamageType(effect.text());
+        default -> throw new IllegalStateException("Unsupported legendary effect " + effect.type());
+      }
+    }
+
+    /** WG p. 103: a quality the weapon has is kept, but an existing Recoil rating rises by 1 (Violent). */
+    private void gainLegendaryQuality(@NonNull String quality) {
+      String gained = baseName(quality);
+      for (int i = 0; i < qualities.size(); i++) {
+        if (baseName(qualities.get(i)).equals(gained)) {
+          Matcher rated = RATED.matcher(qualities.get(i));
+          if (gained.equals(RECOIL) && rated.matches()) {
+            qualities.set(i, rated.group(1) + " (" + (Integer.parseInt(rated.group(2)) + 1) + ")");
+          }
+          return;
+        }
+      }
+      gainQuality(quality);
+    }
+
+    private void addDamageType(@NonNull String type) {
+      String added = DamageType.valueOf(type).displayName();
+      if (Arrays.stream(damageType.split("/")).noneMatch(present -> present.strip().equalsIgnoreCase(added))) {
+        damageType = damageType.isEmpty() ? added : damageType + "/" + added;
       }
     }
 
@@ -254,13 +318,17 @@ public record ModdedWeapon(
       }
     }
 
-    /** CRB p. 88: every Piercing gained raises the rating by 1; other effects are not gained twice. */
+    /**
+     * CRB p. 88: every Piercing gained raises the rating, by the gained rating (WG p. 102: Penetrating +2); other
+     * effects are not gained twice.
+     */
     private void gainEffect(@NonNull String effect) {
-      if (PIERCING.matcher(effect).matches()) {
+      Matcher gained = PIERCING.matcher(effect);
+      if (gained.matches()) {
         for (int i = 0; i < effects.size(); i++) {
           Matcher piercing = PIERCING.matcher(effects.get(i));
           if (piercing.matches()) {
-            effects.set(i, "Piercing " + (Integer.parseInt(piercing.group(1)) + 1));
+            effects.set(i, "Piercing " + (Integer.parseInt(piercing.group(1)) + Integer.parseInt(gained.group(1))));
             return;
           }
         }
@@ -274,12 +342,19 @@ public record ModdedWeapon(
       effects.removeIf(present -> key(present).equals(key(effect)));
     }
 
-    /** The fire rate with the changes; their sum stays within 0–6 (CRB p. 89). */
+    /**
+     * The fire rate with the changes: the mods' sum stays within 0–6 (CRB p. 89), a legendary change is added after
+     * that limit (WG p. 102: Rapid may exceed 6).
+     */
     @Nullable Integer fireRate(@Nullable Integer base) {
-      if (rateChange == 0) {
+      if (rateChange == 0 && legendaryRate == 0) {
         return base;
       }
-      return Math.clamp((long) (base == null ? 0 : base) + rateChange, 0, MAX_FIRE_RATE);
+      int modded = base == null ? 0 : base;
+      if (rateChange != 0) {
+        modded = Math.clamp((long) modded + rateChange, 0, MAX_FIRE_RATE);
+      }
+      return Math.max(0, modded + legendaryRate);
     }
   }
 
@@ -309,6 +384,12 @@ public record ModdedWeapon(
   private static @NonNull WeaponRange step(@NonNull WeaponRange range, int steps) {
     WeaponRange[] ranges = WeaponRange.values();
     return ranges[Math.clamp((long) range.ordinal() + steps, 0, ranges.length - 1)];
+  }
+
+  /** A quality's name without its number, compared as {@link #key}: {@code Recoil (7)} → {@code recoil}. */
+  private static @NonNull String baseName(@NonNull String quality) {
+    Matcher rated = RATED.matcher(quality.strip());
+    return key(rated.matches() ? rated.group(1) : quality);
   }
 
   /** Compares names regardless of case and of the book's "Close-Quarters" / "Close Quarters" spellings. */

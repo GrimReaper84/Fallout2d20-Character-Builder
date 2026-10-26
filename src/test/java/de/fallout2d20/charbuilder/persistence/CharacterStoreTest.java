@@ -16,6 +16,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
@@ -497,6 +498,30 @@ class CharacterStoreTest {
     assertEquals(character.gear().getWeapons(), store.load(file).character().gear().getWeapons());
     JsonNode written = JSON.readTree(file.toFile());
     assertEquals("small-guns-hardened", written.get("weapons").get(0).get("mods").get("RECEIVER").get("id").asText());
+  }
+
+  /** F6d: legendary properties of weapons and apparel survive a round trip; unknown ids are kept, none is not written. */
+  @Test
+  void roundTripsLegendaryProperties() throws Exception {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("hunting-rifle")));
+    character.gear().setWeaponLegendary(0,
+        LegendaryCatalog.weaponPropertyById("legendary-weapon-two-shot").orElseThrow());
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("10mm-pistol")).withLegendary(CatalogRef.of("gone")));
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("machete")));
+    character.gear().addApparel(WornApparel.of(CatalogRef.of("combat-chest-piece")));
+    character.gear().setApparelLegendary(0,
+        LegendaryCatalog.armorPropertyById("legendary-armor-unyielding").orElseThrow());
+    Path file = dir.resolve("legendary.json");
+    store.save(character, file);
+
+    PlayerCharacter loaded = store.load(file).character();
+    assertEquals(character.gear().getWeapons(), loaded.gear().getWeapons());
+    assertEquals(character.gear().getApparel(), loaded.gear().getApparel());
+    JsonNode written = JSON.readTree(file.toFile());
+    assertEquals("legendary-weapon-two-shot", written.get("weapons").get(0).get("legendary").asText());
+    assertFalse(written.get("weapons").get(2).has("legendary"));
+    assertEquals("legendary-armor-unyielding", written.get("apparel").get(0).get("legendary").asText());
   }
 
   /** D4: the new fields are optional – a weapon without mods writes neither, so older files load unchanged. */

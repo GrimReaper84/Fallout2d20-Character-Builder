@@ -49,6 +49,8 @@ import org.jspecify.annotations.Nullable;
  * @param noMeleeBonus whether the melee damage bonus does not apply (Chainsaw, WG p. 78)
  * @param specialDamage whether the damage is "Special" (Flash Bang, Smoke Grenade, Detonator, WG pp. 79–81): it
  *     works by its rule, not by Combat Dice, so damage rating and type mean nothing
+ * @param legendaryAsSmallGun whether the weapon rolls as a Small Gun for legendary properties although it is a Big
+ *     Gun (WG p. 96: machine guns, the Gatling Gun and the Minigun)
  */
 public record WeaponData(
     @JsonProperty(required = true) @NonNull String id,
@@ -74,7 +76,8 @@ public record WeaponData(
     boolean gripOrStock,
     @Nullable String special,
     boolean noMeleeBonus,
-    boolean specialDamage) {
+    boolean specialDamage,
+    boolean legendaryAsSmallGun) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;

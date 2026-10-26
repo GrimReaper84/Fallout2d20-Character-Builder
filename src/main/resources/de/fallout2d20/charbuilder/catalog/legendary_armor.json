@@ -1,0 +1,445 @@
+[
+  {
+    "id": "legendary-armor-acrobats",
+    "name": "Acrobat's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 104
+      }
+    ],
+    "rolls": {
+      "LEG": 1
+    },
+    "rule": "Falling damage after DR is halved; two Acrobat's pieces worn: no falling damage."
+  },
+  {
+    "id": "legendary-armor-assassins",
+    "name": "Assassin's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 104
+      }
+    ],
+    "rolls": {
+      "HEAD": 1,
+      "ARM": 1,
+      "TORSO": 1,
+      "LEG": 2
+    },
+    "rule": "+2 Physical and Energy DR against attacks by humans (Brotherhood of Steel, Survivor and Vault Dweller PCs, and Human characters that are not Mutated)."
+  },
+  {
+    "id": "legendary-armor-auto-stim",
+    "name": "Auto Stim",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "TORSO": 2
+    },
+    "rule": "Once per scene, when HP drop below 1/4 of maximum, a carried Stimpak is used automatically without an action."
+  },
+  {
+    "id": "legendary-armor-bolstering",
+    "name": "Bolstering",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "TORSO": 3
+    },
+    "rule": "+2 Physical and Energy DR on all locations below half maximum HP, +3 below 1/4."
+  },
+  {
+    "id": "legendary-armor-cavaliers",
+    "name": "Cavalier's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "ARM": 2
+    },
+    "rule": "Defending or sprinting gives +2 Physical DR on all locations until the start of the next turn."
+  },
+  {
+    "id": "legendary-armor-chameleon",
+    "name": "Chameleon",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "TORSO": 4
+    },
+    "rule": "While hidden and not moving, tests to find the wearer get +1 difficulty."
+  },
+  {
+    "id": "legendary-armor-champion",
+    "name": "Champion",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "ARM": 3
+    },
+    "rule": "Once per scene, one d20 of a STR or END test counts as a 1 before rolling."
+  },
+  {
+    "id": "legendary-armor-cloaking",
+    "name": "Cloaking",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "HEAD": 2,
+      "ARM": 4,
+      "TORSO": 5,
+      "LEG": 3
+    },
+    "rule": "Once per scene, being hit in melee makes the wearer invisible as with a Stealth Boy (CRB p. 171)."
+  },
+  {
+    "id": "legendary-armor-cryogenic",
+    "name": "Cryogenic",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "HEAD": 3,
+      "ARM": 5,
+      "TORSO": 6,
+      "LEG": 4
+    },
+    "rule": "Enemy melee attacks have +1 complication range; on a complication the attacker takes Freeze Energy damage of as many CD as the attack would roll."
+  },
+  {
+    "id": "legendary-armor-cunning",
+    "name": "Cunning",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 105
+      }
+    ],
+    "rolls": {
+      "HEAD": 4,
+      "LEG": 5
+    },
+    "rule": "Once per scene, one d20 of a AGI or PER test counts as a 1 before rolling."
+  },
+  {
+    "id": "legendary-armor-duelists",
+    "name": "Duelist's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 5,
+      "ARM": 6,
+      "TORSO": 7,
+      "LEG": 6
+    },
+    "rule": "Enemy melee attacks have +1 complication range; on a complication the attacker is disarmed."
+  },
+  {
+    "id": "legendary-armor-exterminators",
+    "name": "Exterminator's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 6,
+      "ARM": 7,
+      "TORSO": 8,
+      "LEG": 7
+    },
+    "rule": "+2 Physical and Energy DR against attacks by insects, arachnids and mirelurks."
+  },
+  {
+    "id": "legendary-armor-ghoul-slayers",
+    "name": "Ghoul Slayer's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 7,
+      "ARM": 8,
+      "TORSO": 9,
+      "LEG": 8
+    },
+    "rule": "+2 Physical, Energy and Radiation DR against attacks by ghouls."
+  },
+  {
+    "id": "legendary-armor-hunters",
+    "name": "Hunter's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 8,
+      "ARM": 9,
+      "TORSO": 10,
+      "LEG": 9
+    },
+    "rule": "+2 Physical and Energy DR against attacks by mammals and lizards."
+  },
+  {
+    "id": "legendary-armor-incendiary",
+    "name": "Incendiary",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 9,
+      "ARM": 10,
+      "TORSO": 11,
+      "LEG": 10
+    },
+    "rule": "Enemy melee attacks have +1 complication range; on a complication the attacker takes Persistent Energy damage of as many CD as the attack would roll."
+  },
+  {
+    "id": "legendary-armor-lucky",
+    "name": "Lucky",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 10,
+      "ARM": 11,
+      "TORSO": 12,
+      "LEG": 11
+    },
+    "rule": "Once per day, when spending Luck on a re-roll, a d20 counts as a 1 or the CD count as Effects instead of re-rolling."
+  },
+  {
+    "id": "legendary-armor-martyrs",
+    "name": "Martyr's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 11,
+      "ARM": 12,
+      "TORSO": 13,
+      "LEG": 12
+    },
+    "rule": "Below 1/4 of maximum HP, extra combat actions cost 1 AP less (does not stack with Jet and the like)."
+  },
+  {
+    "id": "legendary-armor-mutant-slayers",
+    "name": "Mutant Slayer's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 106
+      }
+    ],
+    "rolls": {
+      "HEAD": 12,
+      "ARM": 13,
+      "TORSO": 14,
+      "LEG": 13
+    },
+    "rule": "+2 Physical and Energy DR against attacks by super mutants."
+  },
+  {
+    "id": "legendary-armor-poisoners",
+    "name": "Poisoner's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "HEAD": 13,
+      "ARM": 14,
+      "TORSO": 15,
+      "LEG": 14
+    },
+    "poison": 4,
+    "rule": "+4 Poison DR."
+  },
+  {
+    "id": "legendary-armor-powered",
+    "name": "Powered",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "HEAD": 14,
+      "ARM": 15,
+      "LEG": 15
+    },
+    "rule": "In combat, 1 AP goes to the group pool at the start of each of the wearer's turns."
+  },
+  {
+    "id": "legendary-armor-punishing",
+    "name": "Punishing",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "TORSO": 16,
+      "LEG": 16
+    },
+    "rule": "A melee attacker who hits takes 1 damage of the attack's type per Effect rolled, before DR."
+  },
+  {
+    "id": "legendary-armor-rad-powered",
+    "name": "Rad Powered",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "HEAD": 15,
+      "ARM": 16,
+      "TORSO": 17,
+      "LEG": 17
+    },
+    "rule": "Once per scene with radiation damage, one d20 of a STR test counts as a 1; once more per scene for every 5 radiation damage."
+  },
+  {
+    "id": "legendary-armor-safecrackers",
+    "name": "Safecracker's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "ARM": 17
+    },
+    "rule": "Once per scene, one d20 of a Lockpick test counts as a 1 before rolling."
+  },
+  {
+    "id": "legendary-armor-sentinels",
+    "name": "Sentinel's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "ARM": 18
+    },
+    "rule": "+3 Physical and Energy DR if the wearer did not move last turn."
+  },
+  {
+    "id": "legendary-armor-sharp",
+    "name": "Sharp",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "HEAD": 16,
+      "ARM": 19,
+      "TORSO": 18,
+      "LEG": 18
+    },
+    "rule": "Once per scene, one d20 of a INT or CHA test counts as a 1 before rolling."
+  },
+  {
+    "id": "legendary-armor-sprinters",
+    "name": "Sprinter's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 107
+      }
+    ],
+    "rolls": {
+      "HEAD": 17,
+      "LEG": 19
+    },
+    "rule": "Crossing difficult terrain or obstacles costs 1 AP less (minimum 0)."
+  },
+  {
+    "id": "legendary-armor-troubleshooters",
+    "name": "Troubleshooter's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 108
+      }
+    ],
+    "rolls": {
+      "HEAD": 18,
+      "ARM": 20,
+      "TORSO": 19,
+      "LEG": 20
+    },
+    "rule": "+2 Physical and Energy DR against attacks by robots."
+  },
+  {
+    "id": "legendary-armor-unyielding",
+    "name": "Unyielding",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 108
+      }
+    ],
+    "rolls": {
+      "TORSO": 20
+    },
+    "rule": "Below 1/4 of maximum HP, re-roll 1d20 on any test."
+  }
+]

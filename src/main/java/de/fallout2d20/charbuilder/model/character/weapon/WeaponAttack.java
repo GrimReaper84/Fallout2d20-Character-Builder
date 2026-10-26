@@ -27,7 +27,8 @@ import org.jspecify.annotations.Nullable;
  * damage instead of a rating.
  *
  * @param name weapon name
- * @param moddedName weapon name with the mods' prefixes; equals {@code name} without mods
+ * @param moddedName weapon name with the legendary mark and property and the mods' prefixes; equals {@code name} for
+ *     an ordinary weapon without mods
  * @param skill the attack skill; {@code null} if unknown (custom weapon without skill, unknown id)
  * @param attribute the attribute rolled with the skill; {@code null} without skill
  * @param targetNumber attribute + skill rank; {@code null} without skill

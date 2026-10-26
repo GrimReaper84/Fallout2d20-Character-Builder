@@ -9,6 +9,8 @@ import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
 import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
+import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponData;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
@@ -42,7 +44,8 @@ class ModuleOpensTest {
   private static final Set<Class<?>> JACKSON_ROOTS = Set.of(CharacterData.class, OriginData.class,
       TraitDefinition.class, PerkDefinition.class, EquipmentPackData.class, TagSkillItemData.class,
       TrinketData.class, WeaponData.class, WeaponModData.class, AmmunitionData.class, ApparelData.class,
-      ApparelModData.class, ItemData.class, MagazineData.class);
+      ApparelModData.class, ItemData.class, MagazineData.class, LegendaryWeaponData.class,
+      LegendaryArmorData.class);
 
   private static final Pattern OPENS_TO_JACKSON =
       Pattern.compile("opens\\s+([\\w.]+)\\s+to\\s+com\\.fasterxml\\.jackson\\.databind\\s*;");

@@ -260,7 +260,7 @@ final class CharacterMapper {
     weapon.mods().forEach((slot, mod) -> mods.put(slot.name(), toData(mod)));
     return new WeaponEntryData(ref == null ? null : toData(ref), customData, weapon.quantity(),
         blankToNull(weapon.notes()), weapon.builtIn() ? Boolean.TRUE : null, mods.isEmpty() ? null : mods,
-        toData(weapon.startingSource()));
+        toData(weapon.startingSource()), legendaryId(weapon.legendary()));
   }
 
   private static @NonNull List<CarriedWeapon> weapons(@Nullable List<WeaponEntryData> entries)
@@ -279,7 +279,7 @@ final class CharacterMapper {
       }
       weapons.add(new CarriedWeapon(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
           entry.quantity(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.builtIn()), mods,
-          startingSource(entry.startingSource())));
+          startingSource(entry.startingSource()), legendary(entry.legendary())));
     }
     return weapons;
   }
@@ -336,7 +336,8 @@ final class CharacterMapper {
     Map<String, CatalogRefData> mods = new LinkedHashMap<>();
     item.mods().forEach((slot, mod) -> mods.put(slot.name(), toData(mod)));
     return new WornApparelData(ref == null ? null : toData(ref), customData, item.location(), blankToNull(item.notes()),
-        item.carried() ? Boolean.TRUE : null, toData(item.startingSource()), mods.isEmpty() ? null : mods);
+        item.carried() ? Boolean.TRUE : null, toData(item.startingSource()), mods.isEmpty() ? null : mods,
+        legendaryId(item.legendary()));
   }
 
   private static @NonNull List<WornApparel> apparel(@Nullable List<WornApparelData> entries) throws SaveFormatException {
@@ -354,9 +355,19 @@ final class CharacterMapper {
       }
       apparel.add(new WornApparel(ref == null ? null : toModel(ref), custom == null ? null : toModel(custom),
           entry.location(), notes == null ? "" : notes, Boolean.TRUE.equals(entry.carried()),
-          startingSource(entry.startingSource()), mods));
+          startingSource(entry.startingSource()), mods, legendary(entry.legendary())));
     }
     return apparel;
+  }
+
+  /** The id of a legendary property as saved; {@code null} for none. */
+  private static @Nullable String legendaryId(@Nullable CatalogRef legendary) {
+    return legendary == null ? null : legendary.id();
+  }
+
+  /** A saved legendary property id; an id outside the catalog is kept (it has no effect), a blank one is none. */
+  private static @Nullable CatalogRef legendary(@Nullable String id) {
+    return id == null || id.isBlank() ? null : CatalogRef.of(id);
   }
 
   /** A custom item; an unknown mod table name, or one not fitting the kind (hand-edited file), is read as none. */

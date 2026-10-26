@@ -1,0 +1,863 @@
+[
+  {
+    "id": "legendary-weapon-assassins",
+    "name": "Assassin's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 98
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 1,
+      "ENERGY_WEAPONS": 1,
+      "BIG_GUNS": 1,
+      "MELEE": 1,
+      "UNARMED": 1
+    },
+    "rule": "Against humans (Brotherhood of Steel, Survivor and Vault Dweller PCs, and Human characters that are not Mutated) the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-berserkers",
+    "name": "Berserker's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 98
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 2,
+      "UNARMED": 2
+    },
+    "rule": "+1 CD damage for every point the wielder's torso Physical DR is below 6."
+  },
+  {
+    "id": "legendary-weapon-blazing",
+    "name": "Blazing",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 3
+    },
+    "rule": "While the wielder Defends, a melee attacker who misses takes 4 CD Persistent Energy damage."
+  },
+  {
+    "id": "legendary-weapon-bloodied",
+    "name": "Bloodied",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 4,
+      "UNARMED": 3
+    },
+    "rule": "+1 CD damage while the wielder is below maximum HP, +2 CD below 3/4, +3 CD below 1/2, +4 CD below 1/4."
+  },
+  {
+    "id": "legendary-weapon-cavaliers",
+    "name": "Cavalier's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 5,
+      "UNARMED": 4
+    },
+    "rule": "Defending or sprinting gives the wielder +2 Physical DR until the start of their next turn."
+  },
+  {
+    "id": "legendary-weapon-charged",
+    "name": "Charged",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 6
+    },
+    "rule": "While the wielder Defends, a melee attacker who misses takes 4 CD Stun Energy damage."
+  },
+  {
+    "id": "legendary-weapon-crippling",
+    "name": "Crippling",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 2,
+      "ENERGY_WEAPONS": 2,
+      "BIG_GUNS": 2,
+      "MELEE": 7,
+      "UNARMED": 5
+    },
+    "rule": "A hit on an arm or leg that deals 4+ damage after DR causes an injury."
+  },
+  {
+    "id": "legendary-weapon-deadeye",
+    "name": "Deadeye",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 3,
+      "ENERGY_WEAPONS": 3,
+      "BIG_GUNS": 3
+    },
+    "rule": "After Aiming with it, further minor and major actions this turn cost 1 AP less (does not stack with Jet and the like)."
+  },
+  {
+    "id": "legendary-weapon-defiant",
+    "name": "Defiant",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 4,
+      "ENERGY_WEAPONS": 4,
+      "BIG_GUNS": 4
+    },
+    "rule": "Once per scene, after spending the full Fire Rate in ammo, declare it Empty for +2 CD damage; reloading then takes a minor action."
+  },
+  {
+    "id": "legendary-weapon-duelists",
+    "name": "Duelist's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 99
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 8,
+      "UNARMED": 6
+    },
+    "rule": "While the wielder Defends, roll 1 CD when a melee attacker misses: on an Effect the attacker is disarmed."
+  },
+  {
+    "id": "legendary-weapon-enraging",
+    "name": "Enraging",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 5,
+      "ENERGY_WEAPONS": 5,
+      "BIG_GUNS": 5,
+      "MELEE": 9,
+      "UNARMED": 7
+    },
+    "rule": "After damaging an enemy, spend 1 Luck point: for the rest of the scene it attacks the nearest creature it sees."
+  },
+  {
+    "id": "legendary-weapon-explosive",
+    "name": "Explosive",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 6
+    },
+    "rule": "Each Effect on the damage roll hits a secondary target within Close range (GM's choice, Reach first) for half damage; does not stack with Arc or Burst."
+  },
+  {
+    "id": "legendary-weapon-exterminators",
+    "name": "Exterminator's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 7,
+      "ENERGY_WEAPONS": 6,
+      "BIG_GUNS": 6,
+      "MELEE": 10,
+      "UNARMED": 8
+    },
+    "rule": "Against insects, arachnids and mirelurks the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-freezing",
+    "name": "Freezing",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 8,
+      "ENERGY_WEAPONS": 7,
+      "BIG_GUNS": 7,
+      "MELEE": 11,
+      "UNARMED": 9
+    },
+    "rule": "Spend a Luck point when attacking to give the attack the Freeze damage effect."
+  },
+  {
+    "id": "legendary-weapon-frigid",
+    "name": "Frigid",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 12
+    },
+    "rule": "While the wielder Defends, a melee attacker who misses takes 4 CD Freeze Energy damage."
+  },
+  {
+    "id": "legendary-weapon-furious",
+    "name": "Furious",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "MELEE": 13,
+      "UNARMED": 10
+    },
+    "rule": "+1 CD damage for each earlier hit with this weapon on the same enemy this scene (cumulative)."
+  },
+  {
+    "id": "legendary-weapon-ghoul-slayers",
+    "name": "Ghoul Slayer's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 9,
+      "ENERGY_WEAPONS": 8,
+      "BIG_GUNS": 8,
+      "MELEE": 14,
+      "UNARMED": 11
+    },
+    "rule": "Against ghouls the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-hitmans",
+    "name": "Hitman's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 100
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 10,
+      "ENERGY_WEAPONS": 9,
+      "BIG_GUNS": 9
+    },
+    "rule": "+1 CD damage after Aiming with it; stacks with Accurate."
+  },
+  {
+    "id": "legendary-weapon-hunters",
+    "name": "Hunter's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 11,
+      "ENERGY_WEAPONS": 10,
+      "BIG_GUNS": 10,
+      "MELEE": 15,
+      "UNARMED": 12
+    },
+    "rule": "Against mammals and lizards the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-incendiary",
+    "name": "Incendiary",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 12
+    },
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent (Energy)"
+      }
+    ],
+    "rule": "Gains Persistent (Energy)."
+  },
+  {
+    "id": "legendary-weapon-instigating",
+    "name": "Instigating",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 13,
+      "ENERGY_WEAPONS": 11,
+      "BIG_GUNS": 11,
+      "MELEE": 16,
+      "UNARMED": 13
+    },
+    "rule": "+3 CD damage against a target at maximum HP."
+  },
+  {
+    "id": "legendary-weapon-irradiated",
+    "name": "Irradiated",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 14,
+      "ENERGY_WEAPONS": 12,
+      "BIG_GUNS": 12,
+      "MELEE": 17,
+      "UNARMED": 14
+    },
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Radioactive"
+      }
+    ],
+    "rule": "Gains Radioactive."
+  },
+  {
+    "id": "legendary-weapon-junkies",
+    "name": "Junkie's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 15,
+      "ENERGY_WEAPONS": 13,
+      "BIG_GUNS": 13,
+      "MELEE": 18,
+      "UNARMED": 15
+    },
+    "rule": "+1 CD damage for each addiction the attacker suffers from."
+  },
+  {
+    "id": "legendary-weapon-kneecapper",
+    "name": "Kneecapper",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 16,
+      "ENERGY_WEAPONS": 14,
+      "BIG_GUNS": 14,
+      "MELEE": 19,
+      "UNARMED": 16
+    },
+    "rule": "A hit on a leg that deals 3+ damage after DR is a critical hit."
+  },
+  {
+    "id": "legendary-weapon-lucky",
+    "name": "Lucky",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 1,
+    "rolls": {
+      "SMALL_GUNS": 17,
+      "ENERGY_WEAPONS": 15,
+      "BIG_GUNS": 15,
+      "MELEE": 20,
+      "UNARMED": 17
+    },
+    "rule": "After an attack with Luck re-rolls, roll 1 CD: on an Effect regain one spent Luck point."
+  },
+  {
+    "id": "legendary-weapon-mighty",
+    "name": "Mighty",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "MELEE": 1,
+      "UNARMED": 1
+    },
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "rule": "+2 CD damage (melee name of Powerful)."
+  },
+  {
+    "id": "legendary-weapon-mutant-slayers",
+    "name": "Mutant Slayer's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 1,
+      "ENERGY_WEAPONS": 1,
+      "BIG_GUNS": 1,
+      "MELEE": 2,
+      "UNARMED": 2
+    },
+    "rule": "Against super mutants the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-nimble",
+    "name": "Nimble",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 101
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 2,
+      "ENERGY_WEAPONS": 2,
+      "BIG_GUNS": 2
+    },
+    "rule": "Aiming with it also grants a free Move minor action."
+  },
+  {
+    "id": "legendary-weapon-nocturnal",
+    "name": "Nocturnal",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 3,
+      "ENERGY_WEAPONS": 3,
+      "BIG_GUNS": 3,
+      "MELEE": 3,
+      "UNARMED": 3
+    },
+    "rule": "Between sunset and sunrise the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-penetrating",
+    "name": "Penetrating",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 4,
+      "ENERGY_WEAPONS": 4,
+      "BIG_GUNS": 4,
+      "MELEE": 4,
+      "UNARMED": 4
+    },
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Piercing 2"
+      }
+    ],
+    "rule": "Gains Piercing 2, or +2 to an existing Piercing rating."
+  },
+  {
+    "id": "legendary-weapon-plasma-infused",
+    "name": "Plasma Infused",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 5
+    },
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "ADD_DAMAGE_TYPE",
+        "text": "PHYSICAL"
+      },
+      {
+        "type": "ADD_DAMAGE_TYPE",
+        "text": "ENERGY"
+      }
+    ],
+    "rule": "+2 CD damage, Physical and Energy like a plasma weapon: the target's lower DR of the two applies."
+  },
+  {
+    "id": "legendary-weapon-poisoners",
+    "name": "Poisoner's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 6,
+      "ENERGY_WEAPONS": 5,
+      "BIG_GUNS": 5,
+      "MELEE": 5,
+      "UNARMED": 5
+    },
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent (Poison)"
+      }
+    ],
+    "rule": "Gains Persistent (Poison)."
+  },
+  {
+    "id": "legendary-weapon-powerful",
+    "name": "Powerful",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 7,
+      "ENERGY_WEAPONS": 6,
+      "BIG_GUNS": 6
+    },
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      }
+    ],
+    "rule": "+2 CD damage (ranged name of Mighty)."
+  },
+  {
+    "id": "legendary-weapon-quickdraw",
+    "name": "Quickdraw",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 8,
+      "ENERGY_WEAPONS": 7,
+      "BIG_GUNS": 7,
+      "MELEE": 6,
+      "UNARMED": 6
+    },
+    "rule": "Drawing it is free: no AP and not counted against the minor action limit."
+  },
+  {
+    "id": "legendary-weapon-rapid",
+    "name": "Rapid",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 9,
+      "ENERGY_WEAPONS": 8,
+      "BIG_GUNS": 8
+    },
+    "effects": [
+      {
+        "type": "FIRE_RATE",
+        "value": 3
+      }
+    ],
+    "rule": "+3 Fire Rate, which may go above 6."
+  },
+  {
+    "id": "legendary-weapon-relentless",
+    "name": "Relentless",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 102
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 10,
+      "ENERGY_WEAPONS": 9,
+      "BIG_GUNS": 9,
+      "MELEE": 7,
+      "UNARMED": 7
+    },
+    "rule": "After a critical hit, spend 1 Luck point to regain the AP spent on that attack."
+  },
+  {
+    "id": "legendary-weapon-sentinels",
+    "name": "Sentinel's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "MELEE": 8,
+      "UNARMED": 8
+    },
+    "rule": "+2 Physical and Energy DR while wielded if the wielder did not move last turn; +3 if the weapon has Parry."
+  },
+  {
+    "id": "legendary-weapon-staggering",
+    "name": "Staggering",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 11,
+      "ENERGY_WEAPONS": 10,
+      "BIG_GUNS": 10,
+      "MELEE": 9,
+      "UNARMED": 9
+    },
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Stun"
+      }
+    ],
+    "rule": "Gains Stun."
+  },
+  {
+    "id": "legendary-weapon-stalkers",
+    "name": "Stalker's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 12,
+      "ENERGY_WEAPONS": 11,
+      "BIG_GUNS": 11
+    },
+    "rule": "On a sneak attack with no action but an Aim minor action that turn, one d20 of the pool counts as a 1 before rolling."
+  },
+  {
+    "id": "legendary-weapon-steadfast",
+    "name": "Steadfast",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 13,
+      "ENERGY_WEAPONS": 12,
+      "BIG_GUNS": 12
+    },
+    "rule": "Aiming with it gives +2 Physical DR until the start of the next turn."
+  },
+  {
+    "id": "legendary-weapon-troubleshooters",
+    "name": "Troubleshooter's",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 14,
+      "ENERGY_WEAPONS": 13,
+      "BIG_GUNS": 13,
+      "MELEE": 10,
+      "UNARMED": 10
+    },
+    "rule": "Against robots the attacks gain Vicious; a weapon that is already Vicious deals +2 instead of +1 per Effect."
+  },
+  {
+    "id": "legendary-weapon-two-shot",
+    "name": "Two-Shot",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 15,
+      "ENERGY_WEAPONS": 14,
+      "BIG_GUNS": 14
+    },
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Vicious"
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Ammo-Hungry (2)"
+      }
+    ],
+    "rule": "+2 CD damage, gains Vicious and Ammo-Hungry (2)."
+  },
+  {
+    "id": "legendary-weapon-violent",
+    "name": "Violent",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 16
+    },
+    "effects": [
+      {
+        "type": "DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "GAIN_QUALITY",
+        "text": "Recoil (7)"
+      }
+    ],
+    "rule": "+2 CD damage and Recoil (7), or +1 to an existing Recoil rating; a hit dealing 4+ damage after DR causes an injury."
+  },
+  {
+    "id": "legendary-weapon-wounding",
+    "name": "Wounding",
+    "sources": [
+      {
+        "book": "WG",
+        "page": 103
+      }
+    ],
+    "table": 2,
+    "rolls": {
+      "SMALL_GUNS": 17,
+      "ENERGY_WEAPONS": 15,
+      "BIG_GUNS": 15,
+      "MELEE": 11,
+      "UNARMED": 11
+    },
+    "effects": [
+      {
+        "type": "GAIN_EFFECT",
+        "text": "Persistent (Physical)"
+      }
+    ],
+    "rule": "Gains Persistent (Physical)."
+  }
+]

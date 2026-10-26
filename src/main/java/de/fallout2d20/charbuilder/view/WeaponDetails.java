@@ -30,13 +30,12 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * The right side of the Weapons tab: every value of the selected weapon ({@link WeaponAttack}: target
- * number, critical range, damage with the melee bonus, effects, type, fire rate, effective range,
- * qualities, ammunition left), the catalog's weight, cost and rarity, a quantity for explosives and thrown
- * weapons, the note and the mods ({@link WeaponModSection}); values the mods changed are bold with the value
- * without mods as tooltip. A custom weapon imported without skill gets a skill choice instead of
- * the attack value. Typed notes go to {@code onEdited}; everything else to the model and then to
- * {@code onChanged}.
+ * The right side of the Weapons tab: every value of the selected weapon ({@link WeaponAttack}: target number,
+ * critical range, damage with the melee bonus, effects, type, fire rate, effective range, qualities, ammunition left),
+ * the catalog's weight, cost and rarity, a quantity for explosives and thrown weapons, the note, the legendary property
+ * ({@link LegendarySection}) and the mods ({@link WeaponModSection}); values the mods or the legendary property changed
+ * are bold with the base value as tooltip. A custom weapon imported without skill gets a skill choice instead of the
+ * attack value. Typed notes go to {@code onEdited}; everything else to the model and then to {@code onChanged}.
  */
 final class WeaponDetails {
 
@@ -57,12 +56,13 @@ final class WeaponDetails {
     ModdedWeapon values = weapon == null ? data.map(ModdedWeapon::of).orElse(null)
         : ModdedWeapon.of(weapon).orElse(null);
     ModdedWeapon base = weapon == null ? values : ModdedWeapon.unmodded(weapon).orElse(null);
-    OverviewParts.sectionHeading(pane, attack.name());
+    String heading = weapon == null ? attack.name() : weapon.legendaryName();
+    OverviewParts.sectionHeading(pane, heading);
 
     MigPane rows = Layouts.details(0);
     detailRow(rows, "Source", new Label(data.map(weaponData -> weaponData.sources().getFirst().toString())
         .orElse("Custom weapon")));
-    if (!attack.moddedName().equals(attack.name())) {
+    if (!attack.moddedName().equals(heading)) {
       detailRow(rows, "Modded name", text(attack.moddedName()));
     }
     detailRow(rows, "Attack", entry.needsSkill() ? skillChoice(character, entry.index(), callbacks.onChanged())
@@ -81,6 +81,9 @@ final class WeaponDetails {
       addOwnValues(rows, character, weapon, entry.index(), callbacks);
     }
     pane.add(rows);
+    if (weapon != null) {
+      LegendarySection.addTo(pane, character, entry.index(), weapon, callbacks.onChanged());
+    }
     if (weapon != null && values != null) {
       WeaponModSection.addTo(pane, character, entry.index(), weapon, values, callbacks.onChanged());
     }
@@ -169,7 +172,8 @@ final class WeaponDetails {
       @Nullable ModdedWeapon values, @NonNull Function<ModdedWeapon, String> text) {
     if (base != null && values != null && !text.apply(base).equals(text.apply(values))) {
       label.setStyle("-fx-font-weight: bold;");
-      label.setTooltip(new Tooltip("Without mods: " + text.apply(base)));
+      label.setTooltip(new Tooltip((values.legendary() == null ? "Without mods: "
+          : "Without mods and legendary property: ") + text.apply(base)));
     }
     return label;
   }

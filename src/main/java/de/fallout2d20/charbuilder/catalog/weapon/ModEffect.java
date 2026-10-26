@@ -25,7 +25,7 @@ public record ModEffect(
     if (numeric ? value == null : text == null || text.isBlank()) {
       throw new IllegalArgumentException("Mod effect " + type + " needs a " + (numeric ? "value" : "text"));
     }
-    if (text != null && type == ModEffectType.SET_DAMAGE_TYPE) {
+    if (text != null && (type == ModEffectType.SET_DAMAGE_TYPE || type == ModEffectType.ADD_DAMAGE_TYPE)) {
       DamageType.valueOf(text);
     }
     if (text != null && type == ModEffectType.ALLOWS_SLOT) {
@@ -43,6 +43,7 @@ public record ModEffect(
       case GAIN_QUALITY, GAIN_EFFECT -> "Gain " + text();
       case REMOVE_QUALITY, REMOVE_EFFECT -> "Remove " + text();
       case SET_DAMAGE_TYPE -> "Damage type " + DamageType.valueOf(text()).displayName();
+      case ADD_DAMAGE_TYPE -> "Also " + DamageType.valueOf(text()).displayName() + " damage";
       case SET_AMMUNITION -> "Ammunition " + WeaponCatalog.ammunitionById(text()).map(AmmunitionData::name)
           .orElse(text());
       case ALLOWS_SLOT -> "Allows a " + ModSlot.valueOf(text()).displayName() + " mod";

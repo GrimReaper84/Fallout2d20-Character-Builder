@@ -50,7 +50,7 @@ import org.jspecify.annotations.Nullable;
  * @param luckPointsMax maximum Luck points, printed as a small caption next to the empty Luck box
  * @param weapons all weapons, also those that do not fit on page 1 (the renderer moves them on)
  * @param notes free lines for the notes page: origin choices, Mister Handy arms, trinket, the typed notes of the
- *     character, its weapons, apparel and items, and the rules of the apparel and its mods
+ *     character, its weapons, apparel and items, and the rules of legendary properties, of the apparel and its mods
  */
 public record SheetContent(
     @NonNull String name,
@@ -196,8 +196,8 @@ public record SheetContent(
     }
     for (WornApparel apparel : character.gear().getApparel()) {
       List<String> mods = ApparelMods.installedMods(apparel).stream().map(ApparelModData::name).toList();
-      String name = mods.isEmpty() ? apparel.displayName()
-          : apparel.displayName() + " (" + String.join(", ", mods) + ")";
+      String name = mods.isEmpty() ? apparel.legendaryName()
+          : apparel.legendaryName() + " (" + String.join(", ", mods) + ")";
       rows.add(new GearRow(apparel.carried() ? name + " (carried)" : name,
           pounds(ModdedApparel.of(apparel).map(ModdedApparel::weight).orElse(null), 1)));
     }
@@ -272,12 +272,12 @@ public record SheetContent(
       notes.add("Trinket: " + trinket);
     }
     for (CarriedWeapon weapon : character.gear().getWeapons()) {
-      addNote(notes, weapon.displayName(), weapon.notes());
+      List<String> rules = weapon.legendaryProperty()
+          .map(property -> List.of(sentence(property.name() + ": " + property.rule()))).orElse(List.of());
+      addNote(notes, weapon.legendaryName(), withRules(weapon.notes(), rules));
     }
     for (WornApparel apparel : character.gear().getApparel()) {
-      String rules = String.join(" ", apparelRules(apparel));
-      String note = apparel.notes().strip();
-      addNote(notes, apparel.displayName(), note.isEmpty() || rules.isEmpty() ? note + rules : note + " – " + rules);
+      addNote(notes, apparel.legendaryName(), withRules(apparel.notes(), apparelRules(apparel)));
     }
     for (CarriedItem item : character.gear().getItems()) {
       addNote(notes, item.displayName(), item.notes());
@@ -289,15 +289,27 @@ public record SheetContent(
     return notes;
   }
 
+  /** The typed note, then the rules, separated by a dash when both are present. */
+  private static @NonNull String withRules(@NonNull String note, @NonNull List<String> rules) {
+    String stripped = note.strip();
+    String joined = String.join(" ", rules);
+    return stripped.isEmpty() || joined.isEmpty() ? stripped + joined : stripped + " – " + joined;
+  }
+
   /**
-   * The rules of a piece no sheet column covers, each as a sentence: its own special (WG pp. 86–93), then its mods'
-   * ("Mod: rule").
+   * The rules of a piece no sheet column covers, each as a sentence: its legendary property ("Property: rule", WG pp.
+   * 104–108; its DR is in the resistance columns), its own special (WG pp. 86–93), then its mods' ("Mod: rule").
    */
   private static @NonNull List<String> apparelRules(@NonNull WornApparel apparel) {
     List<String> rules = new ArrayList<>();
+    apparel.legendaryProperty().ifPresent(property -> rules.add(property.name() + ": " + property.rule()));
     apparel.data().map(ApparelData::special).ifPresent(rules::add);
     ModdedApparel.of(apparel).ifPresent(modded -> rules.addAll(modded.specials()));
-    return rules.stream().map(rule -> rule.endsWith(".") ? rule : rule + ".").toList();
+    return rules.stream().map(SheetContent::sentence).toList();
+  }
+
+  private static @NonNull String sentence(@NonNull String rule) {
+    return rule.endsWith(".") ? rule : rule + ".";
   }
 
   private static void addNote(@NonNull List<String> notes, @NonNull String name, @NonNull String note) {

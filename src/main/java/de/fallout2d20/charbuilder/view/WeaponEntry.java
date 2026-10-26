@@ -28,12 +28,15 @@ record WeaponEntry(int index, @NonNull WeaponAttack attack, @Nullable CarriedWea
     return weapon != null ? weapon.isIntegrated() : index < WeaponsTab.UNARMED_STRIKE_INDEX;
   }
 
-  /** Name, the quantity of counted weapons and a marker for weapons built into the character. */
+  /**
+   * Name (with the legendary mark and property), the quantity of counted weapons and a marker for weapons built into
+   * the character.
+   */
   @NonNull String label() {
     if (weapon == null) {
       return attack.name() + (isBuiltIn() ? " (built in)" : "");
     }
-    return attack.name() + (weapon.isCounted() ? " ×" + weapon.quantity() : "")
+    return weapon.legendaryName() + (weapon.isCounted() ? " ×" + weapon.quantity() : "")
         + (weapon.isIntegrated() ? " (built in)" : "");
   }
 

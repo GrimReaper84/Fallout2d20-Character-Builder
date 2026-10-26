@@ -1192,6 +1192,7 @@
       }
     ],
     "skill": "BIG_GUNS",
+    "legendaryAsSmallGun": true,
     "damage": 3,
     "damageEffects": [
       "Burst",
@@ -3250,6 +3251,7 @@
       }
     ],
     "skill": "BIG_GUNS",
+    "legendaryAsSmallGun": true,
     "damage": 7,
     "damageEffects": [
       "Burst"
@@ -3350,6 +3352,7 @@
       }
     ],
     "skill": "BIG_GUNS",
+    "legendaryAsSmallGun": true,
     "damage": 3,
     "damageEffects": [
       "Burst",
@@ -3431,6 +3434,7 @@
       }
     ],
     "skill": "BIG_GUNS",
+    "legendaryAsSmallGun": true,
     "damage": 6,
     "damageEffects": [
       "Burst",
