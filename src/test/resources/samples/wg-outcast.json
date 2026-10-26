@@ -149,7 +149,27 @@
     "rads" : 0,
     "radiationPoints" : 0
   },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "ex-scribe"
+    },
+    "choices" : [ ],
+    "freeArms" : false
+  },
+  "inventoryNotes" : "[Pack] Roll: 8 + 4 CD fusion cells\n[Pack] Roll: 3 rolls on the Outcast Equipment Table (WG p. 19) → d20 14: Sword\n[Tag skill] Roll: Fusion cell with 6 + 3 CD shots\n[Tag skill] Roll: 6 + 3 CD extra shots of an ammunition type you already own\n[Origin] Roll: 1d20 junk\n[Origin] Roll: Up to 3 Uncommon materials, 1 AP each\n[Origin] Roll: 1 extra roll on the loot table, no AP needed",
   "weapons" : [ {
+    "ref" : {
+      "id" : "laser-gun"
+    },
+    "quantity" : 1,
+    "notes" : "Pack: Laser pistol with 8 + 4 CD fusion cells",
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "sword"
+    },
+    "quantity" : 1
+  }, {
     "ref" : {
       "id" : "tesla-rifle"
     },
@@ -179,8 +199,21 @@
   },
   "apparel" : [ {
     "ref" : {
+      "id" : "brotherhood-scribes-armor"
+    },
+    "notes" : "Pack: Brotherhood Scribe's Armor (tattered)",
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "casual-clothing"
+    },
+    "carried" : true,
+    "startingSource" : "TAG_SKILL"
+  }, {
+    "ref" : {
       "id" : "underarmor-suit"
     },
+    "carried" : true,
     "mods" : {
       "LINING" : {
         "id" : "lining-treated-lining"
@@ -190,6 +223,7 @@
     "ref" : {
       "id" : "marine-armor-chest-piece"
     },
+    "carried" : true,
     "mods" : {
       "MATERIAL" : {
         "id" : "marine-welded"
@@ -200,6 +234,7 @@
     "ref" : {
       "id" : "marine-armor-helmet"
     },
+    "carried" : true,
     "mods" : {
       "MATERIAL" : {
         "id" : "marine-tempered"
@@ -207,6 +242,25 @@
     }
   } ],
   "items" : [ {
+    "custom" : {
+      "name" : "Multitool",
+      "weight" : 0
+    },
+    "quantity" : 1,
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "buffout"
+    },
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
+  }, {
+    "ref" : {
+      "id" : "multi-tool"
+    },
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
+  }, {
     "ref" : {
       "id" : "guns-and-bullets-annual"
     },
@@ -227,6 +281,7 @@
     },
     "quantity" : 1
   } ],
+  "caps" : 15,
   "materials" : {
     "junk" : 10,
     "common" : 0,

@@ -1,5 +1,6 @@
 package de.fallout2d20.charbuilder.samples;
 
+import de.fallout2d20.charbuilder.FixedDice;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmSlot;
@@ -24,6 +25,7 @@ import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import de.fallout2d20.charbuilder.model.character.creation.PerkRules;
 import de.fallout2d20.charbuilder.model.character.creation.SkillRules;
 import de.fallout2d20.charbuilder.model.character.equipment.ArmSelection;
+import de.fallout2d20.charbuilder.model.character.equipment.OutcastRolls;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingEquipmentItems;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
@@ -67,6 +69,7 @@ final class SampleCharacters {
     samples.put("child-of-atom.json", SampleCharacters::childOfAtom);
     samples.put("tribal-gifted.json", SampleCharacters::tribalGifted);
     samples.put("wg-outcast.json", SampleCharacters::wandererOutcast);
+    samples.put("wg-assaultron.json", SampleCharacters::assaultron);
     samples.put("in-creation.json", SampleCharacters::inCreation);
     samples.put("level-up-pending.json", SampleCharacters::levelUpPending);
     samples.put("veteran-overflow.json", SampleCharacters::veteranOverflow);
@@ -151,7 +154,8 @@ final class SampleCharacters {
   /**
    * A Brotherhood Outcast showing the Wanderer's Guide content: the Junk Shield perk with junk carried, a Tesla
    * Rifle with a WG muzzle mod, a legendary Violent 12.7mm Pistol whose Recoil (8) is too much for STR 6, a Bow with
-   * plain and cryo arrows, and a legendary Bolstering Marine chest piece. No pack yet (WG packs come with F4).
+   * plain and cryo arrows, and a legendary Bolstering Marine chest piece. Ex-Scribe pack (WG p. 19) with one of its
+   * three Outcast Equipment Table rolls made (d20 14: Sword), so the dice button shows two open rolls.
    */
   static PlayerCharacter wandererOutcast() {
     PlayerCharacter character = start("Sela Voss", "brotherhood-outcast");
@@ -160,12 +164,14 @@ final class SampleCharacters {
     tags(character, Skill.SMALL_GUNS, Skill.REPAIR, Skill.ATHLETICS);
     finish(character, List.of(Skill.ENERGY_WEAPONS, Skill.SMALL_GUNS, Skill.REPAIR, Skill.ATHLETICS),
         List.of("junk-shield"));
+    character.startingGear().choosePack(CatalogRef.of("ex-scribe"));
     complete(character);
+    OutcastRolls.roll(character, FixedDice.of(14));
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("tesla-rifle")));
-    character.gear().setWeaponMod(0, ModSlot.MUZZLE,
+    character.gear().setWeaponMod(lastWeapon(character), ModSlot.MUZZLE,
         WeaponCatalog.modById("energy-weapons-amplified-beam-splitter").orElseThrow());
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("12-7mm-pistol")));
-    character.gear().setWeaponLegendary(1,
+    character.gear().setWeaponLegendary(lastWeapon(character),
         LegendaryCatalog.weaponPropertyById("legendary-weapon-violent").orElseThrow());
     character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("bow")));
     character.gear().setAmmunition("fusion-cell", 30);
@@ -175,13 +181,29 @@ final class SampleCharacters {
     character.gear().setMaterials(new Materials(10, 0, 2, 0));
     wearWithMod(character, "underarmor-suit", ApparelModSlot.LINING, "lining-treated-lining");
     wearWithMod(character, "marine-armor-chest-piece", ApparelModSlot.MATERIAL, "marine-welded");
-    character.gear().setApparelLegendary(1,
+    character.gear().setApparelLegendary(character.gear().getApparel().size() - 1,
         LegendaryCatalog.armorPropertyById("legendary-armor-bolstering").orElseThrow());
     wearWithMod(character, "marine-armor-helmet", ApparelModSlot.MATERIAL, "marine-tempered");
     List.of("guns-and-bullets-annual", "radrat-meat", "duct-tape", "high-tech-gadget")
         .forEach(id -> character.gear().addItem(CarriedItem.of(CatalogRef.of(id))));
     character.setRarePerkUnlocked("ammo-factory", true);
     return character;
+  }
+
+  /**
+   * An Assaultron (WG p. 10) with the U.S. Military Model pack (WG p. 18): built-in Laser Gun, Actuated Frame body
+   * over Standard Plating (the plating does not count on the torso, user decision 2026-10-26).
+   */
+  static PlayerCharacter assaultron() {
+    PlayerCharacter character = start("Unit AX-90", "assaultron");
+    special(character, 1, 1, 1, 1, 0, 0, 1);
+    tags(character, Skill.UNARMED, Skill.ENERGY_WEAPONS, Skill.ATHLETICS);
+    finish(character, List.of(Skill.UNARMED, Skill.ENERGY_WEAPONS, Skill.ATHLETICS, Skill.SNEAK), List.of());
+    return complete(character);
+  }
+
+  private static int lastWeapon(PlayerCharacter character) {
+    return character.gear().getWeapons().size() - 1;
   }
 
   /** A Survivor halfway through creation: origin, one trait, part of S.P.E.C.I.A.L. and Tags; open hints. */
@@ -301,7 +323,7 @@ final class SampleCharacters {
     Optional<EquipmentPackData> offered = EquipmentCatalog.packsFor(originId, character.getEnabledBooks())
         .stream().filter(candidate -> !candidate.needsGmPermission(originId)).findFirst();
     if (offered.isEmpty()) {
-      return; // e.g. Tribal: the WG packs are not in the catalog yet (F4)
+      return;
     }
     EquipmentPackData pack = offered.get();
     character.startingGear().choosePack(CatalogRef.of(pack.id()));

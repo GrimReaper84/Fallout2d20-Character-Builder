@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.model.character.apparel.ApparelValues;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.ModdedApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -125,7 +126,9 @@ final class ApparelDetails {
   /** A choice of the limb for a single-limb catalog piece, else the covered locations as text. */
   private static @NonNull Node location(@NonNull PlayerCharacter character, @NonNull WornApparel item,
       @NonNull Optional<ApparelData> data, int index, @NonNull Runnable onChanged) {
-    Optional<Coverage> chosen = data.flatMap(entry -> entry.coverage().stream().filter(Coverage::isChosen).findFirst());
+    List<HitLocation> body = character.hitLocations();
+    Optional<Coverage> chosen = data.flatMap(entry -> entry.coverage().stream()
+        .filter(coverage -> coverage.isChosenOn(body)).findFirst());
     if (chosen.isEmpty()) {
       return OverviewParts.wrappingInCell(new Label(OverviewParts.orDash(item.locations(character.hitLocations())
           .stream().map(HitLocation::displayName).collect(Collectors.joining(", ")))));

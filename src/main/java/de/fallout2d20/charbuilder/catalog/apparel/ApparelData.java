@@ -87,11 +87,6 @@ public record ApparelData(
     return sources.stream().anyMatch(source -> books.contains(source.book()));
   }
 
-  /** Whether a single arm or leg is chosen when the item is worn. */
-  public boolean needsLocation() {
-    return coverage.stream().anyMatch(Coverage::isChosen);
-  }
-
   /** CRB p. 146: a Mister Handy may wear headgear with "Hat" in its name, without effect. */
   public boolean isHat() {
     return kind == ApparelKind.HEADGEAR && name.contains("Hat");

@@ -33,9 +33,9 @@ import org.jspecify.annotations.Nullable;
  * when every part is known. A catalog match whose wording differs from the catalog name keeps the pack
  * wording as note (e.g. a pipe rifle is a modded Pipe Gun, or a ruling in parentheses); a weapon the text
  * calls built in ("built into the claws") is marked as built in and weighs nothing. Text naming an amount still
- * to roll ({@code 10 + 5 CD rounds …}, loot table rolls, d20 caps) becomes a roll line for the gear notes (user
- * decision 2026-10-19). Everything else becomes a custom item with the line as name, so nothing is lost. The Mister Handy's arms are part of the robot, not the inventory, and
- * open choices are skipped.
+ * to roll ({@code 10 + 5 CD rounds …}, {@code 3 CD junk}, loot table rolls, d20 caps) becomes a roll line for the gear
+ * notes (user decision 2026-10-19). Everything else becomes a custom item with the line as name, so nothing is lost.
+ * The Mister Handy's arms are part of the robot, not the inventory, and open choices are skipped.
  */
 public final class PackInventory {
 
@@ -48,7 +48,7 @@ public final class PackInventory {
       Pattern.compile(" (built into|integrated into|as the) .*$", Pattern.CASE_INSENSITIVE);
   private static final @NonNull Pattern PARENTHESES = Pattern.compile("\\s*\\([^)]*\\)$");
   private static final @NonNull Pattern SEPARATOR = Pattern.compile(", | and ");
-  private static final @NonNull Pattern ROLL = Pattern.compile("\\d+ \\+ \\d+ CD\\b|\\d*d20\\b|\\brolls?\\b",
+  private static final @NonNull Pattern ROLL = Pattern.compile("(\\d+ \\+ )?\\d+ CD\\b|\\d*d20\\b|\\brolls?\\b",
       Pattern.CASE_INSENSITIVE);
 
   private PackInventory() {}
@@ -77,13 +77,7 @@ public final class PackInventory {
             "")).withNotes("Personal trinket"));
         continue;
       }
-      String text = withoutSkillPrefix(line);
-      List<String> parts = Arrays.asList(SEPARATOR.split(text));
-      if (parts.size() > 1 && parts.stream().allMatch(part -> match(part).isPresent())) {
-        parts.forEach(part -> add(part, weapons, apparel, items, rolls));
-      } else {
-        add(text, weapons, apparel, items, rolls);
-      }
+      addLine(withoutSkillPrefix(line), weapons, apparel, items, rolls);
     }
     if (source == StartingSource.TAG_SKILL) {
       int d20 = StartingEquipmentItems.caps(character).d20();
@@ -130,6 +124,30 @@ public final class PackInventory {
     String rest = found.rest();
     if (rest != null) {
       addUnknown(rest, items, rolls);
+    }
+  }
+
+  /**
+   * The entries one piece of text names, matched like a pack line (e.g. a row of the Outcast Equipment Table); the
+   * entries carry no starting source.
+   */
+  static @NonNull PackItems entries(@NonNull String text) {
+    List<CarriedWeapon> weapons = new ArrayList<>();
+    List<WornApparel> apparel = new ArrayList<>();
+    List<CarriedItem> items = new ArrayList<>();
+    List<String> rolls = new ArrayList<>();
+    addLine(text, weapons, apparel, items, rolls);
+    return new PackItems(weapons, apparel, items, rolls);
+  }
+
+  /** One line, split into its parts when it names several known things. */
+  private static void addLine(@NonNull String text, @NonNull List<CarriedWeapon> weapons,
+      @NonNull List<WornApparel> apparel, @NonNull List<CarriedItem> items, @NonNull List<String> rolls) {
+    List<String> parts = Arrays.asList(SEPARATOR.split(text));
+    if (parts.size() > 1 && parts.stream().allMatch(part -> match(part).isPresent())) {
+      parts.forEach(part -> add(part, weapons, apparel, items, rolls));
+    } else {
+      add(text, weapons, apparel, items, rolls);
     }
   }
 

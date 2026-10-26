@@ -1,11 +1,13 @@
 package de.fallout2d20.charbuilder.view;
 
+import de.fallout2d20.charbuilder.catalog.equipment.D20TableRow;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.item.ItemCatalog;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
+import de.fallout2d20.charbuilder.model.character.equipment.OutcastRolls;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.Holotape;
 import de.fallout2d20.charbuilder.view.dialog.AddItemDialog;
@@ -13,6 +15,7 @@ import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import de.fallout2d20.charbuilder.view.dialog.EquipmentPackDialog;
 import java.util.Arrays;
 import java.util.List;
+import java.util.random.RandomGenerator;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -30,6 +33,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
+import org.controlsfx.control.Notifications;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -38,7 +42,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 /**
  * Gear tab, in every mode (user decision 2026-10-19): on top the caps, junk and materials and the load
  * ({@link GearSummary}), the tab's hints and the equipment pack with the button to its dialog
- * ({@link EquipmentPackDialog}); below, in the upper two thirds, the item tree grouped by type
+ * ({@link EquipmentPackDialog}) with, while the pack has open rolls on the Outcast Equipment Table, a dice button;
+ * below, in the upper two thirds, the item tree grouped by type
  * ({@link ItemTree}) with add and remove buttons on the left and the details of the selected item
  * ({@link ItemDetails}) on the right, each side scrolling on its own; in the lower third the gear notes.
  * Selecting an item only replaces the details; the selection and both scroll positions survive the rebuild
@@ -145,7 +150,35 @@ final class GearTab {
       });
       row.add(choose, Layouts.gapBefore(1));
     }
+    int open = OutcastRolls.left(character);
+    if (open > 0) {
+      row.add(outcastButton(character, open, onChanged), Layouts.gapBefore(1));
+    }
     return row;
+  }
+
+  /**
+   * Rolls one of the pack's open rolls on the Outcast Equipment Table (WG p. 19, {@link OutcastRolls}); the count is
+   * checked again on click, as typed notes do not rebuild the tab.
+   */
+  private static @NonNull Node outcastButton(@NonNull PlayerCharacter character, int open,
+      @NonNull Runnable onChanged) {
+    Button roll = new Button("Outcast Equipment Table (" + open + (open == 1 ? " roll" : " rolls") + " left)");
+    roll.setGraphic(new FontIcon("fas-dice-d20"));
+    roll.setTooltip(new Tooltip("Rolls a d20 on the Outcast Equipment Table (WG p. 19), adds the equipment to the "
+        + "inventory and notes the result on the roll line."));
+    roll.setOnAction(_ -> {
+      if (OutcastRolls.left(character) == 0) {
+        Notifications.create().owner(roll).title("Outcast Equipment Table")
+            .text("No open roll: the roll line in the gear notes was changed.").showWarning();
+        return;
+      }
+      D20TableRow row = OutcastRolls.roll(character, RandomGenerator.getDefault());
+      Notifications.create().owner(roll).title("Outcast Equipment Table")
+          .text("d20 " + row.roll() + " → " + row.name()).showInformation();
+      onChanged.run();
+    });
+    return roll;
   }
 
   /** The gear notes, filling the lower third. */

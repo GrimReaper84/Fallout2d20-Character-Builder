@@ -1,0 +1,22 @@
+[
+  {"roll": 1, "name": "Deluxe Toolkit", "source": {"book": "WG", "page": 19}},
+  {"roll": 2, "name": "Flashlight", "source": {"book": "WG", "page": 19}},
+  {"roll": 3, "name": "Fixin' Things", "source": {"book": "WG", "page": 19}},
+  {"roll": 4, "name": "1 Antibiotics", "source": {"book": "WG", "page": 19}},
+  {"roll": 5, "name": "Bottlecap Mine", "source": {"book": "WG", "page": 19}},
+  {"roll": 6, "name": "Radio", "source": {"book": "WG", "page": 19}},
+  {"roll": 7, "name": "Combat Chest Piece", "source": {"book": "WG", "page": 19}},
+  {"roll": 8, "name": "Map to an old world survivalist cache", "source": {"book": "WG", "page": 19}},
+  {"roll": 9, "name": "1 Stimpak", "source": {"book": "WG", "page": 19}},
+  {"roll": 10, "name": "Combat Arm", "source": {"book": "WG", "page": 19}},
+  {"roll": 11, "name": "Combat Leg", "source": {"book": "WG", "page": 19}},
+  {"roll": 12, "name": "Sensor Array", "source": {"book": "WG", "page": 19}},
+  {"roll": 13, "name": "Backpack, Small", "source": {"book": "WG", "page": 19}},
+  {"roll": 14, "name": "Sword", "source": {"book": "WG", "page": 19}},
+  {"roll": 15, "name": "Laser Musket", "source": {"book": "WG", "page": 19}},
+  {"roll": 16, "name": "1 RadAway", "source": {"book": "WG", "page": 19}},
+  {"roll": 17, "name": "Combat Shotgun", "source": {"book": "WG", "page": 19}},
+  {"roll": 18, "name": "Power Fist", "source": {"book": "WG", "page": 19}},
+  {"roll": 19, "name": "Sturdy Combat Helmet", "source": {"book": "WG", "page": 19}},
+  {"roll": 20, "name": "Pip-Boy", "source": {"book": "WG", "page": 19}}
+]

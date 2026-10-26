@@ -266,7 +266,7 @@
   {
     "id": "missionary",
     "name": "Missionary",
-    "sources": [{"book": "WOA", "page": 26}],
+    "sources": [{"book": "WOA", "page": 26}, {"book": "WG", "page": 20}],
     "origins": ["child-of-atom"],
     "items": ["Tough clothing", "Walking cane", "Gamma gun with 4 + 2 CD gamma rounds", "1 stimpak", "1 roll on the random food table (CRB p. 202)"],
     "caps": 10
@@ -274,11 +274,100 @@
   {
     "id": "zealot",
     "name": "Zealot",
-    "sources": [{"book": "WOA", "page": 26}],
+    "sources": [{"book": "WOA", "page": 26}, {"book": "WG", "page": 20}],
     "origins": ["child-of-atom"],
     "items": ["Machete", "Gamma gun with 4 + 2 CD gamma rounds", "Gas mask", "2 rolls on the random food table (CRB p. 202)"],
     "choices": [
       {"label": "Clothing", "options": ["Tough clothing", "Drifter outfit"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "us-military-model",
+    "name": "U.S. Military Model",
+    "sources": [{"book": "WG", "page": 18}],
+    "origins": ["assaultron"],
+    "items": ["One laser gun integrated into one of the claws", "Standard plating (on every location without an Actuated Frame)", "8 + 7 CD fusion cells", "Recon sensors"],
+    "choices": [
+      {"label": "Armor", "options": ["Actuated Frame Body", "Actuated Frame Arm and Actuated Frame Leg (choose sides)"]}
+    ],
+    "caps": 15
+  },
+  {
+    "id": "assaultron-devil",
+    "name": "Assaultron Devil",
+    "sources": [{"book": "WG", "page": 18}],
+    "origins": ["assaultron"],
+    "items": ["Skull mask", "Two construction claws", "Hazard detection mod", "6 + 6 CD fusion cells", "Robot repair kit"],
+    "choices": [
+      {"label": "Armor", "options": ["Serrated Plate Body", "Serrated Plate Arm and Serrated Plate Leg (choose sides)"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "robotic-caravan-guard",
+    "name": "Robotic Caravan Guard",
+    "sources": [{"book": "WG", "page": 19}],
+    "origins": ["assaultron"],
+    "items": ["One laser gun integrated into one of the claws", "Factory Storage Armor", "2 Factory Armor Legs (one per leg)", "14 + 7 CD fusion cells", "Wares: 3 rolls each on the ammunition, aid and junk loot tables (CRB p. 200)", "Behavioral analysis module", "10 + 5 CD caps"],
+    "caps": 0
+  },
+  {
+    "id": "ex-knight",
+    "name": "Ex-Knight",
+    "sources": [{"book": "WG", "page": 19}],
+    "origins": ["brotherhood-outcast"],
+    "items": ["Laser rifle with 8 + 6 CD fusion cells", "Brotherhood of Steel Fatigues (tattered)", "Military canteen filled with water", "2 rolls on the Outcast Equipment Table (WG p. 19)"],
+    "caps": 10
+  },
+  {
+    "id": "ex-scribe",
+    "name": "Ex-Scribe",
+    "sources": [{"book": "WG", "page": 19}],
+    "origins": ["brotherhood-outcast"],
+    "items": ["Laser pistol with 8 + 4 CD fusion cells", "Brotherhood Scribe's Armor (tattered)", "Multitool", "3 rolls on the Outcast Equipment Table (WG p. 19)"],
+    "caps": 15
+  },
+  {
+    "id": "nightkin",
+    "name": "Nightkin",
+    "sources": [{"book": "WG", "page": 20}],
+    "origins": ["nightkin"],
+    "items": ["Laser rifle with 8 + 6 CD fusion cells", "Bumper sword", "Raider chest piece", "Raider armor arm and raider armor leg (choose sides)", "Stealth boy", "2 rolls on the random food table (CRB p. 202)", "1 roll on the random beverages table (CRB p. 203)"],
+    "caps": 0
+  },
+  {
+    "id": "modernist",
+    "name": "Modernist",
+    "sources": [{"book": "WG", "page": 21}],
+    "origins": ["tribal"],
+    "items": ["Underarmor suit", "Multitool", "1 roll on the random food table (CRB p. 202)", "1 roll on the random beverages table (CRB p. 203)", "3 CD junk"],
+    "choices": [
+      {"label": "Weapons", "options": ["9mm pistol with 8 + 6 CD 9mm rounds, combat knife", "Pump-action shotgun with 12 + 6 CD shotgun shells"]},
+      {"label": "Armor", "options": ["Combat chest piece", "Combat arm and combat leg (choose sides)"]}
+    ],
+    "caps": 0
+  },
+  {
+    "id": "ritualist",
+    "name": "Ritualist",
+    "sources": [{"book": "WG", "page": 21}],
+    "origins": ["tribal"],
+    "items": ["Sturdy clothing", "Leather chest piece", "2 rolls on the Oddities and Valuables loot table (CRB p. 207)"],
+    "choices": [
+      {"label": "Weapons", "options": ["Hunting rifle with 6 + 4 CD .308 rounds", "Black powder blunderbuss with 6 + 4 CD .50 balls", "Pipe gun with 4 + 6 CD .38 rounds, pipe revolver with 4 + 6 CD .45 rounds"]}
+    ],
+    "trinket": true,
+    "caps": 0
+  },
+  {
+    "id": "naturalist",
+    "name": "Naturalist",
+    "sources": [{"book": "WG", "page": 21}],
+    "origins": ["tribal"],
+    "items": ["Bow with 10 + 6 CD arrows", "Machete", "Combat knife", "Hunter's Pelt Outfit", "Hunter's Hood", "Wood armor chest piece", "3 rolls on the random food table (CRB p. 202)", "3 rolls on the random beverages table (CRB p. 203)"],
+    "choices": [
+      {"label": "Wood armor", "options": ["Wooden arm", "Wooden leg"]}
     ],
     "caps": 0
   }

@@ -3,11 +3,11 @@ package de.fallout2d20.charbuilder.view.dialog;
 import de.fallout2d20.charbuilder.catalog.Source;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmSlot;
+import de.fallout2d20.charbuilder.catalog.equipment.D20TableRow;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.PackChoice;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
-import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.StartingGear;
@@ -259,7 +259,7 @@ public final class EquipmentPackDialog {
     roll.setGraphic(new FontIcon("fas-dice-d20"));
     roll.setTooltip(new Tooltip("Roll on the trinket table (CRB p. 80)"));
     roll.setOnAction(_ -> {
-      TrinketData rolled = EquipmentCatalog.trinket(ThreadLocalRandom.current().nextInt(1, TrinketData.DIE_SIZE + 1));
+      D20TableRow rolled = EquipmentCatalog.trinket(ThreadLocalRandom.current().nextInt(1, D20TableRow.DIE_SIZE + 1));
       character.startingGear().setTrinket(rolled.name());
       rebuild();
     });

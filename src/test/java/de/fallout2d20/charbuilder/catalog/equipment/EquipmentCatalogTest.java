@@ -26,10 +26,11 @@ class EquipmentCatalogTest {
   @Test
   void loadsCoreAndWinterOfAtomPacksForKnownOrigins() {
     List<EquipmentPackData> packs = EquipmentCatalog.packs();
-    assertEquals(26, packs.size());
+    assertEquals(35, packs.size());
     assertEquals(16, EquipmentCatalog.packs().stream().filter(pack -> pack.isAvailableWith(Set.of(Book.CRB))).count());
     for (EquipmentPackData pack : packs) {
-      assertEquals(1, pack.sources().size(), pack.id());
+      int books = pack.id().equals("missionary") || pack.id().equals("zealot") ? 2 : 1;
+      assertEquals(books, pack.sources().size(), pack.id());
       for (String origin : pack.origins()) {
         assertTrue(OriginCatalog.byId(origin).isPresent(), pack.id() + ": " + origin);
       }
@@ -87,9 +88,43 @@ class EquipmentCatalogTest {
         Map.entry("trader", 50), Map.entry("wanderer", 30)), caps.entrySet().stream()
             .filter(entry -> pack(entry.getKey()).isAvailableWith(Set.of(Book.CRB)))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-    assertEquals(Set.of("brute", "skirmisher", "settler", "trader", "wanderer", "synth-infiltrator"),
+    assertEquals(Set.of("brute", "skirmisher", "settler", "trader", "wanderer", "synth-infiltrator", "ritualist"),
         EquipmentCatalog.packs().stream().filter(EquipmentPackData::trinket)
             .map(EquipmentPackData::id).collect(Collectors.toSet()));
+  }
+
+  /**
+   * WG pp. 18–21: three Assaultron, two Outcast and three Tribal packs, one for the Nightkin; the Child of Atom packs
+   * are the same as in Winter of Atom (WOA p. 26 = WG p. 20).
+   */
+  @Test
+  void offersTheWanderersGuidePacks() {
+    Set<Book> wg = Set.of(Book.WG);
+    assertEquals(List.of("us-military-model", "assaultron-devil", "robotic-caravan-guard"),
+        ids(EquipmentCatalog.packsFor("assaultron", wg)));
+    assertEquals(List.of("ex-knight", "ex-scribe"), ids(EquipmentCatalog.packsFor("brotherhood-outcast", wg)));
+    assertEquals(List.of("nightkin"), ids(EquipmentCatalog.packsFor("nightkin", wg)));
+    assertEquals(List.of("modernist", "ritualist", "naturalist"), ids(EquipmentCatalog.packsFor("tribal", wg)));
+    assertEquals(List.of("missionary", "zealot"), ids(EquipmentCatalog.packsFor("child-of-atom", wg)));
+    assertEquals(List.of(), EquipmentCatalog.packsFor("assaultron", Set.of(Book.CRB)), "needs WG");
+    assertEquals(15, pack("us-military-model").caps());
+    assertEquals(15, pack("ex-scribe").caps());
+    assertEquals(10, pack("ex-knight").caps());
+    assertEquals(2, pack("modernist").choices().size());
+    assertEquals(3, pack("ritualist").choices().getFirst().options().size());
+  }
+
+  /** WG p. 19: the Outcast Equipment Table covers every d20 result. */
+  @Test
+  void outcastEquipmentTable() {
+    assertEquals("Deluxe Toolkit", EquipmentCatalog.outcastEquipment(1).name());
+    assertEquals("Combat Chest Piece", EquipmentCatalog.outcastEquipment(7).name());
+    assertEquals("Pip-Boy", EquipmentCatalog.outcastEquipment(20).name());
+    assertThrows(IllegalArgumentException.class, () -> EquipmentCatalog.outcastEquipment(21));
+  }
+
+  private static List<String> ids(List<EquipmentPackData> packs) {
+    return packs.stream().map(EquipmentPackData::id).toList();
   }
 
   @Test
@@ -156,9 +191,9 @@ class EquipmentCatalogTest {
     assertTrue(new TagSkillItemData(Skill.MELEE_WEAPONS, List.of("Machete", "Baseball bat"), 0, CRB)
         .isChoice());
     Source source = CRB.getFirst();
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(0, "Medal", source));
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(21, "Medal", source));
-    assertThrows(IllegalArgumentException.class, () -> new TrinketData(5, " ", source));
+    assertThrows(IllegalArgumentException.class, () -> new D20TableRow(0, "Medal", source));
+    assertThrows(IllegalArgumentException.class, () -> new D20TableRow(21, "Medal", source));
+    assertThrows(IllegalArgumentException.class, () -> new D20TableRow(5, " ", source));
   }
 
   private static List<String> packIds(String originId) {

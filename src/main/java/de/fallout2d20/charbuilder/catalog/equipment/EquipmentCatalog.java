@@ -18,8 +18,8 @@ import org.jspecify.annotations.NonNull;
  * table are loaded. The data files are read once, when the class is first used.
  *
  * <p>Besides the per-entry validation of the records, loading checks that pack ids are unique, that
- * every skill has exactly one Tag skill items row (CRB p. 81) and that the trinket table covers every
- * d20 result (CRB p. 80).
+ * every skill has exactly one Tag skill items row (CRB p. 81) and that the trinket table (CRB p. 80) and the
+ * Outcast Equipment Table (WG p. 19) cover every d20 result.
  */
 public final class EquipmentCatalog {
 
@@ -27,10 +27,13 @@ public final class EquipmentCatalog {
   private static final @NonNull String TAG_SKILL_ITEMS =
       "/de/fallout2d20/charbuilder/catalog/tag_skill_items.json";
   private static final @NonNull String TRINKETS = "/de/fallout2d20/charbuilder/catalog/trinkets.json";
+  private static final @NonNull String OUTCAST_EQUIPMENT =
+      "/de/fallout2d20/charbuilder/catalog/outcast_equipment.json";
 
   private static final @NonNull Map<String, EquipmentPackData> PACKS_BY_ID = loadPacks();
   private static final @NonNull Map<Skill, TagSkillItemData> TAG_ITEMS_BY_SKILL = loadTagSkillItems();
-  private static final @NonNull List<TrinketData> TRINKET_TABLE = loadTrinkets();
+  private static final @NonNull List<D20TableRow> TRINKET_TABLE = loadD20Table(TRINKETS);
+  private static final @NonNull List<D20TableRow> OUTCAST_TABLE = loadD20Table(OUTCAST_EQUIPMENT);
 
   private EquipmentCatalog() {}
 
@@ -64,11 +67,24 @@ public final class EquipmentCatalog {
    *
    * @throws IllegalArgumentException if the roll is not between 1 and 20
    */
-  public static @NonNull TrinketData trinket(int roll) {
-    if (roll < 1 || roll > TrinketData.DIE_SIZE) {
+  public static @NonNull D20TableRow trinket(int roll) {
+    return row(TRINKET_TABLE, roll);
+  }
+
+  /**
+   * The equipment for a d20 result on the Outcast Equipment Table (WG p. 19).
+   *
+   * @throws IllegalArgumentException if the roll is not between 1 and 20
+   */
+  public static @NonNull D20TableRow outcastEquipment(int roll) {
+    return row(OUTCAST_TABLE, roll);
+  }
+
+  private static @NonNull D20TableRow row(@NonNull List<D20TableRow> table, int roll) {
+    if (roll < 1 || roll > D20TableRow.DIE_SIZE) {
       throw new IllegalArgumentException("A d20 roll lies between 1 and 20: " + roll);
     }
-    return TRINKET_TABLE.get(roll - 1);
+    return table.get(roll - 1);
   }
 
   private static @NonNull Map<String, EquipmentPackData> loadPacks() {
@@ -95,12 +111,12 @@ public final class EquipmentCatalog {
     return bySkill;
   }
 
-  private static @NonNull List<TrinketData> loadTrinkets() {
-    List<TrinketData> table = CatalogReader.readList(TRINKETS, TrinketData.class);
-    boolean complete = table.size() == TrinketData.DIE_SIZE
+  private static @NonNull List<D20TableRow> loadD20Table(@NonNull String resource) {
+    List<D20TableRow> table = CatalogReader.readList(resource, D20TableRow.class);
+    boolean complete = table.size() == D20TableRow.DIE_SIZE
         && IntStream.range(0, table.size()).allMatch(i -> table.get(i).roll() == i + 1);
     if (!complete) {
-      throw new IllegalStateException(TRINKETS + " must list the rolls 1 to 20 in order");
+      throw new IllegalStateException(resource + " must list the rolls 1 to 20 in order");
     }
     return table;
   }

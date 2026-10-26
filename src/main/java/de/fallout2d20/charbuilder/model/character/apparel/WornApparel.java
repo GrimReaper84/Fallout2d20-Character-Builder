@@ -112,7 +112,7 @@ public record WornApparel(
    * @param body the hit locations of the wearer
    */
   public boolean needsLocation(@NonNull List<HitLocation> body) {
-    return data().map(data -> data.coverage().stream().filter(Coverage::isChosen)
+    return data().map(data -> data.coverage().stream().filter(coverage -> coverage.isChosenOn(body))
         .anyMatch(coverage -> location == null || !coverage.locationsOn(body).contains(location))).orElse(false);
   }
 
@@ -130,7 +130,7 @@ public record WornApparel(
     Set<HitLocation> covered = EnumSet.noneOf(HitLocation.class);
     for (Coverage coverage : data().map(ApparelData::coverage).orElse(List.of())) {
       List<HitLocation> onBody = coverage.locationsOn(body);
-      if (!coverage.isChosen()) {
+      if (!coverage.isChosenOn(body)) {
         covered.addAll(onBody);
       } else if (location != null && onBody.contains(location)) {
         covered.add(location);

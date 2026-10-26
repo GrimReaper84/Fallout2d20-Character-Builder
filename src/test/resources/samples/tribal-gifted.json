@@ -156,5 +156,67 @@
   "vitals" : {
     "rads" : 0,
     "radiationPoints" : 0
-  }
+  },
+  "startingEquipment" : {
+    "pack" : {
+      "id" : "modernist"
+    },
+    "choices" : [ "9mm pistol with 8 + 6 CD 9mm rounds, combat knife", "Combat chest piece" ],
+    "tagSkillItems" : {
+      "melee-weapons" : "Machete",
+      "throwing" : "4 + 2 CD throwing knives"
+    },
+    "freeArms" : false
+  },
+  "inventoryNotes" : "[Pack] Roll: 1 roll on the random food table (CRB p. 202)\n[Pack] Roll: 1 roll on the random beverages table (CRB p. 203)\n[Pack] Roll: 3 CD junk\n[Pack] Roll: 8 + 6 CD 9mm rounds\n[Tag skill] Roll: 4 + 2 CD throwing knives",
+  "weapons" : [ {
+    "ref" : {
+      "id" : "9mm-pistol"
+    },
+    "quantity" : 1,
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "combat-knife"
+    },
+    "quantity" : 1,
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "machete"
+    },
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
+  } ],
+  "apparel" : [ {
+    "ref" : {
+      "id" : "underarmor-suit"
+    },
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "combat-chest-piece"
+    },
+    "startingSource" : "PACK"
+  } ],
+  "items" : [ {
+    "custom" : {
+      "name" : "Multitool",
+      "weight" : 0
+    },
+    "quantity" : 1,
+    "startingSource" : "PACK"
+  }, {
+    "ref" : {
+      "id" : "purified-water"
+    },
+    "quantity" : 2,
+    "startingSource" : "TAG_SKILL"
+  }, {
+    "ref" : {
+      "id" : "iguana-on-a-stick"
+    },
+    "quantity" : 1,
+    "startingSource" : "TAG_SKILL"
+  } ]
 }

@@ -52,6 +52,9 @@ import org.jspecify.annotations.Nullable;
  *     (Brotherhood Outcast junk, materials and loot roll, WG p. 12)
  * @param superMutantArmor whether the character can only wear armor made to fit a super mutant (Super Mutant
  *     CRB p. 122: Raider armor; Nightkin WG p. 14)
+ * @param robotArmorReplacesPlating whether robot plating does not count on a location covered by robot armor (WG
+ *     p. 18: an Assaultron's plating sits only where no Actuated Frame is; user decision 2026-10-26); otherwise robot
+ *     armor adds to the plating (CRB p. 146)
  */
 public record OriginData(
     @JsonProperty(required = true) @NonNull String id,
@@ -75,7 +78,8 @@ public record OriginData(
     int maxRadiationPoints,
     @NonNull List<String> innateWeapons,
     @NonNull List<String> startingRolls,
-    boolean superMutantArmor) {
+    boolean superMutantArmor,
+    boolean robotArmorReplacesPlating) {
 
   /** CRB p. 58: no attribute may exceed 10 unless the origin changes the maximum. */
   public static final int DEFAULT_ATTRIBUTE_MAXIMUM = 10;

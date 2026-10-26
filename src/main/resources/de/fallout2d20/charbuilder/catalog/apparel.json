@@ -1819,6 +1819,7 @@
   {
     "id": "factory-armor-main-body",
     "name": "Factory Armor",
+    "aliases": ["Factory Armor Body"],
     "sources": [
       {
         "book": "CRB",
@@ -1836,6 +1837,7 @@
   {
     "id": "factory-armor-arms",
     "name": "Factory Armor",
+    "aliases": ["Factory Armor Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -1853,6 +1855,7 @@
   {
     "id": "factory-armor-thruster",
     "name": "Factory Armor",
+    "aliases": ["Factory Armor Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -1870,6 +1873,7 @@
   {
     "id": "factory-storage-armor-main-body",
     "name": "Factory Storage Armor",
+    "aliases": ["Factory Storage Armor Body"],
     "sources": [
       {
         "book": "CRB",
@@ -1907,6 +1911,7 @@
   {
     "id": "primal-plate-main-body",
     "name": "Primal Plate",
+    "aliases": ["Primal Plate Body"],
     "sources": [
       {
         "book": "CRB",
@@ -1925,6 +1930,7 @@
   {
     "id": "primal-plate-arms",
     "name": "Primal Plate",
+    "aliases": ["Primal Plate Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -1943,6 +1949,7 @@
   {
     "id": "primal-plate-thruster",
     "name": "Primal Plate",
+    "aliases": ["Primal Plate Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -1980,6 +1987,7 @@
   {
     "id": "serrated-plate-main-body",
     "name": "Serrated Plate",
+    "aliases": ["Serrated Plate Body"],
     "sources": [
       {
         "book": "CRB",
@@ -1999,6 +2007,7 @@
   {
     "id": "serrated-plate-arms",
     "name": "Serrated Plate",
+    "aliases": ["Serrated Plate Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -2018,6 +2027,7 @@
   {
     "id": "serrated-plate-thruster",
     "name": "Serrated Plate",
+    "aliases": ["Serrated Plate Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -2056,6 +2066,7 @@
   {
     "id": "noxious-plate-main-body",
     "name": "Noxious Plate",
+    "aliases": ["Noxious Plate Body"],
     "sources": [
       {
         "book": "CRB",
@@ -2075,6 +2086,7 @@
   {
     "id": "noxious-plate-arms",
     "name": "Noxious Plate",
+    "aliases": ["Noxious Plate Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -2094,6 +2106,7 @@
   {
     "id": "noxious-plate-thruster",
     "name": "Noxious Plate",
+    "aliases": ["Noxious Plate Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -2132,6 +2145,7 @@
   {
     "id": "toxic-plate-main-body",
     "name": "Toxic Plate",
+    "aliases": ["Toxic Plate Body"],
     "sources": [
       {
         "book": "CRB",
@@ -2151,6 +2165,7 @@
   {
     "id": "toxic-plate-arms",
     "name": "Toxic Plate",
+    "aliases": ["Toxic Plate Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -2170,6 +2185,7 @@
   {
     "id": "toxic-plate-thruster",
     "name": "Toxic Plate",
+    "aliases": ["Toxic Plate Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -2207,6 +2223,7 @@
   {
     "id": "actuated-frame-main-body",
     "name": "Actuated Frame",
+    "aliases": ["Actuated Frame Body"],
     "sources": [
       {
         "book": "CRB",
@@ -2225,6 +2242,7 @@
   {
     "id": "actuated-frame-arms",
     "name": "Actuated Frame",
+    "aliases": ["Actuated Frame Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -2243,6 +2261,7 @@
   {
     "id": "actuated-frame-thruster",
     "name": "Actuated Frame",
+    "aliases": ["Actuated Frame Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -2280,6 +2299,7 @@
   {
     "id": "voltaic-frame-main-body",
     "name": "Voltaic Frame",
+    "aliases": ["Voltaic Frame Body"],
     "sources": [
       {
         "book": "CRB",
@@ -2299,6 +2319,7 @@
   {
     "id": "voltaic-frame-arms",
     "name": "Voltaic Frame",
+    "aliases": ["Voltaic Frame Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -2318,6 +2339,7 @@
   {
     "id": "voltaic-frame-thruster",
     "name": "Voltaic Frame",
+    "aliases": ["Voltaic Frame Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -2356,6 +2378,7 @@
   {
     "id": "hydraulic-frame-main-body",
     "name": "Hydraulic Frame",
+    "aliases": ["Hydraulic Frame Body"],
     "sources": [
       {
         "book": "CRB",
@@ -2375,6 +2398,7 @@
   {
     "id": "hydraulic-frame-arms",
     "name": "Hydraulic Frame",
+    "aliases": ["Hydraulic Frame Arm"],
     "sources": [
       {
         "book": "CRB",
@@ -2394,6 +2418,7 @@
   {
     "id": "hydraulic-frame-thruster",
     "name": "Hydraulic Frame",
+    "aliases": ["Hydraulic Frame Leg"],
     "sources": [
       {
         "book": "CRB",
@@ -3417,6 +3442,7 @@
   {
     "id": "wood-armor-arm",
     "name": "Wood Armor Arm",
+    "aliases": ["Wooden arm"],
     "sources": [
       {
         "book": "WG",
@@ -3437,6 +3463,7 @@
   {
     "id": "wood-armor-leg",
     "name": "Wood Armor Leg",
+    "aliases": ["Wooden leg"],
     "sources": [
       {
         "book": "WG",

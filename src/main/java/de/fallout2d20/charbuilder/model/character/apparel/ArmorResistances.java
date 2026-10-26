@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.apparel;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
+import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
@@ -15,6 +16,9 @@ import org.jspecify.annotations.NonNull;
 /**
  * Damage resistance per hit location, computed on every call (never stored); the one place combining
  * apparel and innate resistances.
+ *
+ * <p>An Assaultron's plating does not count on a location its robot armor covers ({@link
+ * OriginData#robotArmorReplacesPlating()}, WG p. 18).
  *
  * <p>Humanoids: armor worn over clothing uses the higher resistance of each type (CRB p. 130); two pieces of one layer
  * on a location (a hint of {@link ApparelRules}) count the same way, the higher value. Robots (Mister Handy,
@@ -42,12 +46,17 @@ public final class ArmorResistances {
     int perkDr = perkDr(character);
     List<LocationResistance> result = new ArrayList<>();
     List<HitLocation> body = character.hitLocations();
+    boolean armorReplacesPlating = character.getOriginData().map(OriginData::robotArmorReplacesPlating)
+        .orElse(false);
     for (HitLocation location : body) {
       List<ApparelValues> worn = new ArrayList<>();
       for (WornApparel item : character.gear().getWornApparel()) {
         if (item.locations(body).contains(location)) {
           item.values().ifPresent(worn::add);
         }
+      }
+      if (armorReplacesPlating && worn.stream().anyMatch(item -> item.kind() == ApparelKind.ROBOT_ARMOR)) {
+        worn.removeIf(item -> item.kind() == ApparelKind.ROBOT_PLATING);
       }
       boolean immune = worn.stream().anyMatch(ApparelValues::radiationImmune);
       result.add(new LocationResistance(location,

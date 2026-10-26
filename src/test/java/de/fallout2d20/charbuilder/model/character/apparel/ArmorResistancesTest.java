@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.apparel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
@@ -149,14 +150,48 @@ class ArmorResistancesTest {
     wear(protectron, "factory-armor-main-body", null);
     wear(protectron, "factory-armor-arms", HitLocation.LEFT_ARM);
     wear(protectron, "factory-armor-optics", null);
-    wear(protectron, "factory-armor-thruster", null);
+    wear(protectron, "factory-armor-thruster", HitLocation.LEFT_LEG);
     assertEquals(Resistance.of(3), at(protectron, HitLocation.TORSO).physical());
     assertEquals(Resistance.of(3), at(protectron, HitLocation.HEAD).physical());
     assertEquals(Resistance.of(3), at(protectron, HitLocation.LEFT_ARM).physical());
     assertEquals(Resistance.of(2), at(protectron, HitLocation.RIGHT_ARM).physical(), "one arm per piece");
     assertEquals(Resistance.of(3), at(protectron, HitLocation.LEFT_LEG).physical());
-    assertEquals(Resistance.of(3), at(protectron, HitLocation.RIGHT_LEG).physical());
+    assertEquals(Resistance.of(2), at(protectron, HitLocation.RIGHT_LEG).physical(),
+        "one leg per piece (user decision 2026-10-26)");
     assertEquals(Resistance.IMMUNITY, at(protectron, HitLocation.TORSO).radiation(), "WOA p. 21");
+  }
+
+  /**
+   * WG p. 18 (user decision 2026-10-26): an Assaultron's plating does not count where robot armor sits; a Mister Handy
+   * keeps adding both (CRB p. 146).
+   */
+  @Test
+  void assaultronPlatingYieldsToRobotArmor() {
+    PlayerCharacter assaultron = character("assaultron");
+    wear(assaultron, "standard-plating", null);
+    wear(assaultron, "actuated-frame-main-body", null);
+    wear(assaultron, "actuated-frame-thruster", HitLocation.RIGHT_LEG);
+    assertEquals(Resistance.of(1), at(assaultron, HitLocation.TORSO).physical(), "frame only");
+    assertEquals(Resistance.of(1), at(assaultron, HitLocation.TORSO).energy());
+    assertEquals(Resistance.of(1), at(assaultron, HitLocation.RIGHT_LEG).physical());
+    assertEquals(Resistance.of(2), at(assaultron, HitLocation.LEFT_LEG).physical(), "plating");
+    assertEquals(Resistance.of(2), at(assaultron, HitLocation.HEAD).physical());
+    PlayerCharacter handy = character("mister-handy");
+    wear(handy, "standard-plating", null);
+    wear(handy, "actuated-frame-main-body", null);
+    assertEquals(Resistance.of(3), at(handy, HitLocation.MAIN_BODY).physical());
+  }
+
+  /** WG p. 18 (user decision 2026-10-26): a robot leg piece on a humanoid robot needs a chosen leg. */
+  @Test
+  void thrusterPieceNeedsALegOnHumanoidRobots() {
+    PlayerCharacter assaultron = character("assaultron");
+    WornApparel leg = WornApparel.of(CatalogRef.of("serrated-plate-thruster"));
+    assertTrue(leg.needsLocation(assaultron.hitLocations()));
+    assertEquals(Set.of(), leg.locations(assaultron.hitLocations()));
+    assertEquals(Set.of(HitLocation.LEFT_LEG),
+        leg.withLocation(HitLocation.LEFT_LEG).locations(assaultron.hitLocations()));
+    assertFalse(leg.needsLocation(HitLocation.misterHandy()), "a Mister Handy's thruster is fixed");
   }
 
   /** WOA p. 21: 225 lbs., raised only by modified (robot) armor; the frame counts once its arm is chosen. */

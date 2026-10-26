@@ -97,7 +97,8 @@
     "robot": true,
     "radiationImmune": true,
     "poisonImmune": true,
-    "innateWeapons": ["assaultron-claws", "assaultron-head-laser", "self-destruct"]
+    "innateWeapons": ["assaultron-claws", "assaultron-head-laser", "self-destruct"],
+    "robotArmorReplacesPlating": true
   },
   {
     "id": "brotherhood-outcast",

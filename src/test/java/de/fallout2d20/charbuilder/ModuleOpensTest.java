@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModData;
+import de.fallout2d20.charbuilder.catalog.equipment.D20TableRow;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.equipment.TagSkillItemData;
-import de.fallout2d20.charbuilder.catalog.equipment.TrinketData;
 import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
 import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
@@ -43,7 +43,7 @@ class ModuleOpensTest {
   /** Types Jackson deserializes directly: the save format and the catalog entries. */
   private static final Set<Class<?>> JACKSON_ROOTS = Set.of(CharacterData.class, OriginData.class,
       TraitDefinition.class, PerkDefinition.class, EquipmentPackData.class, TagSkillItemData.class,
-      TrinketData.class, WeaponData.class, WeaponModData.class, AmmunitionData.class, ApparelData.class,
+      D20TableRow.class, WeaponData.class, WeaponModData.class, AmmunitionData.class, ApparelData.class,
       ApparelModData.class, ItemData.class, MagazineData.class, LegendaryWeaponData.class,
       LegendaryArmorData.class);
 

@@ -6,7 +6,8 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * The "Locations Covered" of an apparel table row (CRB p. 124, 130, 146). {@code ARM}, {@code LEG} and
- * {@code ROBOT_ARM} cover one limb, chosen when the piece is worn; the others cover fixed locations.
+ * {@code ROBOT_ARM} cover one limb, chosen when the piece is worn (on a humanoid robot also {@code THRUSTER},
+ * {@link #isChosenOn}); the others cover fixed locations.
  */
 public enum Coverage {
   HEAD("Head", List.of(HitLocation.HEAD)),
@@ -36,9 +37,15 @@ public enum Coverage {
     return displayName;
   }
 
-  /** Whether one of {@link #locations()} is chosen when worn (a single arm or leg). */
-  public boolean isChosen() {
-    return this == ARM || this == LEG || this == ROBOT_ARM;
+  /**
+   * Whether one location is chosen when the piece is worn on a body with these hit locations: a single arm or leg
+   * (ARM, LEG, ROBOT_ARM), and a robot leg piece (Thruster) on a humanoid robot (Assaultron, Protectron), which covers
+   * one chosen leg (user decision 2026-10-26, after WG p. 18, where an Assaultron pack lets the player pick the arm and
+   * the leg; it replaces the 2026-10-16 rule of both legs).
+   */
+  public boolean isChosenOn(@NonNull List<HitLocation> body) {
+    return this == ARM || this == LEG || this == ROBOT_ARM
+        || (this == THRUSTER && !body.contains(HitLocation.THRUSTER));
   }
 
   /** The covered locations; for a chosen coverage the locations to choose from. */
@@ -48,9 +55,10 @@ public enum Coverage {
 
   /**
    * The covered locations on a body with these hit locations. Robot armor on a humanoid robot (a Protectron,
-   * WOA p. 20, whose hit locations the book does not define) is mapped by house rule (user decision
-   * 2026-10-16): Optics to the head, Main Body to the torso, an Arm to one chosen arm, the Thruster to both
-   * legs, All to every location. Otherwise as {@link #locations()}.
+   * WOA p. 20, or an Assaultron, WG p. 10, whose hit locations the books do not define) is mapped by house rule
+   * (user decisions 2026-10-16 and 2026-10-26): Optics to the head, Main Body to the torso, an Arm to one chosen arm,
+   * the Thruster to one chosen leg (both legs are the choice, {@link #isChosenOn}), All to every location. Otherwise
+   * as {@link #locations()}.
    */
   public @NonNull List<HitLocation> locationsOn(@NonNull List<HitLocation> body) {
     if (body.containsAll(locations)) {

@@ -12,9 +12,13 @@ import org.jspecify.annotations.NonNull;
  * 2026-10-19: rolled amounts are no items but own note lines). Each line starts with the prefix of its
  * {@link StartingSource}. When that part of the starting equipment changes, only the lines it wrote before and
  * the player left untouched are replaced; a line the player edited (e.g. the result written behind it) stays,
- * as does everything else.
+ * as does everything else. A line with results noted behind {@link #RESULT} (the Outcast dice, {@link OutcastRolls})
+ * counts as the source's line, so entering the same part again adds no fresh copy of it.
  */
 public final class StartingNotes {
+
+  /** Separates a roll line from a result noted behind it. */
+  static final @NonNull String RESULT = " → ";
 
   private StartingNotes() {}
 
@@ -35,7 +39,7 @@ public final class StartingNotes {
       lines.removeLast();
     }
     for (String line : wanted) {
-      if (!lines.contains(line)) {
+      if (lines.stream().noneMatch(present -> present.equals(line) || present.startsWith(line + RESULT))) {
         lines.add(line);
       }
     }

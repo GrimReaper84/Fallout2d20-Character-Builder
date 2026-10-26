@@ -9,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
 import de.fallout2d20.charbuilder.catalog.weapon.ModPerk;
+import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
+import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +40,7 @@ class ApparelCatalogTest {
         ApparelKind.ARMOR, List.of(Coverage.TORSO), 1, 1, 0, false, "7", 18, 0, 0, null,
         List.of("Raider armor chest piece", "Raider armor torso"), ApparelModTable.RAIDER, true, false, null, 0),
         ApparelCatalog.byId("raider-chest-piece").orElseThrow());
-    assertTrue(ApparelCatalog.byId("raider-arm").orElseThrow().needsLocation());
+    assertTrue(WornApparel.of(CatalogRef.of("raider-arm")).needsLocation(HitLocation.humanoid()));
   }
 
   /** CRB p. 124: radiation "Immune"; CRB p. 146–147: plating and robot armor values. */

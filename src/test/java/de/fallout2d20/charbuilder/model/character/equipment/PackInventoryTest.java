@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.equipment.EquipmentCatalog;
+import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -11,7 +14,10 @@ import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 /** Equipment pack text into inventory entries (user decision 2026-10-16). */
@@ -105,6 +111,65 @@ class PackInventoryTest {
     mercenary.startingGear().chooseOption(0, "Leather armor arm and leather armor leg (choose sides)");
     PackItems added = PackInventory.resolve(mercenary, StartingSource.PACK);
     assertEquals(List.of("tough-clothing", "leather-arm", "leather-leg"), apparelIds(added));
+  }
+
+  /**
+   * WG p. 18 U.S. Military Model: the Laser Gun is built in, the frame arm and leg come from the pack wording
+   * (aliases), the plating stays; amounts to roll become roll lines.
+   */
+  @Test
+  void usMilitaryModel() {
+    PlayerCharacter assaultron = character("assaultron", "us-military-model");
+    assaultron.startingGear().chooseOption(0, "Actuated Frame Arm and Actuated Frame Leg (choose sides)");
+    PackItems added = PackInventory.resolve(assaultron, StartingSource.PACK);
+    assertEquals(List.of("laser-gun"), weaponIds(added));
+    assertTrue(added.weapons().getFirst().builtIn());
+    assertEquals(List.of("standard-plating", "actuated-frame-arms", "actuated-frame-thruster"), apparelIds(added));
+    assertEquals(List.of("8 + 7 CD fusion cells"), added.rolls());
+  }
+
+  /** WG p. 19 Robotic Caravan Guard: "Factory Armor Legs" are two leg pieces; caps to roll are a roll line. */
+  @Test
+  void roboticCaravanGuard() {
+    PackItems added = PackInventory.resolve(character("assaultron", "robotic-caravan-guard"), StartingSource.PACK);
+    assertEquals(List.of("factory-storage-armor-main-body", "factory-armor-thruster", "factory-armor-thruster"),
+        apparelIds(added));
+    assertTrue(added.rolls().contains("10 + 5 CD caps"));
+  }
+
+  /** WG p. 21 Modernist: a weapon line naming pistol and knife splits; "3 CD junk" is an amount to roll. */
+  @Test
+  void modernist() {
+    PlayerCharacter tribal = character("tribal", "modernist");
+    tribal.startingGear().chooseOption(0, "9mm pistol with 8 + 6 CD 9mm rounds, combat knife");
+    tribal.startingGear().chooseOption(1, "Combat arm and combat leg (choose sides)");
+    PackItems added = PackInventory.resolve(tribal, StartingSource.PACK);
+    assertEquals(List.of("9mm-pistol", "combat-knife"), weaponIds(added));
+    assertEquals(List.of("underarmor-suit", "combat-arm", "combat-leg"), apparelIds(added));
+    assertTrue(added.rolls().containsAll(List.of("8 + 6 CD 9mm rounds", "3 CD junk")));
+    assertEquals(List.of("Multitool"), customNames(added), "not in any catalog");
+  }
+
+  /**
+   * Every line of the WG packs (items and options) and every Outcast Equipment Table row is found in a catalog, is an
+   * amount to roll or is one of the documented custom items (catalog report, F4).
+   */
+  @Test
+  void wanderersGuidePackLinesResolve() {
+    Set<String> custom = Set.of("Skull mask", "Two construction claws", "Military canteen filled with water",
+        "Multitool", "Sturdy clothing", "Fixin' Things", "Map to an old world survivalist cache");
+    List<String> texts = new ArrayList<>();
+    for (EquipmentPackData pack : EquipmentCatalog.packs()) {
+      if (pack.sources().stream().anyMatch(source -> source.book() == Book.WG)) {
+        texts.addAll(pack.items());
+        pack.choices().forEach(choice -> texts.addAll(choice.options()));
+      }
+    }
+    IntStream.rangeClosed(1, 20).forEach(roll -> texts.add(EquipmentCatalog.outcastEquipment(roll).name()));
+    for (String text : texts) {
+      List<String> customNames = customNames(PackInventory.entries(text));
+      assertTrue(custom.containsAll(customNames), text + " → " + customNames);
+    }
   }
 
   private static PlayerCharacter character(String origin, String pack) {
