@@ -4,6 +4,7 @@ import static de.fallout2d20.charbuilder.view.OverviewParts.detailRow;
 
 import de.fallout2d20.charbuilder.catalog.weapon.DamageEffect;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -12,11 +13,15 @@ import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.ModdedWeapon;
+import de.fallout2d20.charbuilder.model.character.weapon.PerkWeaponChange;
+import de.fallout2d20.charbuilder.model.character.weapon.PerkWeaponHint;
 import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import de.fallout2d20.charbuilder.view.dialog.QualitiesDialog;
+import de.fallout2d20.charbuilder.view.dialog.EnumCheckBoxes;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javafx.scene.Node;
@@ -33,9 +38,10 @@ import org.tbee.javafx.scene.layout.MigPane;
  * The right side of the Weapons tab: every value of the selected weapon ({@link WeaponAttack}: target number,
  * critical range, damage with the melee bonus, effects, type, fire rate, effective range, qualities, ammunition left),
  * the catalog's weight, cost and rarity, a quantity for explosives and thrown weapons, the note, the legendary property
- * ({@link LegendarySection}) and the mods ({@link WeaponModSection}); values the mods or the legendary property changed
- * are bold with the base value as tooltip. A custom weapon imported without skill gets a skill choice instead of the
- * attack value. Typed notes go to {@code onEdited}; everything else to the model and then to {@code onChanged}.
+ * ({@link LegendarySection}) and the mods ({@link WeaponModSection}); values the mods, the legendary property or the
+ * character's perks changed are bold with the base value as tooltip. The perks' changes and situational bonuses are
+ * listed under "Perk bonuses" (plan C8); the kinds perks look at are shown, and chosen for a custom weapon. A custom
+ * weapon imported without skill gets a skill choice instead of the attack value. Typed notes go to {@code onEdited}; everything else to the model and then to {@code onChanged}.
  */
 final class WeaponDetails {
 
@@ -70,7 +76,10 @@ final class WeaponDetails {
     CustomWeapon custom = weapon == null ? null : weapon.custom();
     Node editQualities = custom == null ? null
         : qualitiesButton(character, entry.index(), custom, callbacks.onChanged());
-    addAttackValues(rows, character, attack, base, values, editQualities);
+    ModdedWeapon shown = values == null ? null : values.withPerks(attack.perkChanges());
+    addAttackValues(rows, character, attack, base, shown, editQualities);
+    addKinds(rows, character, entry.index(), weapon, data.orElse(null), callbacks.onChanged());
+    addPerkBonuses(rows, attack);
     if (values != null && (data.isPresent() || values.weight() != null)) {
       addWeightAndCost(rows, entry.isBuiltIn(), base, values);
     }
@@ -97,17 +106,19 @@ final class WeaponDetails {
   private static void addAttackValues(@NonNull MigPane rows, @NonNull PlayerCharacter character,
       @NonNull WeaponAttack attack, @Nullable ModdedWeapon base, @Nullable ModdedWeapon values,
       @Nullable Node editQualities) {
-    detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values,
+    boolean perked = !attack.perkChanges().isEmpty();
+    detailRow(rows, "Damage", withBase(new Label(attack.damageText()), base, values, perked,
         modded -> modded.damage() + " CD"));
-    detailRow(rows, "Effects", withSummaries(withBase(text(attack.effects()), base, values,
+    detailRow(rows, "Effects", withSummaries(withBase(text(attack.effects()), base, values, perked,
         modded -> String.join(", ", modded.damageEffects())), attack.effects(),
         effect -> DamageEffect.of(effect).map(known -> known.summary() + " (" + known.source() + ")")));
-    detailRow(rows, "Damage type", withBase(text(attack.damageType()), base, values, ModdedWeapon::damageType));
+    detailRow(rows, "Damage type", withBase(text(attack.damageType()), base, values, perked,
+        ModdedWeapon::damageType));
     detailRow(rows, "Fire rate", withBase(new Label(OverviewParts.orDash(attack.fireRate())),
-        base, values, modded -> OverviewParts.orDash(modded.fireRate())));
-    detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values,
+        base, values, perked, modded -> OverviewParts.orDash(modded.fireRate())));
+    detailRow(rows, "Range", withBase(new Label(rangeText(attack)), base, values, perked,
         modded -> modded.range() == null ? "–" : modded.range().displayName()));
-    Label qualities = withSummaries(withRemoved(withBase(text(attack.qualities()), base, values,
+    Label qualities = withSummaries(withRemoved(withBase(text(attack.qualities()), base, values, perked,
         modded -> String.join(", ", modded.qualities())), values), attack.qualities(), WeaponQuality::summaryOf);
     if (editQualities == null) {
       detailRow(rows, "Qualities", qualities);
@@ -125,7 +136,7 @@ final class WeaponDetails {
       warning.setTooltip(new Tooltip(WeaponQuality.RECOIL.summary() + " (" + WeaponQuality.RECOIL.source() + ")"));
       detailRow(rows, "Recoil", warning);
     }
-    detailRow(rows, "Ammunition", withBase(new Label(ammunitionText(character, attack)), base, values,
+    detailRow(rows, "Ammunition", withBase(new Label(ammunitionText(character, attack)), base, values, perked,
         modded -> String.join(", ", modded.ammunition())));
   }
 
@@ -139,13 +150,52 @@ final class WeaponDetails {
         .collect(Collectors.joining(", "));
   }
 
+  /** The kinds perks look at: read-only for a catalog weapon (only if any), check boxes for a custom weapon. */
+  private static void addKinds(@NonNull MigPane rows, @NonNull PlayerCharacter character, int index,
+      @Nullable CarriedWeapon weapon, @Nullable WeaponData data, @NonNull Runnable onChanged) {
+    if (weapon != null && weapon.custom() != null) {
+      EnumCheckBoxes<WeaponKind> boxes = EnumCheckBoxes.weaponKinds(weapon.kinds());
+      boxes.onChange(() -> {
+        character.gear().setCustomWeaponKinds(index, boxes.selected());
+        onChanged.run();
+      });
+      detailRow(rows, "Kinds", boxes.node());
+      return;
+    }
+    Set<WeaponKind> kinds = weapon != null ? weapon.kinds() : data == null ? Set.of() : data.kinds();
+    if (!kinds.isEmpty()) {
+      detailRow(rows, "Kinds", new Label(kinds.stream().map(WeaponKind::displayName)
+          .collect(Collectors.joining(", "))));
+    }
+  }
+
+  /** The perks' changes included in the values, then their situational bonuses in hint style, each with its source. */
+  private static void addPerkBonuses(@NonNull MigPane rows, @NonNull WeaponAttack attack) {
+    if (attack.perkChanges().isEmpty() && attack.perkHints().isEmpty()) {
+      return;
+    }
+    MigPane lines = Layouts.column();
+    for (PerkWeaponChange change : attack.perkChanges()) {
+      Label label = OverviewParts.wrappingInCell(new Label(change.text()));
+      label.setTooltip(new Tooltip(change.source().toString()));
+      lines.add(label);
+    }
+    for (PerkWeaponHint hint : attack.perkHints()) {
+      Label label = OverviewParts.wrappingInCell(new Label(hint.text()));
+      label.setStyle(OverviewParts.HINT_STYLE);
+      label.setTooltip(new Tooltip(hint.source() + ". Situational: not included in the values above."));
+      lines.add(label);
+    }
+    detailRow(rows, "Perk bonuses", lines);
+  }
+
   /** Weight and cost with the mods' values; a built-in weapon weighs nothing, with or without mods. */
   private static void addWeightAndCost(@NonNull MigPane rows, boolean integrated, @Nullable ModdedWeapon base,
       @NonNull ModdedWeapon values) {
     Label weight = new Label(values.weight() == null ? "–" : values.weight() + " lbs.");
     detailRow(rows, "Weight", integrated ? new Label("– (built in)")
-        : withBase(weight, base, values, modded -> OverviewParts.orDash(modded.weight())));
-    detailRow(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values,
+        : withBase(weight, base, values, false, modded -> OverviewParts.orDash(modded.weight())));
+    detailRow(rows, "Cost", withBase(new Label(OverviewParts.orDash(values.cost())), base, values, false,
         modded -> OverviewParts.orDash(modded.cost())));
   }
 
@@ -165,15 +215,16 @@ final class WeaponDetails {
   }
 
   /**
-   * Marks a value the mods changed: bold, with the value without mods as tooltip. {@code text} renders both
+   * Marks a value the mods (or the legendary property or, if {@code perked}, the perks) changed: bold, with the value
+   * without them as tooltip. {@code text} renders both
    * sides alike, so the comparison ignores the melee bonus and ammunition counts of the shown text.
    */
   private static @NonNull Label withBase(@NonNull Label label, @Nullable ModdedWeapon base,
-      @Nullable ModdedWeapon values, @NonNull Function<ModdedWeapon, String> text) {
+      @Nullable ModdedWeapon values, boolean perked, @NonNull Function<ModdedWeapon, String> text) {
     if (base != null && values != null && !text.apply(base).equals(text.apply(values))) {
       label.setStyle("-fx-font-weight: bold;");
-      label.setTooltip(new Tooltip((values.legendary() == null ? "Without mods: "
-          : "Without mods and legendary property: ") + text.apply(base)));
+      label.setTooltip(new Tooltip("Without " + (values.legendary() == null ? "mods" : "mods and legendary property")
+          + (perked ? " and perks: " : ": ") + text.apply(base)));
     }
     return label;
   }

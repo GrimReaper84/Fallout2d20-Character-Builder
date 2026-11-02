@@ -3398,6 +3398,9 @@
         "perk": "blacksmith",
         "rank": 2
       }
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -3487,6 +3490,9 @@
         "perk": "blacksmith",
         "rank": 1
       }
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -4007,6 +4013,9 @@
         "perk": "blacksmith",
         "rank": 2
       }
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -5784,6 +5793,9 @@
         "perk": "science",
         "rank": 1
       }
+    ],
+    "kinds": [
+      "FIRE_BASED"
     ]
   },
   {
@@ -5973,6 +5985,9 @@
         "perk": "gun-nut",
         "rank": 1
       }
+    ],
+    "kinds": [
+      "FIRE_BASED"
     ]
   },
   {

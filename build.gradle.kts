@@ -181,6 +181,31 @@ tasks.register<JavaExec>("generateIcons") {
         layout.projectDirectory.dir("packaging").asFile.absolutePath)
 }
 
+// Easter egg: about one build in ten also "tries" a TempleOS target, fails it and carries on.
+// -PtempleOs forces it. The task never fails the build.
+val templeOsBuild = tasks.register("templeOsBuild") {
+    group = "build"
+    description = "Tries to build for TempleOS."
+    val forced = providers.gradleProperty("templeOs").isPresent
+    mustRunAfter(tasks.check)
+    doLast {
+        if (!forced && kotlin.random.Random.nextInt(10) != 0) {
+            return@doLast
+        }
+        logger.lifecycle("Configuring additional target: TempleOS (x86_64, ring 0, 640x480, 16 colors)")
+        logger.lifecycle("Starting divine compatibility check...")
+        logger.lifecycle("Checking developer compatibility")
+        logger.warn("WARNING: Developer identifies as queer!")
+        logger.error("ERROR: God does not approve!")
+        logger.warn("WARNING: Developer has no intention of changing anything.")
+        logger.lifecycle("RESULT: Working as intended.")
+        logger.lifecycle("TempleOS build aborted. Continuing with the other targets.")
+    }
+}
+tasks.named("build") {
+    dependsOn(templeOsBuild)
+}
+
 // The icon is passed as an option, not a declared input: rebuild the images when it changes.
 tasks.named("jpackageImage") {
     inputs.dir(layout.projectDirectory.dir("packaging"))

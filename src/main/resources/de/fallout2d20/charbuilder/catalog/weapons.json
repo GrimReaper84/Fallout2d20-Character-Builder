@@ -422,6 +422,9 @@
       "small-guns-rapid-automatic-receiver",
       "small-guns-calibrated-powerful-receiver",
       "small-guns-powerful-automatic-receiver"
+    ],
+    "kinds": [
+      "SHOTGUN"
     ]
   },
   {
@@ -464,6 +467,9 @@
       "small-guns-full-stock",
       "small-guns-reflex-sight",
       "small-guns-muzzle-break"
+    ],
+    "kinds": [
+      "SHOTGUN"
     ]
   },
   {
@@ -523,7 +529,10 @@
       "small-guns-calibrated-powerful-receiver"
     ],
     "stockName": "Pipe Bolt-Action Rifle",
-    "gripOrStock": true
+    "gripOrStock": true,
+    "kinds": [
+      "PIPE"
+    ]
   },
   {
     "id": "pipe-gun",
@@ -586,7 +595,10 @@
       "small-guns-hardened-piercing-auto-receiver",
       "small-guns-9mm-receiver"
     ],
-    "stockName": "Pipe Rifle"
+    "stockName": "Pipe Rifle",
+    "kinds": [
+      "PIPE"
+    ]
   },
   {
     "id": "pipe-revolver",
@@ -639,7 +651,10 @@
       "small-guns-calibrated-powerful-receiver",
       "small-guns-357-receiver"
     ],
-    "stockName": "Pipe Revolver Rifle"
+    "stockName": "Pipe Revolver Rifle",
+    "kinds": [
+      "PIPE"
+    ]
   },
   {
     "id": "railway-rifle",
@@ -1072,6 +1087,9 @@
       "flamer-huge-tank",
       "flamer-compression-nozzle",
       "flamer-vaporization-nozzle"
+    ],
+    "kinds": [
+      "FIRE_BASED"
     ]
   },
   {
@@ -1151,6 +1169,9 @@
     "rarity": 4,
     "ammunition": [
       "flamer-fuel"
+    ],
+    "kinds": [
+      "FIRE_BASED"
     ]
   },
   {
@@ -1359,6 +1380,9 @@
       "sword-electrified-blade",
       "sword-electrified-serrated-blade",
       "sword-stun-pack"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -1384,6 +1408,9 @@
     "mods": [
       "combat-knife-serrated-blade",
       "combat-knife-stealth-blade"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -1408,6 +1435,9 @@
     "rarity": 1,
     "mods": [
       "machete-serrated-blade"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -1433,6 +1463,9 @@
     "mods": [
       "ripper-curved-blade",
       "ripper-extended-blade"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -1460,6 +1493,10 @@
     "rarity": 3,
     "mods": [
       "shishkebab-extra-flame-jets"
+    ],
+    "kinds": [
+      "BLADED",
+      "FIRE_BASED"
     ]
   },
   {
@@ -1487,6 +1524,9 @@
     "rarity": 0,
     "mods": [
       "switchblade-serrated-blade"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -2027,6 +2067,9 @@
     "rarity": 1,
     "legacyNames": [
       "Molotov"
+    ],
+    "kinds": [
+      "FIRE_BASED"
     ]
   },
   {
@@ -2820,6 +2863,9 @@
     "rarity": 5,
     "ammunition": [
       "2mm-ec"
+    ],
+    "kinds": [
+      "SHOTGUN"
     ]
   },
   {
@@ -2957,6 +3003,9 @@
       "small-guns-compensator",
       "small-guns-muzzle-break",
       "small-guns-suppressor"
+    ],
+    "kinds": [
+      "SHOTGUN"
     ]
   },
   {
@@ -3641,6 +3690,9 @@
     "rarity": 3,
     "mods": [
       "assaultron-blade-electrified-blade"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -3671,6 +3723,9 @@
       "auto-axe-burning",
       "auto-axe-poisoned",
       "auto-axe-turbo"
+    ],
+    "kinds": [
+      "BLADED"
     ]
   },
   {
@@ -3725,7 +3780,10 @@
     ],
     "weight": "12",
     "cost": 125,
-    "rarity": 2
+    "rarity": 2,
+    "kinds": [
+      "BLADED"
+    ]
   },
   {
     "id": "cattle-prod",
@@ -3778,7 +3836,10 @@
       "chainsaw-flamer"
     ],
     "special": "The melee damage bonus does not apply; the Flamer mod goes in addition to another mod.",
-    "noMeleeBonus": true
+    "noMeleeBonus": true,
+    "kinds": [
+      "BLADED"
+    ]
   },
   {
     "id": "death-tambo",
@@ -3847,7 +3908,10 @@
     "weight": "3",
     "cost": 45,
     "rarity": 3,
-    "special": "+1 complication range on sneak attacks with it, because of the noise."
+    "special": "+1 complication range on sneak attacks with it, because of the noise.",
+    "kinds": [
+      "BLADED"
+    ]
   },
   {
     "id": "mr-handy-buzz-blade",
@@ -3871,7 +3935,10 @@
     ],
     "weight": "10",
     "cost": 50,
-    "rarity": 2
+    "rarity": 2,
+    "kinds": [
+      "BLADED"
+    ]
   },
   {
     "id": "multi-purpose-axe",
@@ -3892,7 +3959,10 @@
     ],
     "weight": "4",
     "cost": 40,
-    "rarity": 2
+    "rarity": 2,
+    "kinds": [
+      "BLADED"
+    ]
   },
   {
     "id": "proton-axe",
@@ -3916,7 +3986,10 @@
     ],
     "weight": "8",
     "cost": 175,
-    "rarity": 5
+    "rarity": 5,
+    "kinds": [
+      "BLADED"
+    ]
   },
   {
     "id": "war-drum",

@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.Collections;
@@ -24,6 +25,8 @@ import org.jspecify.annotations.Nullable;
  * @param ammunition id of the catalog ammunition it uses; {@code null} for none or unknown
  * @param modSlots the mod slots the player gave the weapon (user decision 2026-10-17); any catalog mod of
  *     these slots can be installed; empty for none
+ * @param kinds the kinds the player gave the weapon (shotgun, bladed, pipe, fire-based) for the perks that name them
+ *     (user decision 2026-10-31); empty for none
  */
 public record CustomWeapon(
     @NonNull String name,
@@ -35,7 +38,8 @@ public record CustomWeapon(
     @Nullable WeaponRange range,
     @NonNull String qualities,
     @Nullable String ammunition,
-    @NonNull Set<ModSlot> modSlots) {
+    @NonNull Set<ModSlot> modSlots,
+    @NonNull Set<WeaponKind> kinds) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   public static final int MAX_FIRE_RATE = 6;
@@ -50,29 +54,44 @@ public record CustomWeapon(
     qualities = qualities.strip();
     ammunition = ammunition == null || ammunition.isBlank() ? null : ammunition;
     modSlots = modSlots.isEmpty() ? Set.of() : Collections.unmodifiableSet(EnumSet.copyOf(modSlots));
+    kinds = WeaponKind.copyOf(kinds);
+  }
+
+  /** A custom weapon without kinds. */
+  public CustomWeapon(@NonNull String name, @Nullable Skill skill, int damage, @NonNull String effects,
+      @NonNull String damageType, @Nullable Integer fireRate, @Nullable WeaponRange range, @NonNull String qualities,
+      @Nullable String ammunition, @NonNull Set<ModSlot> modSlots) {
+    this(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, modSlots, Set.of());
   }
 
   /** A custom weapon without mod slots. */
   public CustomWeapon(@NonNull String name, @Nullable Skill skill, int damage, @NonNull String effects,
       @NonNull String damageType, @Nullable Integer fireRate, @Nullable WeaponRange range, @NonNull String qualities,
       @Nullable String ammunition) {
-    this(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, Set.of());
+    this(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, Set.of(), Set.of());
   }
 
   /** The same weapon attacked with another skill, e.g. after importing it without one. */
   public @NonNull CustomWeapon withSkill(@Nullable Skill newSkill) {
     return new CustomWeapon(name, newSkill, damage, effects, damageType, fireRate, range, qualities, ammunition,
-        modSlots);
+        modSlots, kinds);
   }
 
   /** The same weapon with other qualities (text as stored, e.g. from {@code QualitySelection}). */
   public @NonNull CustomWeapon withQualities(@NonNull String newQualities) {
     return new CustomWeapon(name, skill, damage, effects, damageType, fireRate, range, newQualities, ammunition,
-        modSlots);
+        modSlots, kinds);
   }
 
   /** The same weapon with other mod slots. */
   public @NonNull CustomWeapon withModSlots(@NonNull Set<ModSlot> newSlots) {
-    return new CustomWeapon(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, newSlots);
+    return new CustomWeapon(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, newSlots,
+        kinds);
+  }
+
+  /** The same weapon with other kinds. */
+  public @NonNull CustomWeapon withKinds(@NonNull Set<WeaponKind> newKinds) {
+    return new CustomWeapon(name, skill, damage, effects, damageType, fireRate, range, qualities, ammunition, modSlots,
+        newKinds);
   }
 }

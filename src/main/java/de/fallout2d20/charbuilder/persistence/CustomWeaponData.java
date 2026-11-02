@@ -8,7 +8,8 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Save-file form of a custom weapon; the skill as skill id, the names of the mod slots the player chose
- * ({@code null} = none; optional field added 2026-10-17; unknown names are skipped on load).
+ * ({@code null} = none; optional field added 2026-10-17; unknown names are skipped on load) and the names of its
+ * {@code WeaponKind}s ({@code null} = none; optional field added 2026-10-31, plan C8; unknown names are skipped).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CustomWeaponData(
@@ -21,4 +22,5 @@ public record CustomWeaponData(
     @Nullable WeaponRange range,
     @Nullable String qualities,
     @Nullable String ammunition,
-    @Nullable List<String> modSlots) {}
+    @Nullable List<String> modSlots,
+    @Nullable List<String> kinds) {}

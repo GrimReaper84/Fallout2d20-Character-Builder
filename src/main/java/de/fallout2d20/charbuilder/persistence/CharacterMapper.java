@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.equipment.EquipmentPackData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
@@ -254,7 +255,8 @@ final class CharacterMapper {
       customData = new CustomWeaponData(custom.name(), skill == null ? null : skill.id(), custom.damage(),
           blankToNull(custom.effects()), blankToNull(custom.damageType()), custom.fireRate(), custom.range(),
           blankToNull(custom.qualities()), custom.ammunition(),
-          custom.modSlots().isEmpty() ? null : custom.modSlots().stream().map(ModSlot::name).toList());
+          custom.modSlots().isEmpty() ? null : custom.modSlots().stream().map(ModSlot::name).toList(),
+          custom.kinds().isEmpty() ? null : custom.kinds().stream().map(WeaponKind::name).toList());
     }
     Map<String, CatalogRefData> mods = new LinkedHashMap<>();
     weapon.mods().forEach((slot, mod) -> mods.put(slot.name(), toData(mod)));
@@ -289,7 +291,9 @@ final class CharacterMapper {
     return new CustomWeapon(data.name(), skill == null ? null : skill(skill), data.damage(),
         nullToEmpty(data.effects()), nullToEmpty(data.damageType()), data.fireRate(), data.range(),
         nullToEmpty(data.qualities()), data.ammunition(), orEmpty(data.modSlots()).stream()
-        .map(CharacterMapper::modSlot).flatMap(Optional::stream).collect(Collectors.toSet()));
+        .map(CharacterMapper::modSlot).flatMap(Optional::stream).collect(Collectors.toSet()),
+        orEmpty(data.kinds()).stream().map(CharacterMapper::weaponKind).flatMap(Optional::stream)
+        .collect(Collectors.toSet()));
   }
 
   private static @NonNull CarriedItemData toData(@NonNull CarriedItem item) {
@@ -585,6 +589,10 @@ final class CharacterMapper {
   /** A mod slot by its saved name; empty for a name this version does not know (a newer file). */
   private static @NonNull Optional<ModSlot> modSlot(@NonNull String name) {
     return Arrays.stream(ModSlot.values()).filter(slot -> slot.name().equals(name)).findFirst();
+  }
+
+  private static @NonNull Optional<WeaponKind> weaponKind(@NonNull String name) {
+    return Arrays.stream(WeaponKind.values()).filter(kind -> kind.name().equals(name)).findFirst();
   }
 
   private static @NonNull Optional<ApparelModSlot> apparelModSlot(@NonNull String name) {

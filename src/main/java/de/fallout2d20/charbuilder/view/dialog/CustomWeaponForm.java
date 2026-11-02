@@ -2,7 +2,9 @@ package de.fallout2d20.charbuilder.view.dialog;
 
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
 import de.fallout2d20.charbuilder.catalog.weapon.DamageType;
+import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
@@ -26,8 +28,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * The form of a custom weapon (homebrew, books not catalogued yet): name, skill, damage, free-text effects,
- * damage type, fire rate, range, the book's qualities ({@link QualityCheckBoxes}), ammunition and the mod
- * slots the player gives it.
+ * damage type, fire rate, range, the book's qualities ({@link QualityCheckBoxes}), ammunition, the mod
+ * slots the player gives it and its kinds for perks ({@link EnumCheckBoxes}).
  */
 final class CustomWeaponForm {
 
@@ -43,7 +45,8 @@ final class CustomWeaponForm {
   private final @NonNull QualityCheckBoxes qualities = new QualityCheckBoxes("");
   private final @NonNull ComboBox<@Nullable AmmunitionData> ammunition =
       combo(WeaponCatalog.ammunition(), AmmunitionData::name);
-  private final @NonNull ModSlotCheckBoxes modSlots = new ModSlotCheckBoxes(Set.of());
+  private final @NonNull EnumCheckBoxes<ModSlot> modSlots = EnumCheckBoxes.modSlots(Set.of());
+  private final @NonNull EnumCheckBoxes<WeaponKind> kinds = EnumCheckBoxes.weaponKinds(Set.of());
   private final @NonNull MigPane form = Layouts.dialogForm();
 
   CustomWeaponForm() {
@@ -60,6 +63,8 @@ final class CustomWeaponForm {
     addRow("Ammunition", ammunition);
     form.add(new Label("Mod slots"), Layouts.top());
     form.add(modSlots.node());
+    form.add(new Label("Kinds"), Layouts.top());
+    form.add(kinds.node());
   }
 
   @NonNull Node node() {
@@ -90,7 +95,7 @@ final class CustomWeaponForm {
     AmmunitionData ammo = ammunition.getValue();
     return new CustomWeapon(name.getText(), skill.getValue(), rating, effects.getText(),
         type == null ? "" : type.displayName(), WholeNumber.atLeast(fireRate.getText(), 0), range.getValue(), qualities.text(),
-        ammo == null ? null : ammo.id(), modSlots.selected());
+        ammo == null ? null : ammo.id(), modSlots.selected(), kinds.selected());
   }
 
   private void addRow(@NonNull String label, @NonNull Node control) {

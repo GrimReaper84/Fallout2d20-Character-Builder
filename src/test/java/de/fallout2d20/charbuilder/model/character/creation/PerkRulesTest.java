@@ -209,7 +209,7 @@ class PerkRulesTest {
         base.ranks(), base.requirements(), base.choice(), base.summary(), base.legacyNames(),
         base.carryWeightPerRank(), base.physicalDrPerRank(), base.energyDrPerRank(), base.radiationDrPerRank(),
         base.poisonDrPerRank(), base.maxHpPerEndurance(), base.physicalDrByStrength(), base.skillPointsPerRank(),
-        false, 0, 0, 0, false);
+        false, 0, 0, 0, false, base.weaponBonuses());
     PlayerCharacter crbOnly = PlayerCharacter.builder().name("Test").origin(CatalogRef.of("vault-dweller"))
         .enabledBooks(EnumSet.of(Book.CRB)).build();
 

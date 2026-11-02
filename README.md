@@ -16,7 +16,8 @@ at the table.
   checked as soft hints – nothing blocks you.
 - **Advancement:** add XP or milestone levels, spend skill ranks and perks, then apply them.
 - **GM mode** for free corrections after creation.
-- **Gear:** weapons with target numbers, damage and weapon mods, ammunition, apparel and armor with Damage
+- **Gear:** weapons with target numbers, damage and weapon mods (perk bonuses such as Commando or Iron Fist
+  included, situational ones listed per weapon), ammunition, apparel and armor with Damage
   Resistance per hit location (also for Mister Handy and Protectron), items and holotapes, caps, materials
   and carry weight.
 - **Session values:** current HP (rads lower the maximum), Luck points, Rad Sponge points, injuries,

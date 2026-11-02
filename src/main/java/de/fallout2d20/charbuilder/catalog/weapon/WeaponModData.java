@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
  * @param weight lbs. added (negative: removed); {@code null} for "–"
  * @param cost caps added; {@code null} for "–"
  * @param perks perk ranks needed to install it; empty for none
+ * @param kinds kinds the mod makes the weapon (e.g. a Flamer makes the Chainsaw fire-based); empty for none
  */
 public record WeaponModData(
     @JsonProperty(required = true) @NonNull String id,
@@ -40,7 +41,8 @@ public record WeaponModData(
     @NonNull List<ModEffect> effects,
     @Nullable Integer weight,
     @Nullable Integer cost,
-    @NonNull List<ModPerk> perks) {
+    @NonNull List<ModPerk> perks,
+    @NonNull Set<WeaponKind> kinds) {
 
   public WeaponModData {
     if (id == null || id.isBlank() || name == null || name.isBlank() || table == null || table.isBlank()
@@ -50,6 +52,7 @@ public record WeaponModData(
     sources = List.copyOf(sources);
     effects = effects == null ? List.of() : List.copyOf(effects);
     perks = perks == null ? List.of() : List.copyOf(perks);
+    kinds = WeaponKind.copyOf(kinds);
   }
 
   /** Whether one of the books describing the mod is enabled. */

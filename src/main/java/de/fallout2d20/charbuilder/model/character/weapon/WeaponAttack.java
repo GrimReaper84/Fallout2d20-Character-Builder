@@ -1,6 +1,8 @@
 package de.fallout2d20.charbuilder.model.character.weapon;
 
+import de.fallout2d20.charbuilder.catalog.perk.FilteredWeapon;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
@@ -8,6 +10,7 @@ import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
@@ -22,7 +25,8 @@ import org.jspecify.annotations.Nullable;
  * attribute (WOA p. 22: Self-Destruct, END + Explosives). CRB p. 13: with a Tag skill every d20
  * up to the skill rank is a critical success, otherwise only a 1. CRB p. 88: melee and unarmed attacks
  * add the melee bonus (CRB p. 48) to the damage, except a weapon without it (Chainsaw, WG p. 78). Installed mods
- * are applied ({@link ModdedWeapon}); perk damage bonuses are not included (user decision). WG p. 57: a weapon with
+ * are applied ({@link ModdedWeapon}), then the changes of the character's perks ({@link PerkWeaponBonuses}, plan C8);
+ * situational perk bonuses are only listed as hints. WG p. 57: a weapon with
  * Recoil (X) is harder to use when the character's STR is below X; WG pp. 79–81: some explosives have "Special"
  * damage instead of a rating.
  *
@@ -43,6 +47,9 @@ import org.jspecify.annotations.Nullable;
  * @param ammunition ids of the ammunition types the weapon uses
  * @param specialDamage whether the damage is "Special" (the rating means nothing; the type is empty)
  * @param unmetRecoil the X of the weapon's Recoil (X) when the character's STR is below it; {@code null} otherwise
+ * @param perkChanges the perks' changes included in the values ({@link PerkWeaponChange#text()}, e.g.
+ *     {@code Commando 2: +2 CD}); empty for none
+ * @param perkHints the situational perk bonuses for this weapon, not included, one per perk; empty for none
  */
 public record WeaponAttack(
     @NonNull String name,
@@ -60,7 +67,9 @@ public record WeaponAttack(
     @NonNull String qualities,
     @NonNull List<String> ammunition,
     boolean specialDamage,
-    @Nullable Integer unmetRecoil) {
+    @Nullable Integer unmetRecoil,
+    @NonNull List<PerkWeaponChange> perkChanges,
+    @NonNull List<PerkWeaponHint> perkHints) {
 
   /** What weapons with "Special" damage show instead of a damage rating (WG pp. 79–81). */
   public static final @NonNull String SPECIAL_DAMAGE = "Special";
@@ -70,6 +79,8 @@ public record WeaponAttack(
 
   public WeaponAttack {
     ammunition = List.copyOf(ammunition);
+    perkChanges = List.copyOf(perkChanges);
+    perkHints = List.copyOf(perkHints);
   }
 
   /**
@@ -110,17 +121,25 @@ public record WeaponAttack(
     Attribute attribute = weapon.data().map(WeaponData::attackAttribute)
         .orElse(skill == null ? null : skill.governingAttribute());
     return create(character, ModdedWeapon.of(weapon).orElseGet(() -> ModdedWeapon.unknown(weapon.displayName())),
-        skill, attribute, weapon.data().orElse(null));
+        skill, attribute, weapon.data().orElse(null), weapon.kinds());
   }
 
   /** The attack with a catalog weapon, e.g. the Unarmed Strike every character has (CRB p. 111). */
   public static @NonNull WeaponAttack of(@NonNull PlayerCharacter character, @NonNull WeaponData weapon) {
-    return create(character, ModdedWeapon.of(weapon), weapon.skill(), weapon.attackAttribute(), weapon);
+    return create(character, ModdedWeapon.of(weapon), weapon.skill(), weapon.attackAttribute(), weapon, weapon.kinds());
   }
 
-  /** @param data the catalog row; {@code null} for a custom weapon or an id outside the catalog */
-  private static @NonNull WeaponAttack create(@NonNull PlayerCharacter character, @NonNull ModdedWeapon weapon,
-      @Nullable Skill skill, @Nullable Attribute attribute, @Nullable WeaponData data) {
+  /**
+   * @param modded the weapon with its mods and legendary property
+   * @param data the catalog row; {@code null} for a custom weapon or an id outside the catalog
+   * @param kinds the weapon's kinds, including its mods'
+   */
+  private static @NonNull WeaponAttack create(@NonNull PlayerCharacter character, @NonNull ModdedWeapon modded,
+      @Nullable Skill skill, @Nullable Attribute attribute, @Nullable WeaponData data, @NonNull Set<WeaponKind> kinds) {
+    PerkWeaponResult perks = PerkWeaponBonuses.of(character, new FilteredWeapon(
+        data == null ? null : data.id(), skill, modded.fireRate(), modded.qualities(), modded.damageEffects(),
+        modded.damageType(), kinds));
+    ModdedWeapon weapon = modded.withPerks(perks.changes());
     Integer targetNumber = null;
     Integer criticalRange = null;
     int meleeBonus = 0;
@@ -140,6 +159,7 @@ public record WeaponAttack(
     return new WeaponAttack(weapon.name(), weapon.moddedName(), skill, attribute, targetNumber, criticalRange,
         weapon.damage(), meleeBonus, String.join(", ", weapon.damageEffects()),
         weapon.damageType(), weapon.fireRate(), weapon.range(), qualities,
-        weapon.ammunition(), specialDamage, unmetRecoil);
+        weapon.ammunition(), specialDamage, unmetRecoil,
+        perks.changes(), perks.hints());
   }
 }

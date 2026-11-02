@@ -70,7 +70,10 @@
     "requirements": {
       "attributes": {"PERCEPTION": 7}
     },
-    "summary": "After aiming at a target at Close range, your next attack on it gains Piercing 1 (or +1 Piercing)."
+    "summary": "After aiming at a target at Close range, your next attack on it gains Piercing 1 (or +1 Piercing).",
+    "weaponBonuses": [
+      {"hint": "After aiming at a target within Close range: the next attack on it gains Piercing 1 (or +1)."}
+    ]
   },
   {
     "id": "barbarian",
@@ -93,7 +96,10 @@
     "requirements": {
       "attributes": {"STRENGTH": 6}
     },
-    "summary": "Bashing with your gun gains the Vicious damage effect."
+    "summary": "Bashing with your gun gains the Vicious damage effect.",
+    "weaponBonuses": [
+      {"weapons": {"weapons": ["gun-bash", "gun-bash-1h"]}, "gainedEffects": ["Vicious"]}
+    ]
   },
   {
     "id": "better-criticals",
@@ -113,7 +119,10 @@
     "requirements": {
       "attributes": {"STRENGTH": 8}
     },
-    "summary": "Two-handed melee weapons gain the Vicious damage effect."
+    "summary": "Two-handed melee weapons gain the Vicious damage effect.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["MELEE_WEAPONS"], "twoHanded": true}, "gainedEffects": ["Vicious"]}
+    ]
   },
   {
     "id": "black-widow-lady-killer",
@@ -123,7 +132,10 @@
     "requirements": {
       "attributes": {"CHARISMA": 6}
     },
-    "summary": "Against characters of the chosen gender: re-roll 1d20 on CHA tests to influence them and +1 CD damage."
+    "summary": "Against characters of the chosen gender: re-roll 1d20 on CHA tests to influence them and +1 CD damage.",
+    "weaponBonuses": [
+      {"hint": "+1 CD against characters of the chosen gender."}
+    ]
   },
   {
     "id": "blacksmith",
@@ -147,7 +159,10 @@
       "level": 1,
       "levelIncreasePerRank": 3
     },
-    "summary": "Moving into reach and attacking in melee in the same turn lets you re-roll 1d20; at rank 2 also +1 CD damage."
+    "summary": "Moving into reach and attacking in melee in the same turn lets you re-roll 1d20; at rank 2 also +1 CD damage.",
+    "weaponBonuses": [
+      {"fromRank": 2, "weapons": {"skills": ["MELEE_WEAPONS", "UNARMED"]}, "hint": "+1 CD when you move into reach and attack in the same turn."}
+    ]
   },
   {
     "id": "bloody-mess",
@@ -232,7 +247,10 @@
       "level": 2,
       "levelIncreasePerRank": 3
     },
-    "summary": "+1 CD damage per rank with ranged weapons of Fire Rate 3 or more (not heavy weapons)."
+    "summary": "+1 CD damage per rank with ranged weapons of Fire Rate 3 or more (not heavy weapons).",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "ATHLETICS", "THROWING", "EXPLOSIVES"], "minFireRate": 3}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "comprehension",
@@ -273,7 +291,10 @@
     "requirements": {
       "attributes": {"PERCEPTION": 6, "LUCK": 6}
     },
-    "summary": "Blast weapons gain the Vicious damage effect, and explosive recipes that need this perk become available."
+    "summary": "Blast weapons gain the Vicious damage effect, and explosive recipes that need this perk become available.",
+    "weaponBonuses": [
+      {"weapons": {"qualities": ["Blast"]}, "gainedEffects": ["Vicious"]}
+    ]
   },
   {
     "id": "dodger",
@@ -305,7 +326,10 @@
     "requirements": {
       "attributes": {"INTELLIGENCE": 7}
     },
-    "summary": "Attacks against Insect NPCs gain Piercing 1 (or +1 Piercing)."
+    "summary": "Attacks against Insect NPCs gain Piercing 1 (or +1 Piercing).",
+    "weaponBonuses": [
+      {"hint": "Piercing 1 (or +1) against insects."}
+    ]
   },
   {
     "id": "fast-metabolism",
@@ -408,7 +432,10 @@
       "level": 2,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 CD damage per rank with one-handed ranged weapons of Fire Rate 2 or less, and re-roll the hit location."
+    "summary": "+1 CD damage per rank with one-handed ranged weapons of Fire Rate 2 or less, and re-roll the hit location.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "BIG_GUNS", "ATHLETICS", "THROWING", "EXPLOSIVES"], "twoHanded": false, "maxFireRate": 2}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "hacker",
@@ -440,7 +467,10 @@
     "requirements": {
       "attributes": {"STRENGTH": 8}
     },
-    "summary": "Spend 1 AP to increase a thrown weapon's range by one step."
+    "summary": "Spend 1 AP to increase a thrown weapon's range by one step.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["THROWING", "EXPLOSIVES"], "qualities": ["Thrown"]}, "hint": "1 AP: thrown one range step further."}
+    ]
   },
   {
     "id": "hunter",
@@ -450,7 +480,10 @@
     "requirements": {
       "attributes": {"ENDURANCE": 6}
     },
-    "summary": "Attacks on mutated mammals, lizards and insects gain the Vicious damage effect."
+    "summary": "Attacks on mutated mammals, lizards and insects gain the Vicious damage effect.",
+    "weaponBonuses": [
+      {"hint": "Vicious against mutated mammals, lizards and insects."}
+    ]
   },
   {
     "id": "infiltrator",
@@ -494,7 +527,11 @@
       "level": 1,
       "levelIncreasePerRank": 5
     },
-    "summary": "Unarmed attacks deal +1 CD; at rank 2 they also gain the Vicious damage effect."
+    "summary": "Unarmed attacks deal +1 CD; at rank 2 they also gain the Vicious damage effect.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["UNARMED"]}, "damage": 1},
+      {"weapons": {"skills": ["UNARMED"]}, "fromRank": 2, "gainedEffects": ["Vicious"]}
+    ]
   },
   {
     "id": "junktown-jerky-vendor",
@@ -523,7 +560,10 @@
       "level": 2,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 CD damage per rank with ranged energy weapons."
+    "summary": "+1 CD damage per rank with ranged energy weapons.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["ENERGY_WEAPONS"]}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "lead-belly",
@@ -594,7 +634,10 @@
     "requirements": {
       "attributes": {"AGILITY": 9}
     },
-    "summary": "Sneak attacks with silenced or suppressed weapons deal +2 CD; not in Power Armor."
+    "summary": "Sneak attacks with silenced or suppressed weapons deal +2 CD; not in Power Armor.",
+    "weaponBonuses": [
+      {"weapons": {"qualities": ["Suppressed"]}, "hint": "+2 CD on sneak attacks; not in Power Armor."}
+    ]
   },
   {
     "id": "moving-target",
@@ -626,7 +669,10 @@
       "level": 2,
       "levelIncreasePerRank": 5
     },
-    "summary": "Below a quarter of your maximum HP you gain +1 DR and +1 CD damage per rank."
+    "summary": "Below a quarter of your maximum HP you gain +1 DR and +1 CD damage per rank.",
+    "weaponBonuses": [
+      {"hint": "Below a quarter of your maximum HP: +{rank} CD."}
+    ]
   },
   {
     "id": "night-person",
@@ -646,7 +692,10 @@
     "requirements": {
       "attributes": {"AGILITY": 8}
     },
-    "summary": "Melee and unarmed sneak attacks deal +2 CD; not in Power Armor."
+    "summary": "Melee and unarmed sneak attacks deal +2 CD; not in Power Armor.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["MELEE_WEAPONS", "UNARMED"]}, "hint": "+2 CD on sneak attacks; not in Power Armor."}
+    ]
   },
   {
     "id": "nuclear-physicist",
@@ -656,7 +705,10 @@
     "requirements": {
       "attributes": {"INTELLIGENCE": 9}
     },
-    "summary": "Radiation weapons deal 1 more radiation damage per Effect, and your fusion cores hold 3 more charges."
+    "summary": "Radiation weapons deal 1 more radiation damage per Effect, and your fusion cores hold 3 more charges.",
+    "weaponBonuses": [
+      {"weapons": {"radiation": true}, "hint": "Each Effect deals 1 more radiation damage."}
+    ]
   },
   {
     "id": "pain-train",
@@ -678,7 +730,10 @@
     "requirements": {
       "attributes": {"STRENGTH": 8}
     },
-    "summary": "Unarmed attacks aimed at a specific location gain the Stun damage effect."
+    "summary": "Unarmed attacks aimed at a specific location gain the Stun damage effect.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["UNARMED"]}, "hint": "Aimed at a hit location: gains Stun."}
+    ]
   },
   {
     "id": "party-boy-party-girl",
@@ -730,7 +785,11 @@
     "requirements": {
       "attributes": {"STRENGTH": 7}
     },
-    "summary": "Unarmed and bladed melee attacks gain Piercing 1 (or +1 Piercing)."
+    "summary": "Unarmed and bladed melee attacks gain Piercing 1 (or +1 Piercing).",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["UNARMED"]}, "piercing": 1},
+      {"weapons": {"skills": ["MELEE_WEAPONS"], "kinds": ["BLADED"]}, "piercing": 1}
+    ]
   },
   {
     "id": "pyromaniac",
@@ -742,7 +801,10 @@
       "level": 2,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 CD damage per rank with fire-based weapons."
+    "summary": "+1 CD damage per rank with fire-based weapons.",
+    "weaponBonuses": [
+      {"weapons": {"kinds": ["FIRE_BASED"]}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "quick-draw",
@@ -762,7 +824,10 @@
     "requirements": {
       "attributes": {"AGILITY": 8}
     },
-    "summary": "Spend 2 AP to double your gun's Fire Rate for one attack."
+    "summary": "Spend 2 AP to double your gun's Fire Rate for one attack.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "BIG_GUNS"], "minFireRate": 0}, "hint": "2 AP: double the Fire Rate for one attack."}
+    ]
   },
   {
     "id": "rad-resistance",
@@ -811,7 +876,11 @@
       "level": 2,
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 CD damage per rank with two-handed ranged weapons of Fire Rate 2 or less (not heavy weapons); rank 2 adds Piercing."
+    "summary": "+1 CD damage per rank with two-handed ranged weapons of Fire Rate 2 or less (not heavy weapons); rank 2 adds Piercing.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "ATHLETICS", "THROWING", "EXPLOSIVES"], "twoHanded": true, "maxFireRate": 2}, "damage": 1, "perRank": true},
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "ATHLETICS", "THROWING", "EXPLOSIVES"], "twoHanded": true, "maxFireRate": 2}, "fromRank": 2, "piercing": 1}
+    ]
   },
   {
     "id": "robotics-expert",
@@ -878,7 +947,10 @@
     "requirements": {
       "attributes": {"STRENGTH": 5, "AGILITY": 7}
     },
-    "summary": "Shotgun attacks gain Piercing 1 (or +1 Piercing)."
+    "summary": "Shotgun attacks gain Piercing 1 (or +1 Piercing).",
+    "weaponBonuses": [
+      {"weapons": {"kinds": ["SHOTGUN"]}, "piercing": 1}
+    ]
   },
   {
     "id": "skilled",
@@ -901,7 +973,10 @@
       "attributes": {"ENDURANCE": 7, "AGILITY": 6},
       "levelIncreasePerRank": 4
     },
-    "summary": "+1 CD damage per rank with heavy weapons."
+    "summary": "+1 CD damage per rank with heavy weapons.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["BIG_GUNS"]}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "slayer",
@@ -1035,7 +1110,10 @@
       "level": 8,
       "levelIncreasePerRank": 6
     },
-    "summary": "While wielding a big gun, +2 DR; +3 at rank 2, +4 at rank 3."
+    "summary": "While wielding a big gun, +2 DR; +3 at rank 2, +4 at rank 3.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["BIG_GUNS"]}, "hint": "While you wield it: +{rank+1} DR."}
+    ]
   },
   {
     "id": "gladiator",
@@ -1047,7 +1125,10 @@
       "level": 2,
       "levelIncreasePerRank": 5
     },
-    "summary": "One-handed melee weapons deal +1 CD damage per rank."
+    "summary": "One-handed melee weapons deal +1 CD damage per rank.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["MELEE_WEAPONS"], "twoHanded": false}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "incisor",
@@ -1059,7 +1140,10 @@
       "level": 2,
       "levelIncreasePerRank": 9
     },
-    "summary": "Melee weapons gain Piercing 1 per rank, or that much more on an existing Piercing rating."
+    "summary": "Melee weapons gain Piercing 1 per rank, or that much more on an existing Piercing rating.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["MELEE_WEAPONS"]}, "piercing": 1, "perRank": true}
+    ]
   },
   {
     "id": "lock-and-load",
@@ -1071,7 +1155,10 @@
       "level": 7,
       "levelIncreasePerRank": 5
     },
-    "summary": "Big guns with Fire Rate 2 or more get +1 Fire Rate per rank."
+    "summary": "Big guns with Fire Rate 2 or more get +1 Fire Rate per rank.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["BIG_GUNS"], "minFireRate": 2}, "fireRate": 1, "perRank": true}
+    ]
   },
   {
     "id": "martial-artist",
@@ -1130,7 +1217,10 @@
       "level": 1,
       "levelIncreasePerRank": 7
     },
-    "summary": "Bows and crossbows deal +1 CD damage per rank."
+    "summary": "Bows and crossbows deal +1 CD damage per rank.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["ATHLETICS"]}, "damage": 1, "perRank": true}
+    ]
   },
   {
     "id": "bow-before-me",
@@ -1141,7 +1231,10 @@
       "attributes": {"PERCEPTION": 8},
       "level": 4
     },
-    "summary": "Bows and crossbows gain Piercing 1, or +1 on an existing Piercing rating."
+    "summary": "Bows and crossbows gain Piercing 1, or +1 on an existing Piercing rating.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["ATHLETICS"]}, "piercing": 1}
+    ]
   },
   {
     "id": "butchers-bounty",
@@ -1165,7 +1258,11 @@
       "level": 7,
       "levelIncreasePerRank": 7
     },
-    "summary": "Aimed attacks with one-handed ranged weapons reach one range step further; at rank 2 the weapon is also Accurate."
+    "summary": "Aimed attacks with one-handed ranged weapons reach one range step further; at rank 2 the weapon is also Accurate.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "BIG_GUNS", "ATHLETICS", "THROWING", "EXPLOSIVES"], "twoHanded": false}, "hint": "After aiming: range one step further."},
+      {"fromRank": 2, "weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "BIG_GUNS", "ATHLETICS", "THROWING", "EXPLOSIVES"], "twoHanded": false}, "hint": "Also Accurate."}
+    ]
   },
   {
     "id": "fire-in-the-hole",
@@ -1188,7 +1285,10 @@
       "level": 3,
       "levelIncreasePerRank": 8
     },
-    "summary": "+1 CD damage per rank against Glowing enemies."
+    "summary": "+1 CD damage per rank against Glowing enemies.",
+    "weaponBonuses": [
+      {"hint": "+{rank} CD against Glowing enemies."}
+    ]
   },
   {
     "id": "night-eyes",
@@ -1299,7 +1399,10 @@
       "level": 12,
       "notRadiationImmune": true
     },
-    "summary": "With radiation damage of a quarter, half or three quarters of your maximum HP: re-roll 1, 2 or 3 d20 on STR tests and +1, +2 or +3 CD melee damage."
+    "summary": "With radiation damage of a quarter, half or three quarters of your maximum HP: re-roll 1, 2 or 3 d20 on STR tests and +1, +2 or +3 CD melee damage.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["MELEE_WEAPONS", "UNARMED"]}, "hint": "Radiation damage of a quarter, half or three quarters of your maximum HP: +1, +2 or +3 CD."}
+    ]
   },
   {
     "id": "revenant",
@@ -1310,7 +1413,10 @@
       "attributes": {"ENDURANCE": 8},
       "level": 12
     },
-    "summary": "When revived, your attacks deal +2 CD damage for the rest of the scene or until you drop to 0 HP again."
+    "summary": "When revived, your attacks deal +2 CD damage for the rest of the scene or until you drop to 0 HP again.",
+    "weaponBonuses": [
+      {"hint": "After being revived: +2 CD until the scene ends or you drop to 0 HP again."}
+    ]
   },
   {
     "id": "slow-metabolizer",
@@ -1413,7 +1519,10 @@
       "level": 12,
       "notRadiationImmune": true
     },
-    "summary": "With radiation damage of a quarter of your maximum HP or more, your melee attacks gain Radioactive."
+    "summary": "With radiation damage of a quarter of your maximum HP or more, your melee attacks gain Radioactive.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["MELEE_WEAPONS", "UNARMED"]}, "hint": "Radiation damage of a quarter of your maximum HP or more: gains Radioactive."}
+    ]
   },
   {
     "id": "spiritual-healer",
@@ -1449,7 +1558,10 @@
       "level": 8,
       "levelIncreasePerRank": 10
     },
-    "summary": "After a hit, spend 1 AP: attacks against the enemy deal +1 CD damage per rank until the end of its next turn."
+    "summary": "After a hit, spend 1 AP: attacks against the enemy deal +1 CD damage per rank until the end of its next turn.",
+    "weaponBonuses": [
+      {"hint": "After a hit, 1 AP: attacks on that enemy deal +{rank} CD until the end of its next turn."}
+    ]
   },
   {
     "id": "licensed-plumber",
@@ -1460,7 +1572,10 @@
       "attributes": {"INTELLIGENCE": 6},
       "level": 5
     },
-    "summary": "Pipe weapons you use are not Unreliable."
+    "summary": "Pipe weapons you use are not Unreliable.",
+    "weaponBonuses": [
+      {"weapons": {"kinds": ["PIPE"]}, "removedQualities": ["Unreliable"]}
+    ]
   },
   {
     "id": "power-patcher",
@@ -1495,7 +1610,10 @@
       "attributes": {"INTELLIGENCE": 7},
       "level": 16
     },
-    "summary": "In Power Armor, re-roll 1d20 on Big Guns attacks, and big guns gain Piercing 1 (or +1 on an existing rating)."
+    "summary": "In Power Armor, re-roll 1d20 on Big Guns attacks, and big guns gain Piercing 1 (or +1 on an existing rating).",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["BIG_GUNS"]}, "hint": "In Power Armor: Piercing 1 (or +1) and re-roll 1d20 on the attack."}
+    ]
   },
   {
     "id": "born-survivor",
@@ -1774,7 +1892,10 @@
       "levelIncreasePerRank": 8,
       "rare": true
     },
-    "summary": "After a successful ranged sneak attack, all attacks against that enemy deal +1 CD damage until the start of your next turn; +2 CD at rank 2, +3 CD at rank 3."
+    "summary": "After a successful ranged sneak attack, all attacks against that enemy deal +1 CD damage until the start of your next turn; +2 CD at rank 2, +3 CD at rank 3.",
+    "weaponBonuses": [
+      {"weapons": {"skills": ["SMALL_GUNS", "ENERGY_WEAPONS", "BIG_GUNS", "ATHLETICS", "THROWING", "EXPLOSIVES"]}, "hint": "After a ranged sneak attack: +{rank} CD against that enemy until your next turn."}
+    ]
   },
   {
     "id": "funky-duds",

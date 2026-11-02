@@ -1,10 +1,15 @@
 package de.fallout2d20.charbuilder.catalog.perk;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.fallout2d20.charbuilder.catalog.Book;
+import de.fallout2d20.charbuilder.catalog.weapon.DamageEffect;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.model.character.Attribute;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -102,5 +107,62 @@ class PerkCatalogTest {
 
   private static PerkDefinition perk(String id) {
     return PerkCatalog.byId(id).orElseThrow();
+  }
+
+  /** Plan C8: 18 perks change weapon values, 21 more show a hint with the weapons they can help. */
+  @Test
+  void weaponBonuses() {
+    List<String> computed = PerkCatalog.all().stream()
+        .filter(perk -> perk.weaponBonuses().stream().anyMatch(bonus -> !bonus.isHint())).map(PerkDefinition::id)
+        .toList();
+    List<String> hints = PerkCatalog.all().stream()
+        .filter(perk -> perk.weaponBonuses().stream().anyMatch(PerkWeaponBonus::isHint)).map(PerkDefinition::id)
+        .toList();
+    assertEquals(18, computed.size(), computed.toString());
+    assertEquals(21, hints.size(), hints.toString());
+    PerkWeaponBonus ironFist = perk("iron-fist").weaponBonuses().getLast();
+    assertEquals(2, ironFist.fromRank());
+    assertEquals(List.of("Vicious"), ironFist.gainedEffects());
+    PerkWeaponBonus commando = perk("commando").weaponBonuses().getFirst();
+    assertEquals(2, commando.at(commando.damage(), 2));
+    assertEquals(3, commando.weapons().minFireRate());
+  }
+
+  /** A misspelt name or placeholder in a weapon bonus would go unnoticed, so every one must be known. */
+  @Test
+  void weaponBonusNamesExist() {
+    for (PerkDefinition perk : PerkCatalog.all()) {
+      for (PerkWeaponBonus bonus : perk.weaponBonuses()) {
+        for (String weapon : bonus.weapons().weapons()) {
+          assertTrue(WeaponCatalog.byId(weapon).isPresent(), perk.id() + " -> " + weapon);
+        }
+        for (String quality : bonus.weapons().qualities()) {
+          assertTrue(isQuality(quality), perk.id() + " -> " + quality);
+        }
+        for (String quality : bonus.removedQualities()) {
+          assertTrue(isQuality(quality), perk.id() + " -> " + quality);
+        }
+        for (String effect : bonus.gainedEffects()) {
+          assertTrue(DamageEffect.of(effect).isPresent(), perk.id() + " -> " + effect);
+        }
+        String hint = bonus.hintAt(1);
+        assertTrue(hint == null || !hint.contains("{"), perk.id() + ": unknown placeholder in " + hint);
+      }
+    }
+  }
+
+  private static boolean isQuality(String name) {
+    return Arrays.stream(WeaponQuality.values()).anyMatch(quality -> quality.displayName().equals(name));
+  }
+
+  @Test
+  void weaponBonusIsEitherComputedOrHint() {
+    assertThrows(IllegalArgumentException.class,
+        () -> new PerkWeaponBonus(1, WeaponFilter.ANY, 1, 0, 0, false, List.of(), List.of(), "Text."));
+    assertThrows(IllegalArgumentException.class,
+        () -> new PerkWeaponBonus(1, WeaponFilter.ANY, 0, 0, 0, false, List.of(), List.of(), null));
+    assertThrows(IllegalArgumentException.class,
+        () -> new PerkWeaponBonus(2, WeaponFilter.ANY, 1, 0, 0, true, List.of(), List.of(), null));
+    assertEquals(1, new PerkWeaponBonus(0, null, 0, 0, 0, false, List.of(), List.of(), "Text.").fromRank());
   }
 }

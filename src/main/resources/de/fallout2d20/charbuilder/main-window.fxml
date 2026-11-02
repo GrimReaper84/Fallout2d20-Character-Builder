@@ -27,14 +27,13 @@
           <accelerator><KeyCodeCombination code="S" control="DOWN" shift="DOWN" alt="UP" meta="UP" shortcut="UP"/></accelerator>
         </MenuItem>
         <SeparatorMenuItem/>
-        <MenuItem fx:id="exportSheetItem" text="Export Character Sheet (PDF)…" onAction="#onExportSheet" disable="true">
-          <accelerator><KeyCodeCombination code="P" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
-        </MenuItem>
-        <SeparatorMenuItem/>
         <MenuItem text="Exit" onAction="#onExit"/>
       </Menu>
       <Menu text="Character">
         <MenuItem fx:id="createCharacterItem" text="Create Character" onAction="#onCreateCharacter" disable="true"/>
+        <MenuItem fx:id="exportSheetItem" text="Export Character Sheet (PDF)…" onAction="#onExportSheet" disable="true">
+          <accelerator><KeyCodeCombination code="P" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
         <SeparatorMenuItem/>
         <CheckMenuItem fx:id="gmModeItem" text="GM mode" onAction="#onGmMode" disable="true"/>
       </Menu>

@@ -9,9 +9,12 @@ import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.Source;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.Skill;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +52,7 @@ class WeaponCatalogTest {
             "small-guns-hardened-automatic-receiver", "small-guns-rapid-automatic-receiver",
             "small-guns-calibrated-powerful-receiver", "small-guns-powerful-automatic-receiver",
             "small-guns-hardened-piercing-auto-receiver"),
-        null, false, null, false, false, false), pistol);
+        null, false, null, false, false, false, Set.of()), pistol);
     assertTrue(WeaponCatalog.byName("Pipe rifle").isEmpty(), "pack wordings are not legacy names");
     assertEquals("pipe-gun", WeaponCatalog.byNameOrAlias("Pipe rifle").orElseThrow().id());
   }
@@ -118,7 +121,7 @@ class WeaponCatalogTest {
         List.of("Debilitating", "Inaccurate"), "6", 156, 4, List.of("cryo-cell"), List.of(), null,
         List.of("protectron"), List.of(), List.of("cryojet-liquid-nitrogen", "cryojet-compressed-tubing",
             "cryojet-large-tank", "cryojet-huge-tank", "cryojet-wide-diffusion", "cryojet-aerosolizer",
-            "cryojet-bladed-exhaust"), null, false, null, false, false, false), cryojet);
+            "cryojet-bladed-exhaust"), null, false, null, false, false, false, Set.of()), cryojet);
     AmmunitionData cell = WeaponCatalog.ammunitionById("cryo-cell").orElseThrow();
     assertNull(cell.quantityFound());
     assertNull(cell.rarity());
@@ -177,5 +180,27 @@ class WeaponCatalogTest {
     assertEquals(List.of(10, 4), List.of(cryoArrow.cost(), cryoArrow.rarity()), "Arrow 2/1 + Cryo +8/+3 (WG p. 59)");
     assertTrue(cryoArrow.special() != null && cryoArrow.special().contains("Freeze"));
     assertNull(WeaponCatalog.ammunitionById("electron-charge-pack").orElseThrow().cost(), "named only (WG p. 65)");
+  }
+
+  /** The kinds perks use but the tables do not mark (plan C8, section 6). */
+  @Test
+  void kindsAsPlanned() {
+    Map<WeaponKind, Set<String>> byKind = new EnumMap<>(WeaponKind.class);
+    for (WeaponData weapon : WeaponCatalog.all()) {
+      weapon.kinds().forEach(kind -> byKind.computeIfAbsent(kind, key -> new TreeSet<>()).add(weapon.id()));
+    }
+    assertEquals(Set.of("combat-shotgun", "double-barrel-shotgun", "pump-action-shotgun", "gauss-shotgun"),
+        byKind.get(WeaponKind.SHOTGUN));
+    assertEquals(14, byKind.get(WeaponKind.BLADED).size());
+    assertTrue(byKind.get(WeaponKind.BLADED).containsAll(Set.of("sword", "machete", "chainsaw", "proton-axe")));
+    assertEquals(Set.of("pipe-gun", "pipe-bolt-action", "pipe-revolver"), byKind.get(WeaponKind.PIPE));
+    assertEquals(Set.of("flamer", "heavy-incinerator", "molotov-cocktail", "shishkebab"),
+        byKind.get(WeaponKind.FIRE_BASED));
+    assertEquals(Set.of(WeaponKind.FIRE_BASED), WeaponCatalog.modById("chainsaw-flamer").orElseThrow().kinds());
+    assertEquals(Set.of(WeaponKind.FIRE_BASED), WeaponCatalog.modById("auto-axe-burning").orElseThrow().kinds(),
+        "burning like the Chainsaw's Flamer (user decision 2026-11-02)");
+    assertEquals(Set.of(), WeaponCatalog.modById("energy-weapons-flamer-barrel").orElseThrow().kinds(),
+        "still energy damage (user decision 2026-11-02)");
+    assertEquals(Set.of(WeaponKind.BLADED), WeaponCatalog.modById("board-bladed").orElseThrow().kinds());
   }
 }

@@ -90,6 +90,15 @@ class SheetContentTest {
     assertTrue(sheet.notes().contains("Baseball Bat: Spiked"));
   }
 
+  /** The sheet prints the weapon values with the perks' changes (plan C8: Commando, CRB p. 62). */
+  @Test
+  void weaponValuesIncludePerks() {
+    PlayerCharacter character = survivor();
+    character.addPerkRank(CatalogRef.of("commando"), null, null);
+    character.gear().addWeapon(CarriedWeapon.of(CatalogRef.of("submachine-gun")));
+    assertEquals("4 CD", SheetContent.of(character).weapons().getFirst().damage());
+  }
+
   /** F6d: legendary items carry the mark in their names; their rules go to the notes page. */
   @Test
   void legendaryWeaponAndArmor() {

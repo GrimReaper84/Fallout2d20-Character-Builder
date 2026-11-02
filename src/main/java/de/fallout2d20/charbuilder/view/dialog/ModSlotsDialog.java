@@ -17,7 +17,7 @@ public final class ModSlotsDialog {
   /** Shows the dialog with the current slots ticked; empty if cancelled. */
   public static @NonNull Optional<Set<ModSlot>> show(@Nullable Window owner, @NonNull String weaponName,
       @NonNull Set<ModSlot> current) {
-    ModSlotCheckBoxes boxes = new ModSlotCheckBoxes(current);
+    EnumCheckBoxes<ModSlot> boxes = EnumCheckBoxes.modSlots(current);
     Dialog<Set<ModSlot>> dialog = new Dialog<>();
     dialog.initOwner(owner);
     dialog.setTitle("Mod slots");

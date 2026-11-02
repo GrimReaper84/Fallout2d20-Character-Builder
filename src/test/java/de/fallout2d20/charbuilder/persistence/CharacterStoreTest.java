@@ -19,6 +19,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.legendary.LegendaryCatalog;
 import de.fallout2d20.charbuilder.catalog.equipment.ArmAttachment;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
@@ -560,6 +561,28 @@ class CharacterStoreTest {
     List<CarriedWeapon> loaded = store.load(file).character().gear().getWeapons();
     assertTrue(loaded.getFirst().mods().isEmpty());
     assertEquals(Set.of(ModSlot.BARREL), loaded.get(1).custom().modSlots());
+  }
+
+  /** Kinds of a custom weapon (C8) round-trip; files without the field or with unknown names load. */
+  @Test
+  void customWeaponKindsRoundTrip() throws Exception {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Scattergun", Skill.SMALL_GUNS, 5, "Spread",
+        "Physical", 1, WeaponRange.CLOSE, "", null, Set.of(), Set.of(WeaponKind.SHOTGUN, WeaponKind.PIPE))));
+    character.gear().addWeapon(CarriedWeapon.of(new CustomWeapon("Spear", Skill.MELEE_WEAPONS, 3, "", "Physical",
+        null, null, "", null)));
+    Path file = dir.resolve("kinds.json");
+    store.save(character, file);
+    JsonNode weapons = JSON.readTree(file.toFile()).get("weapons");
+    assertEquals("SHOTGUN", weapons.get(0).get("custom").get("kinds").get(0).asText());
+    assertFalse(weapons.get(1).get("custom").has("kinds"));
+    assertEquals(character.gear().getWeapons(), store.load(file).character().gear().getWeapons());
+
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    ((ObjectNode) node.get("weapons").get(1).get("custom")).putArray("kinds").add("LASER").add("BLADED");
+    JSON.writeValue(file.toFile(), node);
+    assertEquals(Set.of(WeaponKind.BLADED),
+        store.load(file).character().gear().getWeapons().get(1).custom().kinds());
   }
 
   /** Catalog item with chosen limb and note, and a custom item (C2). */

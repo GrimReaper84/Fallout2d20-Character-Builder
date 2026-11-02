@@ -47,6 +47,6 @@ class PerkDefinitionTest {
 
   private static PerkDefinition perk(List<Source> sources, int ranks) {
     return new PerkDefinition("test", "Test", sources, ranks, null, null, "Summary.", null,
-        0, 0, 0, 0, 0, 0, false, 0, false, 0, 0, 0, false);
+        0, 0, 0, 0, 0, 0, false, 0, false, 0, 0, 0, false, List.of());
   }
 }

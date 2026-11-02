@@ -40,6 +40,7 @@ import org.jspecify.annotations.Nullable;
  * @param armorWeightQuartersPerRank quarters of the worn armor's weight that stop counting per rank (Sturdy Frame:
  *     1, so ¾, ½, ¼ remain, WG p. 45)
  * @param junkWeightHalved whether carried junk counts half its weight (Pack Rat, WG p. 45)
+ * @param weaponBonuses what the perk does to weapons: computed changes and situational hints (Commando, Ninja, …)
  */
 public record PerkDefinition(
     @JsonProperty(required = true) @NonNull String id,
@@ -62,7 +63,8 @@ public record PerkDefinition(
     int wornArmorDrPerRank,
     int junkDrPerRank,
     int armorWeightQuartersPerRank,
-    boolean junkWeightHalved) {
+    boolean junkWeightHalved,
+    @NonNull List<PerkWeaponBonus> weaponBonuses) {
 
   /** CRB p. 59: perks with ranks go up to 10 (Intense Training, Skilled). */
   private static final int MAX_RANKS = 10;
@@ -79,6 +81,7 @@ public record PerkDefinition(
     sources = List.copyOf(sources);
     requirements = requirements == null ? PerkRequirements.NONE : requirements;
     legacyNames = legacyNames == null ? List.of() : List.copyOf(legacyNames);
+    weaponBonuses = weaponBonuses == null ? List.of() : List.copyOf(weaponBonuses);
   }
 
   /** Whether one of the books describing the perk is enabled. */

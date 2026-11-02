@@ -9,6 +9,7 @@ import de.fallout2d20.charbuilder.catalog.Source;
 import de.fallout2d20.charbuilder.catalog.perk.PerkCatalog;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /** The weapon mod catalog (CRB pp. 100–119, WOA p. 23, WG pp. 66–84). */
@@ -26,7 +27,7 @@ class WeaponModCatalogTest {
   void hardenedReceiver() {
     assertEquals(new WeaponModData("small-guns-hardened", "Hardened", "small-guns", "Small Guns mods",
         List.of(new Source(Book.CRB, 100)), ModSlot.RECEIVER, Skill.REPAIR, "Hardened",
-        List.of(new ModEffect(ModEffectType.DAMAGE, 1, null)), null, 20, List.of()),
+        List.of(new ModEffect(ModEffectType.DAMAGE, 1, null)), null, 20, List.of(), Set.of()),
         WeaponCatalog.modById("small-guns-hardened").orElseThrow());
   }
 

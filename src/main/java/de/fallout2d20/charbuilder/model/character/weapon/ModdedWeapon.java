@@ -133,6 +133,33 @@ public record ModdedWeapon(
     return weapon.data().map(ModdedWeapon::of);
   }
 
+  /**
+   * The weapon with the perks' changes (plan C8), applied after the mods and the legendary property: damage, Piercing
+   * gained or raised as with mods, damage effects not gained twice, qualities removed (noted as "removed by" the
+   * perk) and fire rate added after the 0–6 limit of the mods, so it may exceed 6 (assumption, as Rapid, WG p. 102).
+   */
+  public @NonNull ModdedWeapon withPerks(@NonNull List<PerkWeaponChange> perks) {
+    if (perks.isEmpty()) {
+      return this;
+    }
+    Map<String, String> removals = new LinkedHashMap<>();
+    for (PerkWeaponChange perk : perks) {
+      perk.removedQualities().forEach(quality -> removals.putIfAbsent(key(quality), perk.perk()));
+    }
+    Changes changes = new Changes(this, removals);
+    for (PerkWeaponChange perk : perks) {
+      changes.damage += perk.damage();
+      if (perk.piercing() > 0) {
+        changes.gainEffect("Piercing " + perk.piercing());
+      }
+      perk.gainedEffects().forEach(changes::gainEffect);
+      changes.unlimitedRate += perk.fireRate();
+    }
+    return new ModdedWeapon(name, moddedName, Math.max(0, changes.damage), changes.effects, damageType,
+        changes.fireRate(fireRate), range, changes.qualities, ammunition, weight, cost, changes.specials,
+        changes.removed, legendary);
+  }
+
   private static @Nullable String stockName(@NonNull CarriedWeapon weapon) {
     return weapon.data().map(WeaponData::stockName).orElse(null);
   }
@@ -207,7 +234,8 @@ public record ModdedWeapon(
     private @NonNull String damageType;
     private @NonNull List<String> ammunition;
     private int rateChange;
-    private int legendaryRate;
+    /** Fire rate added after the 0–6 limit: the legendary property's (Rapid) and the perks'. */
+    private int unlimitedRate;
     private int rangeSteps;
     private final @NonNull List<String> effects;
     private final @NonNull List<String> qualities;
@@ -221,6 +249,8 @@ public record ModdedWeapon(
       ammunition = base.ammunition;
       effects = new ArrayList<>(base.damageEffects);
       qualities = new ArrayList<>(base.qualities);
+      specials.addAll(base.specials);
+      removed.addAll(base.removedQualities);
       qualities.removeIf(this::blocked);
     }
 
@@ -255,7 +285,7 @@ public record ModdedWeapon(
     void legendary(@NonNull ModEffect effect) {
       switch (effect.type()) {
         case DAMAGE -> damage += effect.number();
-        case FIRE_RATE -> legendaryRate += effect.number();
+        case FIRE_RATE -> unlimitedRate += effect.number();
         case GAIN_EFFECT -> gainEffect(effect.text());
         case GAIN_QUALITY -> gainLegendaryQuality(effect.text());
         case ADD_DAMAGE_TYPE -> addDamageType(effect.text());
@@ -343,18 +373,18 @@ public record ModdedWeapon(
     }
 
     /**
-     * The fire rate with the changes: the mods' sum stays within 0–6 (CRB p. 89), a legendary change is added after
-     * that limit (WG p. 102: Rapid may exceed 6).
+     * The fire rate with the changes: the mods' sum stays within 0–6 (CRB p. 89), a legendary change (WG p. 102: Rapid
+     * may exceed 6) and the perks' are added after that limit.
      */
     @Nullable Integer fireRate(@Nullable Integer base) {
-      if (rateChange == 0 && legendaryRate == 0) {
+      if (rateChange == 0 && unlimitedRate == 0) {
         return base;
       }
       int modded = base == null ? 0 : base;
       if (rateChange != 0) {
         modded = Math.clamp((long) modded + rateChange, 0, MAX_FIRE_RATE);
       }
-      return Math.max(0, modded + legendaryRate);
+      return Math.max(0, modded + unlimitedRate);
     }
   }
 

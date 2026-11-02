@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelModTable;
 import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
 import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponData;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponModData;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelMods;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
@@ -128,6 +129,15 @@ public final class Gear {
    */
   public void setCustomWeaponQualities(int index, @NonNull String qualities) {
     weapons.set(index, weapons.get(index).withCustomQualities(qualities));
+  }
+
+  /**
+   * The kinds of the custom weapon at the index (shotgun, bladed, pipe, fire-based), for the perks that name them.
+   *
+   * @throws IllegalStateException for a catalog weapon, whose kinds come from the catalog
+   */
+  public void setCustomWeaponKinds(int index, @NonNull Set<WeaponKind> kinds) {
+    weapons.set(index, weapons.get(index).withCustomKinds(kinds));
   }
 
   /**

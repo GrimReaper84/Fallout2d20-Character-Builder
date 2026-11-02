@@ -51,6 +51,7 @@ import org.jspecify.annotations.Nullable;
  *     works by its rule, not by Combat Dice, so damage rating and type mean nothing
  * @param legendaryAsSmallGun whether the weapon rolls as a Small Gun for legendary properties although it is a Big
  *     Gun (WG p. 96: machine guns, the Gatling Gun and the Minigun)
+ * @param kinds kinds the tables do not mark but perks use (shotgun, bladed, pipe, fire-based); empty for none
  */
 public record WeaponData(
     @JsonProperty(required = true) @NonNull String id,
@@ -77,7 +78,8 @@ public record WeaponData(
     @Nullable String special,
     boolean noMeleeBonus,
     boolean specialDamage,
-    boolean legendaryAsSmallGun) {
+    boolean legendaryAsSmallGun,
+    @NonNull Set<WeaponKind> kinds) {
 
   /** CRB p. 89: fire rate is a number from 0 to 6. */
   private static final int MAX_FIRE_RATE = 6;
@@ -101,6 +103,7 @@ public record WeaponData(
     origins = origins == null ? List.of() : List.copyOf(origins);
     aliases = aliases == null ? List.of() : List.copyOf(aliases);
     mods = mods == null ? List.of() : List.copyOf(mods);
+    kinds = WeaponKind.copyOf(kinds);
     if (special != null && special.isBlank()) {
       special = null;
     }

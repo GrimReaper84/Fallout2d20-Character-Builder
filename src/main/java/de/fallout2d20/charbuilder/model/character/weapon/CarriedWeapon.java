@@ -6,6 +6,7 @@ import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponType;
 import de.fallout2d20.charbuilder.catalog.weapon.ModSlot;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
+import de.fallout2d20.charbuilder.catalog.weapon.WeaponKind;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.equipment.StartingSource;
@@ -13,6 +14,7 @@ import de.fallout2d20.charbuilder.model.character.legendary.LegendaryRules;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -90,6 +92,20 @@ public record CarriedWeapon(
   }
 
   /**
+   * The kinds of the weapon for perks (CRB p. 70–71, WG p. 50): a catalog weapon's own and those of its installed
+   * mods (a Flamer makes the Chainsaw fire-based), or the custom weapon's.
+   */
+  public @NonNull Set<WeaponKind> kinds() {
+    if (custom != null) {
+      return custom.kinds();
+    }
+    Set<WeaponKind> kinds = EnumSet.noneOf(WeaponKind.class);
+    data().ifPresent(entry -> kinds.addAll(entry.kinds()));
+    WeaponMods.installedMods(this).forEach(mod -> kinds.addAll(mod.kinds()));
+    return WeaponKind.copyOf(kinds);
+  }
+
+  /**
    * Whether the quantity matters: explosives and thrown weapons are used up when attacking (CRB p. 27),
    * and any entry already held more than once.
    */
@@ -132,6 +148,18 @@ public record CarriedWeapon(
     }
     return new CarriedWeapon(null, custom.withQualities(qualities), quantity, notes, builtIn, mods, startingSource,
         legendary);
+  }
+
+  /**
+   * The custom weapon with other kinds.
+   *
+   * @throws IllegalStateException for a catalog weapon, whose kinds come from the catalog
+   */
+  public @NonNull CarriedWeapon withCustomKinds(@NonNull Set<WeaponKind> kinds) {
+    if (custom == null) {
+      throw new IllegalStateException("Only a custom weapon has choosable kinds");
+    }
+    return new CarriedWeapon(null, custom.withKinds(kinds), quantity, notes, builtIn, mods, startingSource, legendary);
   }
 
   public @NonNull CarriedWeapon withQuantity(int newQuantity) {
