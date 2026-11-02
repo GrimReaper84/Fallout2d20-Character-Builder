@@ -89,7 +89,7 @@ public final class PerkRules {
   }
 
   /**
-   * Whether the next rank of the perk can be taken: perk ranks left and nothing blocks it. In GM mode
+   * Whether the next rank of the perk can be taken: perk ranks left and nothing blocks it. In GM free edit
    * (D2) no budget applies and unmet requirements are only hints; the maximum rank and a choice perk
    * without options still block.
    */
@@ -102,7 +102,7 @@ public final class PerkRules {
 
   /**
    * Whether a rank of the perk can be given back: in creation a rank taken in this creation, after
-   * creation a staged rank; in GM mode any rank, imported ones too (D2).
+   * creation a staged rank; in GM free edit any rank, imported ones too (D2).
    */
   public static boolean canRemove(@NonNull PlayerCharacter character, @NonNull String perkId) {
     return character.getPerks().stream().anyMatch(perk -> perk.perk().id().equals(perkId)
@@ -126,7 +126,7 @@ public final class PerkRules {
   }
 
   /**
-   * What blocks the next rank even in GM mode (D2): the maximum rank, a perk whose book is not enabled for
+   * What blocks the next rank even in GM free edit (D2): the maximum rank, a perk whose book is not enabled for
    * the character (the GM keeps the book limits), or nothing left to choose for a choice perk.
    * Requirements are not part of it.
    */
@@ -222,7 +222,7 @@ public final class PerkRules {
   }
 
   /**
-   * All perk problems of a character in creation (or in GM mode, without the budget); empty for complete
+   * All perk problems of a character in creation (or in GM free edit, without the budget); empty for complete
    * characters.
    */
   public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {

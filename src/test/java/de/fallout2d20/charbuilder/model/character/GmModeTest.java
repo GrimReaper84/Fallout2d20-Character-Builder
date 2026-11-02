@@ -35,7 +35,7 @@ class GmModeTest {
     assertThrows(IllegalStateException.class, () -> abilities.setFreeTag(Skill.SCIENCE, false));
   }
 
-  /** No budgets in GM mode; the attribute maximum and the skill rank cap stay. */
+  /** No budgets in GM free edit; the attribute maximum and the skill rank cap stay. */
   @Test
   void budgetsDoNotApplyButCapsDo() {
     PlayerCharacter character = complete();
@@ -43,7 +43,7 @@ class GmModeTest {
     character.abilities().setAttributeAllocation(Attribute.STRENGTH, 4);
     character.abilities().setAttributeAllocation(Attribute.AGILITY, 1);
     assertEquals(0, AttributeRules.pointsLeft(character));
-    assertTrue(AttributeRules.canRaise(character, Attribute.STRENGTH), "no budget in GM mode");
+    assertTrue(AttributeRules.canRaise(character, Attribute.STRENGTH), "no budget in GM free edit");
     character.abilities().setAttributeAllocation(Attribute.STRENGTH, 5);
     assertEquals(10, character.abilities().attributeValue(Attribute.STRENGTH));
     assertFalse(AttributeRules.canRaise(character, Attribute.STRENGTH), "maximum 10 (CRB p. 50)");
@@ -64,7 +64,7 @@ class GmModeTest {
     PlayerCharacter character = complete();
     character.setGmMode(true);
     assertTrue(PerkRules.canAdd(character, PerkCatalog.byId("adamantium-skeleton").orElseThrow()),
-        "requirements are hints in GM mode");
+        "requirements are hints in GM free edit");
     character.addPerkRank(CatalogRef.of("adamantium-skeleton"), null, null);
     PerkSelection perk = character.getPerks().getLast();
     assertEquals(0, perk.stagedRanks());
@@ -104,7 +104,7 @@ class GmModeTest {
     assertEquals(3, character.abilities().skillRank(Skill.SURVIVAL));
   }
 
-  /** Ending creation and the starting level belong to creation itself, even in GM mode. */
+  /** Ending creation and the starting level belong to creation itself, even in GM free edit. */
   @Test
   void creationItselfIsNotRedone() {
     PlayerCharacter character = complete();
@@ -128,7 +128,7 @@ class GmModeTest {
     assertEquals(new Progression(1, 0), character.advancement().getProgression(), "raising grants no points");
   }
 
-  /** In GM mode a complete character gets content hints (requirements), but no budget hints. */
+  /** In GM free edit a complete character gets content hints (requirements), but no budget hints. */
   @Test
   void contentHintsWithoutBudgets() {
     PlayerCharacter character = complete();

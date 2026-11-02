@@ -19,9 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -30,44 +33,54 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Main window: file and character menus (the character's books and house rules in {@link RulesDialog}) and the
- * character overview.
- *
- * <p>A character imported from a legacy file has no file path, so its first save always asks for
- * a new file; the legacy file is never overwritten.
+ * Main window: file and character menus (the character's books and house rules in {@link RulesDialog}) and one
+ * tab per open character (H1). New and Open always open a new tab; a file that is already open selects its tab.
+ * Save, export, rules and GM free edit act on the selected tab; closing a tab or the window asks for every
+ * character with unsaved changes.
  */
 public class MainWindowController {
 
   private static final String APP_TITLE = AppInfo.NAME;
 
   private final CharacterStore store = new CharacterStore();
+  private final TabPane documents = new TabPane();
+  private final Label emptyState = new Label("No character loaded. Use File → New or File → Open.");
 
   @FXML private MenuBar menuBar;
   @FXML private StackPane contentPane;
+  @FXML private MenuItem saveItem;
+  @FXML private MenuItem saveAsItem;
+  @FXML private MenuItem closeItem;
   @FXML private MenuItem createCharacterItem;
   @FXML private MenuItem exportSheetItem;
   @FXML private CheckMenuItem gmModeItem;
   @FXML private MenuItem rulesItem;
 
   private @Nullable Stage stage;
-  private @Nullable PlayerCharacter character;
-  private @Nullable CharacterView view;
-  private @Nullable Path file;
+  /** The folder of the last file opened or saved; proposed by the file dialogs. */
   private @Nullable Path suggestedDirectory;
-  private boolean dirty;
-  /** Whether the character was opened from the Beta menu and has not been saved yet (E9). */
-  private boolean betaSample;
 
   @FXML
   private void initialize() {
-    showEmptyState();
+    emptyState.setStyle("-fx-padding: 24;");
+    documents.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+    documents.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> updateWindow());
+    documents.getTabs().addListener((ListChangeListener<Tab>) _ -> {
+      showDocumentsOrEmptyState();
+      updateWindow();
+    });
+    showDocumentsOrEmptyState();
+    updateWindow();
   }
 
   /** Connects the controller to its window; asks before closing with unsaved changes. */
@@ -75,43 +88,35 @@ public class MainWindowController {
     this.stage = stage;
     stage.setOnCloseRequest(this::onCloseRequest);
     BetaMenu.folder().ifPresent(folder -> menuBar.getMenus().add(
-        BetaMenu.create(folder, sample -> openFromBeta(sample, true), legacy -> openFromBeta(legacy, false))));
-    updateTitle();
+        BetaMenu.create(folder, sample -> open(sample, true), legacy -> open(legacy, true))));
+    updateWindow();
   }
 
   @FXML
   private void onNew() {
-    if (!confirmDiscard()) {
-      return;
-    }
-    show(PlayerCharacter.createNew(AppInfo.version()), null);
+    add(CharacterDocument.created(PlayerCharacter.createNew(AppInfo.version())));
   }
 
   @FXML
   private void onOpen() {
-    if (!confirmDiscard()) {
-      return;
-    }
-    File chosen = fileChooser("Open character").showOpenDialog(stage);
+    List<File> chosen = fileChooser("Open character").showOpenMultipleDialog(stage);
     if (chosen == null) {
       return;
     }
-    open(chosen.toPath(), false, false);
-  }
-
-  /** Opens a file from the Beta menu (E9); a sample opens as an unsaved copy, a legacy file as usual. */
-  private void openFromBeta(Path path, boolean asCopy) {
-    if (confirmDiscard()) {
-      open(path, true, asCopy);
-    }
+    chosen.forEach(file -> open(file.toPath(), false));
   }
 
   /**
-   * Loads a character file and shows it. A legacy file opens unsaved with its import report. With
-   * {@code fromBeta} the folder is never proposed for later saves (it holds the test fixtures), and a sample
-   * opens as a copy without a file path, so saving asks for a target and the sample is never overwritten.
+   * Loads a character file into a new tab, or selects its tab when it is already open. A legacy file opens unsaved
+   * with its import report. A file from the Beta menu ({@code fromBeta}) opens as a copy without file path and
+   * folder, so saving asks for a target, its folder (the test fixtures) is never proposed and never overwritten.
    */
-  private void open(Path path, boolean fromBeta, boolean asCopy) {
+  private void open(@NonNull Path path, boolean fromBeta) {
+    Optional<OpenCharacter> already = fromBeta ? Optional.empty() : openWithFile(path, null);
+    if (already.isPresent()) {
+      documents.getSelectionModel().select(already.get().tab());
+      return;
+    }
     CharacterFile loaded;
     try {
       loaded = store.load(path);
@@ -124,27 +129,30 @@ public class MainWindowController {
     }
     ImportReport report = loaded.importReport();
     if (report != null) {
-      show(loaded.character(), null);
-      dirty = true;
-      updateTitle();
+      add(CharacterDocument.imported(loaded.character(), fromBeta ? null : path));
       if (stage != null) {
         ImportReportDialog.show(stage, path, report);
       }
     } else {
-      show(loaded.character(), asCopy ? null : path);
-      betaSample = asCopy;
-      updateTitle();
+      add(fromBeta ? CharacterDocument.betaCopy(loaded.character())
+          : CharacterDocument.loaded(loaded.character(), path));
     }
   }
 
   @FXML
   private void onSave() {
-    save(false);
+    current().ifPresent(character -> save(character, false));
   }
 
   @FXML
   private void onSaveAs() {
-    save(true);
+    current().ifPresent(character -> save(character, true));
+  }
+
+  /** Closes the selected character's tab after asking about unsaved changes. */
+  @FXML
+  private void onClose() {
+    current().filter(this::confirmDiscard).ifPresent(character -> documents.getTabs().remove(character.tab()));
   }
 
   /**
@@ -153,15 +161,15 @@ public class MainWindowController {
    */
   @FXML
   private void onExportSheet() {
-    if (character == null) {
+    Optional<OpenCharacter> selected = current();
+    if (selected.isEmpty()) {
       return;
     }
+    PlayerCharacter character = selected.get().document().character();
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Export character sheet");
     chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
-    if (suggestedDirectory != null && suggestedDirectory.toFile().isDirectory()) {
-      chooser.setInitialDirectory(suggestedDirectory.toFile());
-    }
+    initialDirectory(chooser, selected.get().document());
     chooser.setInitialFileName(fileBaseName(character) + ".pdf");
     File chosen = chooser.showSaveDialog(stage);
     if (chosen == null) {
@@ -179,7 +187,7 @@ public class MainWindowController {
 
   @FXML
   private void onExit() {
-    if (confirmDiscard() && stage != null) {
+    if (confirmDiscardAll() && stage != null) {
       stage.close();
     }
   }
@@ -191,45 +199,47 @@ public class MainWindowController {
 
   @FXML
   private void onCreateCharacter() {
-    completeCreation();
+    current().ifPresent(this::completeCreation);
   }
 
   /**
-   * Switches GM free edit (D2) on after a confirmation, or off; never saved (user decision 2026-10-16).
+   * Switches GM free edit (D2) of the selected character on after a confirmation, or off; never saved (user
+   * decision 2026-10-16).
    */
   @FXML
   private void onGmMode() {
-    if (character == null) {
+    Optional<OpenCharacter> selected = current();
+    if (selected.isEmpty()) {
       return;
     }
     boolean on = gmModeItem.isSelected();
-    if (on && !ConfirmDialog.confirm(stage, "GM mode", "Switch on GM mode?",
+    if (on && !ConfirmDialog.confirm(stage, "GM free edit", "Switch on GM free edit?",
         "Budgets and level-up points no longer limit changes, perk requirements are only hints, and every "
             + "change counts at once – also for a complete character (origin, traits, S.P.E.C.I.A.L., Tags, "
             + "skills, perks, pack, level and XP). For an imported character the imported values are not "
-            + "recalculated; a new pack adds no inventory items once the old pack's items were added. GM mode is "
-            + "not saved.", "Switch on")) {
+            + "recalculated; a new pack adds no inventory items once the old pack's items were added. GM free edit "
+            + "is not saved.", "Switch on")) {
       gmModeItem.setSelected(false);
       return;
     }
-    character.setGmMode(on);
-    showOverview();
+    selected.get().document().character().setGmMode(on);
+    refresh(selected.get());
   }
 
-  /** Opens the character's rulebooks and house rules; OK with changes marks it unsaved and rebuilds the overview. */
+  /** Opens the character's rulebooks and house rules; OK with changes marks it unsaved and rebuilds the view. */
   @FXML
   private void onRules() {
-    if (character != null && RulesDialog.show(stage, character)) {
-      onChanged();
-    }
+    current().filter(character -> RulesDialog.show(stage, character.document().character()))
+        .ifPresent(this::onChanged);
   }
 
   /**
    * Ends character creation (one-way, user decision) after the player confirms; open creation hints are
    * listed in the confirmation.
    */
-  private void completeCreation() {
-    if (character == null || character.isCreationComplete()) {
+  private void completeCreation(@NonNull OpenCharacter selected) {
+    PlayerCharacter character = selected.document().character();
+    if (character.isCreationComplete()) {
       return;
     }
     // The same hints as the header's counter (creation and apparel hints).
@@ -238,135 +248,184 @@ public class MainWindowController {
       return;
     }
     character.completeCreation();
-    onChanged();
+    onChanged(selected);
   }
 
   private void onCloseRequest(WindowEvent event) {
-    if (!confirmDiscard()) {
+    if (!confirmDiscardAll()) {
       event.consume();
     }
   }
 
   /** Saves the character; returns whether it was written. */
-  private boolean save(boolean askForFile) {
-    if (character == null) {
-      return false;
-    }
-    Path target = file;
+  private boolean save(@NonNull OpenCharacter selected, boolean askForFile) {
+    CharacterDocument document = selected.document();
+    Path target = document.file();
     if (askForFile || target == null) {
       FileChooser chooser = fileChooser("Save character");
-      chooser.setInitialFileName(suggestedFileName(character));
+      initialDirectory(chooser, document);
+      chooser.setInitialFileName(suggestedFileName(document));
       File chosen = chooser.showSaveDialog(stage);
       if (chosen == null) {
         return false;
       }
       target = chosen.toPath();
+      if (openWithFile(target, selected).isPresent()) {
+        showError("The character could not be saved.",
+            "The file is open in another tab. Close that tab first or choose another file.");
+        return false;
+      }
     }
     try {
-      store.save(character, target);
+      store.save(document.character(), target);
     } catch (IOException e) {
       showError("The character could not be saved.", e.getMessage());
       return false;
     }
-    file = target;
+    document.markSaved(target);
     suggestedDirectory = target.getParent();
-    dirty = false;
-    betaSample = false;
-    updateTitle();
+    updateTitles(selected);
+    return true;
+  }
+
+  /** Asks for every character with unsaved changes, in tab order; false as soon as one is cancelled. */
+  private boolean confirmDiscardAll() {
+    for (Tab tab : new ArrayList<>(documents.getTabs())) {
+      Optional<OpenCharacter> character = OpenCharacter.of(tab).filter(open -> open.document().isDirty());
+      if (character.isPresent()) {
+        documents.getSelectionModel().select(tab);
+        if (!confirmDiscard(character.get())) {
+          return false;
+        }
+      }
+    }
     return true;
   }
 
   /** Returns true if there are no unsaved changes or the user saved or discarded them. */
-  private boolean confirmDiscard() {
-    if (!dirty || character == null) {
+  private boolean confirmDiscard(@NonNull OpenCharacter character) {
+    if (!character.document().isDirty()) {
       return true;
     }
     ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.YES);
     ButtonType discardButton = new ButtonType("Discard", ButtonBar.ButtonData.NO);
     Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-        "The character has unsaved changes.", saveButton, discardButton, ButtonType.CANCEL);
+        "\"" + character.document().displayName() + "\" has unsaved changes.", saveButton, discardButton, ButtonType.CANCEL);
     alert.initOwner(stage);
     alert.setHeaderText("Save changes?");
     Optional<ButtonType> answer = alert.showAndWait();
     if (answer.isEmpty() || answer.get() == ButtonType.CANCEL) {
       return false;
     }
-    return answer.get() == discardButton || save(false);
+    return answer.get() == discardButton || save(character, false);
   }
 
-  private void show(PlayerCharacter newCharacter, @Nullable Path newFile) {
-    character = newCharacter;
-    file = newFile;
-    dirty = false;
-    betaSample = false;
-    CharacterView newView = new CharacterView(newCharacter,
-        new ViewCallbacks(this::onEdited, this::onChanged, this::completeCreation));
-    view = newView;
-    contentPane.getChildren().setAll(newView.node());
-    showOverview();
-    updateTitle();
+  /** Shows the character in a new tab and selects it. */
+  private void add(@NonNull CharacterDocument document) {
+    Tab tab = new Tab();
+    CharacterView view = new CharacterView(document.character(),
+        new ViewCallbacks(() -> withCharacter(tab, this::onEdited), () -> withCharacter(tab, this::onChanged),
+            () -> withCharacter(tab, this::completeCreation)));
+    OpenCharacter character = OpenCharacter.attach(document, view, tab);
+    tab.setContent(view.node());
+    tab.setOnCloseRequest(event -> {
+      if (!confirmDiscard(character)) {
+        event.consume();
+      }
+    });
+    tab.setText(document.title());
+    documents.getTabs().add(tab);
+    documents.getSelectionModel().select(tab);
+    view.refresh();
   }
 
-  private void showOverview() {
-    if (character == null) {
-      return;
+  /** Runs the action for the character of the tab while it is open (a late callback of a closed tab does nothing). */
+  private void withCharacter(@NonNull Tab tab, @NonNull Consumer<OpenCharacter> action) {
+    if (documents.getTabs().contains(tab)) {
+      OpenCharacter.of(tab).ifPresent(action);
     }
-    createCharacterItem.setDisable(character.isCreationComplete());
-    exportSheetItem.setDisable(false);
-    gmModeItem.setDisable(false);
-    gmModeItem.setSelected(character.isGmMode());
-    rulesItem.setDisable(false);
-    if (view != null) {
-      view.refresh();
-    }
   }
 
-  /** A creation edit changed the character: mark it unsaved and rebuild the overview afterwards. */
-  private void onChanged() {
-    dirty = true;
-    updateTitle();
-    Platform.runLater(this::showOverview);
+  /** The character of the selected tab. */
+  private @NonNull Optional<OpenCharacter> current() {
+    Tab selected = documents.getSelectionModel().getSelectedItem();
+    return selected == null ? Optional.empty() : OpenCharacter.of(selected);
+  }
+
+  /** The open character with this file, other than {@code except}. */
+  private @NonNull Optional<OpenCharacter> openWithFile(@NonNull Path path, @Nullable OpenCharacter except) {
+    return documents.getTabs().stream().map(OpenCharacter::of).flatMap(Optional::stream)
+        .filter(character -> !character.equals(except) && character.document().isFile(path)).findFirst();
+  }
+
+  /** A creation edit changed the character: mark it unsaved and rebuild its view afterwards. */
+  private void onChanged(@NonNull OpenCharacter character) {
+    onEdited(character);
+    Platform.runLater(() -> {
+      if (documents.getTabs().contains(character.tab())) {
+        refresh(character);
+      }
+    });
   }
 
   /** An edit that needs no rebuild (typed text): only mark the character unsaved. */
-  private void onEdited() {
-    dirty = true;
-    updateTitle();
+  private void onEdited(@NonNull OpenCharacter character) {
+    character.document().markDirty();
+    updateTitles(character);
   }
 
-  private void showEmptyState() {
-    Label label = new Label("No character loaded. Use File → New or File → Open.");
-    label.setStyle("-fx-padding: 24;");
-    contentPane.getChildren().setAll(label);
+  private void refresh(@NonNull OpenCharacter character) {
+    character.view().refresh();
+    updateWindow();
   }
 
-  private void updateTitle() {
-    if (stage == null) {
-      return;
+  private void updateTitles(@NonNull OpenCharacter character) {
+    character.tab().setText(character.document().title());
+    updateWindow();
+  }
+
+  /** Window title and menu state for the selected tab. */
+  private void updateWindow() {
+    Optional<OpenCharacter> selected = current();
+    Optional<PlayerCharacter> character = selected.map(open -> open.document().character());
+    for (MenuItem item : List.of(saveItem, saveAsItem, closeItem, exportSheetItem, gmModeItem, rulesItem)) {
+      item.setDisable(selected.isEmpty());
     }
-    if (character == null) {
-      stage.setTitle(APP_TITLE);
-      return;
+    createCharacterItem.setDisable(character.map(PlayerCharacter::isCreationComplete).orElse(true));
+    gmModeItem.setSelected(character.map(PlayerCharacter::isGmMode).orElse(false));
+    if (stage != null) {
+      stage.setTitle(selected.map(open -> APP_TITLE + " – " + open.document().title()).orElse(APP_TITLE));
     }
-    String name = character.getName().isBlank() ? "Unnamed" : character.getName();
-    stage.setTitle(APP_TITLE + " – " + name + (betaSample ? " (beta sample)" : "") + (dirty ? " *" : ""));
+  }
+
+  private void showDocumentsOrEmptyState() {
+    contentPane.getChildren().setAll(documents.getTabs().isEmpty() ? emptyState : documents);
   }
 
   /**
    * File name for the save dialog. For an imported character the dialog starts in the folder of the
    * legacy file; the name gets a {@code _v3} suffix so the legacy file is not proposed.
    */
-  private String suggestedFileName(PlayerCharacter current) {
-    String base = fileBaseName(current);
-    return current.isLegacyImport() && file == null ? base + "_v3.json" : base + ".json";
+  private static @NonNull String suggestedFileName(@NonNull CharacterDocument document) {
+    String base = fileBaseName(document.character());
+    return document.character().isLegacyImport() && document.file() == null ? base + "_v3.json" : base + ".json";
   }
 
   /** The character's name without characters that file systems reject, or "character". */
-  private static String fileBaseName(PlayerCharacter current) {
+  private static @NonNull String fileBaseName(@NonNull PlayerCharacter current) {
     return current.getName().isBlank() ? "character" : current.getName().replaceAll("[\\\\/:*?\"<>|]", "_");
   }
 
-  private FileChooser fileChooser(String title) {
+  /** Starts the dialog in the character's folder, else in the folder used last. */
+  private void initialDirectory(@NonNull FileChooser chooser, @NonNull CharacterDocument document) {
+    Path own = document.directory();
+    Path directory = own != null ? own : suggestedDirectory;
+    if (directory != null && directory.toFile().isDirectory()) {
+      chooser.setInitialDirectory(directory.toFile());
+    }
+  }
+
+  private @NonNull FileChooser fileChooser(@NonNull String title) {
     FileChooser chooser = new FileChooser();
     chooser.setTitle(title);
     chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Character files (*.json)", "*.json"));
@@ -376,7 +435,7 @@ public class MainWindowController {
     return chooser;
   }
 
-  private void showError(String header, @Nullable String message) {
+  private void showError(@NonNull String header, @Nullable String message) {
     Alert alert = new Alert(Alert.AlertType.ERROR, message == null ? "" : message);
     alert.initOwner(stage);
     alert.setHeaderText(header);

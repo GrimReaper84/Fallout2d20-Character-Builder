@@ -22,7 +22,7 @@ public final class AttributeRules {
   /** Lowest allocation: one rank below the starting value. */
   public static final int MIN_ALLOCATION = -1;
 
-  /** Lowest attribute value in GM mode (D2): a technical floor, the book sets none for corrections. */
+  /** Lowest attribute value in GM free edit (D2): a technical floor, the book sets none for corrections. */
   public static final int GM_MINIMUM_VALUE = 1;
 
   private static final String TOPIC = "S.P.E.C.I.A.L.";
@@ -45,7 +45,7 @@ public final class AttributeRules {
   }
 
   /**
-   * Whether one more point may go into the attribute: points left (not in GM mode, D2) and below its
+   * Whether one more point may go into the attribute: points left (not in GM free edit, D2) and below its
    * maximum.
    */
   public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
@@ -54,7 +54,7 @@ public final class AttributeRules {
   }
 
   /**
-   * Whether the attribute may lose one point: not yet lowered below its starting value; in GM mode down to
+   * Whether the attribute may lose one point: not yet lowered below its starting value; in GM free edit down to
    * {@link #GM_MINIMUM_VALUE}.
    */
   public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Attribute attribute) {
@@ -62,7 +62,7 @@ public final class AttributeRules {
         : character.abilities().attributeAllocation(attribute) > MIN_ALLOCATION;
   }
 
-  /** All allocation problems of a character in creation; empty for complete characters and in GM mode (D2). */
+  /** All allocation problems of a character in creation; empty for complete characters and in GM free edit (D2). */
   public static @NonNull List<CreationProblem> problems(@NonNull PlayerCharacter character) {
     List<CreationProblem> problems = new ArrayList<>();
     if (character.isCreationComplete() || character.isGmMode()) {

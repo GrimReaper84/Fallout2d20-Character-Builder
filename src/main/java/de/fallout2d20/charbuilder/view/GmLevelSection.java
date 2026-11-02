@@ -7,7 +7,7 @@ import javafx.scene.control.Tooltip;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Level and XP of a complete character in GM mode (D2): both set freely, also downwards. A new level sets
+ * Level and XP of a complete character in GM free edit (D2): both set freely, also downwards. A new level sets
  * the XP to that level's minimum (CRB p. 49 table); the XP field can then be corrected.
  */
 final class GmLevelSection {

@@ -224,7 +224,7 @@ public final class Advancement {
    * it, takes back staged advancement, cuts the pending level-up points by the levels lost and caps the
    * current HP at the new maximum; raising grants no points (user decision 2026-10-16).
    *
-   * @throws IllegalStateException outside GM mode
+   * @throws IllegalStateException outside GM free edit
    * @throws IllegalArgumentException for a level below 1 or negative XP
    */
   public void setLevelAsGm(int newLevel, long newXp) {

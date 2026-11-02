@@ -74,7 +74,7 @@ class LegendaryRulesTest {
     assertEquals(LegendaryWeaponType.BIG_GUNS, launcher.legendaryType().orElseThrow());
   }
 
-  /** The properties need the Wanderer's Guide; GM mode offers all of them for any item. */
+  /** The properties need the Wanderer's Guide; GM free edit offers all of them for any item. */
   @Test
   void bookAndGmMode() {
     PlayerCharacter core = PlayerCharacter.builder().enabledBooks(Set.of(Book.CRB)).build();

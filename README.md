@@ -15,7 +15,7 @@ at the table.
   inventory automatically). Budgets and rules are
   checked as soft hints – nothing blocks you.
 - **Advancement:** add XP or milestone levels, spend skill ranks and perks, then apply them.
-- **GM mode** for free corrections after creation.
+- **GM free edit** for free corrections after creation.
 - **Rules** (Character ▸ Rules…): switch the Wanderer's Guide and Winter of Atom on or off per character and choose
   house rules (armor helmets count as headgear); both are saved with the character.
 - **Gear:** weapons with target numbers, damage and weapon mods (perk bonuses such as Commando or Iron Fist

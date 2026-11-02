@@ -109,7 +109,7 @@ final class CharacterView {
   }
 
   /**
-   * All hints of the character with their areas: the creation rules during creation and in GM mode (D2:
+   * All hints of the character with their areas: the creation rules during creation and in GM free edit (D2:
    * content hints only), the advancement rules while level-up points are spent, and the apparel and book rules
    * always (book hints of weapons appear with the gear, the Weapons tab shows none).
    */

@@ -20,11 +20,14 @@
         <MenuItem text="Open…" onAction="#onOpen">
           <accelerator><KeyCodeCombination code="O" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
         </MenuItem>
-        <MenuItem text="Save" onAction="#onSave">
+        <MenuItem fx:id="saveItem" text="Save" onAction="#onSave" disable="true">
           <accelerator><KeyCodeCombination code="S" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
         </MenuItem>
-        <MenuItem text="Save As…" onAction="#onSaveAs">
+        <MenuItem fx:id="saveAsItem" text="Save As…" onAction="#onSaveAs" disable="true">
           <accelerator><KeyCodeCombination code="S" control="DOWN" shift="DOWN" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
+        <MenuItem fx:id="closeItem" text="Close" onAction="#onClose" disable="true">
+          <accelerator><KeyCodeCombination code="W" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
         </MenuItem>
         <SeparatorMenuItem/>
         <MenuItem text="Exit" onAction="#onExit"/>
@@ -36,7 +39,7 @@
         </MenuItem>
         <MenuItem fx:id="rulesItem" text="Rules…" onAction="#onRules" disable="true"/>
         <SeparatorMenuItem/>
-        <CheckMenuItem fx:id="gmModeItem" text="GM mode" onAction="#onGmMode" disable="true"/>
+        <CheckMenuItem fx:id="gmModeItem" text="GM free edit" onAction="#onGmMode" disable="true"/>
       </Menu>
       <Menu text="Help">
         <MenuItem text="About" onAction="#onAbout"/>

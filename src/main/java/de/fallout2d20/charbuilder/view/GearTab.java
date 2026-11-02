@@ -133,7 +133,7 @@ final class GearTab {
     return top;
   }
 
-  /** The chosen pack and, while it can still be chosen (creation or GM mode), the button to the dialog. */
+  /** The chosen pack and, while it can still be chosen (creation or GM free edit), the button to the dialog. */
   private static @NonNull Node packRow(@NonNull PlayerCharacter character, @NonNull Runnable onChanged) {
     MigPane row = Layouts.row();
     CatalogRef pack = character.startingGear().getSelection().pack();

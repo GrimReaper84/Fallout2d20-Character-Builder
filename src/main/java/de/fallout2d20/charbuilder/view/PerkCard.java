@@ -50,7 +50,7 @@ final class PerkCard {
 
   /**
    * @param blockers why the next rank cannot be taken ({@link PerkRules#blockers}), computed once by the grid
-   * @param editable whether perks can be changed now (creation, GM mode, pending level-up perks)
+   * @param editable whether perks can be changed now (creation, GM free edit, pending level-up perks)
    */
   static @NonNull VBox of(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,
       @NonNull List<String> blockers, boolean editable, @NonNull Runnable onChanged) {
@@ -161,7 +161,7 @@ final class PerkCard {
 
   /**
    * The access switch of a rare perk (WG p. 108; user decision 2026-10-22): unlocking is always possible, as the GM
-   * grants access at any time (also after a rare perk was taken in GM mode); locking not while the perk has a rank.
+   * grants access at any time (also after a rare perk was taken in GM free edit); locking not while the perk has a rank.
    * The tooltip names the rare book.
    */
   private static @NonNull CheckBox rareAccess(@NonNull PlayerCharacter character, @NonNull PerkDefinition perk,

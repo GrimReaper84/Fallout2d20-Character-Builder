@@ -66,7 +66,7 @@ class CharacterStoreTest {
 
   @TempDir Path dir;
 
-  /** A GM skill correction (D2) survives a save and is written only when not 0; GM mode itself is not saved. */
+  /** A GM skill correction (D2) survives a save and is written only when not 0; GM free edit itself is not saved. */
   @Test
   void roundTripsGmSkillCorrections() throws Exception {
     PlayerCharacter character = PlayerCharacter.createNew();

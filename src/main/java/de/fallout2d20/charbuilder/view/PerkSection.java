@@ -21,7 +21,7 @@ import org.tbee.javafx.scene.layout.MigPane;
  * that are not possible for a robot or because a chosen perk excludes them ({@link PerkRules#isImpossible}; user
  * requests 2026-10-19) and the rare perks the character has no access to yet (WG p. 108; user decision 2026-10-22:
  * unlocked on their card, then they join the other groups). The last four can be collapsed; the state is kept in
- * the {@link ViewPreferences}. While perks can be changed (creation, GM mode, pending level-up perks) the cards
+ * the {@link ViewPreferences}. While perks can be changed (creation, GM free edit, pending level-up perks) the cards
  * have −/+ buttons and the perks left are shown; every change goes to the model and then to {@code onChanged},
  * which rebuilds the view.
  */

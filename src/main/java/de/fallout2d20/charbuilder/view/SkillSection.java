@@ -17,7 +17,7 @@ import org.tbee.javafx.scene.layout.MigPane;
 /**
  * Tag skills and skill ranks (CRB p. 58) as a six-column grid: Tag, skill, governing attribute, rank,
  * − and +. During creation a budget row shows the free Tags and skill points left; Tags of the origin
- * are shown checked and disabled. In GM mode for a complete character −/+ correct the rank directly (D2).
+ * are shown checked and disabled. In GM free edit for a complete character −/+ correct the rank directly (D2).
  * Afterwards the skills are read-only. Every change goes to the model and then to {@code onChanged},
  * which rebuilds the view.
  */
@@ -31,7 +31,7 @@ final class SkillSection {
 
   private SkillSection() {}
 
-  /** @param locked whether the character is complete and not in GM mode (ranks read-only) */
+  /** @param locked whether the character is complete and not in GM free edit (ranks read-only) */
   static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onChanged) {
     MigPane pane = grid();
     if (locked) {

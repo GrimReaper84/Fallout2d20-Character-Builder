@@ -24,7 +24,7 @@ import org.jspecify.annotations.NonNull;
  * columns (Poisoner's, Lucky), the tables decide (assumption, plan F6d). Armor: armor pieces, robot armor and outfits
  * that count as armor, with the properties of any column of the locations they cover (WG p. 104: the player chooses
  * one covered location); clothing, headgear and other outfits get none (assumption). The properties need the
- * Wanderer's Guide (the properties' book must be enabled). In GM mode every property of the kind is offered for any item (user decision 2026-10-23).
+ * Wanderer's Guide (the properties' book must be enabled). In GM free edit every property of the kind is offered for any item (user decision 2026-10-23).
  */
 public final class LegendaryRules {
 
@@ -65,7 +65,7 @@ public final class LegendaryRules {
         .filter(property -> property.isAvailableWith(books) && columns.stream().anyMatch(property::fits)).toList();
   }
 
-  /** Whether the piece can be legendary outside GM mode: armor, robot armor and outfits that count as armor. */
+  /** Whether the piece can be legendary outside GM free edit: armor, robot armor and outfits that count as armor. */
   private static boolean isArmor(@NonNull WornApparel item) {
     return item.isArmor() || item.values().map(ApparelValues::kind).filter(ApparelKind.ROBOT_ARMOR::equals).isPresent();
   }

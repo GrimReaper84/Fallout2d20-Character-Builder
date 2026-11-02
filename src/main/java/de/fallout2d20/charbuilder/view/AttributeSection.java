@@ -10,7 +10,7 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * S.P.E.C.I.A.L. of a character (CRB p. 58) as a four-column grid: name, value, − and +. During
- * creation and in GM mode the buttons change the allocation and the points left are shown above;
+ * creation and in GM free edit the buttons change the allocation and the points left are shown above;
  * afterwards the values are read-only. Every change goes to the model and then to {@code onChanged},
  * which rebuilds the view, so the buttons always reflect the current budget.
  */
@@ -18,7 +18,7 @@ final class AttributeSection {
 
   private AttributeSection() {}
 
-  /** @param locked whether the character is complete and not in GM mode (values read-only) */
+  /** @param locked whether the character is complete and not in GM free edit (values read-only) */
   static @NonNull MigPane build(@NonNull PlayerCharacter character, boolean locked, @NonNull Runnable onChanged) {
     MigPane pane = Layouts.table(4);
     if (locked) {

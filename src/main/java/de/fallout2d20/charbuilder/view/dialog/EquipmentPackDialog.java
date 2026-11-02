@@ -67,7 +67,7 @@ public final class EquipmentPackDialog {
   }
 
   /**
-   * Shows the dialog; on OK enters the starting equipment, after creation (GM mode) only once the replaced
+   * Shows the dialog; on OK enters the starting equipment, after creation (GM free edit) only once the replaced
    * entries are confirmed. A character whose pack items an earlier version added keeps its inventory and only
    * stores the selection.
    *
@@ -102,7 +102,7 @@ public final class EquipmentPackDialog {
     if (!character.startingGear().canApply()) {
       return true;
     }
-    // After creation (GM mode) always ask: entries are replaced, or – for a character whose pack items were typed
+    // After creation (GM free edit) always ask: entries are replaced, or – for a character whose pack items were typed
     // in by hand before this version – added a second time.
     if (character.isCreationComplete() && !ConfirmDialog.confirm(owner, TITLE,
         "Enter the starting equipment again?", replacement(character), "Enter")) {

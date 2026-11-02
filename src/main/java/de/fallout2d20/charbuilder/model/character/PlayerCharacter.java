@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  * (play-session values). Edits that touch several parts (origin, traits, perks) live here.
  *
  * <p>Origin, origin choices, traits, attribute allocation, free Tags, bought skill ranks and the starting
- * equipment can only be changed while creation is not complete (or in GM mode); gear can always be edited.
+ * equipment can only be changed while creation is not complete (or in GM free edit); gear can always be edited.
  * After creation the character advances (CRB p. 49).
  */
 public class PlayerCharacter {
@@ -264,7 +264,7 @@ public class PlayerCharacter {
 
   /**
    * Gives back the last rank of a perk, with its choice: during creation any rank but the imported
-   * ones, after creation only a staged rank; in GM mode any rank, imported ones too (D2). The perk is
+   * ones, after creation only a staged rank; in GM free edit any rank, imported ones too (D2). The perk is
    * removed when no rank is left.
    */
   public void removePerkRank(@NonNull String perkId) {
@@ -380,7 +380,7 @@ public class PlayerCharacter {
     gmMode = on;
   }
 
-  /** For creation edits: during creation or in GM mode. */
+  /** For creation edits: during creation or in GM free edit. */
   void requireCreation() {
     if (creationComplete && !gmMode) {
       throw new IllegalStateException("This can only be changed during character creation");
@@ -396,7 +396,7 @@ public class PlayerCharacter {
 
   void requireGmMode() {
     if (!gmMode) {
-      throw new IllegalStateException("Only the GM can change this (GM mode)");
+      throw new IllegalStateException("Only the GM can change this (GM free edit)");
     }
   }
 

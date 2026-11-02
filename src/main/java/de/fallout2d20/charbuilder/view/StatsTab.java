@@ -10,7 +10,7 @@ import org.tbee.javafx.scene.layout.MigPane;
 
 /**
  * Stats tab in two halves of equal width: rule hints, traits (with the origin trait and the origin's
- * options) and S.P.E.C.I.A.L. on the left, skills on the right. Editable during creation and in GM mode;
+ * options) and S.P.E.C.I.A.L. on the left, skills on the right. Editable during creation and in GM free edit;
  * afterwards read-only, except the skill ranks to spend after a level-up. The origin itself is chosen in
  * the header bar.
  */

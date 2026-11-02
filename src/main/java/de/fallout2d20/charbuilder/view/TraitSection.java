@@ -28,7 +28,7 @@ import org.tbee.javafx.scene.layout.MigPane;
 /**
  * Traits of a character as a two-column grid: the origin trait with the origin's options (extra Tag
  * skill, purpose) below it, then the chosen traits. Each trait shows its name and below it a short
- * description with the source. During creation and in GM mode, origins with trait lists (Survivor
+ * description with the source. During creation and in GM free edit, origins with trait lists (Survivor
  * CRB p. 56, Tribal WG p. 15) offer one checkbox per trait, grouped by list, with benefit and penalty
  * below each, and the attribute choosers of Gifted below Gifted; the checkboxes show the choice, so the
  * chosen traits are not listed again. Every change goes to the model and then to {@code onChanged}, which
@@ -43,7 +43,7 @@ final class TraitSection {
   private TraitSection() {}
 
   /**
-   * @param locked whether the character is complete and not in GM mode (read-only)
+   * @param locked whether the character is complete and not in GM free edit (read-only)
    * @param onEdited called after an edit that needs no rebuild (typed purpose)
    * @param onChanged called after an edit that changes other values; rebuilds the view
    */

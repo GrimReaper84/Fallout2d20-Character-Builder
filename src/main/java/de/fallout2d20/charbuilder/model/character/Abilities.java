@@ -272,7 +272,7 @@ public final class Abilities {
    * GM correction of a skill rank by {@code delta} (D2), counted at once; works for imported characters
    * too, whose legacy rank is kept as baseline. The rank cap is checked by the rules.
    *
-   * @throws IllegalStateException outside GM mode
+   * @throws IllegalStateException outside GM free edit
    */
   public void adjustSkillRankAsGm(@NonNull Skill skill, int delta) {
     owner.requireGmMode();

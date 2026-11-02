@@ -75,7 +75,7 @@ public final class SkillRules {
     return skillPointBudget(character) - spent;
   }
 
-  /** Whether one more rank may be bought: points left (not in GM mode, D2) and below the rank cap. */
+  /** Whether one more rank may be bought: points left (not in GM free edit, D2) and below the rank cap. */
   public static boolean canRaise(@NonNull PlayerCharacter character, @NonNull Skill skill) {
     Abilities abilities = character.abilities();
     boolean belowCap = abilities.skillRank(skill) < abilities.skillRankCap();
@@ -86,7 +86,7 @@ public final class SkillRules {
   }
 
   /**
-   * Whether a rank can be taken back: a bought one during creation; for a complete character in GM mode a
+   * Whether a rank can be taken back: a bought one during creation; for a complete character in GM free edit a
    * step that really lowers the shown rank (a Tag! bonus can hide it).
    */
   public static boolean canLower(@NonNull PlayerCharacter character, @NonNull Skill skill) {
@@ -96,7 +96,7 @@ public final class SkillRules {
 
   /**
    * Raises (+1) or lowers (−1) a rank if allowed: bought ranks during creation, a GM correction for a
-   * complete character in GM mode (D2: counted at once).
+   * complete character in GM free edit (D2: counted at once).
    */
   public static void step(@NonNull PlayerCharacter character, @NonNull Skill skill, int delta) {
     boolean allowed = delta > 0 ? canRaise(character, skill) : canLower(character, skill);

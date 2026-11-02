@@ -37,8 +37,8 @@ public final class CreationRules {
   }
 
   /**
-   * Whether the creation rules look at the character: during creation, and in GM mode also afterwards
-   * (D2: content hints such as requirements and open choices; budget hints are left out in GM mode).
+   * Whether the creation rules look at the character: during creation, and in GM free edit also afterwards
+   * (D2: content hints such as requirements and open choices; budget hints are left out in GM free edit).
    */
   public static boolean isChecked(@NonNull PlayerCharacter character) {
     return !character.isCreationComplete() || character.isGmMode();

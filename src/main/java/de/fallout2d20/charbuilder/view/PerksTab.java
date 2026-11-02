@@ -9,7 +9,7 @@ import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Perks tab: the perk grid in every mode. Perks can be changed during creation, in GM mode and while
+ * Perks tab: the perk grid in every mode. Perks can be changed during creation, in GM free edit and while
  * level-up perks are pending; otherwise the grid is read-only.
  */
 final class PerksTab {

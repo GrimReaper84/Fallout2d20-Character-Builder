@@ -141,7 +141,7 @@ class StartingEquipmentSyncTest {
     assertTrue(settler.gear().getCaps() > 45);
   }
 
-  /** After creation only GM mode re-enters the pack; Tags are frozen then, so a Tag change changes nothing. */
+  /** After creation only GM free edit re-enters the pack; Tags are frozen then, so a Tag change changes nothing. */
   @Test
   void afterCreationOnlyInGmMode() {
     PlayerCharacter settler = settler();

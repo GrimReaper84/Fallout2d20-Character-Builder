@@ -29,7 +29,7 @@ class GmModeImportTest {
     assertEquals(0, imported.abilities().skillState(skill).stagedRanks(), "not staged");
   }
 
-  /** An imported perk rank can be removed in GM mode; the imported rank count follows. */
+  /** An imported perk rank can be removed in GM free edit; the imported rank count follows. */
   @Test
   void importedPerkRanksCanBeRemoved() throws Exception {
     PlayerCharacter imported = new LegacyCharacterImporter(Clock.systemUTC())

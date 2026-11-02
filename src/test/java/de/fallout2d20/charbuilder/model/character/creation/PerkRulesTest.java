@@ -282,7 +282,7 @@ class PerkRulesTest {
 
   /**
    * WG p. 108: a rare perk needs access (user decision 2026-10-22: unlocked on its card), then its level requirement
-   * applies as usual; in GM mode the missing access is only a hint; a taken rare perk stays unlocked.
+   * applies as usual; in GM free edit the missing access is only a hint; a taken rare perk stays unlocked.
    */
   @Test
   void rarePerksNeedAccess() {
@@ -297,7 +297,7 @@ class PerkRulesTest {
 
     PlayerCharacter gm = character("survivor", 9, Map.of(), List.of(), List.of());
     gm.setGmMode(true);
-    assertTrue(PerkRules.canAdd(gm, whatRads), "GM mode: requirements are hints only");
+    assertTrue(PerkRules.canAdd(gm, whatRads), "GM free edit: requirements are hints only");
     gm.addPerkRank(CatalogRef.of("what-rads"), null, null);
     assertEquals(List.of("Requirement not met: rare book."), PerkRules.unmetForTakenRank(gm, whatRads));
     gm.setRarePerkUnlocked("what-rads", true);

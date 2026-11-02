@@ -35,7 +35,7 @@ import org.tbee.javafx.scene.layout.MigPane;
 /**
  * The Legendary section of the weapon and armor details (F6d, WG pp. 96–108): a choice of the legendary property
  * among those {@link LegendaryRules} offers ("None" makes the item ordinary), a Roll button following the book
- * tables while there are options (a property kept from GM mode or a disabled book can only be removed outside it) ({@link LegendaryRoll}; for a piece covering several table columns with a choice of the column), and the
+ * tables while there are options (a property kept from GM free edit or a disabled book can only be removed outside it) ({@link LegendaryRoll}; for a piece covering several table columns with a choice of the column), and the
  * chosen property's rule. Shown only when the item can be legendary or already is. Every change goes to the model
  * and then to {@code onChanged}; the dice rolled are shown as a notification.
  */
@@ -112,7 +112,7 @@ final class LegendarySection {
 
   /**
    * The heading, a row with the property choice and the roll controls, and the chosen property's rule. A stored
-   * property outside the options (GM mode left, book disabled, unknown id) stays selectable as it is.
+   * property outside the options (GM free edit switched off, book disabled, unknown id) stays selectable as it is.
    */
   private static void build(@NonNull MigPane pane, @NonNull List<String> options, @Nullable CatalogRef stored,
       @NonNull Function<String, Optional<LegendaryOption>> shown, @NonNull Consumer<@Nullable String> choose,

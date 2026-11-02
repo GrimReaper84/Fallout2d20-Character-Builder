@@ -24,8 +24,8 @@ import org.tbee.javafx.scene.layout.MigPane;
 /**
  * The bar above the tabs: name, origin, level and XP in the first row; below, depending on the mode, the
  * "Create Character" button with the hint counter and the starting caps (creation), or adding XP and the
- * pending level-up points with Apply/Discard (after creation). In GM mode a banner on top and level/XP as
- * free fields. Origin and level are editable during creation (and in GM mode), labels afterwards.
+ * pending level-up points with Apply/Discard (after creation). In GM free edit a banner on top and level/XP as
+ * free fields. Origin and level are editable during creation (and in GM free edit), labels afterwards.
  */
 final class CharacterHeader {
 
@@ -38,7 +38,7 @@ final class CharacterHeader {
     boolean complete = character.isCreationComplete();
     boolean gm = character.isGmMode();
     if (gm) {
-      Label banner = new Label("GM mode: budgets and level-up points do not apply; every change counts at once.");
+      Label banner = new Label("GM free edit: budgets and level-up points do not apply; every change counts at once.");
       banner.setStyle(OverviewParts.HINT_STYLE + " -fx-font-weight: bold;");
       banner.setWrapText(true);
       pane.add(banner, Layouts.span(8));
