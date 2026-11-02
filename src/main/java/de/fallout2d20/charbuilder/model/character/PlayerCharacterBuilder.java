@@ -14,9 +14,9 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Collects the stored parts of a {@link PlayerCharacter} (see {@link PlayerCharacter#builder()}). Every part
- * has the value of a new, empty character in creation: no name and origin, level 1, 0 XP, all books, no
- * allocation (attributes at the base), untrained skills, no traits, perks, gear or starting equipment, full
- * vitals. {@link #build()} checks the parts.
+ * has the value of a new, empty character in creation: no name and origin, level 1, 0 XP, all books, no house
+ * rules, no allocation (attributes at the base), untrained skills, no traits, perks, gear or starting equipment,
+ * full vitals. {@link #build()} checks the parts.
  */
 public final class PlayerCharacterBuilder {
   @NonNull String name = "";
@@ -26,6 +26,7 @@ public final class PlayerCharacterBuilder {
   long xp;
   boolean creationComplete;
   @NonNull Set<Book> enabledBooks = EnumSet.allOf(Book.class);
+  @NonNull Set<HouseRule> houseRules = Set.of();
   @NonNull Map<Attribute, Integer> attributeAllocation = Map.of();
   @NonNull Map<Skill, SkillState> skills = Map.of();
   @NonNull List<TraitSelection> traits = List.of();
@@ -83,6 +84,11 @@ public final class PlayerCharacterBuilder {
   /** The Core Rulebook is always added. */
   public @NonNull PlayerCharacterBuilder enabledBooks(@NonNull Set<Book> enabledBooks) {
     this.enabledBooks = enabledBooks;
+    return this;
+  }
+
+  public @NonNull PlayerCharacterBuilder houseRules(@NonNull Set<HouseRule> houseRules) {
+    this.houseRules = houseRules;
     return this;
   }
 

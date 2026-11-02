@@ -34,6 +34,7 @@
         <MenuItem fx:id="exportSheetItem" text="Export Character Sheet (PDF)…" onAction="#onExportSheet" disable="true">
           <accelerator><KeyCodeCombination code="P" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
         </MenuItem>
+        <MenuItem fx:id="rulesItem" text="Rules…" onAction="#onRules" disable="true"/>
         <SeparatorMenuItem/>
         <CheckMenuItem fx:id="gmModeItem" text="GM mode" onAction="#onGmMode" disable="true"/>
       </Menu>

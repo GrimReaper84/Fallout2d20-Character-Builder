@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.model.character.apparel;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
+import de.fallout2d20.charbuilder.model.character.HouseRule;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.HintArea;
@@ -13,11 +14,13 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Hints about worn apparel, in every mode; soft only, the values are computed anyway (user decision): armor
- * over an outfit (CRB p. 130), two items of one layer on the same location, human apparel on a Mister Handy
- * (only hats, without effect, CRB p. 146) or on a humanoid robot such as the Protectron (house rule: it
- * wears robot plating and armor, user decision 2026-10-16), robot armor on anyone else, armor not made for a
- * super mutant on a Super Mutant or Nightkin (CRB p. 122, WG p. 14; user decision 2026-10-22), single-limb pieces
- * without a fitting limb, and items outside the catalog.
+ * over an outfit (CRB p. 130), two items of one layer on the same location (an outfit that covers the head is the
+ * head's headgear item, CRB p. 122, user decision 2026-10-22; with the house rule
+ * {@link HouseRule#ARMOR_HELMETS_AS_HEADGEAR} an armor helmet is too, and no longer clashes with an outfit), human
+ * apparel on a Mister Handy (only hats, without effect, CRB p. 146) or on a humanoid robot such as the Protectron
+ * (house rule: it wears robot plating and armor, user decision 2026-10-16), robot armor on anyone else, armor not
+ * made for a super mutant on a Super Mutant or Nightkin (CRB p. 122, WG p. 14; user decision 2026-10-22),
+ * single-limb pieces without a fitting limb, and items outside the catalog.
  */
 public final class ApparelRules {
 
@@ -51,8 +54,9 @@ public final class ApparelRules {
 
   /**
    * Whether a piece would clash with what the character wears: a worn piece of the same layer covers one
-   * of its locations, or it is armor while an outfit is worn or the other way round (CRB p. 130). A new
-   * piece that clashes starts carried (user decision 2026-10-16).
+   * of its locations, or it is armor while an outfit is worn or the other way round (CRB p. 130; an armor helmet
+   * not under the house rule {@link HouseRule#ARMOR_HELMETS_AS_HEADGEAR}). A new piece that clashes starts carried
+   * (user decision 2026-10-16).
    */
   public static boolean clashesWithWorn(@NonNull PlayerCharacter character, @NonNull WornApparel item) {
     Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
@@ -60,23 +64,37 @@ public final class ApparelRules {
       return false;
     }
     List<WornApparel> worn = character.gear().getWornApparel();
-    if ((kind.get() == ApparelKind.ARMOR && has(worn, ApparelKind.OUTFIT))
-        || (kind.get() == ApparelKind.OUTFIT && has(worn, ApparelKind.ARMOR))) {
+    List<HitLocation> body = character.hitLocations();
+    boolean helmetsAsHeadgear = character.isOn(HouseRule.ARMOR_HELMETS_AS_HEADGEAR);
+    if ((countsAsArmor(item, body, helmetsAsHeadgear) && has(worn, ApparelKind.OUTFIT))
+        || (kind.get() == ApparelKind.OUTFIT && hasArmor(worn, body, helmetsAsHeadgear))) {
       return true;
     }
-    List<HitLocation> body = character.hitLocations();
-    return worn.stream().anyMatch(other -> sharedLocation(item, other, body).isPresent());
+    return worn.stream().anyMatch(other -> sharedLocation(item, other, body, helmetsAsHeadgear).isPresent());
   }
 
-  /** A location both pieces cover while being of the same layer; empty otherwise or for unknown pieces. */
+  /** Armor that cannot be worn with an outfit: every armor piece, except a helmet under the house rule. */
+  private static boolean countsAsArmor(@NonNull WornApparel item, @NonNull List<HitLocation> body,
+      boolean helmetsAsHeadgear) {
+    return item.values().map(ApparelValues::kind).filter(ApparelKind.ARMOR::equals).isPresent()
+        && !(helmetsAsHeadgear && item.isArmorHelmet(body));
+  }
+
+  private static boolean hasArmor(@NonNull List<WornApparel> worn, @NonNull List<HitLocation> body,
+      boolean helmetsAsHeadgear) {
+    return worn.stream().anyMatch(item -> countsAsArmor(item, body, helmetsAsHeadgear));
+  }
+
+  /** A location both pieces cover while being of the same layer there; empty otherwise or for unknown pieces. */
   private static @NonNull Optional<HitLocation> sharedLocation(@NonNull WornApparel item, @NonNull WornApparel other,
-      @NonNull List<HitLocation> body) {
-    Optional<ApparelKind> kind = item.values().map(ApparelValues::kind);
-    Optional<ApparelKind> otherKind = other.values().map(ApparelValues::kind);
-    if (kind.isEmpty() || otherKind.isEmpty() || layer(kind.get()) != layer(otherKind.get())) {
+      @NonNull List<HitLocation> body, boolean helmetsAsHeadgear) {
+    if (item.values().isEmpty() || other.values().isEmpty()) {
       return Optional.empty();
     }
-    return item.locations(body).stream().filter(other.locations(body)::contains).findFirst();
+    return item.locations(body).stream().filter(other.locations(body)::contains)
+        .filter(location -> layer(item, location, body, helmetsAsHeadgear)
+            == layer(other, location, body, helmetsAsHeadgear))
+        .findFirst();
   }
 
   /** Hints about the worn pieces (carried ones only have to be catalog items). */
@@ -89,7 +107,8 @@ public final class ApparelRules {
     boolean robot = isRobot(character);
     boolean superMutantArmor = character.getOriginData().map(OriginData::superMutantArmor).orElse(false);
     List<HitLocation> body = character.hitLocations();
-    if (has(worn, ApparelKind.OUTFIT) && has(worn, ApparelKind.ARMOR)) {
+    boolean helmetsAsHeadgear = character.isOn(HouseRule.ARMOR_HELMETS_AS_HEADGEAR);
+    if (has(worn, ApparelKind.OUTFIT) && hasArmor(worn, body, helmetsAsHeadgear)) {
       problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, "Armor cannot be worn over an outfit (CRB p. 130)."));
     }
     for (int i = 0; i < worn.size(); i++) {
@@ -113,7 +132,7 @@ public final class ApparelRules {
       }
       for (int j = i + 1; j < worn.size(); j++) {
         WornApparel other = worn.get(j);
-        sharedLocation(item, other, body).ifPresent(location ->
+        sharedLocation(item, other, body, helmetsAsHeadgear).ifPresent(location ->
             problems.add(new CreationProblem(HintArea.ARMOR, TOPIC, item.displayName() + " and " + other.displayName()
                 + " both cover the " + location.displayName() + "; the higher values count.")));
       }
@@ -136,8 +155,17 @@ public final class ApparelRules {
         + "fit a super mutant, such as Raider armor (CRB p. 122, WG p. 14); " + item.displayName() + " is not."));
   }
 
-  /** Items of one layer cannot be worn on top of each other; clothing and outfits share a layer. */
-  private static @NonNull ApparelKind layer(@NonNull ApparelKind kind) {
+  /**
+   * Items of one layer cannot be worn on top of each other at a location: clothing and outfits share a layer, but on
+   * the head an outfit is the headgear item (CRB p. 122), and so is an armor helmet under the house rule.
+   */
+  private static @NonNull ApparelKind layer(@NonNull WornApparel item, @NonNull HitLocation location,
+      @NonNull List<HitLocation> body, boolean helmetsAsHeadgear) {
+    ApparelKind kind = item.values().map(ApparelValues::kind).orElseThrow();
+    if (location == HitLocation.HEAD && (kind == ApparelKind.OUTFIT
+        || (helmetsAsHeadgear && item.isArmorHelmet(body)))) {
+      return ApparelKind.HEADGEAR;
+    }
     return kind == ApparelKind.OUTFIT ? ApparelKind.CLOTHING : kind;
   }
 

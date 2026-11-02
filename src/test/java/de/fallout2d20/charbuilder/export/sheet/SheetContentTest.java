@@ -8,6 +8,7 @@ import de.fallout2d20.charbuilder.catalog.apparel.ApparelCatalog;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelModSlot;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.HouseRule;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
@@ -173,5 +174,14 @@ class SheetContentTest {
     assertEquals(1, lines.size());
     assertTrue(lines.getFirst().startsWith("Underarmor Suit: Forest pattern – Re-roll"), lines.getFirst());
     assertTrue(lines.getFirst().contains("STR or PER test per scene. Shielded Lining: "), lines.getFirst());
+  }
+
+  /** The notes page names the house rules switched on, so the table sees how the sheet was built. */
+  @Test
+  void houseRulesNote() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    assertTrue(SheetContent.of(character).notes().stream().noneMatch(note -> note.startsWith("House rules")));
+    character.setHouseRule(HouseRule.ARMOR_HELMETS_AS_HEADGEAR, true);
+    assertEquals("House rules: Armor helmets count as headgear.", SheetContent.of(character).notes().getFirst());
   }
 }

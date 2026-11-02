@@ -3,6 +3,7 @@ package de.fallout2d20.charbuilder.view;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.advancement.AdvancementRules;
 import de.fallout2d20.charbuilder.model.character.apparel.ApparelRules;
+import de.fallout2d20.charbuilder.model.character.creation.BookRules;
 import de.fallout2d20.charbuilder.model.character.creation.CreationProblem;
 import de.fallout2d20.charbuilder.model.character.creation.CreationRules;
 import java.util.ArrayList;
@@ -109,7 +110,8 @@ final class CharacterView {
 
   /**
    * All hints of the character with their areas: the creation rules during creation and in GM mode (D2:
-   * content hints only), the advancement rules while level-up points are spent, and the apparel rules always.
+   * content hints only), the advancement rules while level-up points are spent, and the apparel and book rules
+   * always (book hints of weapons appear with the gear, the Weapons tab shows none).
    */
   static @NonNull List<CreationProblem> hints(@NonNull PlayerCharacter character) {
     List<CreationProblem> hints = new ArrayList<>();
@@ -119,6 +121,7 @@ final class CharacterView {
       hints.addAll(AdvancementRules.problems(character));
     }
     hints.addAll(ApparelRules.problems(character));
+    hints.addAll(BookRules.problems(character));
     return hints;
   }
 }

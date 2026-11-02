@@ -11,6 +11,7 @@ import de.fallout2d20.charbuilder.model.character.Abilities;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Gear;
+import de.fallout2d20.charbuilder.model.character.HouseRule;
 import de.fallout2d20.charbuilder.model.character.LegacyBaseline;
 import de.fallout2d20.charbuilder.model.character.LegacyImport;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
@@ -85,6 +86,8 @@ final class CharacterMapper {
         character.isCreationComplete()
             ? character.getStartingTagSkills().stream().sorted().map(Skill::id).toList() : null,
         character.getEnabledBooks().stream().map(Book::name).toList(),
+        character.getHouseRules().isEmpty() ? null
+            : character.getHouseRules().stream().map(HouseRule::name).toList(),
         allocationData(character.abilities()),
         skillData(character.abilities()),
         character.getTraits().stream()
@@ -154,6 +157,8 @@ final class CharacterMapper {
           .xp(data.xp())
           .creationComplete(data.creationComplete())
           .enabledBooks(books(data.books()))
+          .houseRules(orEmpty(data.houseRules()).stream().map(CharacterMapper::houseRule).flatMap(Optional::stream)
+              .collect(Collectors.toSet()))
           .attributeAllocation(allocation(data.attributeAllocation()))
           .skills(skills(data.skills()))
           .traits(traits(data.traits()))
@@ -589,6 +594,10 @@ final class CharacterMapper {
   /** A mod slot by its saved name; empty for a name this version does not know (a newer file). */
   private static @NonNull Optional<ModSlot> modSlot(@NonNull String name) {
     return Arrays.stream(ModSlot.values()).filter(slot -> slot.name().equals(name)).findFirst();
+  }
+
+  private static @NonNull Optional<HouseRule> houseRule(@NonNull String name) {
+    return Arrays.stream(HouseRule.values()).filter(rule -> rule.name().equals(name)).findFirst();
   }
 
   private static @NonNull Optional<WeaponKind> weaponKind(@NonNull String name) {

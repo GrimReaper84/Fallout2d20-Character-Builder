@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.view.dialog.AboutDialog;
 import de.fallout2d20.charbuilder.view.dialog.ConfirmDialog;
 import de.fallout2d20.charbuilder.view.dialog.CreateCharacterDialog;
 import de.fallout2d20.charbuilder.view.dialog.ImportReportDialog;
+import de.fallout2d20.charbuilder.view.dialog.RulesDialog;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,8 @@ import javafx.stage.WindowEvent;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Main window: file menu and character overview.
+ * Main window: file and character menus (the character's books and house rules in {@link RulesDialog}) and the
+ * character overview.
  *
  * <p>A character imported from a legacy file has no file path, so its first save always asks for
  * a new file; the legacy file is never overwritten.
@@ -52,6 +54,7 @@ public class MainWindowController {
   @FXML private MenuItem createCharacterItem;
   @FXML private MenuItem exportSheetItem;
   @FXML private CheckMenuItem gmModeItem;
+  @FXML private MenuItem rulesItem;
 
   private @Nullable Stage stage;
   private @Nullable PlayerCharacter character;
@@ -213,6 +216,14 @@ public class MainWindowController {
     showOverview();
   }
 
+  /** Opens the character's rulebooks and house rules; OK with changes marks it unsaved and rebuilds the overview. */
+  @FXML
+  private void onRules() {
+    if (character != null && RulesDialog.show(stage, character)) {
+      onChanged();
+    }
+  }
+
   /**
    * Ends character creation (one-way, user decision) after the player confirms; open creation hints are
    * listed in the confirmation.
@@ -304,6 +315,7 @@ public class MainWindowController {
     exportSheetItem.setDisable(false);
     gmModeItem.setDisable(false);
     gmModeItem.setSelected(character.isGmMode());
+    rulesItem.setDisable(false);
     if (view != null) {
       view.refresh();
     }

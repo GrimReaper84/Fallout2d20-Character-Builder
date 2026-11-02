@@ -25,6 +25,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponQuality;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
+import de.fallout2d20.charbuilder.model.character.HouseRule;
 import de.fallout2d20.charbuilder.model.character.OriginChoices;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Progression;
@@ -583,6 +584,29 @@ class CharacterStoreTest {
     JSON.writeValue(file.toFile(), node);
     assertEquals(Set.of(WeaponKind.BLADED),
         store.load(file).character().gear().getWeapons().get(1).custom().kinds());
+  }
+
+  /** House rules and switched-off books are saved; unknown rule names are skipped, a missing field is none. */
+  @Test
+  void houseRulesRoundTrip() throws Exception {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    Path file = dir.resolve("rules.json");
+    store.save(character, file);
+    assertFalse(JSON.readTree(file.toFile()).has("houseRules"));
+    assertEquals(Set.of(), store.load(file).character().getHouseRules());
+
+    character.setHouseRule(HouseRule.ARMOR_HELMETS_AS_HEADGEAR, true);
+    character.setBookEnabled(Book.WOA, false);
+    store.save(character, file);
+    assertEquals("ARMOR_HELMETS_AS_HEADGEAR", JSON.readTree(file.toFile()).get("houseRules").get(0).asText());
+    PlayerCharacter loaded = store.load(file).character();
+    assertEquals(Set.of(HouseRule.ARMOR_HELMETS_AS_HEADGEAR), loaded.getHouseRules());
+    assertEquals(Set.of(Book.CRB, Book.WG), loaded.getEnabledBooks());
+
+    ObjectNode node = (ObjectNode) JSON.readTree(file.toFile());
+    node.putArray("houseRules").add("FLYING_CARS").add("ARMOR_HELMETS_AS_HEADGEAR");
+    JSON.writeValue(file.toFile(), node);
+    assertEquals(Set.of(HouseRule.ARMOR_HELMETS_AS_HEADGEAR), store.load(file).character().getHouseRules());
   }
 
   /** Catalog item with chosen limb and note, and a custom item (C2). */

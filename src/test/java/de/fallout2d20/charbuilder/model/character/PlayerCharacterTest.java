@@ -11,6 +11,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class PlayerCharacterTest {
@@ -487,5 +488,24 @@ class PlayerCharacterTest {
       LegacyBaseline baseline) {
     return PlayerCharacter.builder().name("Test").origin(CatalogRef.of("survivor")).creationComplete(baseline != null)
         .attributeAllocation(allocation).skills(skills).legacyBaseline(baseline).build();
+  }
+
+  /** The basic rules come from the Core Rulebook, so it cannot be switched off; supplements can. */
+  @Test
+  void coreRulebookStaysOn() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    character.setBookEnabled(Book.CRB, false);
+    character.setBookEnabled(Book.WG, false);
+    assertEquals(Set.of(Book.CRB, Book.WOA), character.getEnabledBooks());
+  }
+
+  @Test
+  void houseRuleOnAndOff() {
+    PlayerCharacter character = PlayerCharacter.createNew();
+    assertFalse(character.isOn(HouseRule.ARMOR_HELMETS_AS_HEADGEAR));
+    character.setHouseRule(HouseRule.ARMOR_HELMETS_AS_HEADGEAR, true);
+    assertEquals(Set.of(HouseRule.ARMOR_HELMETS_AS_HEADGEAR), character.getHouseRules());
+    character.setHouseRule(HouseRule.ARMOR_HELMETS_AS_HEADGEAR, false);
+    assertEquals(Set.of(), character.getHouseRules());
   }
 }

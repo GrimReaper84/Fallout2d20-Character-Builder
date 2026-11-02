@@ -19,7 +19,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A player character (aggregate root): identity, origin, traits, perks, books and modes, plus its parts
+ * A player character (aggregate root): identity, origin, traits, perks, books, house rules and modes, plus its parts
  * {@link #abilities()} (S.P.E.C.I.A.L., skills), {@link #advancement()} (level, XP, level-up),
  * {@link #gear()} (what it carries), {@link #startingGear()} (starting equipment) and {@link #session()}
  * (play-session values). Edits that touch several parts (origin, traits, perks) live here.
@@ -38,6 +38,7 @@ public class PlayerCharacter {
   private @NonNull OriginChoices originChoices;
   private boolean creationComplete;
   private final @NonNull Set<Book> enabledBooks;
+  private final @NonNull Set<HouseRule> houseRules;
   private final @NonNull List<TraitSelection> traits;
   private final @NonNull List<PerkSelection> perks;
   /** Rare perks the character has access to (WG p. 108: through a rare book or the GM). */
@@ -64,6 +65,8 @@ public class PlayerCharacter {
     this.creationComplete = parts.creationComplete;
     this.enabledBooks = EnumSet.of(Book.CRB);
     this.enabledBooks.addAll(parts.enabledBooks);
+    this.houseRules = EnumSet.noneOf(HouseRule.class);
+    this.houseRules.addAll(parts.houseRules);
     this.traits = new ArrayList<>(parts.traits);
     this.perks = new ArrayList<>(parts.perks);
     this.unlockedRarePerks = new TreeSet<>(parts.unlockedRarePerks);
@@ -413,6 +416,38 @@ public class PlayerCharacter {
    */
   public @NonNull Set<Book> getEnabledBooks() {
     return Collections.unmodifiableSet(enabledBooks);
+  }
+
+  /**
+   * Switches a supplement on or off (Character ▸ Rules); the Core Rulebook stays on. Nothing the character has is
+   * removed: things of a switched-off book only get hints (user decision 2026-11-02).
+   */
+  public void setBookEnabled(@NonNull Book book, boolean on) {
+    if (book == Book.CRB) {
+      return;
+    }
+    if (on) {
+      enabledBooks.add(book);
+    } else {
+      enabledBooks.remove(book);
+    }
+  }
+
+  /** The house rules the character is built with. */
+  public @NonNull Set<HouseRule> getHouseRules() {
+    return Collections.unmodifiableSet(houseRules);
+  }
+
+  public boolean isOn(@NonNull HouseRule rule) {
+    return houseRules.contains(rule);
+  }
+
+  public void setHouseRule(@NonNull HouseRule rule, boolean on) {
+    if (on) {
+      houseRules.add(rule);
+    } else {
+      houseRules.remove(rule);
+    }
   }
 
   public @NonNull List<TraitSelection> getTraits() {

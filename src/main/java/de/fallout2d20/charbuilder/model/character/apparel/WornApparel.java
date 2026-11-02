@@ -98,6 +98,17 @@ public record WornApparel(
         || data().map(ApparelData::countsAsArmor).orElse(false);
   }
 
+  /**
+   * Whether the piece is the helmet of an armor set: armor covering only the head (catalog or custom), not full body
+   * armor that includes it (house rule {@code ARMOR_HELMETS_AS_HEADGEAR}).
+   *
+   * @param body the hit locations of the wearer
+   */
+  public boolean isArmorHelmet(@NonNull List<HitLocation> body) {
+    return values().map(ApparelValues::kind).filter(ApparelKind.ARMOR::equals).isPresent()
+        && locations(body).equals(Set.of(HitLocation.HEAD));
+  }
+
   public @NonNull String displayName() {
     if (custom != null) {
       return custom.name();

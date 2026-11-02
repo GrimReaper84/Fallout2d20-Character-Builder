@@ -13,6 +13,7 @@ import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
 import de.fallout2d20.charbuilder.model.character.Attribute;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.ExperienceTable;
+import de.fallout2d20.charbuilder.model.character.HouseRule;
 import de.fallout2d20.charbuilder.model.character.PerkSelection;
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.Skill;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -49,8 +51,9 @@ import org.jspecify.annotations.Nullable;
  *
  * @param luckPointsMax maximum Luck points, printed as a small caption next to the empty Luck box
  * @param weapons all weapons, also those that do not fit on page 1 (the renderer moves them on)
- * @param notes free lines for the notes page: origin choices, Mister Handy arms, trinket, the typed notes of the
- *     character, its weapons, apparel and items, and the rules of legendary properties, of the apparel and its mods
+ * @param notes free lines for the notes page: the house rules switched on, origin choices, Mister Handy arms,
+ *     trinket, the typed notes of the character, its weapons, apparel and items, and the rules of legendary
+ *     properties, of the apparel and its mods
  */
 public record SheetContent(
     @NonNull String name,
@@ -257,6 +260,10 @@ public record SheetContent(
 
   private static @NonNull List<String> notes(@NonNull PlayerCharacter character) {
     List<String> notes = new ArrayList<>();
+    if (!character.getHouseRules().isEmpty()) {
+      notes.add("House rules: " + character.getHouseRules().stream().map(HouseRule::displayName)
+          .collect(Collectors.joining(", ")) + ".");
+    }
     String purpose = character.getOriginChoices().purpose();
     if (purpose != null && !purpose.isBlank()) {
       notes.add("Purpose: " + purpose.strip());
