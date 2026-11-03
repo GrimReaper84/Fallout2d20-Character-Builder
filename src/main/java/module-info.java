@@ -17,6 +17,7 @@ module de.fallout2d20.charbuilder {
 
   opens de.fallout2d20.charbuilder.view to javafx.fxml;
   opens de.fallout2d20.charbuilder.persistence to com.fasterxml.jackson.databind;
+  opens de.fallout2d20.charbuilder.persistence.party to com.fasterxml.jackson.databind;
   opens de.fallout2d20.charbuilder.catalog to com.fasterxml.jackson.databind;
   opens de.fallout2d20.charbuilder.catalog.origin to com.fasterxml.jackson.databind;
   opens de.fallout2d20.charbuilder.catalog.trait to com.fasterxml.jackson.databind;

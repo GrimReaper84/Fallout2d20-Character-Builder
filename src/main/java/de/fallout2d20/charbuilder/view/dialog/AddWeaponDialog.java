@@ -1,19 +1,17 @@
 package de.fallout2d20.charbuilder.view.dialog;
 
 import de.fallout2d20.charbuilder.catalog.weapon.AmmunitionData;
-import de.fallout2d20.charbuilder.catalog.weapon.DamageType;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponCatalog;
 import de.fallout2d20.charbuilder.catalog.weapon.WeaponData;
-import de.fallout2d20.charbuilder.catalog.weapon.WeaponRange;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.Skill;
-import de.fallout2d20.charbuilder.model.character.derived.Weight;
 import de.fallout2d20.charbuilder.model.character.weapon.CarriedWeapon;
 import de.fallout2d20.charbuilder.model.character.weapon.CustomWeapon;
-import de.fallout2d20.charbuilder.model.character.weapon.WeaponAttack;
 import de.fallout2d20.charbuilder.view.DisplayConverter;
 import de.fallout2d20.charbuilder.view.Layouts;
 import de.fallout2d20.charbuilder.view.WholeNumber;
+import de.fallout2d20.charbuilder.view.catalog.CatalogColumns;
+import de.fallout2d20.charbuilder.view.catalog.CatalogPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +19,6 @@ import java.util.OptionalInt;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -63,15 +60,7 @@ public final class AddWeaponDialog {
   public static @NonNull OptionalInt show(@Nullable Window owner, @NonNull List<WeaponData> weapons,
       @NonNull Function<WeaponData, String> categoryOf, @NonNull List<String> categories,
       @NonNull ToIntFunction<WeaponPick> onAdd) {
-    CatalogPage<WeaponData> page = new CatalogPage<>(weapons, WeaponData::name, categoryOf, categories,
-        AddWeaponDialog::details);
-    page.addColumn("Skill", weapon -> weapon.skill().displayName());
-    page.addNumberColumn("Damage", WeaponData::damage,
-        weapon -> weapon.specialDamage() ? WeaponAttack.SPECIAL_DAMAGE : weapon.damage() + " CD");
-    page.addColumn("Range", AddWeaponDialog::rangeText);
-    page.addNumberColumn("Weight", weapon -> Weight.pounds(weapon.weight()),
-        weapon -> weapon.weight() == null ? "–" : weapon.weight());
-    page.addColumn("Source", weapon -> weapon.sources().getFirst().toString());
+    CatalogPage<WeaponData> page = CatalogColumns.weapons(weapons, categoryOf, categories);
     Tab catalog = new Tab("Catalog", page.node());
     CustomWeaponForm form = new CustomWeaponForm();
     Tab custom = new Tab("Custom weapon", form.node());
@@ -190,31 +179,5 @@ public final class AddWeaponDialog {
     }
     String name = WeaponCatalog.ammunitionById(ammunitionId).map(AmmunitionData::name).orElse(ammunitionId);
     return text + ", " + pick.rounds() + " rounds of " + name;
-  }
-
-  /** The effective range like the Weapons tree: the table range, else the Thrown range, e.g. "Medium (thrown)". */
-  private static @NonNull String rangeText(@NonNull WeaponData weapon) {
-    WeaponRange range = WeaponAttack.effectiveRange(weapon);
-    if (range == null) {
-      return "–";
-    }
-    return range.displayName() + (weapon.range() == null ? " (thrown)" : "");
-  }
-
-  /** The row tooltip: the values the table has no column for. */
-  private static @NonNull String details(@NonNull WeaponData weapon) {
-    List<String> lines = new ArrayList<>();
-    if (!weapon.damageEffects().isEmpty()) {
-      lines.add("Effects: " + String.join(", ", weapon.damageEffects()));
-    }
-    lines.add("Damage type: " + weapon.damageTypes().stream().map(DamageType::displayName)
-        .collect(Collectors.joining("/")));
-    if (weapon.fireRate() != null) {
-      lines.add("Fire rate: " + weapon.fireRate());
-    }
-    if (!weapon.qualities().isEmpty()) {
-      lines.add("Qualities: " + String.join(", ", weapon.qualities()));
-    }
-    return String.join("\n", lines);
   }
 }

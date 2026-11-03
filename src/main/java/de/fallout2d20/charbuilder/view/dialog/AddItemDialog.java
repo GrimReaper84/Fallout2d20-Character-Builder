@@ -7,6 +7,7 @@ import de.fallout2d20.charbuilder.model.character.derived.Weight;
 import de.fallout2d20.charbuilder.model.character.item.CarriedItem;
 import de.fallout2d20.charbuilder.model.character.item.CustomItem;
 import de.fallout2d20.charbuilder.view.Layouts;
+import de.fallout2d20.charbuilder.view.catalog.CatalogPage;
 import de.fallout2d20.charbuilder.view.WholeNumber;
 import java.util.ArrayList;
 import java.util.List;

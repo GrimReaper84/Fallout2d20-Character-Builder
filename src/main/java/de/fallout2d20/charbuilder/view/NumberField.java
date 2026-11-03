@@ -10,13 +10,13 @@ import org.jspecify.annotations.NonNull;
  * overview, and the old field must not commit again when it loses the focus on removal. Anything but a
  * whole number of at least the minimum resets it.
  */
-final class NumberField {
+public final class NumberField {
 
   private static final double WIDTH = 60;
 
   private NumberField() {}
 
-  static @NonNull TextField of(int value, int minimum, @NonNull IntConsumer commit) {
+  public static @NonNull TextField of(int value, int minimum, @NonNull IntConsumer commit) {
     TextField field = new TextField(Integer.toString(value));
     field.setPrefWidth(WIDTH);
     Runnable take = () -> {

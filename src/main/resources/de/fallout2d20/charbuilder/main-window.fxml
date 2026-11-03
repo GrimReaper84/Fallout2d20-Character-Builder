@@ -41,6 +41,16 @@
         <SeparatorMenuItem/>
         <CheckMenuItem fx:id="gmModeItem" text="GM free edit" onAction="#onGmMode" disable="true"/>
       </Menu>
+      <Menu text="GM">
+        <MenuItem text="Compendium" onAction="#onCompendium">
+          <accelerator><KeyCodeCombination code="G" control="DOWN" shift="UP" alt="UP" meta="UP" shortcut="UP"/></accelerator>
+        </MenuItem>
+        <SeparatorMenuItem/>
+        <MenuItem text="New Party" onAction="#onNewParty"/>
+        <MenuItem text="Open Party…" onAction="#onOpenParty"/>
+        <MenuItem text="Save Party" onAction="#onSaveParty"/>
+        <MenuItem text="Save Party As…" onAction="#onSavePartyAs"/>
+      </Menu>
       <Menu text="Help">
         <MenuItem text="About" onAction="#onAbout"/>
       </Menu>

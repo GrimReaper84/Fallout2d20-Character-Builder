@@ -95,6 +95,15 @@ public record CarryLoad(int carried, int carryWeight, int penalty, boolean immob
     return new CarryLoad(carried, carryWeight, penalty, carried >= 2 * carryWeight);
   }
 
+  /**
+   * The Initiative with this load (CRB p. 87): lowered by the penalty, 0 when the character cannot move.
+   *
+   * @param base the unencumbered Initiative ({@link DerivedStats#initiative()})
+   */
+  public int initiative(int base) {
+    return immobile ? 0 : Math.max(0, base - penalty);
+  }
+
   public boolean isOverEncumbered() {
     return penalty > 0;
   }

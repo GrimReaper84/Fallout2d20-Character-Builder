@@ -1,4 +1,4 @@
-package de.fallout2d20.charbuilder.view.dialog;
+package de.fallout2d20.charbuilder.view.catalog;
 
 import de.fallout2d20.charbuilder.view.Layouts;
 import java.util.ArrayList;
@@ -25,26 +25,30 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The catalog tab of an add dialog: a category combo box with the groups of the tab's tree ("All" first,
- * only groups that hold entries, in tree order), a search field for the name and a table sorted by name
- * (case-insensitive) that re-sorts on a click on a column header. Each row has the entry's long values as
- * tooltip; a double click on a row or Enter runs {@link #setOnActivate}. The dialog defines the columns.
+ * A catalog list, used by the add dialogs and the GM compendium (H2): a category combo box with the given groups
+ * ("All" first, only groups that hold entries, in the given order), a search field for the name and a table sorted
+ * by name (case-insensitive) that re-sorts on a click on a column header. Each row has the entry's long values as
+ * tooltip; a double click on a row or Enter runs {@link #setOnActivate}. The caller defines the columns.
  *
  * @param <T> the catalog entry type
  */
-final class CatalogPage<T> {
+public final class CatalogPage<T> {
 
-  static final @NonNull String ALL = "All";
+  public static final @NonNull String ALL = "All";
 
   private static final double TABLE_WIDTH = 720;
   private static final double TABLE_HEIGHT = 380;
+  private static final double USE_COMPUTED = Region.USE_COMPUTED_SIZE;
 
   private final @NonNull TableView<T> table;
+  private final @NonNull ComboBox<String> category;
+  private final @NonNull TextField search = new TextField();
   private final @NonNull VBox node;
   private @NonNull Runnable onActivate = () -> { };
 
@@ -55,8 +59,8 @@ final class CatalogPage<T> {
    * @param categories the tree groups in tree order
    * @param tooltip the row tooltip of an entry; empty for none
    */
-  CatalogPage(@NonNull List<T> entries, @NonNull Function<T, String> name, @NonNull Function<T, String> categoryOf,
-      @NonNull List<String> categories, @NonNull Function<T, String> tooltip) {
+  public CatalogPage(@NonNull List<T> entries, @NonNull Function<T, String> name,
+      @NonNull Function<T, String> categoryOf, @NonNull List<String> categories, @NonNull Function<T, String> tooltip) {
     List<T> alphabetical = new ArrayList<>(entries);
     alphabetical.sort(Comparator.comparing(name, String.CASE_INSENSITIVE_ORDER));
     FilteredList<T> filtered = new FilteredList<>(FXCollections.observableArrayList(alphabetical));
@@ -78,10 +82,9 @@ final class CatalogPage<T> {
       }
     });
 
-    ComboBox<String> category = new ComboBox<>(FXCollections.observableArrayList(present(entries, categoryOf,
+    category = new ComboBox<>(FXCollections.observableArrayList(present(entries, categoryOf,
         categories)));
     category.setValue(ALL);
-    TextField search = new TextField();
     search.setPromptText("Search");
     HBox.setHgrow(search, Priority.ALWAYS);
     Runnable filter = () -> {
@@ -99,14 +102,15 @@ final class CatalogPage<T> {
   }
 
   /** Adds a column with the entry's text, sorted alphabetically. */
-  void addColumn(@NonNull String header, @NonNull Function<T, String> text) {
+  public void addColumn(@NonNull String header, @NonNull Function<T, String> text) {
     TableColumn<T, String> column = textColumn(header, text);
     column.setComparator(String.CASE_INSENSITIVE_ORDER);
     table.getColumns().add(column);
   }
 
   /** Adds a column showing {@code text} but sorted by {@code number} (damage, weight, resistances). */
-  void addNumberColumn(@NonNull String header, @NonNull ToIntFunction<T> number, @NonNull Function<T, String> text) {
+  public void addNumberColumn(@NonNull String header, @NonNull ToIntFunction<T> number,
+      @NonNull Function<T, String> text) {
     TableColumn<T, T> column = new TableColumn<>(header);
     column.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue()));
     column.setComparator(Comparator.comparingInt(number));
@@ -121,20 +125,35 @@ final class CatalogPage<T> {
   }
 
   /** Runs when an entry is double-clicked or Enter is pressed on it (the dialog adds it). */
-  void setOnActivate(@NonNull Runnable action) {
+  public void setOnActivate(@NonNull Runnable action) {
     onActivate = action;
   }
 
-  @NonNull VBox node() {
+  public @NonNull VBox node() {
     return node;
   }
 
-  @NonNull ReadOnlyObjectProperty<T> selectedItemProperty() {
+  public @NonNull ReadOnlyObjectProperty<T> selectedItemProperty() {
     return table.getSelectionModel().selectedItemProperty();
   }
 
-  @Nullable T selected() {
+  public @Nullable T selected() {
     return table.getSelectionModel().getSelectedItem();
+  }
+
+  /** Lets the table fill the space it is given instead of its dialog size (GM compendium). */
+  public void fillAvailableSpace() {
+    table.setPrefSize(USE_COMPUTED, USE_COMPUTED);
+  }
+
+  /** Selects the entry and scrolls to it; category and search are reset first if they hide it. */
+  public void select(@NonNull T entry) {
+    if (!table.getItems().contains(entry)) {
+      category.setValue(ALL);
+      search.clear();
+    }
+    table.getSelectionModel().select(entry);
+    table.scrollTo(entry);
   }
 
   private static <T> @NonNull TableColumn<T, String> textColumn(@NonNull String header,

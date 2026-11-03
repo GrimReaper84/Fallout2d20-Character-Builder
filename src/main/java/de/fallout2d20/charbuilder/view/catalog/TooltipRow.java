@@ -1,4 +1,4 @@
-package de.fallout2d20.charbuilder.view.dialog;
+package de.fallout2d20.charbuilder.view.catalog;
 
 import java.util.function.Function;
 import javafx.scene.control.TableRow;

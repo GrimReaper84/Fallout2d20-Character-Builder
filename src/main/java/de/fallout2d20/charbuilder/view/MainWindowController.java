@@ -27,8 +27,6 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -43,10 +41,11 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Main window: file and character menus (the character's books and house rules in {@link RulesDialog}) and one
- * tab per open character (H1). New and Open always open a new tab; a file that is already open selects its tab.
- * Save, export, rules and GM free edit act on the selected tab; closing a tab or the window asks for every
- * character with unsaved changes.
+ * Main window: file, character and GM menus (the character's books and house rules in {@link RulesDialog}) and one
+ * tab per open character (H1), plus the GM compendium tab with the party ({@link CompendiumTab}, H2). New and Open
+ * always open a new tab; a file that is already open selects its tab. Export, rules and GM free edit act on the
+ * selected character; Save, Save As and Close also on the compendium tab (its party). Closing a tab or the window
+ * asks for every character and the party with unsaved changes.
  */
 public class MainWindowController {
 
@@ -54,7 +53,9 @@ public class MainWindowController {
 
   private final CharacterStore store = new CharacterStore();
   private final TabPane documents = new TabPane();
-  private final Label emptyState = new Label("No character loaded. Use File → New or File → Open.");
+  private final Label emptyState = new Label("No character loaded. Use File → New or File → Open, or GM → Compendium.");
+  private final CompendiumTab compendium = new CompendiumTab(documents, () -> this.stage, this::openCharacters,
+      this::updateWindow, this::showError);
 
   @FXML private MenuBar menuBar;
   @FXML private StackPane contentPane;
@@ -75,7 +76,12 @@ public class MainWindowController {
     emptyState.setStyle("-fx-padding: 24;");
     documents.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
     documents.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> updateWindow());
-    documents.getTabs().addListener((ListChangeListener<Tab>) _ -> {
+    documents.getTabs().addListener((ListChangeListener<Tab>) change -> {
+      while (change.next()) {
+        if (change.getRemoved().stream().anyMatch(compendium::isTab)) {
+          compendium.closed();
+        }
+      }
       showDocumentsOrEmptyState();
       updateWindow();
     });
@@ -141,18 +147,30 @@ public class MainWindowController {
 
   @FXML
   private void onSave() {
-    current().ifPresent(character -> save(character, false));
+    if (compendiumSelected()) {
+      onSaveParty();
+    } else {
+      current().ifPresent(character -> save(character, false));
+    }
   }
 
   @FXML
   private void onSaveAs() {
-    current().ifPresent(character -> save(character, true));
+    if (compendiumSelected()) {
+      onSavePartyAs();
+    } else {
+      current().ifPresent(character -> save(character, true));
+    }
   }
 
-  /** Closes the selected character's tab after asking about unsaved changes. */
+  /** Closes the selected tab – a character or the GM compendium – after asking about unsaved changes. */
   @FXML
   private void onClose() {
-    current().filter(this::confirmDiscard).ifPresent(character -> documents.getTabs().remove(character.tab()));
+    if (compendiumSelected()) {
+      compendium.close();
+    } else {
+      current().filter(this::confirmDiscard).ifPresent(character -> documents.getTabs().remove(character.tab()));
+    }
   }
 
   /**
@@ -190,6 +208,34 @@ public class MainWindowController {
     if (confirmDiscardAll() && stage != null) {
       stage.close();
     }
+  }
+
+  /** Opens the GM compendium tab (H2), or selects it. */
+  @FXML
+  private void onCompendium() {
+    compendium.show();
+  }
+
+  @FXML
+  private void onNewParty() {
+    compendium.newParty();
+  }
+
+  @FXML
+  private void onOpenParty() {
+    compendium.openParty();
+  }
+
+  @FXML
+  private void onSaveParty() {
+    compendium.showParty();
+    compendium.save(false);
+  }
+
+  @FXML
+  private void onSavePartyAs() {
+    compendium.showParty();
+    compendium.save(true);
   }
 
   @FXML
@@ -288,9 +334,12 @@ public class MainWindowController {
     return true;
   }
 
-  /** Asks for every character with unsaved changes, in tab order; false as soon as one is cancelled. */
+  /** Asks for every character and the party with unsaved changes, in tab order; false as soon as one is cancelled. */
   private boolean confirmDiscardAll() {
     for (Tab tab : new ArrayList<>(documents.getTabs())) {
+      if (compendium.isTab(tab) && !compendium.confirmDiscard()) {
+        return false;
+      }
       Optional<OpenCharacter> character = OpenCharacter.of(tab).filter(open -> open.document().isDirty());
       if (character.isPresent()) {
         documents.getSelectionModel().select(tab);
@@ -307,17 +356,11 @@ public class MainWindowController {
     if (!character.document().isDirty()) {
       return true;
     }
-    ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.YES);
-    ButtonType discardButton = new ButtonType("Discard", ButtonBar.ButtonData.NO);
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-        "\"" + character.document().displayName() + "\" has unsaved changes.", saveButton, discardButton, ButtonType.CANCEL);
-    alert.initOwner(stage);
-    alert.setHeaderText("Save changes?");
-    Optional<ButtonType> answer = alert.showAndWait();
-    if (answer.isEmpty() || answer.get() == ButtonType.CANCEL) {
-      return false;
-    }
-    return answer.get() == discardButton || save(character, false);
+    return switch (SaveQuestion.ask(stage, character.document().displayName())) {
+      case SAVE -> save(character, false);
+      case DISCARD -> true;
+      case CANCEL -> false;
+    };
   }
 
   /** Shows the character in a new tab and selects it. */
@@ -344,6 +387,17 @@ public class MainWindowController {
     if (documents.getTabs().contains(tab)) {
       OpenCharacter.of(tab).ifPresent(action);
     }
+  }
+
+  /** Whether the GM compendium tab is selected. */
+  private boolean compendiumSelected() {
+    return compendium.isTab(documents.getSelectionModel().getSelectedItem());
+  }
+
+  /** The characters of the open tabs, in tab order. */
+  private @NonNull List<PlayerCharacter> openCharacters() {
+    return documents.getTabs().stream().map(OpenCharacter::of).flatMap(Optional::stream)
+        .map(open -> open.document().character()).toList();
   }
 
   /** The character of the selected tab. */
@@ -388,13 +442,18 @@ public class MainWindowController {
   private void updateWindow() {
     Optional<OpenCharacter> selected = current();
     Optional<PlayerCharacter> character = selected.map(open -> open.document().character());
-    for (MenuItem item : List.of(saveItem, saveAsItem, closeItem, exportSheetItem, gmModeItem, rulesItem)) {
+    boolean gm = compendiumSelected();
+    for (MenuItem item : List.of(saveItem, saveAsItem, closeItem)) {
+      item.setDisable(selected.isEmpty() && !gm);
+    }
+    for (MenuItem item : List.of(exportSheetItem, gmModeItem, rulesItem)) {
       item.setDisable(selected.isEmpty());
     }
     createCharacterItem.setDisable(character.map(PlayerCharacter::isCreationComplete).orElse(true));
     gmModeItem.setSelected(character.map(PlayerCharacter::isGmMode).orElse(false));
     if (stage != null) {
-      stage.setTitle(selected.map(open -> APP_TITLE + " – " + open.document().title()).orElse(APP_TITLE));
+      String title = gm ? compendium.title() : selected.map(open -> open.document().title()).orElse(null);
+      stage.setTitle(title == null ? APP_TITLE : APP_TITLE + " – " + title);
     }
   }
 

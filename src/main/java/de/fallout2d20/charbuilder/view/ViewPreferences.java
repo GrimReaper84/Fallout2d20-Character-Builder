@@ -9,7 +9,7 @@ import org.jspecify.annotations.NonNull;
  * the user's Java preferences, never in the character file. A failing preferences backend only loses the
  * state: reads fall back to the defaults, writes are dropped.
  */
-final class ViewPreferences {
+public final class ViewPreferences {
 
   private final @NonNull Preferences node;
 
@@ -18,11 +18,11 @@ final class ViewPreferences {
   }
 
   /** The preferences of the current user; looked up on each call, so merely loading the class writes nothing. */
-  static @NonNull ViewPreferences user() {
+  public static @NonNull ViewPreferences user() {
     return new ViewPreferences(Preferences.userNodeForPackage(ViewPreferences.class));
   }
 
-  boolean getBoolean(@NonNull String key, boolean defaultValue) {
+  public boolean getBoolean(@NonNull String key, boolean defaultValue) {
     try {
       return node.getBoolean(key, defaultValue);
     } catch (IllegalStateException | SecurityException _) {
@@ -30,9 +30,26 @@ final class ViewPreferences {
     }
   }
 
-  void putBoolean(@NonNull String key, boolean value) {
+  public void putBoolean(@NonNull String key, boolean value) {
     try {
       node.putBoolean(key, value);
+      node.flush();
+    } catch (BackingStoreException | IllegalStateException | SecurityException _) {
+      // UI state only; losing it is harmless.
+    }
+  }
+
+  public @NonNull String getString(@NonNull String key, @NonNull String defaultValue) {
+    try {
+      return node.get(key, defaultValue);
+    } catch (IllegalStateException | SecurityException _) {
+      return defaultValue;
+    }
+  }
+
+  public void putString(@NonNull String key, @NonNull String value) {
+    try {
+      node.put(key, value);
       node.flush();
     } catch (BackingStoreException | IllegalStateException | SecurityException _) {
       // UI state only; losing it is harmless.

@@ -163,4 +163,12 @@ class CarryLoadTest {
     without.gear().addItem(CarriedItem.of(CatalogRef.of("bowling-ball")));
     assertEquals(8, CarryLoad.of(without).carried());
   }
+
+  @Test
+  void initiativeDropsByThePenaltyAndIsZeroWhenImmobile() {
+    assertEquals(12, CarryLoad.of(200, 200).initiative(12));
+    assertEquals(10, CarryLoad.of(260, 200).initiative(12));
+    assertEquals(0, CarryLoad.of(300, 100).initiative(12));
+    assertEquals(0, CarryLoad.of(190, 100).initiative(1), "never below 0");
+  }
 }

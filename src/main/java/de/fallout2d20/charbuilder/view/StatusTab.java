@@ -1,6 +1,7 @@
 package de.fallout2d20.charbuilder.view;
 
 import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
+import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
 import javafx.scene.Node;
@@ -42,7 +43,7 @@ final class StatusTab {
     DerivedStats derived = DerivedStats.of(character);
     MigPane pane = Layouts.table(2);
     row(pane, new Label("Max HP"), Integer.toString(derived.maxHp()));
-    row(pane, new Label("Initiative"), Integer.toString(derived.initiative()));
+    initiative(pane, derived.initiative(), CarryLoad.of(character));
     row(pane, new Label("Defense"), Integer.toString(derived.defense()));
     row(pane, new Label("Carry weight"), derived.carryWeight() + " lbs.");
     row(pane, new Label("Melee damage"), derived.meleeDamageText());
@@ -52,6 +53,20 @@ final class StatusTab {
     resistance(pane, "Radiation DR", derived.radiation(), RESISTANCE_TOOLTIP);
     resistance(pane, "Poison DR", derived.poison(), RESISTANCE_TOOLTIP);
     return pane;
+  }
+
+  /** The Initiative with the load; when the load lowers it, the reason as tooltip (CRB p. 87). */
+  private static void initiative(@NonNull MigPane pane, int base, @NonNull CarryLoad load) {
+    int initiative = load.initiative(base);
+    Label value = new Label(Integer.toString(initiative));
+    if (initiative < base) {
+      String reason = load.immobile() ? "0: carrying twice the carry weight or more"
+          : "−" + (base - initiative) + " for carrying too much";
+      value.setTooltip(new Tooltip(base + " unencumbered; " + reason + " (CRB p. 87)"));
+      value.setStyle(OverviewParts.HINT_STYLE);
+    }
+    pane.add(new Label("Initiative"));
+    pane.add(value);
   }
 
   private static void resistance(@NonNull MigPane pane, @NonNull String text,

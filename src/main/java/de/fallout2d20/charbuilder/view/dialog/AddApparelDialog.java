@@ -3,12 +3,13 @@ package de.fallout2d20.charbuilder.view.dialog;
 import de.fallout2d20.charbuilder.catalog.Book;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelData;
 import de.fallout2d20.charbuilder.catalog.apparel.ApparelKind;
-import de.fallout2d20.charbuilder.catalog.apparel.Coverage;
 import de.fallout2d20.charbuilder.model.character.CatalogRef;
 import de.fallout2d20.charbuilder.model.character.apparel.CustomApparel;
 import de.fallout2d20.charbuilder.model.character.apparel.HitLocation;
 import de.fallout2d20.charbuilder.model.character.apparel.WornApparel;
 import de.fallout2d20.charbuilder.view.Layouts;
+import de.fallout2d20.charbuilder.view.catalog.CatalogColumns;
+import de.fallout2d20.charbuilder.view.catalog.CatalogPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
@@ -16,7 +17,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.ButtonType;
@@ -34,9 +34,6 @@ import org.jspecify.annotations.Nullable;
  * tree for the character's body) or custom pieces ({@link CustomApparelForm}).
  */
 public final class AddApparelDialog {
-
-  /** Sorts radiation immunity above every resistance. */
-  private static final int IMMUNE = Integer.MAX_VALUE;
 
   private AddApparelDialog() {}
 
@@ -56,16 +53,7 @@ public final class AddApparelDialog {
       @NonNull Function<ApparelData, String> categoryOf, @NonNull List<String> categories,
       @NonNull List<HitLocation> locations, @NonNull ApparelKind defaultKind, @NonNull Set<Book> books,
       @NonNull ToIntFunction<WornApparel> onAdd) {
-    CatalogPage<ApparelData> page = new CatalogPage<>(items, ApparelData::name, categoryOf, categories,
-        _ -> "");
-    page.addColumn("Kind", item -> item.kind().displayName());
-    page.addColumn("Covers", item -> item.coverage().stream().map(Coverage::displayName)
-        .collect(Collectors.joining(", ")));
-    page.addNumberColumn("Phys.", ApparelData::physical, item -> Integer.toString(item.physical()));
-    page.addNumberColumn("Energy", ApparelData::energy, item -> Integer.toString(item.energy()));
-    page.addNumberColumn("Rad.", item -> item.radiationImmune() ? IMMUNE : item.radiation(),
-        item -> item.radiationImmune() ? "Immune" : Integer.toString(item.radiation()));
-    page.addColumn("Source", item -> item.sources().getFirst().toString());
+    CatalogPage<ApparelData> page = CatalogColumns.apparel(items, categoryOf, categories);
     Tab catalog = new Tab("Catalog", page.node());
     CustomApparelForm form = new CustomApparelForm(locations, defaultKind, books);
     Tab custom = new Tab("Custom item", form.node());

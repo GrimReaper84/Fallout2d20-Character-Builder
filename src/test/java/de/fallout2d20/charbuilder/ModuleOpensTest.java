@@ -40,12 +40,12 @@ import org.junit.jupiter.api.Test;
  */
 class ModuleOpensTest {
 
-  /** Types Jackson deserializes directly: the save format and the catalog entries. */
+  /** Types Jackson deserializes directly: the save format, the party file (H2) and the catalog entries. */
   private static final Set<Class<?>> JACKSON_ROOTS = Set.of(CharacterData.class, OriginData.class,
       TraitDefinition.class, PerkDefinition.class, EquipmentPackData.class, TagSkillItemData.class,
       D20TableRow.class, WeaponData.class, WeaponModData.class, AmmunitionData.class, ApparelData.class,
       ApparelModData.class, ItemData.class, MagazineData.class, LegendaryWeaponData.class,
-      LegendaryArmorData.class);
+      LegendaryArmorData.class, type("de.fallout2d20.charbuilder.persistence.party.PartyData"));
 
   private static final Pattern OPENS_TO_JACKSON =
       Pattern.compile("opens\\s+([\\w.]+)\\s+to\\s+com\\.fasterxml\\.jackson\\.databind\\s*;");
@@ -97,6 +97,15 @@ class ModuleOpensTest {
           collect(component.getGenericType(), packages, visited);
         }
       }
+    }
+  }
+
+  /** A package-private root type by name. */
+  private static Class<?> type(String name) {
+    try {
+      return Class.forName(name);
+    } catch (ClassNotFoundException e) {
+      throw new IllegalStateException(e);
     }
   }
 }

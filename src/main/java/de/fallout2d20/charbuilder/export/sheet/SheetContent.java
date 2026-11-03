@@ -117,7 +117,7 @@ public record SheetContent(
         skills,
         derived.meleeDamageText(),
         Integer.toString(derived.defense()),
-        Integer.toString(derived.initiative()),
+        Integer.toString(load.initiative(derived.initiative())),
         Integer.toString(derived.maxLuckPoints()),
         Integer.toString(derived.maxHp()),
         derived.poison().toString(),
