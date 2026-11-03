@@ -8,8 +8,8 @@ at the table.
 
 ## Features
 
-- **Books:** Core Rulebook, Winter of Atom, and the Wanderer's Guide origins (more Wanderer's Guide content
-  is planned).
+- **Books:** Core Rulebook, Winter of Atom and Wanderer's Guide (what is still missing: see
+  [Roadmap](#roadmap)).
 - **Character creation** step by step: origin and origin options, traits, S.P.E.C.I.A.L., Tag skills and
   skill ranks, perks (perk grid with requirements), starting level, equipment packs (entered into the
   inventory automatically). Budgets and rules are
@@ -27,6 +27,45 @@ at the table.
 - **Character sheet** export as PDF for printing.
 
 Characters are saved as JSON files wherever you like.
+
+## Roadmap
+
+As of November 2026. The order can still change; ideas and wishes are welcome.
+
+**Next release (1.5.0, finished, not released yet)**
+
+- Perk bonuses computed into the weapon values (situational perks as hints per weapon)
+- Rules window: books per character, house rules (first one: armor helmets count as headgear)
+- Several characters open at once, each in its own tab
+- GM compendium: equipment catalogs, character rules, roll tables and a party overview with its own party file
+- Initiative lowered by carry load everywhere
+
+**Planned next**
+
+- Custom weapons that use Athletics and AGI (bows)
+- Check the Tag skill items of robots (an Assaultron currently gets Casual Clothing through Athletics)
+- Show book hints for weapons in the Weapons tab (today they appear in the Gear tab)
+- **Power Armor**, including the Wanderer's Guide suits (Excavator, Hellcat, T-65)
+- Developer documentation: architecture overview and flow diagrams
+
+**Maintenance**
+
+- Remaining static analysis findings
+- Jackson 3 migration, once Jackson 2 is no longer maintained
+
+**To be decided**
+
+- Text export next to the PDF sheet
+- Wanderer's Guide vehicles, crafting and GM creature rules (do they belong in a character builder?)
+
+**Nice to have**
+
+- Equipment sets: named loadouts to switch between (e.g. "combat", "town")
+- Picture of the weapon type with its mod slots around it
+- Compendium: add entries to a character, NPC stat blocks, export
+
+**Not planned:** other books such as Settler's Guide or Royal Flush (the legacy import still accepts their
+names and reports what it skips).
 
 ## Download and installation
 
@@ -66,6 +105,36 @@ Development runs (`./gradlew run`) show an extra **Beta** menu that opens test c
 Release builds never show it. To get it in an IDE run configuration, add
 `-Dcharbuilder.beta=src/test/resources`. `./gradlew generateSamples` recreates the generated samples
 after a save format change; other `.json` files in the folder are left alone.
+
+## Contributing
+
+The project is developed with [Claude Code](https://claude.com/claude-code), and everyone works from the same
+rules, which are part of this repository:
+
+- [`CLAUDE.md`](CLAUDE.md): project overview, loaded automatically
+- [`.claude/skills/_shared/project-rules.md`](.claude/skills/_shared/project-rules.md): workflow, code
+  conventions, building blocks, UI conventions
+- [`.claude/skills/`](.claude/skills): one skill per workflow step (analysis, plan, implementation, review) and
+  catalog extraction
+
+Local setup:
+
+1. Install JDK 25 and check that `./gradlew build` passes.
+2. The rulebooks are the source of truth, and they stay out of the repository for copyright reasons. Put your
+   own PDFs into `docs/rulebooks/` as `core_rulebook.pdf`, `winter_of_atom.pdf` and `wanderers_guide.pdf`, then
+   create the text files with `pdftotext` (poppler-utils) in that folder:
+
+   ```bash
+   for book in core_rulebook winter_of_atom wanderers_guide; do
+     pdftotext -enc UTF-8 "$book.pdf" "$book.txt"
+     pdftotext -enc UTF-8 -layout "$book.pdf" "${book}_layout.txt"
+   done
+   ```
+
+3. Optional: put personal notes for Claude into `CLAUDE.local.md` (gitignored).
+
+`docs/` is gitignored; plans and analyses are created there per developer. Never copy rules text into tracked
+files: only values, page references and short descriptions in your own words.
 
 ## Releasing
 

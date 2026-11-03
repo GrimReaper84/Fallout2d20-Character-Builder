@@ -44,7 +44,8 @@ bin/
 ### Local project documentation (rulebooks, plans, analyses) - never published ###
 docs/
 
-### AI working files (skills, project rules) - kept locally, never published ###
-.claude/
+### Personal AI settings and notes - the shared project rules and skills are tracked ###
+.claude/settings.local.json
+.claude/worktrees/
 .aicoding/
-CLAUDE.md
+CLAUDE.local.md
