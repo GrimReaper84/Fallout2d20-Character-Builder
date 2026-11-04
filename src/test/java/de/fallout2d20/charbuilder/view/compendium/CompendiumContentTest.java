@@ -21,7 +21,7 @@ class CompendiumContentTest {
   private static final Set<Book> ALL_BOOKS = EnumSet.allOf(Book.class);
 
   @ParameterizedTest
-  @EnumSource(value = Section.class, names = {"PARTY", "ROLL_TABLES"}, mode = EnumSource.Mode.EXCLUDE)
+  @EnumSource(value = Section.class, names = {"PARTY", "SCAVENGING", "ROLL_TABLES"}, mode = EnumSource.Mode.EXCLUDE)
   void everySectionListsEntriesWithOneCellPerColumnUniqueIdsAndKnownCategories(Section section) {
     SectionContent content = CompendiumContent.of(section, ALL_BOOKS);
     assertFalse(content.entries().isEmpty(), section + " lists entries");

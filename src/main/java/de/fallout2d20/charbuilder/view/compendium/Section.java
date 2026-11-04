@@ -18,6 +18,7 @@ enum Section {
   SKILLS("Skills"),
   PACKS("Equipment packs"),
   QUALITIES("Qualities"),
+  SCAVENGING("Scavenging"),
   ROLL_TABLES("Roll tables");
 
   private final @NonNull String title;
@@ -30,8 +31,8 @@ enum Section {
     return title;
   }
 
-  /** Whether the section is a catalog list (master–detail), not the party or the roll tables. */
+  /** Whether the section is a catalog list (master–detail), not the party, the scavenging or the roll tables. */
   boolean isCatalog() {
-    return this != PARTY && this != ROLL_TABLES;
+    return this != PARTY && this != SCAVENGING && this != ROLL_TABLES;
   }
 }

@@ -10,7 +10,7 @@ final class CompendiumContent {
   private CompendiumContent() {}
 
   /**
-   * @throws IllegalArgumentException for the party and the roll tables, which are no catalog lists
+   * @throws IllegalArgumentException for the party, the scavenging and the roll tables, which are no catalog lists
    */
   static @NonNull SectionContent of(@NonNull Section section, @NonNull Set<Book> books) {
     return switch (section) {
@@ -27,7 +27,7 @@ final class CompendiumContent {
       case SKILLS -> RuleEntries.skills();
       case PACKS -> RuleEntries.packs(books);
       case QUALITIES -> RuleEntries.qualities(books);
-      case PARTY, ROLL_TABLES -> throw new IllegalArgumentException("Not a catalog section: " + section);
+      case PARTY, SCAVENGING, ROLL_TABLES -> throw new IllegalArgumentException("Not a catalog section: " + section);
     };
   }
 }

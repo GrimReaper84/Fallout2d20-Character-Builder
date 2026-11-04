@@ -11,6 +11,7 @@ import de.fallout2d20.charbuilder.catalog.item.ItemData;
 import de.fallout2d20.charbuilder.catalog.item.MagazineData;
 import de.fallout2d20.charbuilder.catalog.legendary.LegendaryArmorData;
 import de.fallout2d20.charbuilder.catalog.legendary.LegendaryWeaponData;
+import de.fallout2d20.charbuilder.catalog.loot.LootTable;
 import de.fallout2d20.charbuilder.catalog.origin.OriginData;
 import de.fallout2d20.charbuilder.catalog.perk.PerkDefinition;
 import de.fallout2d20.charbuilder.catalog.trait.TraitDefinition;
@@ -45,7 +46,7 @@ class ModuleOpensTest {
       TraitDefinition.class, PerkDefinition.class, EquipmentPackData.class, TagSkillItemData.class,
       D20TableRow.class, WeaponData.class, WeaponModData.class, AmmunitionData.class, ApparelData.class,
       ApparelModData.class, ItemData.class, MagazineData.class, LegendaryWeaponData.class,
-      LegendaryArmorData.class, type("de.fallout2d20.charbuilder.persistence.party.PartyData"));
+      LegendaryArmorData.class, LootTable.class, type("de.fallout2d20.charbuilder.persistence.party.PartyData"));
 
   private static final Pattern OPENS_TO_JACKSON =
       Pattern.compile("opens\\s+([\\w.]+)\\s+to\\s+com\\.fasterxml\\.jackson\\.databind\\s*;");

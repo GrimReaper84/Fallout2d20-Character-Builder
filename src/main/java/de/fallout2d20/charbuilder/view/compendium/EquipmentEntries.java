@@ -243,7 +243,7 @@ final class EquipmentEntries {
   private static @NonNull CompendiumEntry magazine(@NonNull MagazineData magazine) {
     Details details = new Details().value("Summary", magazine.summary());
     magazine.issues().forEach(issue -> details.value(issue.roll(), issue.title() + ": " + issue.effect()));
-    return new CompendiumEntry("magazine:" + magazine.id(), magazine.name(), MAGAZINES, List.of(
+    return new CompendiumEntry(magazineId(magazine.id()), magazine.name(), MAGAZINES, List.of(
         Cell.text(MAGAZINES), Cell.number(null), Cell.number(null), Cell.number(null),
         Cell.text(firstSource(magazine.sources()))), details.source(magazine.sources()));
   }
@@ -279,6 +279,11 @@ final class EquipmentEntries {
         .source(property.sources());
     return new CompendiumEntry(legendaryArmorId(property.id()), property.name(), ARMOR_PROPERTIES, List.of(
         Cell.text("Armor"), Cell.text(rolls), Cell.text(firstSource(property.sources()))), details);
+  }
+
+  /** The entry id of a magazine in the Items section. */
+  static @NonNull String magazineId(@NonNull String magazineId) {
+    return "magazine:" + magazineId;
   }
 
   /** The entry id of a legendary weapon property in the Legendary section. */

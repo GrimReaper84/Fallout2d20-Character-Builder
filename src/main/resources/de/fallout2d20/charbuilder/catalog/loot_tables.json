@@ -1,0 +1,4277 @@
+[
+  {
+    "id": "ammunition",
+    "name": "Random Ammunition",
+    "source": {
+      "book": "CRB",
+      "page": 200
+    },
+    "dice": 2,
+    "note": "Scrounger (CRB p. 71) adds CD to the quantity; not computed here.",
+    "rows": [
+      {
+        "from": 2,
+        "to": 4,
+        "name": "2mm EC",
+        "quantity": "6+3 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "2mm-ec"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Plasma Cartridge",
+        "quantity": "10+5 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "plasma-cartridge"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Missile",
+        "quantity": "2+1 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "missile"
+        },
+        "note": "Scrounger: only +1 CD per rank."
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Fusion Core",
+        "quantity": "1",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "fusion-core"
+        },
+        "note": "Scrounger adds nothing here."
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "name": "5mm",
+        "quantity": "12+6 CD x10",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "5mm"
+        }
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "name": ".50 Ammo",
+        "quantity": "4+2 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "50"
+        }
+      },
+      {
+        "from": 12,
+        "to": 13,
+        "name": "Syringer Ammo",
+        "quantity": "4+2 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "syringer-ammo"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Gamma Round",
+        "quantity": "4+2 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "gamma-round"
+        }
+      },
+      {
+        "from": 15,
+        "to": 16,
+        "name": "Flamer Fuel",
+        "quantity": "12+6 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "flamer-fuel"
+        }
+      },
+      {
+        "from": 17,
+        "to": 18,
+        "name": ".45 Rounds",
+        "quantity": "9+4 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "45"
+        }
+      },
+      {
+        "from": 19,
+        "to": 20,
+        "name": "10mm",
+        "quantity": "8+4 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "10mm"
+        }
+      },
+      {
+        "from": 21,
+        "to": 22,
+        "name": ".38 Ammo",
+        "quantity": "10+5 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "38"
+        }
+      },
+      {
+        "from": 23,
+        "to": 23,
+        "name": "Flare",
+        "quantity": "2+1 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "flare"
+        }
+      },
+      {
+        "from": 24,
+        "to": 24,
+        "name": ".308 Ammo",
+        "quantity": "6+3 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "308"
+        }
+      },
+      {
+        "from": 25,
+        "to": 26,
+        "name": "Shotgun Shells",
+        "quantity": "6+3 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "shotgun-shell"
+        }
+      },
+      {
+        "from": 27,
+        "to": 28,
+        "name": "Fusion Cell",
+        "quantity": "14+7 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "fusion-cell"
+        }
+      },
+      {
+        "from": 29,
+        "to": 30,
+        "name": "Railway Spike",
+        "quantity": "6+3 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "railway-spike"
+        }
+      },
+      {
+        "from": 31,
+        "to": 32,
+        "name": ".44 Magnum",
+        "quantity": "4+2 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "44-magnum"
+        }
+      },
+      {
+        "from": 33,
+        "to": 34,
+        "name": "5.56mm",
+        "quantity": "8+4 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "5-56mm"
+        }
+      },
+      {
+        "from": 35,
+        "to": 35,
+        "name": "Missile",
+        "quantity": "2+1 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "missile"
+        },
+        "note": "Scrounger: only +1 CD per rank."
+      },
+      {
+        "from": 36,
+        "to": 36,
+        "name": "Fusion Core",
+        "quantity": "1",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "fusion-core"
+        },
+        "note": "Scrounger adds nothing here."
+      },
+      {
+        "from": 37,
+        "to": 37,
+        "name": "Plasma Cartridge",
+        "quantity": "10+5 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "plasma-cartridge"
+        }
+      },
+      {
+        "from": 38,
+        "to": 40,
+        "name": "Mini-Nuke",
+        "quantity": "1+1 CD",
+        "ref": {
+          "kind": "AMMUNITION",
+          "id": "mini-nuke"
+        },
+        "note": "Scrounger adds nothing here."
+      }
+    ]
+  },
+  {
+    "id": "armor",
+    "name": "Random Armor",
+    "source": {
+      "book": "CRB",
+      "page": 201
+    },
+    "dice": 2,
+    "rows": [
+      {
+        "from": 2,
+        "to": 4,
+        "name": "X-01 Power Armor Piece",
+        "rollsLocation": true
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Power Armor Frame",
+        "note": "Comes without a fusion core."
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "name": "T-60 Power Armor Piece",
+        "rollsLocation": true
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "name": "Heavy Dog Armor"
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Sturdy Combat Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-combat"
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Heavy Metal Armor",
+        "rollsLocation": true,
+        "pieces": "heavy-metal"
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Raider Power Armor Piece",
+        "rollsLocation": true
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Medium Dog Armor"
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Sturdy Metal Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-metal"
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Heavy Raider Armor",
+        "rollsLocation": true,
+        "pieces": "heavy-raider"
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Vault-Tec Armor",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "vault-tec-security-armor"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Sturdy Raider Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-raider"
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "Leather Armor",
+        "rollsLocation": true,
+        "pieces": "leather"
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Sturdy Raider Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-raider"
+      },
+      {
+        "from": 21,
+        "to": 21,
+        "name": "Raider Armor",
+        "rollsLocation": true,
+        "pieces": "raider"
+      },
+      {
+        "from": 22,
+        "to": 22,
+        "name": "Sturdy Raider Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-raider"
+      },
+      {
+        "from": 23,
+        "to": 23,
+        "name": "Metal Armor",
+        "rollsLocation": true,
+        "pieces": "metal"
+      },
+      {
+        "from": 24,
+        "to": 24,
+        "name": "Light Dog Armor"
+      },
+      {
+        "from": 25,
+        "to": 25,
+        "name": "Sturdy Leather Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-leather"
+      },
+      {
+        "from": 26,
+        "to": 26,
+        "name": "Combat Armor",
+        "rollsLocation": true,
+        "pieces": "combat"
+      },
+      {
+        "from": 27,
+        "to": 27,
+        "name": "T-45 Power Armor Piece",
+        "rollsLocation": true
+      },
+      {
+        "from": 28,
+        "to": 28,
+        "name": "Heavy Leather Armor",
+        "rollsLocation": true,
+        "pieces": "heavy-leather"
+      },
+      {
+        "from": 29,
+        "to": 29,
+        "name": "Synth Armor",
+        "rollsLocation": true,
+        "pieces": "synth"
+      },
+      {
+        "from": 30,
+        "to": 30,
+        "name": "T-51 Power Armor Piece",
+        "rollsLocation": true
+      },
+      {
+        "from": 31,
+        "to": 32,
+        "name": "Heavy Combat Armor",
+        "rollsLocation": true,
+        "pieces": "heavy-combat"
+      },
+      {
+        "from": 33,
+        "to": 34,
+        "name": "Sturdy Synth Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-synth"
+      },
+      {
+        "from": 35,
+        "to": 35,
+        "name": "Sturdy Raider Armor",
+        "rollsLocation": true,
+        "pieces": "sturdy-raider"
+      },
+      {
+        "from": 36,
+        "to": 37,
+        "name": "Power Armor Frame",
+        "note": "Comes without a fusion core."
+      },
+      {
+        "from": 38,
+        "to": 40,
+        "name": "Heavy Synth Armor",
+        "rollsLocation": true,
+        "pieces": "heavy-synth"
+      }
+    ]
+  },
+  {
+    "id": "clothing",
+    "name": "Random Clothing",
+    "source": {
+      "book": "CRB",
+      "page": 201
+    },
+    "dice": 2,
+    "rows": [
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Brotherhood of Steel Fatigues",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "brotherhood-of-steel-fatigues"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Welder’s Visor",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "welders-visor"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Brotherhood Scribe’s Hat",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "brotherhood-scribes-hat"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Brotherhood of Steel Hood",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "brotherhood-of-steel-hood"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Brotherhood Scribe’s Armor",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "brotherhood-scribes-armor"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Brotherhood of Steel Uniform",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "brotherhood-of-steel-uniform"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Hard Hat",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "hard-hat"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Army Helmet",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "army-helmet"
+        }
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "name": "Lab Coat",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "lab-coat"
+        }
+      },
+      {
+        "from": 12,
+        "to": 13,
+        "name": "Engineer’s Armor",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "engineers-armor"
+        }
+      },
+      {
+        "from": 14,
+        "to": 15,
+        "name": "Road Leathers",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "road-leathers"
+        }
+      },
+      {
+        "from": 16,
+        "to": 17,
+        "name": "Casual Clothing",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "casual-clothing"
+        }
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "name": "Hides",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "hides"
+        }
+      },
+      {
+        "from": 20,
+        "to": 21,
+        "name": "Harness",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "harness"
+        }
+      },
+      {
+        "from": 22,
+        "to": 23,
+        "name": "Sack Hood",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "sack-hood"
+        }
+      },
+      {
+        "from": 24,
+        "to": 25,
+        "name": "Military Fatigues",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "military-fatigues"
+        }
+      },
+      {
+        "from": 26,
+        "to": 27,
+        "name": "Tough Clothing",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "tough-clothing"
+        }
+      },
+      {
+        "from": 28,
+        "to": 29,
+        "name": "Heavy Coat",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "heavy-coat"
+        }
+      },
+      {
+        "from": 30,
+        "to": 31,
+        "name": "Utility Overalls",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "utility-coveralls"
+        }
+      },
+      {
+        "from": 32,
+        "to": 32,
+        "name": "Casual Hat",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "casual-hat"
+        }
+      },
+      {
+        "from": 33,
+        "to": 33,
+        "name": "Hood or Cowl",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "hood-or-cowl"
+        }
+      },
+      {
+        "from": 34,
+        "to": 34,
+        "name": "Vault Jumpsuit",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "vault-jumpsuit"
+        }
+      },
+      {
+        "from": 35,
+        "to": 36,
+        "name": "Formal Clothing",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "formal-clothing"
+        }
+      },
+      {
+        "from": 37,
+        "to": 37,
+        "name": "Formal Hat",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "formal-hat"
+        }
+      },
+      {
+        "from": 38,
+        "to": 38,
+        "name": "Gas Mask",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "gas-mask"
+        }
+      },
+      {
+        "from": 39,
+        "to": 39,
+        "name": "Cage Armor",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "cage-armor"
+        }
+      },
+      {
+        "from": 40,
+        "to": 40,
+        "name": "Hazmat Suit",
+        "ref": {
+          "kind": "APPAREL",
+          "id": "hazmat-suit"
+        }
+      }
+    ]
+  },
+  {
+    "id": "food",
+    "name": "Random Food",
+    "source": {
+      "book": "CRB",
+      "page": 202
+    },
+    "dice": 2,
+    "note": "Can Do! (CRB p. 61): one extra food roll for free.",
+    "rows": [
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Tarberry",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tarberry"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Perfectly Preserved Pie",
+        "ref": {
+          "kind": "ITEM",
+          "id": "perfectly-preserved-pie"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Melon (non-irradiated)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "melon"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Carrot (non-irradiated)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "carrot"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Institute Food Packet",
+        "ref": {
+          "kind": "ITEM",
+          "id": "institute-food-packet"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Sugar Bombs (preserved)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "sugar-bombs"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Mutfruit (non-irradiated)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "mutfruit"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Fancy Lads Snack Cakes (preserved)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "fancy-lads-snack-cakes"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Sweet Roll",
+        "ref": {
+          "kind": "ITEM",
+          "id": "sweet-roll"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Razorgrain",
+        "ref": {
+          "kind": "ITEM",
+          "id": "razorgrain"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Iguana Bits",
+        "ref": {
+          "kind": "ITEM",
+          "id": "iguana-bits"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Cram",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cram"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Carrot",
+        "ref": {
+          "kind": "ITEM",
+          "id": "carrot"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "BlamCo Brand Mac and Cheese",
+        "ref": {
+          "kind": "ITEM",
+          "id": "blamco-brand-mac-and-cheese"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Sugar Bombs",
+        "ref": {
+          "kind": "ITEM",
+          "id": "sugar-bombs"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Potted Meat",
+        "ref": {
+          "kind": "ITEM",
+          "id": "potted-meat"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Pork ‘n’ Beans",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pork-n-beans"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "InstaMash",
+        "ref": {
+          "kind": "ITEM",
+          "id": "instamash"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Dandy Boy Apples",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dandy-boy-apples"
+        }
+      },
+      {
+        "from": 21,
+        "to": 21,
+        "name": "Canned Dog Food",
+        "ref": {
+          "kind": "ITEM",
+          "id": "canned-dog-food"
+        }
+      },
+      {
+        "from": 22,
+        "to": 22,
+        "name": "Fancy Lads Snack Cakes",
+        "ref": {
+          "kind": "ITEM",
+          "id": "fancy-lads-snack-cakes"
+        }
+      },
+      {
+        "from": 23,
+        "to": 23,
+        "name": "Gum Drops",
+        "ref": {
+          "kind": "ITEM",
+          "id": "gum-drops"
+        }
+      },
+      {
+        "from": 24,
+        "to": 24,
+        "name": "Mutfruit",
+        "ref": {
+          "kind": "ITEM",
+          "id": "mutfruit"
+        }
+      },
+      {
+        "from": 25,
+        "to": 25,
+        "name": "Potato Crisps",
+        "ref": {
+          "kind": "ITEM",
+          "id": "potato-crisps"
+        }
+      },
+      {
+        "from": 26,
+        "to": 26,
+        "name": "Salisbury Steak",
+        "ref": {
+          "kind": "ITEM",
+          "id": "salisbury-steak"
+        }
+      },
+      {
+        "from": 27,
+        "to": 27,
+        "name": "Yum-Yum Deviled Eggs",
+        "ref": {
+          "kind": "ITEM",
+          "id": "yum-yum-deviled-eggs"
+        }
+      },
+      {
+        "from": 28,
+        "to": 28,
+        "name": "Brain Fungus",
+        "ref": {
+          "kind": "ITEM",
+          "id": "brain-fungus"
+        }
+      },
+      {
+        "from": 29,
+        "to": 29,
+        "name": "Corn",
+        "ref": {
+          "kind": "ITEM",
+          "id": "corn"
+        }
+      },
+      {
+        "from": 30,
+        "to": 30,
+        "name": "Gourd",
+        "ref": {
+          "kind": "ITEM",
+          "id": "gourd"
+        }
+      },
+      {
+        "from": 31,
+        "to": 31,
+        "name": "Melon",
+        "ref": {
+          "kind": "ITEM",
+          "id": "melon"
+        }
+      },
+      {
+        "from": 32,
+        "to": 32,
+        "name": "Silt Bean",
+        "ref": {
+          "kind": "ITEM",
+          "id": "silt-bean"
+        }
+      },
+      {
+        "from": 33,
+        "to": 33,
+        "name": "Tato",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tato"
+        }
+      },
+      {
+        "from": 34,
+        "to": 34,
+        "name": "InstaMash (preserved)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "instamash"
+        }
+      },
+      {
+        "from": 35,
+        "to": 35,
+        "name": "Salisbury Steak (preserved)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "salisbury-steak"
+        }
+      },
+      {
+        "from": 36,
+        "to": 36,
+        "name": "Food Paste",
+        "ref": {
+          "kind": "ITEM",
+          "id": "food-paste"
+        }
+      },
+      {
+        "from": 37,
+        "to": 37,
+        "name": "Noodle Cup",
+        "ref": {
+          "kind": "ITEM",
+          "id": "noodle-cup"
+        }
+      },
+      {
+        "from": 38,
+        "to": 38,
+        "name": "Corn (non-irradiated)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "corn"
+        }
+      },
+      {
+        "from": 39,
+        "to": 39,
+        "name": "BlamCo Brand Mac and Cheese (preserved)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "blamco-brand-mac-and-cheese"
+        }
+      },
+      {
+        "from": 40,
+        "to": 40,
+        "name": "Tarberry",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tarberry"
+        }
+      }
+    ]
+  },
+  {
+    "id": "beverages",
+    "name": "Random Beverages",
+    "source": {
+      "book": "CRB",
+      "page": 203
+    },
+    "dice": 2,
+    "rows": [
+      {
+        "from": 2,
+        "to": 3,
+        "name": "Wine",
+        "ref": {
+          "kind": "ITEM",
+          "id": "wine"
+        }
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "name": "Whiskey",
+        "ref": {
+          "kind": "ITEM",
+          "id": "whiskey"
+        }
+      },
+      {
+        "from": 6,
+        "to": 8,
+        "name": "Nuka-Cherry",
+        "ref": {
+          "kind": "ITEM",
+          "id": "nuka-cherry"
+        }
+      },
+      {
+        "from": 9,
+        "to": 11,
+        "name": "Nuka-Cola",
+        "ref": {
+          "kind": "ITEM",
+          "id": "nuka-cola"
+        }
+      },
+      {
+        "from": 12,
+        "to": 14,
+        "name": "Bourbon",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bourbon"
+        }
+      },
+      {
+        "from": 15,
+        "to": 18,
+        "name": "Beer",
+        "ref": {
+          "kind": "ITEM",
+          "id": "beer"
+        }
+      },
+      {
+        "from": 19,
+        "to": 23,
+        "name": "Dirty Water",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dirty-water"
+        }
+      },
+      {
+        "from": 24,
+        "to": 27,
+        "name": "Purified Water",
+        "ref": {
+          "kind": "ITEM",
+          "id": "purified-water"
+        }
+      },
+      {
+        "from": 28,
+        "to": 30,
+        "name": "Brahmin Milk",
+        "ref": {
+          "kind": "ITEM",
+          "id": "brahmin-milk"
+        }
+      },
+      {
+        "from": 31,
+        "to": 33,
+        "name": "Rum",
+        "ref": {
+          "kind": "ITEM",
+          "id": "rum"
+        }
+      },
+      {
+        "from": 34,
+        "to": 36,
+        "name": "Moonshine",
+        "ref": {
+          "kind": "ITEM",
+          "id": "moonshine"
+        }
+      },
+      {
+        "from": 37,
+        "to": 38,
+        "name": "Vodka",
+        "ref": {
+          "kind": "ITEM",
+          "id": "vodka"
+        }
+      },
+      {
+        "from": 39,
+        "to": 40,
+        "name": "Wine",
+        "ref": {
+          "kind": "ITEM",
+          "id": "wine"
+        }
+      }
+    ]
+  },
+  {
+    "id": "chems",
+    "name": "Random Chems",
+    "source": {
+      "book": "CRB",
+      "page": 204
+    },
+    "dice": 2,
+    "note": "Pharma Farma (CRB p. 69): one extra chem roll for free.",
+    "rows": [
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Super Stimpak",
+        "ref": {
+          "kind": "ITEM",
+          "id": "super-stimpak"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Calmex",
+        "ref": {
+          "kind": "ITEM",
+          "id": "calmex"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Day Tripper",
+        "ref": {
+          "kind": "ITEM",
+          "id": "day-tripper"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Addictol",
+        "ref": {
+          "kind": "ITEM",
+          "id": "addictol"
+        }
+      },
+      {
+        "from": 6,
+        "to": 7,
+        "name": "Stimpak",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stimpak"
+        }
+      },
+      {
+        "from": 8,
+        "to": 9,
+        "name": "RadAway",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radaway"
+        }
+      },
+      {
+        "from": 10,
+        "to": 11,
+        "name": "Psycho",
+        "ref": {
+          "kind": "ITEM",
+          "id": "psycho"
+        }
+      },
+      {
+        "from": 12,
+        "to": 13,
+        "name": "Med-X",
+        "ref": {
+          "kind": "ITEM",
+          "id": "med-x"
+        }
+      },
+      {
+        "from": 14,
+        "to": 15,
+        "name": "Daddy-O",
+        "ref": {
+          "kind": "ITEM",
+          "id": "daddy-o"
+        }
+      },
+      {
+        "from": 16,
+        "to": 17,
+        "name": "Rad-X (diluted)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "rad-x-diluted"
+        }
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "name": "Healing Salve",
+        "ref": {
+          "kind": "ITEM",
+          "id": "healing-salve"
+        }
+      },
+      {
+        "from": 20,
+        "to": 22,
+        "name": "Dirty Water",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dirty-water"
+        }
+      },
+      {
+        "from": 23,
+        "to": 24,
+        "name": "Stimpak (diluted)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stimpak-diluted"
+        }
+      },
+      {
+        "from": 25,
+        "to": 26,
+        "name": "RadAway (diluted)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radaway-diluted"
+        }
+      },
+      {
+        "from": 27,
+        "to": 28,
+        "name": "Buffout",
+        "ref": {
+          "kind": "ITEM",
+          "id": "buffout"
+        }
+      },
+      {
+        "from": 29,
+        "to": 30,
+        "name": "Jet",
+        "ref": {
+          "kind": "ITEM",
+          "id": "jet"
+        }
+      },
+      {
+        "from": 31,
+        "to": 32,
+        "name": "Mentats",
+        "ref": {
+          "kind": "ITEM",
+          "id": "mentats"
+        }
+      },
+      {
+        "from": 33,
+        "to": 34,
+        "name": "Rad-X",
+        "ref": {
+          "kind": "ITEM",
+          "id": "rad-x"
+        }
+      },
+      {
+        "from": 35,
+        "to": 36,
+        "name": "Stimpak",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stimpak"
+        }
+      },
+      {
+        "from": 37,
+        "to": 37,
+        "name": "Antibiotics",
+        "ref": {
+          "kind": "ITEM",
+          "id": "antibiotics"
+        }
+      },
+      {
+        "from": 38,
+        "to": 38,
+        "name": "Overdrive",
+        "ref": {
+          "kind": "ITEM",
+          "id": "overdrive"
+        }
+      },
+      {
+        "from": 39,
+        "to": 39,
+        "name": "Fury",
+        "ref": {
+          "kind": "ITEM",
+          "id": "fury"
+        }
+      },
+      {
+        "from": 40,
+        "to": 40,
+        "name": "X-Cell",
+        "ref": {
+          "kind": "ITEM",
+          "id": "x-cell"
+        }
+      }
+    ]
+  },
+  {
+    "id": "weapons-ranged",
+    "name": "Random Ranged Weapons",
+    "source": {
+      "book": "CRB",
+      "page": 204
+    },
+    "dice": 2,
+    "missingRolls": [
+      10,
+      19
+    ],
+    "rows": [
+      {
+        "from": 2,
+        "to": 3,
+        "name": "Fat Man",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "fat-man"
+        }
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "name": "Missile Launcher",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "missile-launcher"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Railway Rifle",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "railway-rifle"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Junk Jet",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "junk-jet"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Flamer",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "flamer"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Plasma Pistol",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "plasma-gun"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Institute Laser Rifle (Long Barrel, Standard Stock)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "institute-laser"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Syringer",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "syringer"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Hunting Rifle",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "hunting-rifle"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Assault Rifle",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "assault-rifle"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Laser Musket",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "laser-musket"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Submachine Gun",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "submachine-gun"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "10mm Pistol",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "10mm-pistol"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Pipe Bolt Action",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-bolt-action"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Pipe Rifle (Long Barrel, Standard Stock)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-gun"
+        }
+      },
+      {
+        "from": 21,
+        "to": 21,
+        "name": "Pipe Gun",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-gun"
+        }
+      },
+      {
+        "from": 22,
+        "to": 22,
+        "name": "Auto Pipe Gun (Automatic Receiver)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-gun"
+        }
+      },
+      {
+        "from": 23,
+        "to": 23,
+        "name": "Pipe Revolver",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-revolver"
+        }
+      },
+      {
+        "from": 24,
+        "to": 24,
+        "name": "Pipe Bolt Action Rifle (Long Barrel, Standard Stock)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-bolt-action"
+        }
+      },
+      {
+        "from": 25,
+        "to": 25,
+        "name": "10mm Auto Pistol (Automatic Receiver)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "10mm-pistol"
+        }
+      },
+      {
+        "from": 26,
+        "to": 26,
+        "name": "Double-Barreled Shotgun",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "double-barrel-shotgun"
+        }
+      },
+      {
+        "from": 27,
+        "to": 27,
+        "name": ".44 Pistol",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "44-pistol"
+        }
+      },
+      {
+        "from": 28,
+        "to": 28,
+        "name": "Combat Rifle",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "combat-rifle"
+        }
+      },
+      {
+        "from": 29,
+        "to": 29,
+        "name": "Scoped Hunting Rifle (Long Barrel, Short Scope)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "hunting-rifle"
+        }
+      },
+      {
+        "from": 30,
+        "to": 30,
+        "name": "Combat Shotgun",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "combat-shotgun"
+        }
+      },
+      {
+        "from": 31,
+        "to": 31,
+        "name": "Institute Laser Pistol",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "institute-laser"
+        }
+      },
+      {
+        "from": 32,
+        "to": 32,
+        "name": "Laser Pistol",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "laser-gun"
+        }
+      },
+      {
+        "from": 33,
+        "to": 33,
+        "name": "Minigun",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "minigun"
+        }
+      },
+      {
+        "from": 34,
+        "to": 34,
+        "name": "Plasma Rifle (Long Barrel, Standard Stock)",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "plasma-gun"
+        }
+      },
+      {
+        "from": 35,
+        "to": 35,
+        "name": "Gatling Laser",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "gatling-laser"
+        }
+      },
+      {
+        "from": 36,
+        "to": 36,
+        "name": "Gauss Rifle",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "gauss-rifle"
+        }
+      },
+      {
+        "from": 37,
+        "to": 38,
+        "name": "Heavy Incinerator",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "heavy-incinerator"
+        }
+      },
+      {
+        "from": 39,
+        "to": 40,
+        "name": "Gamma Gun",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "gamma-gun"
+        }
+      }
+    ]
+  },
+  {
+    "id": "weapons-melee",
+    "name": "Random Melee Weapons",
+    "source": {
+      "book": "CRB",
+      "page": 205
+    },
+    "dice": 2,
+    "rows": [
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Deathclaw Gauntlet",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "deathclaw-gauntlet"
+        }
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "name": "Shishkebab",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "shishkebab"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Sledgehammer",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "sledgehammer"
+        }
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "name": "Ripper",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "ripper"
+        }
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "name": "Boxing Glove",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "boxing-glove"
+        }
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "name": "Baton",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "baton"
+        }
+      },
+      {
+        "from": 13,
+        "to": 14,
+        "name": "Machete",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "machete"
+        }
+      },
+      {
+        "from": 15,
+        "to": 16,
+        "name": "Walking Cane",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "walking-cane"
+        }
+      },
+      {
+        "from": 17,
+        "to": 18,
+        "name": "Pool Cue",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pool-cue"
+        }
+      },
+      {
+        "from": 19,
+        "to": 20,
+        "name": "Switchblade",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "switchblade"
+        }
+      },
+      {
+        "from": 21,
+        "to": 22,
+        "name": "Board",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "board"
+        }
+      },
+      {
+        "from": 23,
+        "to": 24,
+        "name": "Lead Pipe",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "lead-pipe"
+        }
+      },
+      {
+        "from": 25,
+        "to": 26,
+        "name": "Rolling Pin",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "rolling-pin"
+        }
+      },
+      {
+        "from": 27,
+        "to": 28,
+        "name": "Pipe Wrench",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pipe-wrench"
+        }
+      },
+      {
+        "from": 29,
+        "to": 30,
+        "name": "Knuckles",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "knuckles"
+        }
+      },
+      {
+        "from": 31,
+        "to": 32,
+        "name": "Tire Iron",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "tire-iron"
+        }
+      },
+      {
+        "from": 33,
+        "to": 34,
+        "name": "Sword",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "sword"
+        }
+      },
+      {
+        "from": 35,
+        "to": 36,
+        "name": "Aluminum Baseball Bat",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "aluminum-baseball-bat"
+        }
+      },
+      {
+        "from": 37,
+        "to": 38,
+        "name": "Power Fist",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "power-fist"
+        }
+      },
+      {
+        "from": 39,
+        "to": 40,
+        "name": "Super Sledge",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "super-sledge"
+        }
+      }
+    ]
+  },
+  {
+    "id": "weapons-thrown",
+    "name": "Random Thrown and Explosive Weapons",
+    "source": {
+      "book": "CRB",
+      "page": 206
+    },
+    "dice": 2,
+    "rows": [
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Nuka Grenade",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "nuka-grenade"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "name": "Pulse Mine",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pulse-mine"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Plasma Mine",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "plasma-mine"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 7,
+        "to": 9,
+        "name": "Bottlecap Mine",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "bottlecap-mine"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 10,
+        "to": 12,
+        "name": "Frag Grenade",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "frag-grenade"
+        },
+        "quantity": "2+1 CD"
+      },
+      {
+        "from": 13,
+        "to": 14,
+        "name": "Molotov Cocktail",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "molotov-cocktail"
+        },
+        "quantity": "2+1 CD"
+      },
+      {
+        "from": 15,
+        "to": 19,
+        "name": "Javelin",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "javelin"
+        },
+        "quantity": "2+1 CD"
+      },
+      {
+        "from": 20,
+        "to": 22,
+        "name": "Throwing Knives",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "throwing-knives"
+        },
+        "quantity": "4+2 CD"
+      },
+      {
+        "from": 23,
+        "to": 27,
+        "name": "Baseball Grenade",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "baseball-grenade"
+        },
+        "quantity": "2+1 CD"
+      },
+      {
+        "from": 28,
+        "to": 29,
+        "name": "Molotov Cocktail",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "molotov-cocktail"
+        },
+        "quantity": "2+1 CD"
+      },
+      {
+        "from": 30,
+        "to": 32,
+        "name": "Tomahawk",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "tomahawk"
+        },
+        "quantity": "2+1 CD"
+      },
+      {
+        "from": 33,
+        "to": 35,
+        "name": "Frag Mine",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "frag-mine"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 36,
+        "to": 37,
+        "name": "Plasma Grenade",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "plasma-grenade"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 38,
+        "to": 39,
+        "name": "Pulse Grenade",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "pulse-grenade"
+        },
+        "quantity": "1"
+      },
+      {
+        "from": 40,
+        "to": 40,
+        "name": "Nuke Mine",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "nuke-mine"
+        },
+        "quantity": "1"
+      }
+    ]
+  },
+  {
+    "id": "oddities",
+    "name": "Random Oddities and Valuables",
+    "source": {
+      "book": "CRB",
+      "page": 207
+    },
+    "dice": 3,
+    "rows": [
+      {
+        "from": 3,
+        "to": 4,
+        "name": "Regeneration Field",
+        "ref": {
+          "kind": "ITEM",
+          "id": "regeneration-field"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Pre-War Money worth {} Caps",
+        "quantity": "5d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 7,
+        "to": 9,
+        "name": "{} Caps",
+        "quantity": "5d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Stealth Field",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stealth-field"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Recon Sensors",
+        "ref": {
+          "kind": "ITEM",
+          "id": "recon-sensors"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Diagnosis Mod",
+        "ref": {
+          "kind": "ITEM",
+          "id": "diagnosis-mod"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Geiger Counter",
+        "ref": {
+          "kind": "ITEM",
+          "id": "geiger-counter"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Doctor’s Bag",
+        "ref": {
+          "kind": "ITEM",
+          "id": "doctors-bag"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Magazine",
+        "next": "magazine"
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Pre-War Money worth {} Caps",
+        "quantity": "4d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "{} Caps",
+        "quantity": "4d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Container",
+        "note": "Unsecured. The GM chooses a category; it holds one item rolled from it at the container’s rarity (CRB p. 207)."
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "Hazard Detection Mod",
+        "ref": {
+          "kind": "ITEM",
+          "id": "hazard-detection-mod"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Radio",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radio"
+        }
+      },
+      {
+        "from": 21,
+        "to": 21,
+        "name": "Lockpick Set",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lock-pick-set"
+        }
+      },
+      {
+        "from": 22,
+        "to": 22,
+        "name": "Holotape Player",
+        "ref": {
+          "kind": "ITEM",
+          "id": "holotape-player"
+        }
+      },
+      {
+        "from": 23,
+        "to": 23,
+        "name": "Large Backpack",
+        "ref": {
+          "kind": "ITEM",
+          "id": "backpack-large"
+        }
+      },
+      {
+        "from": 24,
+        "to": 24,
+        "name": "Pre-War Money worth {} Caps",
+        "quantity": "3d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 25,
+        "to": 25,
+        "name": "{} Caps",
+        "quantity": "3d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 26,
+        "to": 26,
+        "name": "Integral Boiler Mod",
+        "ref": {
+          "kind": "ITEM",
+          "id": "integral-boiler-mod"
+        }
+      },
+      {
+        "from": 27,
+        "to": 27,
+        "name": "Signal Flare",
+        "ref": {
+          "kind": "ITEM",
+          "id": "signal-flare"
+        },
+        "quantity": "1+2 CD"
+      },
+      {
+        "from": 28,
+        "to": 28,
+        "name": "Pre-War Money worth {} Caps",
+        "quantity": "2d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 29,
+        "to": 29,
+        "name": "{} Caps",
+        "quantity": "2d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 30,
+        "to": 30,
+        "name": "Bobby Pin",
+        "quantity": "2+1 CD",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bobby-pin"
+        }
+      },
+      {
+        "from": 31,
+        "to": 31,
+        "name": "{} Caps",
+        "quantity": "1d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 32,
+        "to": 32,
+        "name": "Pre-War Money worth {} Caps",
+        "quantity": "1d20",
+        "note": "Fortune Finder (CRB p. 64) adds CD; not computed here."
+      },
+      {
+        "from": 33,
+        "to": 33,
+        "name": "Bobby Pin",
+        "quantity": "4+2 CD",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bobby-pin"
+        }
+      },
+      {
+        "from": 34,
+        "to": 34,
+        "name": "Small Backpack",
+        "ref": {
+          "kind": "ITEM",
+          "id": "backpack-small"
+        }
+      },
+      {
+        "from": 35,
+        "to": 35,
+        "name": "Torch",
+        "ref": {
+          "kind": "ITEM",
+          "id": "torch"
+        }
+      },
+      {
+        "from": 36,
+        "to": 36,
+        "name": "Note or Holotape",
+        "note": "The GM decides what it tells (CRB p. 207)."
+      },
+      {
+        "from": 37,
+        "to": 37,
+        "name": "Bobby Pin",
+        "quantity": "6+3 CD",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bobby-pin"
+        }
+      },
+      {
+        "from": 38,
+        "to": 38,
+        "name": "Robot Repair Kit",
+        "ref": {
+          "kind": "ITEM",
+          "id": "robot-repair-kit"
+        }
+      },
+      {
+        "from": 39,
+        "to": 39,
+        "name": "First Aid Kit",
+        "ref": {
+          "kind": "ITEM",
+          "id": "first-aid-kit"
+        }
+      },
+      {
+        "from": 40,
+        "to": 40,
+        "name": "Lantern",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lantern"
+        }
+      },
+      {
+        "from": 41,
+        "to": 41,
+        "name": "Multi-Tool",
+        "ref": {
+          "kind": "ITEM",
+          "id": "multi-tool"
+        }
+      },
+      {
+        "from": 42,
+        "to": 42,
+        "name": "Hacking Module",
+        "ref": {
+          "kind": "ITEM",
+          "id": "hacking-module"
+        }
+      },
+      {
+        "from": 43,
+        "to": 43,
+        "name": "Lockpick Module",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lockpick-module"
+        }
+      },
+      {
+        "from": 44,
+        "to": 44,
+        "name": "Container, Locked",
+        "note": "PER + Lockpick, difficulty = rarity. Holds two items of categories the GM chooses, at that rarity (CRB p. 207)."
+      },
+      {
+        "from": 45,
+        "to": 45,
+        "name": "Bobby Pin",
+        "quantity": "8+4 CD",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bobby-pin"
+        }
+      },
+      {
+        "from": 46,
+        "to": 46,
+        "name": "Stealth Boy",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stealth-boy"
+        }
+      },
+      {
+        "from": 47,
+        "to": 47,
+        "name": "Deluxe Toolkit",
+        "ref": {
+          "kind": "ITEM",
+          "id": "deluxe-toolkit"
+        }
+      },
+      {
+        "from": 48,
+        "to": 48,
+        "name": "Flashlight",
+        "ref": {
+          "kind": "ITEM",
+          "id": "flashlight"
+        }
+      },
+      {
+        "from": 49,
+        "to": 49,
+        "name": "Behavioral Analysis Mod",
+        "ref": {
+          "kind": "ITEM",
+          "id": "behavioral-analysis-mod"
+        }
+      },
+      {
+        "from": 50,
+        "to": 50,
+        "name": "Radiation Coils",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radiation-coils"
+        }
+      },
+      {
+        "from": 51,
+        "to": 51,
+        "name": "Sensor Array",
+        "ref": {
+          "kind": "ITEM",
+          "id": "sensor-array"
+        }
+      },
+      {
+        "from": 52,
+        "to": 54,
+        "name": "Key",
+        "note": "Opens a lock or computer up to its rarity in difficulty (CRB p. 207)."
+      },
+      {
+        "from": 55,
+        "to": 57,
+        "name": "Bobby Pin",
+        "quantity": "10+5 CD",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bobby-pin"
+        }
+      },
+      {
+        "from": 58,
+        "to": 59,
+        "name": "Stimpak Diffuser",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stimpak-diffuser"
+        }
+      },
+      {
+        "from": 60,
+        "to": 60,
+        "name": "Tesla Coils",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tesla-coils"
+        }
+      }
+    ]
+  },
+  {
+    "id": "magazine",
+    "name": "Random Publication",
+    "source": {
+      "book": "CRB",
+      "page": 172
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "¡La Fantoma!",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "la-fantoma"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Astoundingly Awesome Tales",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "astoundingly-awesome-tales"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Backwoodsman",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "backwoodsman"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Boxing Times",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "boxing-times"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Duck and Cover!",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "duck-and-cover"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Fixin’ Things",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "fixin-things"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Future Weapons Today",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "future-weapons-today"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Grognak the Barbarian",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "grognak-the-barbarian"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Guns and Bullets",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "guns-and-bullets"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Live & Love",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "live-and-love"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Massachusetts Surgical Journal",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "massachusetts-surgical-journal"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Meeting People",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "meeting-people"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Programmer’s Digest",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "programmers-digest"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Tales of a Junktown Jerky Vendor",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "tales-of-a-junktown-jerky-vendor"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Tesla Science Magazine",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "tesla-science-magazine"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "True Police Stories",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "true-police-stories"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Tumblers Today",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "tumblers-today"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Unstoppables",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "unstoppables"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "U.S. Covert Operations Manual",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "u-s-covert-operations-manual"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Wasteland Survival Guide",
+        "ref": {
+          "kind": "MAGAZINE",
+          "id": "wasteland-survival-guide"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rare-book",
+    "name": "Rare Books",
+    "source": {
+      "book": "WG",
+      "page": 108
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "101 Heroic Last Stands",
+        "ref": {
+          "kind": "ITEM",
+          "id": "101-heroic-last-stands"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Atomic Command (Holotape)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "atomic-command-holotape"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Automatron (holotape)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "automatron-holotape"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Big Book of Science",
+        "ref": {
+          "kind": "ITEM",
+          "id": "big-book-of-science"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Chinese Army: Special Ops Training Manual",
+        "ref": {
+          "kind": "ITEM",
+          "id": "chinese-army-special-ops-training-manual"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Dress to Survive",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dress-to-survive"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Duck and Cover Annual",
+        "ref": {
+          "kind": "ITEM",
+          "id": "duck-and-cover-annual"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Grognak and the Ruby Ruins (holotape)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "grognak-and-the-ruby-ruins-holotape"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Guns and Bullets Annual",
+        "ref": {
+          "kind": "ITEM",
+          "id": "guns-and-bullets-annual"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Hot Summer Fashions",
+        "ref": {
+          "kind": "ITEM",
+          "id": "hot-summer-fashions"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Journal of Internal Medicine",
+        "ref": {
+          "kind": "ITEM",
+          "id": "journal-of-internal-medicine"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Nikola Tesla and You",
+        "ref": {
+          "kind": "ITEM",
+          "id": "nikola-tesla-and-you"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Pipfall (holotape)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pipfall-holotape"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Pugilism Illustrated",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pugilism-illustrated"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Red Menace (holotape)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "red-menace-holotape"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Scout Handbook",
+        "ref": {
+          "kind": "ITEM",
+          "id": "scout-handbook"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "The Collected Adventures of Grognak the Barbarian",
+        "ref": {
+          "kind": "ITEM",
+          "id": "the-collected-adventures-of-grognak-the-barbarian"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "The Pointy End: A Guide to Swords",
+        "ref": {
+          "kind": "ITEM",
+          "id": "the-pointy-end-a-guide-to-swords"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "U.S. Army: 30 Handy Flamethrower Recipes",
+        "ref": {
+          "kind": "ITEM",
+          "id": "u-s-army-30-handy-flamethrower-recipes"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Zeta Invaders (holotape)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "zeta-invaders-holotape"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk",
+    "name": "Junk Tables",
+    "source": {
+      "book": "WG",
+      "page": 120
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 4,
+        "name": "Animal Products and Food",
+        "next": "junk-animal"
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Household Items 1",
+        "next": "junk-household-1"
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Household Items 2",
+        "next": "junk-household-2"
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Household Items 3",
+        "next": "junk-household-3"
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Household Items 4",
+        "next": "junk-household-4"
+      },
+      {
+        "from": 9,
+        "to": 12,
+        "name": "Sporting Equipment",
+        "next": "junk-sporting"
+      },
+      {
+        "from": 13,
+        "to": 14,
+        "name": "Science and Technology",
+        "next": "junk-science"
+      },
+      {
+        "from": 15,
+        "to": 16,
+        "name": "Medical Equipment",
+        "next": "junk-medical"
+      },
+      {
+        "from": 17,
+        "to": 20,
+        "name": "Workplace Items",
+        "next": "junk-workplace"
+      }
+    ]
+  },
+  {
+    "id": "junk-animal",
+    "name": "Animal Products and Food",
+    "source": {
+      "book": "WG",
+      "page": 121
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 4,
+        "name": "Animal Hide",
+        "ref": {
+          "kind": "ITEM",
+          "id": "animal-hide"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Mutated Viscera",
+        "ref": {
+          "kind": "ITEM",
+          "id": "mutated-viscera"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Blood Sac",
+        "ref": {
+          "kind": "ITEM",
+          "id": "blood-sac"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Stinger or Proboscis",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stinger-or-proboscis"
+        }
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "name": "Bones and Teeth",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bones-and-teeth"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Radscorpion Stinger",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radscorpion-stinger"
+        }
+      },
+      {
+        "from": 12,
+        "to": 20,
+        "name": "Food",
+        "next": "food",
+        "note": "The book sends this roll to the food items; rolled on Random Food here."
+      }
+    ]
+  },
+  {
+    "id": "junk-household-1",
+    "name": "Household Items 1",
+    "source": {
+      "book": "WG",
+      "page": 121
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "Abraxo Cleaner",
+        "ref": {
+          "kind": "ITEM",
+          "id": "abraxo-cleaner"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Alarm Clock",
+        "ref": {
+          "kind": "ITEM",
+          "id": "alarm-clock"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Ashtray",
+        "ref": {
+          "kind": "ITEM",
+          "id": "ashtray"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Bread Box",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bread-box"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Broom",
+        "ref": {
+          "kind": "ITEM",
+          "id": "broom"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Bucket",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bucket"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Camera",
+        "ref": {
+          "kind": "ITEM",
+          "id": "camera"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Can",
+        "ref": {
+          "kind": "ITEM",
+          "id": "can"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Chalk",
+        "ref": {
+          "kind": "ITEM",
+          "id": "chalk"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Chessboard",
+        "ref": {
+          "kind": "ITEM",
+          "id": "chessboard"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Cigar or Cigarettes",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cigar-or-cigarettes"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Cigar Box",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cigar-box"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Cigarette Carton",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cigarette-carton"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Clothes Hanger",
+        "ref": {
+          "kind": "ITEM",
+          "id": "clothes-hanger"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Clothing Iron",
+        "ref": {
+          "kind": "ITEM",
+          "id": "clothing-iron"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Cooking Oil",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cooking-oil"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Cookware (pots and pans)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cookware-pots-and-pans"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Cotton Yarn",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cotton-yarn"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "Crockery and Tableware (bowls and plates)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "crockery-and-tableware-bowls-and-plates"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Crystal Decanter",
+        "ref": {
+          "kind": "ITEM",
+          "id": "crystal-decanter"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk-household-2",
+    "name": "Household Items 2",
+    "source": {
+      "book": "WG",
+      "page": 122
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "Cutlery (knives, forks, spoons, and sporks)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cutlery-knives-forks-spoons-and-sporks"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Cutting Board",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cutting-board"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Dishrag",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dishrag"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Dog Bowl",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dog-bowl"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Extinguisher",
+        "ref": {
+          "kind": "ITEM",
+          "id": "extinguisher"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Feather Duster",
+        "ref": {
+          "kind": "ITEM",
+          "id": "feather-duster"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Flag",
+        "ref": {
+          "kind": "ITEM",
+          "id": "flag"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Giddyup Buttercup Parts",
+        "ref": {
+          "kind": "ITEM",
+          "id": "giddyup-buttercup-parts"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Glass Bottle",
+        "ref": {
+          "kind": "ITEM",
+          "id": "glass-bottle"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Glassware (decanters, glass vases, drinking glasses)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "glassware-decanters-glass-vases-drinking-glasses"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Globe",
+        "ref": {
+          "kind": "ITEM",
+          "id": "globe"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Hairbrush",
+        "ref": {
+          "kind": "ITEM",
+          "id": "hairbrush"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Hot Plate",
+        "ref": {
+          "kind": "ITEM",
+          "id": "hot-plate"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Kitchen Scale",
+        "ref": {
+          "kind": "ITEM",
+          "id": "kitchen-scale"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Ladle",
+        "ref": {
+          "kind": "ITEM",
+          "id": "ladle"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Lamp",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lamp"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Light Bulb",
+        "ref": {
+          "kind": "ITEM",
+          "id": "light-bulb"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Mop",
+        "ref": {
+          "kind": "ITEM",
+          "id": "mop"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "Newspaper",
+        "ref": {
+          "kind": "ITEM",
+          "id": "newspaper"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Oven Mitt",
+        "ref": {
+          "kind": "ITEM",
+          "id": "oven-mitt"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk-household-3",
+    "name": "Household Items 3",
+    "source": {
+      "book": "WG",
+      "page": 123
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "Paint",
+        "ref": {
+          "kind": "ITEM",
+          "id": "paint"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Paintbrush",
+        "ref": {
+          "kind": "ITEM",
+          "id": "paintbrush"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Pen",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pen"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Pencil",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pencil"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Picture Frame",
+        "ref": {
+          "kind": "ITEM",
+          "id": "picture-frame"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Pillow",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pillow"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Plastic Decorations",
+        "ref": {
+          "kind": "ITEM",
+          "id": "plastic-decorations"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Plunger",
+        "ref": {
+          "kind": "ITEM",
+          "id": "plunger"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Pool Ball",
+        "ref": {
+          "kind": "ITEM",
+          "id": "pool-ball"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Radio",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radio"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Rat Poison",
+        "ref": {
+          "kind": "ITEM",
+          "id": "rat-poison"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Scissors",
+        "ref": {
+          "kind": "ITEM",
+          "id": "scissors"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Shopping Basket",
+        "ref": {
+          "kind": "ITEM",
+          "id": "shopping-basket"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Soap",
+        "ref": {
+          "kind": "ITEM",
+          "id": "soap"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Spatula",
+        "ref": {
+          "kind": "ITEM",
+          "id": "spatula"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Stuffed Toy",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stuffed-toy"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Tea or Coffee Cup",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tea-or-coffee-cup"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Tea or Coffee Pot",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tea-or-coffee-pot"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "Toaster",
+        "ref": {
+          "kind": "ITEM",
+          "id": "toaster"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Toothbrush",
+        "ref": {
+          "kind": "ITEM",
+          "id": "toothbrush"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk-household-4",
+    "name": "Household Items 4",
+    "source": {
+      "book": "WG",
+      "page": 123
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 2,
+        "name": "Toothpaste",
+        "ref": {
+          "kind": "ITEM",
+          "id": "toothpaste"
+        }
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "name": "Toy Alien",
+        "ref": {
+          "kind": "ITEM",
+          "id": "toy-alien"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Toy Vehicle (Car, Plane, Spaceship, etc)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "toy-vehicle-car-plane-spaceship-etc"
+        }
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "name": "Tray",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tray"
+        }
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "name": "Umbrella",
+        "ref": {
+          "kind": "ITEM",
+          "id": "umbrella"
+        }
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "name": "Vase",
+        "ref": {
+          "kind": "ITEM",
+          "id": "vase"
+        }
+      },
+      {
+        "from": 13,
+        "to": 14,
+        "name": "Wooden Spoon",
+        "ref": {
+          "kind": "ITEM",
+          "id": "wooden-spoon"
+        }
+      },
+      {
+        "from": 15,
+        "to": 16,
+        "name": "Wooden Toy",
+        "ref": {
+          "kind": "ITEM",
+          "id": "wooden-toy"
+        }
+      },
+      {
+        "from": 17,
+        "to": 18,
+        "name": "Watch (pocket watch or wristwatch)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "watch-pocket-watch-or-wristwatch"
+        }
+      },
+      {
+        "from": 19,
+        "to": 20,
+        "name": "Workplace Items",
+        "next": "junk-workplace"
+      }
+    ]
+  },
+  {
+    "id": "junk-sporting",
+    "name": "Sporting Equipment",
+    "source": {
+      "book": "WG",
+      "page": 124
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 2,
+        "name": "Baseball",
+        "ref": {
+          "kind": "ITEM",
+          "id": "baseball"
+        }
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "name": "Baseball Base",
+        "ref": {
+          "kind": "ITEM",
+          "id": "baseball-base"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Baseball Glove",
+        "ref": {
+          "kind": "ITEM",
+          "id": "baseball-glove"
+        }
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "name": "Baseball Bat",
+        "ref": {
+          "kind": "WEAPON",
+          "id": "baseball-bat"
+        }
+      },
+      {
+        "from": 9,
+        "to": 10,
+        "name": "Basketball",
+        "ref": {
+          "kind": "ITEM",
+          "id": "basketball"
+        }
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "name": "Bowling Ball",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bowling-ball"
+        }
+      },
+      {
+        "from": 13,
+        "to": 14,
+        "name": "Bowling Pin",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bowling-pin"
+        }
+      },
+      {
+        "from": 15,
+        "to": 16,
+        "name": "Dumbbells, Barbells, and Weights",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dumbbells-barbells-and-weights"
+        }
+      },
+      {
+        "from": 17,
+        "to": 18,
+        "name": "Kickball",
+        "ref": {
+          "kind": "ITEM",
+          "id": "kickball"
+        }
+      },
+      {
+        "from": 19,
+        "to": 20,
+        "name": "Life Preserver",
+        "ref": {
+          "kind": "ITEM",
+          "id": "life-preserver"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk-science",
+    "name": "Science and Technology",
+    "source": {
+      "book": "WG",
+      "page": 124
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "Battery",
+        "ref": {
+          "kind": "ITEM",
+          "id": "battery"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Circuit Board",
+        "ref": {
+          "kind": "ITEM",
+          "id": "circuit-board"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Coolant",
+        "ref": {
+          "kind": "ITEM",
+          "id": "coolant"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Cutting Fluid",
+        "ref": {
+          "kind": "ITEM",
+          "id": "cutting-fluid"
+        }
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "name": "Duct Tape",
+        "ref": {
+          "kind": "ITEM",
+          "id": "duct-tape"
+        }
+      },
+      {
+        "from": 6,
+        "to": 6,
+        "name": "Electrical Cable",
+        "ref": {
+          "kind": "ITEM",
+          "id": "electrical-cable"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Fuse",
+        "ref": {
+          "kind": "ITEM",
+          "id": "fuse"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "High-Powered Magnet",
+        "ref": {
+          "kind": "ITEM",
+          "id": "high-powered-magnet"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "High-Powered Microscope",
+        "ref": {
+          "kind": "ITEM",
+          "id": "high-powered-microscope"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "High-Tech Gadget",
+        "ref": {
+          "kind": "ITEM",
+          "id": "high-tech-gadget"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Lab Equipment (racks, stands, containers, etc.)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lab-equipment-racks-stands-containers-etc"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Lab Glassware (beakers, test tubes, etc.)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lab-glassware-beakers-test-tubes-etc"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Metal Ingot",
+        "ref": {
+          "kind": "ITEM",
+          "id": "metal-ingot"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Microscope",
+        "ref": {
+          "kind": "ITEM",
+          "id": "microscope"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Radio",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radio"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Sensor",
+        "ref": {
+          "kind": "ITEM",
+          "id": "sensor"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Solvent",
+        "ref": {
+          "kind": "ITEM",
+          "id": "solvent"
+        }
+      },
+      {
+        "from": 18,
+        "to": 18,
+        "name": "Suprathaw Antifreeze",
+        "ref": {
+          "kind": "ITEM",
+          "id": "suprathaw-antifreeze"
+        }
+      },
+      {
+        "from": 19,
+        "to": 19,
+        "name": "Turpentine",
+        "ref": {
+          "kind": "ITEM",
+          "id": "turpentine"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Vacuum Tube",
+        "ref": {
+          "kind": "ITEM",
+          "id": "vacuum-tube"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk-medical",
+    "name": "Medical Equipment",
+    "source": {
+      "book": "WG",
+      "page": 125
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 2,
+        "name": "Bandages",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bandages"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Blood Pack",
+        "ref": {
+          "kind": "ITEM",
+          "id": "blood-pack"
+        }
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "name": "Bone Saw",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bone-saw"
+        }
+      },
+      {
+        "from": 5,
+        "to": 6,
+        "name": "Dirty Water",
+        "ref": {
+          "kind": "ITEM",
+          "id": "dirty-water"
+        }
+      },
+      {
+        "from": 7,
+        "to": 8,
+        "name": "Empty Blood Pack/IV Bag",
+        "ref": {
+          "kind": "ITEM",
+          "id": "empty-blood-pack-iv-bag"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "High-Powered Microscope",
+        "ref": {
+          "kind": "ITEM",
+          "id": "high-powered-microscope"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Lab Equipment (racks, stands, containers, etc.)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lab-equipment-racks-stands-containers-etc"
+        }
+      },
+      {
+        "from": 11,
+        "to": 11,
+        "name": "Lab Glassware (beakers, test tubes, etc.)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "lab-glassware-beakers-test-tubes-etc"
+        }
+      },
+      {
+        "from": 12,
+        "to": 12,
+        "name": "Purified Water",
+        "ref": {
+          "kind": "ITEM",
+          "id": "purified-water"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "RadAway (Diluted)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "radaway-diluted"
+        }
+      },
+      {
+        "from": 14,
+        "to": 15,
+        "name": "Scalpel",
+        "ref": {
+          "kind": "ITEM",
+          "id": "scalpel"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Stimpak",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stimpak"
+        }
+      },
+      {
+        "from": 17,
+        "to": 18,
+        "name": "Stimpak (Diluted)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "stimpak-diluted"
+        }
+      },
+      {
+        "from": 19,
+        "to": 20,
+        "name": "Tweezers",
+        "ref": {
+          "kind": "ITEM",
+          "id": "tweezers"
+        }
+      }
+    ]
+  },
+  {
+    "id": "junk-workplace",
+    "name": "Workplace Items",
+    "source": {
+      "book": "WG",
+      "page": 125
+    },
+    "dice": 1,
+    "rows": [
+      {
+        "from": 1,
+        "to": 1,
+        "name": "Bag of Cement",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bag-of-cement"
+        }
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "name": "Bag of Fertilizer",
+        "ref": {
+          "kind": "ITEM",
+          "id": "bag-of-fertilizer"
+        }
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "name": "Blowtorch",
+        "ref": {
+          "kind": "ITEM",
+          "id": "blowtorch"
+        }
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "name": "Clipboard",
+        "ref": {
+          "kind": "ITEM",
+          "id": "clipboard"
+        }
+      },
+      {
+        "from": 7,
+        "to": 7,
+        "name": "Desk Fan",
+        "ref": {
+          "kind": "ITEM",
+          "id": "desk-fan"
+        }
+      },
+      {
+        "from": 8,
+        "to": 8,
+        "name": "Duct Tape",
+        "ref": {
+          "kind": "ITEM",
+          "id": "duct-tape"
+        }
+      },
+      {
+        "from": 9,
+        "to": 9,
+        "name": "Magnifying Glass",
+        "ref": {
+          "kind": "ITEM",
+          "id": "magnifying-glass"
+        }
+      },
+      {
+        "from": 10,
+        "to": 10,
+        "name": "Military Ammo Bag",
+        "ref": {
+          "kind": "ITEM",
+          "id": "military-ammo-bag"
+        }
+      },
+      {
+        "from": 11,
+        "to": 12,
+        "name": "Oil Can",
+        "ref": {
+          "kind": "ITEM",
+          "id": "oil-can"
+        }
+      },
+      {
+        "from": 13,
+        "to": 13,
+        "name": "Shovel",
+        "ref": {
+          "kind": "ITEM",
+          "id": "shovel"
+        }
+      },
+      {
+        "from": 14,
+        "to": 14,
+        "name": "Typewriter",
+        "ref": {
+          "kind": "ITEM",
+          "id": "typewriter"
+        }
+      },
+      {
+        "from": 15,
+        "to": 15,
+        "name": "Wonderglue",
+        "ref": {
+          "kind": "ITEM",
+          "id": "wonderglue"
+        }
+      },
+      {
+        "from": 16,
+        "to": 16,
+        "name": "Hubcap",
+        "ref": {
+          "kind": "ITEM",
+          "id": "hubcap"
+        }
+      },
+      {
+        "from": 17,
+        "to": 17,
+        "name": "Auto Parts",
+        "ref": {
+          "kind": "ITEM",
+          "id": "auto-parts"
+        }
+      },
+      {
+        "from": 18,
+        "to": 19,
+        "name": "Metal Tools (hammers, screwdrivers, spanners)",
+        "ref": {
+          "kind": "ITEM",
+          "id": "metal-tools-hammers-screwdrivers-spanners"
+        }
+      },
+      {
+        "from": 20,
+        "to": 20,
+        "name": "Telephone",
+        "ref": {
+          "kind": "ITEM",
+          "id": "telephone"
+        }
+      }
+    ]
+  }
+]

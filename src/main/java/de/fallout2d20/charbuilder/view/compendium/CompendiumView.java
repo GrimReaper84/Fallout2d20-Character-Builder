@@ -153,6 +153,7 @@ public final class CompendiumView {
     }
     tab.setContent(switch (section) {
       case PARTY -> new PartySection(party, openCharacters, onPartyChanged).node();
+      case SCAVENGING -> new ScavengingSection(books, random, this::isListed, this::open).node();
       case ROLL_TABLES -> new RollTablesSection(books, random, this::open).node();
       default -> catalog(section).node();
     });
@@ -167,7 +168,7 @@ public final class CompendiumView {
     return contents.computeIfAbsent(section, _ -> CompendiumContent.of(section, books));
   }
 
-  /** The book filter changed: catalog sections and roll tables are built again when shown; links back are dropped. */
+  /** The book filter changed: all sections but the party are built again when shown; links back are dropped. */
   private void rebuildCatalogs() {
     catalogs.clear();
     contents.clear();

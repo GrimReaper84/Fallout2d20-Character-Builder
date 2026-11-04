@@ -38,6 +38,7 @@ As of November 2026. The order can still change; ideas and wishes are welcome.
 - Rules window: books per character, house rules (first one: armor helmets count as headgear)
 - Several characters open at once, each in its own tab
 - GM compendium: equipment catalogs, character rules, roll tables and a party overview with its own party file
+- Scavenging in the compendium: search a location by the book (AP, Luck, loot tables with links) and loot defeated NPCs
 - Initiative lowered by carry load everywhere
 
 **Planned next**
@@ -63,6 +64,7 @@ As of November 2026. The order can still change; ideas and wishes are welcome.
 - Equipment sets: named loadouts to switch between (e.g. "combat", "town")
 - Picture of the weapon type with its mod slots around it
 - Compendium: add entries to a character, NPC stat blocks, export
+- Scavenging: transfer finds to a character, prepared locations of Winter of Atom and Wanderer's Guide as presets
 
 **Not planned:** other books such as Settler's Guide or Royal Flush (the legacy import still accepts their
 names and reports what it skips).
