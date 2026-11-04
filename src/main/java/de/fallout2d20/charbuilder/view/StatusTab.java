@@ -4,15 +4,17 @@ import de.fallout2d20.charbuilder.model.character.PlayerCharacter;
 import de.fallout2d20.charbuilder.model.character.derived.CarryLoad;
 import de.fallout2d20.charbuilder.model.character.derived.DerivedStats;
 import de.fallout2d20.charbuilder.model.character.derived.Resistance;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.VBox;
 import org.jspecify.annotations.NonNull;
 import org.tbee.javafx.scene.layout.MigPane;
 
 /**
- * Status tab in two halves of equal width: the play-session values (D5, once creation is complete) on the
- * left, the derived statistics with the innate Damage Resistances on the right.
+ * The status of a character: the play-session values (D5, once creation is complete) and the derived statistics with
+ * the innate Damage Resistances. As a tab in two halves of equal width, on the slide panel one below the other.
  */
 final class StatusTab {
 
@@ -23,19 +25,34 @@ final class StatusTab {
 
   private StatusTab() {}
 
+  /** The two parts side by side, for the tab. */
   static @NonNull Node build(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
-    MigPane left = Layouts.column();
-    OverviewParts.sectionHeading(left, "Session");
-    if (character.isCreationComplete()) {
-      left.add(SessionSection.build(character, callbacks.onChanged()));
-    } else {
-      left.add(new Label("Tracked once the character is created."));
-    }
+    return Layouts.halves(session(character, callbacks), derived(character));
+  }
 
-    MigPane right = Layouts.column();
-    OverviewParts.sectionHeading(right, "Derived statistics");
-    right.add(derivedStatistics(character));
-    return Layouts.halves(left, right);
+  /** The two parts one below the other, for the narrow slide panel. */
+  static @NonNull Node buildStacked(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
+    VBox stacked = new VBox(Layouts.WIDE_GAP, session(character, callbacks), derived(character));
+    stacked.setPadding(new Insets(Layouts.PAGE_INSETS));
+    return stacked;
+  }
+
+  private static @NonNull MigPane session(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
+    MigPane pane = Layouts.column();
+    OverviewParts.sectionHeading(pane, "Session");
+    if (character.isCreationComplete()) {
+      pane.add(SessionSection.build(character, callbacks.onChanged()));
+    } else {
+      pane.add(new Label("Tracked once the character is created."));
+    }
+    return pane;
+  }
+
+  private static @NonNull MigPane derived(@NonNull PlayerCharacter character) {
+    MigPane pane = Layouts.column();
+    OverviewParts.sectionHeading(pane, "Derived statistics");
+    pane.add(derivedStatistics(character));
+    return pane;
   }
 
   /** Name and value per row, one below the other. */

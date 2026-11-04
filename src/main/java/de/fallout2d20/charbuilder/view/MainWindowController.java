@@ -50,8 +50,12 @@ import org.jspecify.annotations.Nullable;
 public class MainWindowController {
 
   private static final String APP_TITLE = AppInfo.NAME;
+  private static final @NonNull String STATUS_AS_TAB_KEY = "character.statusAsTab";
 
   private final CharacterStore store = new CharacterStore();
+  private final @NonNull ViewPreferences preferences = ViewPreferences.user();
+  private final @NonNull FloatingButtonPosition statusButtonPosition =
+      new FloatingButtonPosition(preferences, "character.statusButtonPosition");
   private final TabPane documents = new TabPane();
   private final Label emptyState = new Label("No character loaded. Use File → New or File → Open, or GM → Compendium.");
   private final CompendiumTab compendium = new CompendiumTab(documents, () -> this.stage, this::openCharacters,
@@ -66,6 +70,7 @@ public class MainWindowController {
   @FXML private MenuItem exportSheetItem;
   @FXML private CheckMenuItem gmModeItem;
   @FXML private MenuItem rulesItem;
+  @FXML private CheckMenuItem statusAsTabItem;
 
   private @Nullable Stage stage;
   /** The folder of the last file opened or saved; proposed by the file dialogs. */
@@ -73,6 +78,7 @@ public class MainWindowController {
 
   @FXML
   private void initialize() {
+    statusAsTabItem.setSelected(preferences.getBoolean(STATUS_AS_TAB_KEY, false));
     emptyState.setStyle("-fx-padding: 24;");
     documents.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
     documents.getSelectionModel().selectedItemProperty().addListener((_, _, _) -> updateWindow());
@@ -368,7 +374,7 @@ public class MainWindowController {
     Tab tab = new Tab();
     CharacterView view = new CharacterView(document.character(),
         new ViewCallbacks(() -> withCharacter(tab, this::onEdited), () -> withCharacter(tab, this::onChanged),
-            () -> withCharacter(tab, this::completeCreation)));
+            () -> withCharacter(tab, this::completeCreation)), statusAsTabItem.isSelected(), statusButtonPosition);
     OpenCharacter character = OpenCharacter.attach(document, view, tab);
     tab.setContent(view.node());
     tab.setOnCloseRequest(event -> {
@@ -387,6 +393,15 @@ public class MainWindowController {
     if (documents.getTabs().contains(tab)) {
       OpenCharacter.of(tab).ifPresent(action);
     }
+  }
+
+  /** Settings: the status as a tab or on the slide panel, for all open characters at once; remembered between runs. */
+  @FXML
+  private void onStatusAsTab() {
+    boolean asTab = statusAsTabItem.isSelected();
+    preferences.putBoolean(STATUS_AS_TAB_KEY, asTab);
+    documents.getTabs().stream().map(OpenCharacter::of).flatMap(Optional::stream)
+        .forEach(character -> character.view().setStatusAsTab(asTab));
   }
 
   /** Whether the GM compendium tab is selected. */

@@ -24,13 +24,15 @@ import org.jspecify.annotations.NonNull;
  * change but keeps the tab pane, so the selected tab, each tab's scroll position and the selection of the
  * Weapons, Armor and Gear tabs ({@link MasterDetailState}) stay – except after the starting equipment was
  * synced into the inventory, which moves entries. A tab with rule hints shows a warning icon, with
- * the hints as tooltip.
+ * the hints as tooltip. The status is on a {@link SlidePanel} or, by choice in the Settings menu, a tab of its own.
  */
 final class CharacterView {
 
   private final @NonNull PlayerCharacter character;
   private final @NonNull ViewCallbacks callbacks;
   private final @NonNull BorderPane root = new BorderPane();
+  private final @NonNull TabPane tabPane = new TabPane();
+  private final @NonNull SlidePanel statusPanel;
   /** The tabs and their scroll panes, in the order of {@link CharacterTab#values()}. */
   private final @NonNull List<Tab> tabs = new ArrayList<>();
   private final @NonNull List<ScrollPane> scrollPanes = new ArrayList<>();
@@ -39,11 +41,20 @@ final class CharacterView {
   private final @NonNull MasterDetailState itemSelection = new MasterDetailState(null);
   /** The character's sync count at the last refresh: a sync moves entries, so the selections no longer fit. */
   private int startingEquipmentSyncs;
+  private boolean statusAsTab;
 
-  CharacterView(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks) {
+  /**
+   * Creates the empty view.
+   *
+   * @param statusAsTab whether the status is a tab instead of the slide panel
+   * @param statusButtonPosition where the slide panel's button sits, shared by all characters
+   */
+  CharacterView(@NonNull PlayerCharacter character, @NonNull ViewCallbacks callbacks, boolean statusAsTab,
+      @NonNull FloatingButtonPosition statusButtonPosition) {
+    statusPanel = new SlidePanel(root, "fas-heartbeat", "Status (drag to move the button)", statusButtonPosition);
     this.character = character;
     this.callbacks = callbacks;
-    TabPane tabPane = new TabPane();
+    this.statusAsTab = statusAsTab;
     tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
     for (CharacterTab kind : CharacterTab.values()) {
       ScrollPane scrollPane = new ScrollPane();
@@ -54,13 +65,33 @@ final class CharacterView {
       Tab tab = new Tab(kind.title(), scrollPane);
       tabs.add(tab);
       scrollPanes.add(scrollPane);
-      tabPane.getTabs().add(tab);
+      if (kind != CharacterTab.STATUS || statusAsTab) {
+        tabPane.getTabs().add(tab);
+      }
     }
     root.setCenter(tabPane);
+    statusPanel.setAvailable(!statusAsTab);
   }
 
   @NonNull Node node() {
-    return root;
+    return statusPanel.node();
+  }
+
+  /** Shows the status as a tab at its usual place or on the slide panel; takes effect at once. */
+  void setStatusAsTab(boolean asTab) {
+    if (asTab == statusAsTab) {
+      return;
+    }
+    statusAsTab = asTab;
+    int position = List.of(CharacterTab.values()).indexOf(CharacterTab.STATUS);
+    Tab status = tabs.get(position);
+    if (asTab) {
+      tabPane.getTabs().add(position, status);
+    } else {
+      tabPane.getTabs().remove(status);
+    }
+    statusPanel.setAvailable(!asTab);
+    refresh();
   }
 
   /** Rebuilds header and tab contents from the character; keeps the selected tab and scroll positions. */
@@ -73,9 +104,15 @@ final class CharacterView {
     }
     List<CreationProblem> hints = hints(character);
     root.setTop(CharacterHeader.build(character, hints, callbacks));
+    if (!statusAsTab) {
+      statusPanel.setContent(StatusTab.buildStacked(character, callbacks));
+    }
     CharacterTab[] kinds = CharacterTab.values();
     for (int i = 0; i < kinds.length; i++) {
       CharacterTab kind = kinds[i];
+      if (kind == CharacterTab.STATUS && !statusAsTab) {
+        continue;
+      }
       List<CreationProblem> tabHints = hints.stream().filter(hint -> hint.area() == kind.area()).toList();
       ScrollPane scrollPane = scrollPanes.get(i);
       double position = scrollPane.getVvalue();

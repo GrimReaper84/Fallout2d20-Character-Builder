@@ -39,6 +39,23 @@ public final class ViewPreferences {
     }
   }
 
+  public double getDouble(@NonNull String key, double defaultValue) {
+    try {
+      return node.getDouble(key, defaultValue);
+    } catch (IllegalStateException | SecurityException _) {
+      return defaultValue;
+    }
+  }
+
+  public void putDouble(@NonNull String key, double value) {
+    try {
+      node.putDouble(key, value);
+      node.flush();
+    } catch (BackingStoreException | IllegalStateException | SecurityException _) {
+      // UI state only; losing it is harmless.
+    }
+  }
+
   public @NonNull String getString(@NonNull String key, @NonNull String defaultValue) {
     try {
       return node.get(key, defaultValue);

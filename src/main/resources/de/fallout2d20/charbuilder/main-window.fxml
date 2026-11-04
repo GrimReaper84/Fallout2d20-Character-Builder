@@ -51,6 +51,9 @@
         <MenuItem text="Save Party" onAction="#onSaveParty"/>
         <MenuItem text="Save Party As…" onAction="#onSavePartyAs"/>
       </Menu>
+      <Menu text="Settings">
+        <CheckMenuItem fx:id="statusAsTabItem" text="Status as Tab" onAction="#onStatusAsTab"/>
+      </Menu>
       <Menu text="Help">
         <MenuItem text="About" onAction="#onAbout"/>
       </Menu>

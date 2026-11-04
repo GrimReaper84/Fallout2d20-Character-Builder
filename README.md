@@ -40,6 +40,7 @@ As of November 2026. The order can still change; ideas and wishes are welcome.
 - GM compendium: equipment catalogs, character rules, roll tables and a party overview with its own party file
 - Scavenging in the compendium: search a location by the book (AP, Luck, loot tables with links) and loot defeated NPCs
 - Initiative lowered by carry load everywhere
+- Status on a slide panel with a floating button (Settings: Status as Tab brings the tab back)
 
 **Planned next**
 
