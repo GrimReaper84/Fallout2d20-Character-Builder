@@ -23,7 +23,11 @@ at the table.
   Resistance per hit location (also for Mister Handy and Protectron), items and holotapes, caps, materials
   and carry weight.
 - **Session values:** current HP (rads lower the maximum), Luck points, Rad Sponge points, injuries,
-  notes.
+  notes. The status slides in from the right with a floating button, or stays a tab if you prefer
+  (Settings ▸ Status as Tab).
+- **Several characters** open at once, each in its own tab.
+- **GM compendium** (GM ▸ Compendium): all catalogs and character rules with search and links between entries, roll
+  tables, a party overview with its own file, and scavenging: search a location by the book or loot defeated NPCs.
 - **Character sheet** export as PDF for printing.
 
 Characters are saved as JSON files wherever you like.
@@ -32,7 +36,7 @@ Characters are saved as JSON files wherever you like.
 
 As of November 2026. The order can still change; ideas and wishes are welcome.
 
-**Next release (1.5.0, finished, not released yet)**
+**Latest release (1.5.0)**
 
 - Perk bonuses computed into the weapon values (situational perks as hints per weapon)
 - Rules window: books per character, house rules (first one: armor helmets count as headgear)
