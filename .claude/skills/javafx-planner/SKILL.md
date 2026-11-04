@@ -20,7 +20,7 @@ the book? The user makes these decisions; you prepare them with recommendations.
 | Java analysis | `docs/analyses/<feature>_java_analysis.md` | Catch up briefly yourself if the Java state is known from the session, otherwise ask |
 | Catalog reports | `docs/analyses/<catalog>_catalog.md` | If the feature needs a catalog that does not exist: plan its extraction as a separate `catalog-extractor` step |
 | Books | text + PDF (project rules section 4) | — |
-| Project plan | `docs/plans/project_plan.md` | — (phase, overall decisions E1–E6) |
+| Design decisions | `DECISIONS.md` | decisions and reasons that bind the plan |
 
 ## Procedure
 

@@ -72,7 +72,7 @@ in. All files (code, data, skills, docs) are in English.
 
 | What | Path |
 |---|---|
-| Project plan (phases, decisions) | `docs/plans/project_plan.md` |
+| Design decisions with reasons (tracked) | `DECISIONS.md` |
 | Java analysis | `docs/analyses/<feature>_java_analysis.md` |
 | Catalog report | `docs/analyses/<catalog>_catalog.md` |
 | Feature plan | `docs/plans/<feature>_plan.md` |
@@ -241,6 +241,7 @@ small and mention them in the result.
 ## 10. Follow-up after an implementation
 
 - `README.md` roadmap: update it when an item is finished, added or dropped.
+- `DECISIONS.md`: add the feature's lasting decisions with their reasons; move the finished plan to `docs/plans/archive/`.
 - `docs/feature_checklist.md` (if you keep one): update status and notes of the area, record deferred items.
 - In the final report, name deviations from the plan, new book findings and open points clearly.
 - Do not commit (Git is read-only); suggest a commit message instead.

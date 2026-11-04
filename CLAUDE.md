@@ -11,7 +11,8 @@ Its save files must still import. The rulebooks are the source of truth.
 
 Supported books: Core Rulebook (`CRB`), Winter of Atom (`WOA`), Wanderer's Guide (`WG`).
 
-The roadmap is in `README.md`, the setup for new contributors in its "Contributing" section.
+The roadmap is in `README.md`, the setup for new contributors in its "Contributing" section. Design decisions with
+their reasons are in `DECISIONS.md`.
 
 ## Build & Run
 
@@ -49,8 +50,8 @@ Everyone provides their own rulebooks (README, "Contributing"); plans and analys
 | What | Path |
 |---|---|
 | Rulebook PDFs + text | `docs/rulebooks/` (`<book>.pdf`, `<book>.txt` for prose, `<book>_layout.txt` for tables, `\f` page breaks; page offsets and commands in project rules section 4) |
-| Plans | `docs/plans/` |
-| Analyses / catalog reports | `docs/analyses/` |
+| Plans (of current work; finished ones go to `docs/plans/archive/`) | `docs/plans/` |
+| Analyses / catalog reports (of current work; older ones in `docs/analyses/archive/`) | `docs/analyses/` |
 
 **Never copy rules text verbatim into tracked files** (catalogs, Javadoc, UI). Use values, page
 references (`CRB p. 61`) and short descriptions in your own words.
@@ -68,7 +69,7 @@ Personal settings go into `CLAUDE.local.md` (gitignored, loaded automatically). 
 - Derived values (HP, initiative, defense, carry weight, melee bonus, DR) are **computed, never
   stored**.
 - Save format: JSON with `format: "fallout2d20-character-builder"`, `formatVersion: 1` and the app versions
-  `createdWith`/`savedWith` (plan `docs/plans/save_format_plan.md`); 1.0.0 test-build files
+  `createdWith`/`savedWith` (`DECISIONS.md`, ADR-013); 1.0.0 test-build files
   (`schemaVersion: 3`) still load. Legacy saves (unversioned and `schemaVersion: 2`, examples in
   `src/test/resources/legacy`) **must** stay importable; unknown names are
   skipped and reported, never crash the import.

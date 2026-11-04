@@ -26,9 +26,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Draws the application icon (user decision 2026-10-19, plan {@code docs/plans/app_icon_plan.md}): the Font
+ * Draws the application icon (user decision 2026-10-19, {@code DECISIONS.md} ADR-040): the Font
  * Awesome Free "radiation" glyph (CC BY 4.0, recolored) in Pip-Boy green on a dark rounded square. Writes the
  * window icons into the main resources and the installer icons (PNG, ICO, ICNS) into the packaging folder; started
  * by the Gradle task {@code generateIcons}, never by the build. The generated files are committed.
@@ -50,7 +51,7 @@ public final class GenerateIcons {
   private GenerateIcons() {}
 
   /** @param args the main resource folder of the {@code App} class and the packaging folder */
-  public static void main(String[] args) throws IOException, FontFormatException {
+  static void main(String @NonNull [] args) throws IOException, FontFormatException {
     if (args.length != 2) {
       throw new IllegalArgumentException("Usage: GenerateIcons <resource folder> <packaging folder>");
     }
